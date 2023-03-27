@@ -1,39 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dynamic_ui/type_parser.dart';
-import 'storage.dart';
-import 'data_type.dart';
-import 'db/data_source.dart';
-
-enum ThemeEnum { dark, light, auto, manual }
 
 class ThemeProvider {
-  static ThemeEnum manualThemeEnum = ThemeEnum.auto;
   static Brightness deviceBrightness = Brightness.light;
-
-  static void init() {
-    Storage().onChange('theme', 'light', (value) {
-      deviceBrightness = value == 'light' ? Brightness.light : Brightness.dark;
-      DataSource().get('main.json', (data) {
-        if (data != null) {
-          data['theme'] = value;
-          DataSource().set('main.json', data, DataType.template);
-        }
-      });
-    });
-  }
-
-  static ThemeData getTheme() {
-    ThemeEnum result = manualThemeEnum;
-    if (manualThemeEnum == ThemeEnum.auto) {
-      result = deviceBrightness == Brightness.dark ? ThemeEnum.dark : ThemeEnum.light;
-    }
-    switch (result) {
-      case ThemeEnum.dark:
-        return darkThemeData();
-      default:
-        return lightThemeData();
-    }
-  }
 
   static ThemeData lightThemeData() {
     return ThemeData.light().copyWith(

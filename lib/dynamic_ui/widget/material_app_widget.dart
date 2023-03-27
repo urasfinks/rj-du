@@ -10,7 +10,9 @@ class MaterialAppWidget extends AbstractWidget {
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return MaterialApp(
       debugShowCheckedModeBanner: GlobalSettings.debug,
-      theme: ThemeProvider.getTheme(),
+      theme: ThemeProvider.lightThemeData(),
+      darkTheme: ThemeProvider.darkThemeData(),
+      themeMode: ThemeMode.system,
       home: BottomTab(dynamicUIBuilderContext),
     );
   }

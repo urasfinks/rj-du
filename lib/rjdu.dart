@@ -1,8 +1,8 @@
 library rjdu;
 
 import 'package:flutter/cupertino.dart';
+import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
-import 'package:rjdu/theme_provider.dart';
 import 'package:rjdu/translate.dart';
 import 'package:uuid/uuid.dart';
 import 'data_sync.dart';
@@ -17,8 +17,8 @@ class RjDu {
     WidgetsFlutterBinding.ensureInitialized();
     await Storage().init();
     Storage().set('uuid', const Uuid().v4(), false);
+    Storage().set('version', GlobalSettings.version, false);
 
-    ThemeProvider.init();
     DataSource().init();
     DynamicInvoke().init();
     HttpClient.init();

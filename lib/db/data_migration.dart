@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:rjdu/storage.dart';
 import '../data_type.dart';
 import '../global_settings.dart';
 import 'data_source.dart';
@@ -11,8 +12,14 @@ class DataMigration {
   }
 
   migration() async {
+    bool updateApplication = Storage().get('version', 'v0') != GlobalSettings.version;
+    print("migration() updateApplication = $updateApplication");
+    if (updateApplication) {
+      print("migration() set new version = ${GlobalSettings.version}");
+      Storage().set('version', GlobalSettings.version);
+    }
     await _sqlExecute([
-      //GlobalSettings.debug ? 'db/drop/2023-01-31.sql' : '',
+      (GlobalSettings.debug || updateApplication) ? 'db/drop/2023-01-31.sql' : '',
       'db/migration/2023-01-29.sql',
     ]);
     await loadAssetsData();

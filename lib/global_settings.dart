@@ -1,5 +1,5 @@
 class GlobalSettings{
-  static bool debug = true;
+  static bool debug = false;
   static String version = "v1";
-  static String host = "http://192.168.0.20:8453";
+  static String host = "https://e-humidor.ru:8453";
 }
