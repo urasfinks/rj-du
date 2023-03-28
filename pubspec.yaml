@@ -1,7 +1,7 @@
 name: rjdu
-description: A new Flutter project.
+description: Jamsys.ru DynamicUI.
 version: 0.0.1
-homepage:
+homepage: jamsys.ru
 
 environment:
   sdk: '>=2.19.4 <3.0.0'
@@ -39,6 +39,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - lib/assets/db/drop/
+    - lib/assets/db/migration/
 
   # To add assets to your package, add an assets section, like this:
   # assets:

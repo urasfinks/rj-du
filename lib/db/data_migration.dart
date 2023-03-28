@@ -18,6 +18,10 @@ class DataMigration {
       print("migration() set new version = ${GlobalSettings.version}");
       Storage().set('version', GlobalSettings.version);
     }
+    /*Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
+    for(MapEntry<dynamic, dynamic> k in assets.entries){
+      print(">> ${k.key}");
+    }*/
     await _sqlExecute([
       (GlobalSettings.debug || updateApplication) ? 'db/drop/2023-01-31.sql' : '',
       'db/migration/2023-01-29.sql',
@@ -32,7 +36,7 @@ class DataMigration {
         continue;
       }
       print("Migration: $file");
-      String migration = await rootBundle.loadString('assets/$file');
+      String migration = await rootBundle.loadString('packages/rjdu/lib/assets/$file');
       List<String> split = migration.split(";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
       for (String query in split) {
         query = query.trim();
