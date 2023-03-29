@@ -13,7 +13,7 @@ class DataSourceSetHandler extends AbstractHandler {
       Data data = Data(
         args['uuid'],
         args['value'],
-        args['type'] != null ? Util.dataTypeValueOf(args['type']) : null,
+        Util.dataTypeValueOf(args['type']),
         args['parent'],
       );
       data.key = args['key'];

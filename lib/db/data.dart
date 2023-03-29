@@ -4,7 +4,7 @@ class Data {
   String uuid;
   String? parentUuid;
   dynamic value;
-  DataType? type;
+  DataType type;
   String? key;
   int? dateAdd;
   int? dateUpdate;
@@ -13,6 +13,7 @@ class Data {
 
   bool updateIfExist = true;
   bool cloneFieldIfNull = true;
+  bool onUpdateResetRevision = true;
   Function? onPersist;
 
   Data(

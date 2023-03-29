@@ -12,18 +12,18 @@ class DataMigration {
   }
 
   migration() async {
-    bool updateApplication = Storage().get('version', 'v0') != GlobalSettings.version;
+    bool updateApplication = Storage().get('version', 'v0') != GlobalSettings().version;
     print("migration() updateApplication = $updateApplication");
     if (updateApplication) {
-      print("migration() set new version = ${GlobalSettings.version}");
-      Storage().set('version', GlobalSettings.version);
+      print("migration() set new version = ${GlobalSettings().version}");
+      Storage().set('version', GlobalSettings().version);
     }
     /*Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
     for(MapEntry<dynamic, dynamic> k in assets.entries){
       print(">> ${k.key}");
     }*/
     await _sqlExecute([
-      (GlobalSettings.debug || updateApplication) ? 'db/drop/2023-01-31.sql' : '',
+      updateApplication ? 'db/drop/2023-01-31.sql' : '',
       'db/migration/2023-01-29.sql',
     ]);
     await loadAssetsData();
@@ -55,7 +55,7 @@ class DataMigration {
         String fileData = await rootBundle.loadString(path);
         String fileName = path.split("/").last;
         //print("loadAssetsData() $fileName");
-        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings.debug);
+        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
       }
     }
   }

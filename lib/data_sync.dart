@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:rjdu/storage.dart';
 import 'data_type.dart';
 import 'db/data_source.dart';
 import 'global_settings.dart';
@@ -11,6 +12,19 @@ import 'package:flutter/material.dart';
 import 'util.dart';
 import 'db/data.dart';
 import 'db/data_getter.dart';
+
+/*
+* [Общая информация]
+*
+* Если у данных ревизия = 0 - это значит, что данные не синхронизованны с внешней БД
+* Синхронизация доступна только для типов данных заканчивающихсяна на RSync (Remote Synchronization) в текущий момент это единственный тип: userDataRSync
+*
+* Возможные сценарии значений:
+* [0] При вставке по умолчанию
+* [0] При обновлении если устаноавлен флаг updateIfExist = true и onUpdateNeedSync = true
+* [~] При вставке с предзаполненным revision
+* [~] При обновлении данных если updateIfExist = true и onUpdateNeedSync = false и cloneFieldIfNull = true
+* */
 
 class DataSync {
   static final DataSync _singleton = DataSync._internal();
@@ -31,8 +45,8 @@ class DataSync {
         await cron!.close();
       }
       cron = Cron();
-      cron!.schedule(Schedule.parse(template), handler);
-      handler();
+      cron!.schedule(Schedule.parse(template), sync);
+      sync();
     } catch (e, stacktrace) {
       if (kDebugMode) {
         print("Exception: $e; Stacktrace: $stacktrace");
@@ -40,22 +54,14 @@ class DataSync {
     }
   }
 
-  void handler() async {
+  void sync() async {
     if (isActive && !isRun) {
+      isRun = true;
       int start = Util.getTimestamp();
       int allInsertion = 0;
-      isRun = true;
       try {
         int counter = 0;
         Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
-        for (DataType dataType in DataType.values) {
-          if (!maxRevisionByType.containsKey(dataType.name)) {
-            if (dataType != DataType.virtual) {
-              maxRevisionByType[dataType.name] = 0;
-            }
-          }
-        }
-        //print("Max: $maxRevisionByType");
         while (true) {
           if (counter > 20) {
             if (kDebugMode) {
@@ -64,15 +70,23 @@ class DataSync {
             break;
           }
           counter++;
-
-          print("Request: $maxRevisionByType");
+          Map<String, dynamic> request = {
+            "maxRevisionByType": maxRevisionByType,
+            "notRSync": Storage().get("isAuth", "false") == "true" ? await DataGetter.getNotRSync() : [], //Добавляем только в том случаи если пользователь авторизовался, а то на сервере не к чему будет привязывать данные
+          };
+          if (kDebugMode) {
+            print("DataSync.sync() ${Util.jsonPretty(request)}");
+          }
           Response response = await Util.asyncInvokeIsolate((args) {
-            return HttpClient.post("${GlobalSettings.host}/sync", args["body"], args["headers"]);
+            return HttpClient.post("${args["host"]}/sync", args["body"], args["headers"]);
           }, {
             "headers": HttpClient.upgradeHeadersAuthorization({}),
-            "body": maxRevisionByType,
+            "body": request,
+            "host": GlobalSettings().host,
           });
-          //print("ResponseCode: ${response.statusCode}");
+          if (kDebugMode) {
+            print("ResponseCode: ${response.statusCode} Response: ${response.body}");
+          }
           if (response.statusCode == 200) {
             int insertion = 0;
             Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
@@ -81,17 +95,20 @@ class DataSync {
               DataType dataType = Util.dataTypeValueOf(item.key);
               List<dynamic> list = item.value;
               for (Map<String, dynamic> curData in list) {
-                Data dataObject = Data(curData['uuid'], curData['value'], dataType, curData['parent_uuid']);
-                dataObject.dateAdd = curData['date_add'];
-                dataObject.dateUpdate = curData['date_update'];
-                dataObject.key = curData['key'];
-                dataObject.revision = curData['revision'];
-                dataObject.isRemove = curData['is_remove'];
-                //print(dataObject.revision);
-                DataSource().setData(dataObject);
-                maxRevisionByType[dataType.name] = dataObject.revision!;
-                insertion++;
-                allInsertion++;
+                if (curData['uuid'] != null && curData['uuid'] != "") {
+                  Data dataObject = Data(curData['uuid'], curData['value'], dataType, curData['parent_uuid']);
+                  dataObject.dateAdd = curData['date_add'];
+                  dataObject.dateUpdate = curData['date_update'];
+                  dataObject.key = curData['key'];
+                  dataObject.revision = curData['revision'];
+                  dataObject.onUpdateResetRevision = false;
+                  dataObject.cloneFieldIfNull = true;
+                  dataObject.isRemove = curData['is_remove'];
+                  DataSource().setData(dataObject);
+                  maxRevisionByType[dataType.name] = dataObject.revision!;
+                  insertion++;
+                  allInsertion++;
+                }
               }
             }
             if (insertion == 0) {
@@ -110,7 +127,9 @@ class DataSync {
           print(stacktrace);
         }
       }
-      print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion");
+      if (kDebugMode) {
+        print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion");
+      }
       isRun = false;
     }
   }
@@ -118,7 +137,9 @@ class DataSync {
   void init() {
     DataSource().onChange("DataSync.json", (data) {
       if (data != null) {
-        print("DataSync.init.onChange() => $data");
+        if (kDebugMode) {
+          print("DataSync.init.onChange() => $data");
+        }
         restart(data["cron"]);
       }
     });

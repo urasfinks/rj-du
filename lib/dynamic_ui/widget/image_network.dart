@@ -10,7 +10,7 @@ class ImageNetworkWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String src = getValue(parsedJson, 'src', null, dynamicUIBuilderContext);
     if (!src.startsWith("http")) {
-      src = "${GlobalSettings.host}$src";
+      src = "${GlobalSettings().host}$src";
     }
     return Image.network(
       src,

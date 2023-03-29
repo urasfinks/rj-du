@@ -16,8 +16,13 @@ class RjDu {
   static void init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Storage().init();
+    GlobalSettings().init();
+
     Storage().set('uuid', const Uuid().v4(), false);
-    Storage().set('version', GlobalSettings.version, false);
+    Storage().set('version', GlobalSettings().version, false);
+    Storage().set('isAuth', "false", false);
+
+    GlobalSettings().setHost("http://192.168.0.20:8453");
 
     DataSource().init();
     DynamicInvoke().init();

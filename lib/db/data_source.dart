@@ -59,7 +59,7 @@ class DataSource {
     debugPrint('flushQueue complete: $count');
   }
 
-  void set(String uuid, dynamic value, DataType? type, [String? key, String? parent, bool updateIfExist = true]) {
+  void set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.updateIfExist = updateIfExist;
@@ -97,23 +97,25 @@ class DataSource {
 
   void updateNullable(Data curData, dynamic dbResult) {
     if (curData.cloneFieldIfNull) {
+      curData.value ??= dbResult['value_data'];
       curData.parentUuid ??= dbResult['parent_uuid_data'];
       curData.key ??= dbResult['key_data'];
       curData.dateAdd ??= dbResult['date_add_data'];
       curData.dateUpdate ??= dbResult['date_update_data'];
       curData.revision ??= dbResult['revision_data'];
       curData.isRemove ??= dbResult['is_remove_data'];
-      curData.type ??= Util.dataTypeValueOf(dbResult['type_data']);
+    }
+    if (curData.onUpdateResetRevision && curData.type.runtimeType.toString().endsWith("RSync")) {
+      curData.revision = 0;
     }
   }
 
   void update(Data curData, String dataString) {
-    curData.type ??= DataType.any;
     db.rawUpdate(
       'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
       [
         dataString,
-        curData.type!.name,
+        curData.type.name,
         curData.parentUuid,
         curData.key,
         curData.dateAdd,
@@ -131,13 +133,12 @@ class DataSource {
 
   void insert(Data curData, String dataString) {
     //print('INSERT $curData');
-    curData.type ??= DataType.any;
     db.rawInsert(
       'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         curData.uuid,
         dataString,
-        curData.type!.name,
+        curData.type.name,
         curData.parentUuid,
         curData.key,
         curData.dateAdd ??= Util.getTimestamp(),
@@ -163,7 +164,7 @@ class DataSource {
         runtimeData = curData.value;
       }
     } else {
-      runtimeData = {curData.type!.name: curData.value};
+      runtimeData = {curData.type.name: curData.value};
     }
     //Оповещение для перестройки страниц
     if (isJsonDataType(curData.type)) {

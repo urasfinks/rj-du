@@ -50,7 +50,7 @@ class HttpClient {
   }
 
   static void onUpdateDeviceUuid(String value) {
-    String decoded = base64.encode(utf8.encode("${GlobalSettings.version}:$value"));
+    String decoded = base64.encode(utf8.encode("${GlobalSettings().version}:$value"));
     cacheAuthorizationBase64 = "Basic $decoded";
   }
 }
