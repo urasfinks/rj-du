@@ -160,7 +160,7 @@ class DynamicPage extends StatefulWidget {
 class _DynamicPage extends State<DynamicPage> {
   @override
   void initState() {
-    NavigatorApp.allDynamicPage.add(widget);
+    NavigatorApp.addPage(widget);
     super.initState();
   }
 

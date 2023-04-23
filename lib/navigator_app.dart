@@ -10,6 +10,10 @@ class NavigatorApp {
   static Map<int, List<DynamicPage>> tabNavigator = {};
   static BottomTabState? bottomTabState;
 
+  static void addPage(DynamicPage dynamicPage) {
+    allDynamicPage.add(dynamicPage);
+  }
+
   static void addNavigatorPage(DynamicPage dynamicPage, [int? indexTab]) {
     indexTab ??= selectedTab;
     if (!tabNavigator.containsKey(indexTab)) {

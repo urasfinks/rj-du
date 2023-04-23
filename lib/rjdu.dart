@@ -22,8 +22,6 @@ class RjDu {
     Storage().set('version', GlobalSettings().version, false);
     Storage().set('isAuth', "false", false);
 
-    GlobalSettings().setHost("http://192.168.0.20:8453");
-
     DataSource().init();
     DynamicInvoke().init();
     HttpClient.init();

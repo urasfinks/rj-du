@@ -75,8 +75,9 @@ class DataSync {
             "notRSync": Storage().get("isAuth", "false") == "true" ? await DataGetter.getNotRSync() : [], //Добавляем только в том случаи если пользователь авторизовался, а то на сервере не к чему будет привязывать данные
           };
           if (kDebugMode) {
-            print("DataSync.sync() ${Util.jsonPretty(request)}");
+            print("DataSync.sync(${GlobalSettings().host}/sync) ${Util.jsonPretty(request)}");
           }
+
           Response response = await Util.asyncInvokeIsolate((args) {
             return HttpClient.post("${args["host"]}/sync", args["body"], args["headers"]);
           }, {
