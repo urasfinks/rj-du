@@ -127,7 +127,7 @@ class DynamicPage extends StatefulWidget {
   State<DynamicPage> createState() => _DynamicPage();
 
   void updateNotifier(String uuid, Map<String, dynamic> data) {
-    //print("DynamicPage.updateNotifier() pageUuid: ${this.uuid}; updUuid: $uuid");
+    //print("DynamicPage.updateNotifier() pageUuid: ${this.uuid}; updUuid: $uuid; arg: ${arguments["link"]}; data: $data");
     dynamicPageNotifier.updateNotifier(uuid, data);
     // listenUuid содержит uuid отображённых данных без NotifyWidget
     // Например в ChildrenExtension

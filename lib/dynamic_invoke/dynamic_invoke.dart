@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/foundation.dart';
 import '../db/data_source.dart';
+import '../dynamic_page.dart';
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../navigator_app.dart';
 import 'package:flutter_js/flutter_js.dart';
@@ -36,7 +37,6 @@ class DynamicInvoke {
   DynamicInvoke._internal();
 
   JavascriptRuntime? javascriptRuntime;
-  DynamicUIBuilderContext? lastDynamicUIBuilderContext;
 
   Map<String, Function> handler = {
     'NavigatorPush': NavigatorPushHandler().handle,
@@ -64,7 +64,13 @@ class DynamicInvoke {
     for (MapEntry<String, Function> item in handler.entries) {
       javascriptRuntime!.onMessage(item.key, (dynamic args) {
         //print("onMessage: args: $args");
-        dynamic result = sysInvoke(item.key, args, lastDynamicUIBuilderContext!, true);
+        String pageUuid = args["_rjduPageUuid"];
+        args.removeWhere((key, value) => key == "_rjduPageUuid");
+        DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
+        dynamic result;
+        if(pageByUuid != null){
+          result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
+        }
         //print("onMessage [${item.key}]($args) => $result");
         if (result == null) {
           return null;
@@ -174,10 +180,10 @@ class DynamicInvoke {
     }
 
     dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
-    lastDynamicUIBuilderContext = dynamicUIBuilderContext;
     DataSource().get(uuid, (data) {
       if (data != null && data.containsKey(DataType.js.name)) {
         String? result = _eval(
+          dynamicUIBuilderContext.dynamicPage.uuid,
           data[DataType.js.name],
           json.encode(args),
           includeContext ? json.encode(dynamicUIBuilderContext.data) : '',
@@ -198,7 +204,7 @@ class DynamicInvoke {
     });
   }
 
-  String? _eval(
+  String? _eval( String pageUuid,
       String js, String args, String context, String container, String state, String pageArgs) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
@@ -215,7 +221,8 @@ class DynamicInvoke {
     if (pageArgs.isNotEmpty) {
       pageArgs = "bridge.pageArgs = $pageArgs;";
     }
-    String jsCode = "bridge.clearAll();$args\n$context\n$container\n$state\n$pageArgs\n$js";
+    pageUuid = "bridge.pageUuid = '$pageUuid';";
+    String jsCode = "bridge.clearAll();\n$pageUuid\n$args\n$context\n$container\n$state\n$pageArgs\n$js";
     //print("\n\nJS CODE BLOCK======================\n$jsCode\n===================FINISH BLOCK\n\n");
     return javascriptRuntime!.evaluate(jsCode).stringResult;
   }

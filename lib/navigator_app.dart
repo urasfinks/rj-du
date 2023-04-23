@@ -14,6 +14,15 @@ class NavigatorApp {
     allDynamicPage.add(dynamicPage);
   }
 
+  static DynamicPage? getPageByUuid(String uuid) {
+    for (DynamicPage dynamicPage in allDynamicPage) {
+      if(dynamicPage.uuid == uuid){
+        return dynamicPage;
+      }
+    }
+    return null;
+  }
+
   static void addNavigatorPage(DynamicPage dynamicPage, [int? indexTab]) {
     indexTab ??= selectedTab;
     if (!tabNavigator.containsKey(indexTab)) {
