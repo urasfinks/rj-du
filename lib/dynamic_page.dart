@@ -37,14 +37,19 @@ class DynamicPage extends StatefulWidget {
       isRunConstructor = true;
       constructorArguments = parsedJson;
       if (constructorArguments.isNotEmpty) {
-        AbstractWidget.clickStatic(constructorArguments, dynamicUIBuilderContext, "constructor");
+        AbstractWidget.clickStatic(
+            constructorArguments, dynamicUIBuilderContext, "constructor");
       }
     }
   }
 
   void reload() {
     isRunConstructor = false;
-    constructor(constructorArguments);
+    if (dynamicPageSate != null) {
+      dynamicPageSate!.setState(() {});
+    } else {
+      constructor(constructorArguments);
+    }
   }
 
   void setStateDataMap(Map<String, dynamic> map) {
@@ -80,7 +85,8 @@ class DynamicPage extends StatefulWidget {
     return defValue;
   }
 
-  void setContainer(String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void setContainer(
+      String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     container[key] = dynamicUIBuilderContext;
     if (key == "root") {
       dynamicUIBuilderContext.isRoot = true;
@@ -99,7 +105,9 @@ class DynamicPage extends StatefulWidget {
     if (NavigatorApp.getLast() == this) {
       if (container.containsKey("root") &&
           container["root"]!.data.containsKey("template") &&
-          container["root"]!.data["template"]!.containsKey("floatingActionButton")) {
+          container["root"]!
+              .data["template"]!
+              .containsKey("floatingActionButton")) {
         DynamicInvoke().sysInvoke(
           "DataSourceSet",
           {
@@ -122,6 +130,8 @@ class DynamicPage extends StatefulWidget {
       }
     }
   }
+
+  _DynamicPage? dynamicPageSate;
 
   @override
   State<DynamicPage> createState() => _DynamicPage();
@@ -160,6 +170,7 @@ class DynamicPage extends StatefulWidget {
 class _DynamicPage extends State<DynamicPage> {
   @override
   void initState() {
+    widget.dynamicPageSate = this;
     NavigatorApp.addPage(widget);
     super.initState();
   }
@@ -173,11 +184,13 @@ class _DynamicPage extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
-    //DataSource().dataMigration.loadAssetsData();
     widget.context = context;
-    dynamic resultWidget = DynamicUI.render(widget.arguments, null, const SizedBox(), widget.dynamicUIBuilderContext);
-    if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {
-      return Text("DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+    dynamic resultWidget = DynamicUI.render(widget.arguments, null,
+        const SizedBox(), widget.dynamicUIBuilderContext);
+    if (resultWidget == null ||
+        resultWidget.runtimeType.toString().contains('Map<String,')) {
+      return Text(
+          "DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;
   }
