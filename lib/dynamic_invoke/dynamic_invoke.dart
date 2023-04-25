@@ -14,6 +14,7 @@ import 'handler/copy_clipboard_handler.dart';
 import 'handler/data_source_set_handler.dart';
 import 'handler/db_to_state_data_handler.dart';
 import 'handler/hide_keyboard_handler.dart';
+import 'handler/http_handler.dart';
 import 'handler/navigator_push_handler.dart';
 import 'handler/page_reload_handler.dart';
 import 'handler/reset_text_controller_handler.dart';
@@ -56,6 +57,7 @@ class DynamicInvoke {
     'HideKeyboard': HideKeyboardHandler().handle,
     'ResetTextController': ResetTextControllerHandler().handle,
     'PageReload': PageReloadHandler().handle,
+    'Http': HttpHandler().handle,
   };
 
   init() {
