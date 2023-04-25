@@ -15,6 +15,7 @@ import 'http_client.dart';
 class RjDu {
   static void init() async {
     WidgetsFlutterBinding.ensureInitialized();
+    DynamicInvoke().init();
     await Storage().init();
     GlobalSettings().init();
 
@@ -23,7 +24,7 @@ class RjDu {
     Storage().set('isAuth', "false", false);
 
     DataSource().init();
-    DynamicInvoke().init();
+
     HttpClient.init();
     Translate().init();
     DataSync().init();

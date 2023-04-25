@@ -24,7 +24,7 @@ class DynamicPage extends StatefulWidget {
   final String uuid = const Uuid().v4();
   bool isRunConstructor = false;
   List<String> shadowUuidList = [];
-  Map<String, dynamic> constructorArguments = {};
+  _DynamicPage? dynamicPageSate;
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
@@ -32,13 +32,14 @@ class DynamicPage extends StatefulWidget {
     dynamicUIBuilderContext = DynamicUIBuilderContext(this);
   }
 
-  void constructor(Map<String, dynamic> parsedJson) {
+  void constructor() {
+    //print(arguments);
     if (!isRunConstructor) {
       isRunConstructor = true;
-      constructorArguments = parsedJson;
-      if (constructorArguments.isNotEmpty) {
+      if (arguments.containsKey("constructor") &&
+          arguments["constructor"].isNotEmpty) {
         AbstractWidget.clickStatic(
-            constructorArguments, dynamicUIBuilderContext, "constructor");
+            arguments, dynamicUIBuilderContext, "constructor");
       }
     }
   }
@@ -47,8 +48,6 @@ class DynamicPage extends StatefulWidget {
     isRunConstructor = false;
     if (dynamicPageSate != null) {
       dynamicPageSate!.setState(() {});
-    } else {
-      constructor(constructorArguments);
     }
   }
 
@@ -131,8 +130,6 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  _DynamicPage? dynamicPageSate;
-
   @override
   State<DynamicPage> createState() => _DynamicPage();
 
@@ -185,6 +182,7 @@ class _DynamicPage extends State<DynamicPage> {
   @override
   Widget build(BuildContext context) {
     widget.context = context;
+    widget.constructor();
     dynamic resultWidget = DynamicUI.render(widget.arguments, null,
         const SizedBox(), widget.dynamicUIBuilderContext);
     if (resultWidget == null ||
