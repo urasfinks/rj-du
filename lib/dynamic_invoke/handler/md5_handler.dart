@@ -5,7 +5,8 @@ import 'package:crypto/crypto.dart';
 
 class MD5Handler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return md5.convert(utf8.encode(args["data"])).toString();
+  handle(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    return {"md5": md5.convert(utf8.encode(args["data"])).toString()};
   }
 }
