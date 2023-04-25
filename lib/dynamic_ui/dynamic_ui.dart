@@ -32,6 +32,7 @@ import 'package:rjdu/dynamic_ui/widget/limited_box_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/list_view_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/margin_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_app_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
@@ -127,6 +128,7 @@ class DynamicUI {
     'TextField': TextFieldWidget().get,
     'GestureDetector': GestureDetectorWidget().get,
     'Material': MaterialWidget().get,
+    'MaterialButton': MaterialButtonWidget().get,
 
     //Property
     'TextStyle': TextStyleProperty().get,
