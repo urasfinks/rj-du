@@ -13,7 +13,7 @@ class ElevatedButtonIconWidget extends AbstractWidget {
       },
       style: render(parsedJson, 'style', null, dynamicUIBuilderContext),
       icon: render(parsedJson, 'icon', null, dynamicUIBuilderContext),
-      label: getValue(parsedJson, 'label', null, dynamicUIBuilderContext),
+      label: render(parsedJson, 'label', null, dynamicUIBuilderContext),
     );
   }
 }
