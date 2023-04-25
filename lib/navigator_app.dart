@@ -56,7 +56,7 @@ class NavigatorApp {
     }
   }
 
-  static void reloadPage(String key, String value) {
+  static void reloadPageByArguments(String key, String value) {
     for (DynamicPage dynamicPage in allDynamicPage) {
       if (dynamicPage.arguments.containsKey(key) && dynamicPage.arguments[key] == value) {
         dynamicPage.reload();
