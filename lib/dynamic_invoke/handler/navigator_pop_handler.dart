@@ -1,3 +1,5 @@
+import 'package:rjdu/dynamic_page.dart';
+
 import '../../navigator_app.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -5,8 +7,10 @@ import 'package:flutter/material.dart';
 
 class NavigatorPopHandler extends AbstractHandler {
   @override
-  dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    int indexTab = args.containsKey('tab') ? args['tab'] : NavigatorApp.selectedTab;
+  dynamic handle(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    int indexTab =
+        args.containsKey('tab') ? args['tab'] : NavigatorApp.selectedTab;
     int count = args.containsKey('count') ? args['count'] : 1;
     if (args.containsKey('toBegin')) {
       count = 9999; //break остановит
@@ -18,6 +22,17 @@ class NavigatorPopHandler extends AbstractHandler {
       });
     } else {
       pop(count, indexTab, args);
+    }
+    updateLast(args, indexTab);
+  }
+
+  void updateLast(Map<String, dynamic> args, int indexTab) {
+    DynamicPage dynamicPage = NavigatorApp.getLast(indexTab)!;
+    if (args.containsKey("setStateDataMap")) {
+      dynamicPage.setStateDataMap(args["setStateDataMap"]);
+    }
+    if (args.containsKey("reloadParent")) {
+      dynamicPage.reload();
     }
   }
 
