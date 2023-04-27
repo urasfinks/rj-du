@@ -29,13 +29,24 @@ class Util {
     return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 
-  static String path2(Map<String, dynamic> data, String path, [String defaultValue = ""]) {
+  static String path2(Map<String, dynamic> data, String path,
+      [String defaultValue = ""]) {
+    if (defaultValue == "") {
+      defaultValue = "[$path]";
+    }
     List<String> exp = path.split(".");
     dynamic cur = data;
+    bool find = true;
     for (String key in exp) {
       if (cur != null && cur[key] != null) {
         cur = cur[key];
+      } else {
+        find = false;
+        break;
       }
+    }
+    if (!find) {
+      return defaultValue;
     }
     if (cur.runtimeType.toString() == "bool") {
       return cur == true ? "true" : "false";
@@ -64,10 +75,14 @@ class Util {
         cur = cur[key];
       }
     }
-    return cur != null ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"") : "null";
+    return cur != null
+        ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"")
+        : "null";
   }
 
-  static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext, [bool autoEscape = true]) {
+  static String template(
+      String template, DynamicUIBuilderContext dynamicUIBuilderContext,
+      [bool autoEscape = true]) {
     List<String> exp = template.split('\${');
 
     for (String expItem in exp) {
@@ -80,17 +95,21 @@ class Util {
       }
       String templateName = exp2[0];
       List<String> expDirective = exp2[0].split("|");
-      String value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext);
+      String value =
+          parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext);
       // if (autoEscape == true && expDirective.isEmpty) {
       //   value = jsonStringEscape(value);
       // }
       if (expDirective.isNotEmpty) {
         for (String directive in expDirective) {
-          for (MapEntry<String,
-                  String Function(String? data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
+          for (MapEntry<
+                  String,
+                  String Function(String? data, List<String> arguments,
+                      DynamicUIBuilderContext dynamicUIBuilderContext)> item
               in templateDirective.entries) {
             if (directive.startsWith("${item.key}(")) {
-              List<String> arguments = parseArguments(directive.substring(item.key.length + 1, directive.length - 1));
+              List<String> arguments = parseArguments(directive.substring(
+                  item.key.length + 1, directive.length - 1));
               value = item.value(value, arguments, dynamicUIBuilderContext);
               break;
             }
@@ -102,7 +121,10 @@ class Util {
     return template;
   }
 
-  static Map<String, String Function(String? data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)>
+  static Map<
+          String,
+          String Function(String? data, List<String> arguments,
+              DynamicUIBuilderContext dynamicUIBuilderContext)>
       templateDirective = {
     "escape": (data, arguments, ctx) {
       return data != null ? jsonStringEscape(data) : '';
@@ -122,20 +144,23 @@ class Util {
         /*if (data.length == 10) {
           x *= 1000;
         }*/
-        return DateFormat(arguments[0]).format(DateTime.fromMillisecondsSinceEpoch(x));
+        return DateFormat(arguments[0])
+            .format(DateTime.fromMillisecondsSinceEpoch(x));
       }
       return "timestampToDate exception; Data: $data; Args: $arguments";
     }
   };
 
-  static Map<String,
-          String Function(Map<String, dynamic> data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)>
-      templateFunction = {
+  static Map<
+      String,
+      String Function(Map<String, dynamic> data, List<String> arguments,
+          DynamicUIBuilderContext dynamicUIBuilderContext)> templateFunction = {
     "context": (data, arguments, ctx) {
       return mapSelector(data, arguments);
     },
     "state": (data, arguments, ctx) {
-      return mapSelector(getMutableMap(ctx.dynamicPage.stateData.value), arguments);
+      return mapSelector(
+          getMutableMap(ctx.dynamicPage.stateData.value), arguments);
     },
     "pageArgument": (data, arguments, ctx) {
       return mapSelector(ctx.dynamicPage.arguments, arguments);
@@ -151,18 +176,21 @@ class Util {
     }
   };
 
-  static String parseTemplateQuery(String query, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static String parseTemplateQuery(
+      String query, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!query.contains("(")) {
       query = "context($query)";
     }
     for (MapEntry<
             String,
-            String Function(
-                Map<String, dynamic> data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
+            String Function(Map<String, dynamic> data, List<String> arguments,
+                DynamicUIBuilderContext dynamicUIBuilderContext)> item
         in templateFunction.entries) {
       if (query.startsWith("${item.key}(")) {
-        List<String> arguments = parseArguments(query.substring(item.key.length + 1, query.length - 1));
-        return item.value(dynamicUIBuilderContext.data, arguments, dynamicUIBuilderContext);
+        List<String> arguments = parseArguments(
+            query.substring(item.key.length + 1, query.length - 1));
+        return item.value(
+            dynamicUIBuilderContext.data, arguments, dynamicUIBuilderContext);
       }
     }
     return "Undefined handler for: $query";
@@ -210,7 +238,8 @@ class Util {
     return escaped;
   }
 
-  static Map<String, dynamic> merge(Map<String, dynamic> def, Map<String, dynamic>? input) {
+  static Map<String, dynamic> merge(
+      Map<String, dynamic> def, Map<String, dynamic>? input) {
     if (input == null || input.isEmpty) {
       return def;
     }
@@ -220,9 +249,11 @@ class Util {
     return def;
   }
 
-  static String intLPad(int i, {int pad = 0, String char = "0"}) => i.toString().padLeft(pad, char);
+  static String intLPad(int i, {int pad = 0, String char = "0"}) =>
+      i.toString().padLeft(pad, char);
 
-  static String intRPad(int i, {int pad = 0, String char = "0"}) => i.toString().padRight(pad, char);
+  static String intRPad(int i, {int pad = 0, String char = "0"}) =>
+      i.toString().padRight(pad, char);
 
   static bool isIndexKey(dynamic data) {
     if (data.runtimeType.toString().contains("Map<")) {
@@ -293,13 +324,15 @@ class Util {
     return true;
   }
 
-  static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) async {
+  static Future<dynamic> asyncInvokeIsolate(
+      Function(dynamic arg) fn, dynamic arg) async {
     if (arg != null) {
       return await compute(fn, arg);
     }
   }
 
-  static Future<void> asyncInvoke(Function(dynamic args) fn, dynamic args) async {
+  static Future<void> asyncInvoke(
+      Function(dynamic args) fn, dynamic args) async {
     Future<void>.delayed(Duration.zero).then((_) {
       fn(args);
     });
