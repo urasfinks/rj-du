@@ -19,23 +19,28 @@ class ThemeProvider {
             inversePrimary: Colors.black,
             onBackground: TypeParser.parseColor("#ffffff"), //e9e9eb
           ),
-      floatingActionButtonTheme: ThemeData.light().floatingActionButtonTheme.copyWith(
-            backgroundColor: TypeParser.parseColor("#f5f5f5"),
-            foregroundColor: Colors.black,
-            elevation: 0,
-            disabledElevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-          ),
-      bottomNavigationBarTheme: ThemeData.light().bottomNavigationBarTheme.copyWith(
-            elevation: 0,
-            selectedItemColor: Colors.black,
-            selectedIconTheme: const IconThemeData(color: Colors.black),
-            unselectedIconTheme: IconThemeData(color: Colors.grey[500]),
-            backgroundColor: TypeParser.parseColor("#f9f9f9"),
-          ),
+      floatingActionButtonTheme:
+          ThemeData.light().floatingActionButtonTheme.copyWith(
+                backgroundColor: TypeParser.parseColor("#f5f5f5"),
+                foregroundColor: Colors.black,
+                elevation: 0,
+                disabledElevation: 0,
+                focusElevation: 0,
+                hoverElevation: 0,
+                highlightElevation: 0,
+              ),
+      bottomNavigationBarTheme:
+          ThemeData.light().bottomNavigationBarTheme.copyWith(
+                elevation: 0,
+                selectedItemColor: Colors.black,
+                selectedIconTheme: const IconThemeData(color: Colors.black),
+                unselectedIconTheme: IconThemeData(color: Colors.grey[500]),
+                backgroundColor: TypeParser.parseColor("#f9f9f9"),
+              ),
       scaffoldBackgroundColor: TypeParser.parseColor("#f5f5f5"),
+      textSelectionTheme: ThemeData.dark().textSelectionTheme.copyWith(
+            cursorColor: Colors.black,
+          ),
     );
   }
 
@@ -54,23 +59,28 @@ class ThemeProvider {
             inversePrimary: Colors.white,
             onBackground: Colors.grey[900],
           ),
-      floatingActionButtonTheme: ThemeData.dark().floatingActionButtonTheme.copyWith(
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            disabledElevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-          ),
-      bottomNavigationBarTheme: ThemeData.dark().bottomNavigationBarTheme.copyWith(
-            elevation: 0,
-            selectedItemColor: Colors.white,
-            selectedIconTheme: const IconThemeData(color: Colors.white),
-            unselectedIconTheme: IconThemeData(color: Colors.grey[600]),
-            backgroundColor: Colors.grey[900],
-          ),
+      floatingActionButtonTheme:
+          ThemeData.dark().floatingActionButtonTheme.copyWith(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                disabledElevation: 0,
+                focusElevation: 0,
+                hoverElevation: 0,
+                highlightElevation: 0,
+              ),
+      bottomNavigationBarTheme:
+          ThemeData.dark().bottomNavigationBarTheme.copyWith(
+                elevation: 0,
+                selectedItemColor: Colors.white,
+                selectedIconTheme: const IconThemeData(color: Colors.white),
+                unselectedIconTheme: IconThemeData(color: Colors.grey[600]),
+                backgroundColor: Colors.grey[900],
+              ),
       scaffoldBackgroundColor: Colors.black,
+      textSelectionTheme: ThemeData.dark().textSelectionTheme.copyWith(
+            cursorColor: Colors.white,
+          ),
     );
   }
 }
