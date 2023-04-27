@@ -4,6 +4,7 @@ import '../dynamic_ui_builder_context.dart';
 import '../widget/abstract_widget.dart';
 import '../../bottom_tab.dart';
 import '../../theme_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MaterialAppWidget extends AbstractWidget {
   @override
@@ -14,6 +15,15 @@ class MaterialAppWidget extends AbstractWidget {
       darkTheme: ThemeProvider.darkThemeData(),
       themeMode: ThemeMode.system,
       home: BottomTab(dynamicUIBuilderContext),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('ru'), // Spanish
+      ],
     );
   }
 }
