@@ -94,7 +94,8 @@ class TypeParser {
     } else if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
       try {
-        return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
+        return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!,
+            parseDouble(l[3])!);
       } catch (e) {}
       return Colors.pink;
     } else if (value.startsWith("#")) {
@@ -102,14 +103,18 @@ class TypeParser {
     } else if (value.contains(".")) {
       try {
         List<String> l = value.split(".");
-        MaterialColor? x = (mapAssocNameColor.containsKey(l[0]) ? mapAssocNameColor[l[0]] : null) as MaterialColor?;
+        MaterialColor? x = (mapAssocNameColor.containsKey(l[0])
+            ? mapAssocNameColor[l[0]]
+            : null) as MaterialColor?;
         if (x != null) {
           return x[parseInt(l[1])!];
         }
       } catch (e) {}
       return null;
     } else {
-      return mapAssocNameColor.containsKey(value) ? mapAssocNameColor[value] : null;
+      return mapAssocNameColor.containsKey(value)
+          ? mapAssocNameColor[value]
+          : null;
     }
   }
 
@@ -218,7 +223,9 @@ class TypeParser {
           ret.add(d);
         }
       }
-      if (parsedJson.runtimeType.toString().startsWith("_InternalLinkedHashMap<String, dynamic>")) {
+      if (parsedJson.runtimeType
+          .toString()
+          .startsWith("_InternalLinkedHashMap<String, dynamic>")) {
         Map x = parsedJson;
         for (var item in x.entries) {
           ret.add(item.value);
@@ -239,7 +246,9 @@ class TypeParser {
           }
         }
       }
-      if (parsedJson.runtimeType.toString().startsWith("_InternalLinkedHashMap<String, dynamic>")) {
+      if (parsedJson.runtimeType
+          .toString()
+          .startsWith("_InternalLinkedHashMap<String, dynamic>")) {
         Map x = parsedJson;
         for (var item in x.entries) {
           Color? x = parseColor(item.value);
@@ -290,6 +299,22 @@ class TypeParser {
       'stretch': CrossAxisAlignment.stretch,
     };
     return map.containsKey(value) ? map[value] : null;
+  }
+
+  static MaterialType? parseMaterialType(dynamic value) {
+    switch (value) {
+      case "transparency":
+        return MaterialType.transparency;
+      case "button":
+        return MaterialType.button;
+      case "canvas":
+        return MaterialType.canvas;
+      case "card":
+        return MaterialType.card;
+      case "circle":
+        return MaterialType.circle;
+    }
+    return null;
   }
 
   static BorderRadius? parseBorderRadius(dynamic value) {

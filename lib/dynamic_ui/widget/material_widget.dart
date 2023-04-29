@@ -8,6 +8,9 @@ class MaterialWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Material(
+      type: TypeParser.parseMaterialType(
+          getValue(parsedJson, 'type', 'canvas', dynamicUIBuilderContext)
+      )!,
       key: Util.getKey(),
       borderRadius: TypeParser.parseBorderRadius(
         getValue(parsedJson, 'borderRadius', null, dynamicUIBuilderContext),
