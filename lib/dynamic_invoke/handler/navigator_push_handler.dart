@@ -9,66 +9,131 @@ class NavigatorPushHandler extends AbstractHandler {
   dynamic handle(Map<String, dynamic> args,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> dataPage = args;
-    bool modalBottomSheet =
-        args.containsKey('modalBottomSheet') && args['modalBottomSheet'] == true;
+
+    String type = args.containsKey("type") ? args["type"] : "Window";
+    if (!["Window", "BottomSheet", "Dialog"].contains(type)) {
+      type = "Window";
+    }
+
     bool raw = args.containsKey('raw') && args['raw'] == true;
     BuildContext buildContext = args.containsKey('tab')
         ? NavigatorApp.tab[args['tab']].context
         : NavigatorApp.tab[NavigatorApp.selectedTab].context;
-    if (modalBottomSheet) {
-      if (!raw) {
-        dataPage.addAll({
-          'flutterType': 'Notify',
-          'link': args.containsKey('uuid')
-              ? {'template': args['uuid']}
-              : args['link'],
-          'linkContainer': 'root',
-          'linkDefault': {
-            'template': {
-              'flutterType': 'Text',
-              'label': 'Hello world'
-            }
-          }
-        });
-      }
-      showModalBottomSheet(
-          context: buildContext,
-          builder: (context) {
-            DynamicPage dynamicPage = DynamicPage(dataPage);
-            NavigatorApp.addNavigatorPage(dynamicPage);
-            return dynamicPage;
-          });
-    } else {
-      if (!raw) {
-        dataPage.addAll({
-          'flutterType': 'Notify',
-          'link': args.containsKey('uuid')
-              ? {'template': args['uuid']}
-              : args['link'],
-          'linkContainer': 'root',
-          'linkDefault': {
-            'template': {
-              'flutterType': 'Scaffold',
-              'appBar': {
-                'flutterType': 'AppBar',
-                'title': {'flutterType': 'Text', 'label': args['label']}
-              }
-            }
-          }
-        });
-      }
 
-      Navigator.push(
-        buildContext,
-        MaterialPageRoute(
-          fullscreenDialog: args['fullscreenDialog'] ?? false,
-          builder: (context) {
-            DynamicPage dynamicPage = DynamicPage(dataPage);
-            NavigatorApp.addNavigatorPage(dynamicPage);
-            return dynamicPage;
-          },
-        ),
+    switch (type) {
+      case "BottomSheet":
+        bottomSheet(buildContext, raw, dataPage);
+        break;
+      case "Dialog":
+        dialog(buildContext, raw, dataPage);
+        break;
+      default:
+        window(buildContext, raw, dataPage);
+        break;
+    }
+  }
+
+  void dialog(
+      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+    if (!raw) {
+      dataPage.addAll(
+        {
+          'name': dataPage.containsKey('name') ? dataPage['name'] : '',
+          'flutterType': 'Notify',
+          'link': dataPage.containsKey('uuid')
+              ? {'template': dataPage['uuid']}
+              : dataPage['link'],
+          'linkContainer': 'root',
+          'linkDefault': dataPage.containsKey('linkDefault')
+              ? dataPage['linkDefault']
+              : {
+                  'template': {'flutterType': 'Text', 'label': ''}
+                }
+        },
       );
     }
+    showGeneralDialog(
+      context: buildContext,
+      pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
+        DynamicPage dynamicPage = DynamicPage(dataPage);
+        NavigatorApp.addNavigatorPage(dynamicPage);
+        return dynamicPage;
+      },
+    );
+  }
+
+  void bottomSheet(
+      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+    if (!raw) {
+      dataPage.addAll(
+        {
+          'name': dataPage.containsKey('name') ? dataPage['name'] : '',
+          'flutterType': 'Notify',
+          'link': dataPage.containsKey('uuid')
+              ? {'template': dataPage['uuid']}
+              : dataPage['link'],
+          'linkContainer': 'root',
+          'linkDefault': dataPage.containsKey('linkDefault')
+              ? dataPage['linkDefault']
+              : {
+                  'template': {'flutterType': 'Text', 'label': ''}
+                }
+        },
+      );
+    }
+    showModalBottomSheet(
+      context: buildContext,
+      builder: (context) {
+        DynamicPage dynamicPage = DynamicPage(dataPage);
+        NavigatorApp.addNavigatorPage(dynamicPage);
+        return dynamicPage;
+      },
+    );
+  }
+
+  void window(
+      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+    if (!raw) {
+      dataPage.addAll(
+        {
+          'name': dataPage.containsKey('name') ? dataPage['name'] : '',
+          'flutterType': 'Notify',
+          'link': dataPage.containsKey('uuid')
+              ? {'template': dataPage['uuid']}
+              : dataPage['link'],
+          'linkContainer': 'root',
+          'linkDefault': dataPage.containsKey('linkDefault')
+              ? dataPage['linkDefault']
+              : {
+                  'template': {
+                    'flutterType': 'Scaffold',
+                    'appBar': {
+                      'flutterType': 'AppBar',
+                      'title': {
+                        'flutterType': 'Text',
+                        'label': dataPage['label']
+                      }
+                    }
+                  }
+                }
+        },
+      );
+    }
+
+    Navigator.push(
+      buildContext,
+      MaterialPageRoute(
+        fullscreenDialog: dataPage['fullscreenDialog'] ?? false,
+        builder: (context) {
+          DynamicPage dynamicPage = DynamicPage(dataPage);
+          NavigatorApp.addNavigatorPage(dynamicPage);
+          return dynamicPage;
+        },
+      ),
+    );
   }
 }
