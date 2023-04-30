@@ -48,23 +48,27 @@ class Util {
     if (!find) {
       return defaultValue;
     }
-    if (cur.runtimeType.toString() == "bool") {
-      return cur == true ? "true" : "false";
+    if (cur == null) {
+      return "null";
     }
-    if (cur.runtimeType.toString() == "String") {
-      return cur != null ? cur.toString() : "null";
-    }
-    if (defaultValue != "") {
-      return defaultValue;
-    } else {
-      String result = "Path: $path is not String";
-      try {
-        result = jsonEncode(cur);
-      } catch (e) {
-        result += e.toString();
-      }
-      return result;
-    }
+    return cur.toString();
+    // if (cur.runtimeType.toString() == "bool") {
+    //   return cur == true ? "true" : "false";
+    // }
+    // if (cur.runtimeType.toString() == "String") {
+    //   return cur != null ? cur.toString() : "null";
+    // }
+    // if (defaultValue != "") {
+    //   return defaultValue;
+    // } else {
+    //   String result = "Path: $path is not String";
+    //   try {
+    //     result = jsonEncode(cur);
+    //   } catch (e) {
+    //     result += e.toString();
+    //   }
+    //   return result;
+    // }
   }
 
   static String path(dynamic data, String path) {
