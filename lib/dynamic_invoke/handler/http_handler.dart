@@ -30,7 +30,14 @@ class HttpHandler extends AbstractHandler {
     }
     response.then((value) {
       if (args.containsKey("onResponse")) {
-        args["onResponse"]["args"]["body"] = json.decode(value.body);
+        try {
+          args["onResponse"]["args"]["body"] = json.decode(value.body);
+        } catch (e) {
+          args["onResponse"]["args"]["body"] = {
+            'status': false,
+            'exception': [e.toString()]
+          };
+        }
         args["onResponse"]["args"]["headers"] = value.headers;
         args["onResponse"]["args"]["statusCode"] = value.statusCode;
         AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onResponse");
