@@ -27,6 +27,8 @@ import 'handler/template_handler.dart';
 import 'handler/test_handler.dart';
 import 'handler/url_launcher_handler.dart';
 import 'handler/uuid_handler.dart';
+import 'handler_custom/custom_loader_close_handler.dart';
+import 'handler_custom/custom_loader_open_handler.dart';
 
 class DynamicInvoke {
   static final DynamicInvoke _singleton = DynamicInvoke._internal();
@@ -58,6 +60,8 @@ class DynamicInvoke {
     'ResetTextController': ResetTextControllerHandler().handle,
     'PageReload': PageReloadHandler().handle,
     'Http': HttpHandler().handle,
+    'CustomLoaderOpen': CustomLoaderOpenHandler().handle,
+    'CustomLoaderClose': CustomLoaderCloseHandler().handle,
   };
 
   init() {
