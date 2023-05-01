@@ -13,6 +13,8 @@ import 'handler/alert_handler.dart';
 import 'handler/copy_clipboard_handler.dart';
 import 'handler/data_source_set_handler.dart';
 import 'handler/db_to_state_data_handler.dart';
+import 'handler/get_state_data_handler.dart';
+import 'handler/get_storage_handler.dart';
 import 'handler/hide_keyboard_handler.dart';
 import 'handler/http_handler.dart';
 import 'handler/navigator_push_handler.dart';
@@ -22,6 +24,7 @@ import 'handler/set_state_data_handler.dart';
 import 'handler/md5_handler.dart';
 import 'handler/navigator_pop_handler.dart';
 import 'handler/select_tab_handler.dart';
+import 'handler/set_storage_handler.dart';
 import 'handler/share_handler.dart';
 import 'handler/template_handler.dart';
 import 'handler/test_handler.dart';
@@ -53,6 +56,7 @@ class DynamicInvoke {
     'Share': ShareHandler().handle,
     'SelectTab': SelectTabHandler().handle,
     'SetStateData': SetStateDataHandler().handle,
+    'GetStateData': GetStateDataHandler().handle,
     'Test': TestHandler().handle,
     'Uuid': UuidHandler().handle,
     'DbQuery': DbQueryHandler().handle,
@@ -62,6 +66,8 @@ class DynamicInvoke {
     'Http': HttpHandler().handle,
     'CustomLoaderOpen': CustomLoaderOpenHandler().handle,
     'CustomLoaderClose': CustomLoaderCloseHandler().handle,
+    'SetStorage': SetStorageHandler().handle,
+    'GetStorage': GetStorageHandler().handle,
   };
 
   init() {
@@ -73,8 +79,9 @@ class DynamicInvoke {
         args.removeWhere((key, value) => key == "_rjduPageUuid");
         DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
         dynamic result;
-        if(pageByUuid != null){
-          result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
+        if (pageByUuid != null) {
+          result = sysInvoke(
+              item.key, args, pageByUuid.dynamicUIBuilderContext, true);
         }
         if (result == null) {
           return null;
@@ -89,14 +96,17 @@ class DynamicInvoke {
     });
   }
 
-  DynamicUIBuilderContext changeContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (args.containsKey("changeContext") && args["changeContext"] == "lastPage") {
+  DynamicUIBuilderContext changeContext(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (args.containsKey("changeContext") &&
+        args["changeContext"] == "lastPage") {
       dynamicUIBuilderContext = NavigatorApp.getLast()!.dynamicUIBuilderContext;
     }
     return dynamicUIBuilderContext;
   }
 
-  Map<String, dynamic> templateArguments(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  Map<String, dynamic> templateArguments(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (args.containsKey("templateArguments")) {
       Map<String, dynamic> newArgs = {};
       newArgs.addAll(args);
@@ -108,7 +118,8 @@ class DynamicInvoke {
     return args;
   }
 
-  void tmp(String path, Map data, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void tmp(
+      String path, Map data, DynamicUIBuilderContext dynamicUIBuilderContext) {
     List<String> exp = path.split(".");
     dynamic cur = data;
     dynamic curParent = data;
@@ -118,14 +129,17 @@ class DynamicInvoke {
         cur = cur[key];
       }
     }
-    curParent[exp[exp.length - 1]] = Util.template(cur, dynamicUIBuilderContext);
+    curParent[exp[exp.length - 1]] =
+        Util.template(cur, dynamicUIBuilderContext);
   }
 
-  dynamic sysInvoke(String handler, Map<String, dynamic> inArgs, DynamicUIBuilderContext dynamicUIBuilderContext,
+  dynamic sysInvoke(String handler, Map<String, dynamic> inArgs,
+      DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool jsContext = false]) {
     if (this.handler.containsKey(handler)) {
       dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
-      Map<String, dynamic> args = templateArguments(Util.getMutableMap(inArgs), dynamicUIBuilderContext);
+      Map<String, dynamic> args = templateArguments(
+          Util.getMutableMap(inArgs), dynamicUIBuilderContext);
       String log = "";
       if (kDebugMode) {
         log = "DynamicInvoke.sysInvoke($handler, $inArgs)\ntemplate:\n";
@@ -134,7 +148,8 @@ class DynamicInvoke {
           log += "from JsInvoke\n";
         }
       }
-      dynamic result = Function.apply(this.handler[handler]!, [args, dynamicUIBuilderContext]);
+      dynamic result = Function.apply(
+          this.handler[handler]!, [args, dynamicUIBuilderContext]);
       if (kDebugMode) {
         if (args.containsKey("printResult")) {
           Util.log("$log => $result");
@@ -168,16 +183,20 @@ class DynamicInvoke {
       includeContext = true;
       includePageArgument = true;
     } else {
-      if (args.containsKey("includeStateData") && args["includeStateData"] == true) {
+      if (args.containsKey("includeStateData") &&
+          args["includeStateData"] == true) {
         includeStateData = true;
       }
-      if (args.containsKey("includeContainer") && args["includeContainer"] == true) {
+      if (args.containsKey("includeContainer") &&
+          args["includeContainer"] == true) {
         includeContainer = true;
       }
-      if (args.containsKey("includeContext") && args["includeContext"] == true) {
+      if (args.containsKey("includeContext") &&
+          args["includeContext"] == true) {
         includeContext = true;
       }
-      if (args.containsKey("includePageArgument") && args["includePageArgument"] == true) {
+      if (args.containsKey("includePageArgument") &&
+          args["includePageArgument"] == true) {
         includePageArgument = true;
       }
     }
@@ -190,9 +209,16 @@ class DynamicInvoke {
           data[DataType.js.name],
           json.encode(args),
           includeContext ? json.encode(dynamicUIBuilderContext.data) : '',
-          includeContainer ? json.encode(dynamicUIBuilderContext.dynamicPage.getContainerData()) : '',
-          includeStateData ? json.encode(dynamicUIBuilderContext.dynamicPage.stateData.value) : '',
-          includePageArgument ? json.encode(dynamicUIBuilderContext.dynamicPage.arguments) : '',
+          includeContainer
+              ? json.encode(
+                  dynamicUIBuilderContext.dynamicPage.getContainerData())
+              : '',
+          includeStateData
+              ? json.encode(dynamicUIBuilderContext.dynamicPage.stateData.value)
+              : '',
+          includePageArgument
+              ? json.encode(dynamicUIBuilderContext.dynamicPage.arguments)
+              : '',
         );
         if (result != null) {
           if (kDebugMode) {
@@ -207,8 +233,8 @@ class DynamicInvoke {
     });
   }
 
-  String? _eval( String pageUuid,
-      String js, String args, String context, String container, String state, String pageArgs) {
+  String? _eval(String pageUuid, String js, String args, String context,
+      String container, String state, String pageArgs) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
     }
@@ -225,7 +251,8 @@ class DynamicInvoke {
       pageArgs = "bridge.pageArgs = $pageArgs;";
     }
     pageUuid = "bridge.pageUuid = '$pageUuid';";
-    String jsCode = "bridge.clearAll();\n$pageUuid\n$args\n$context\n$container\n$state\n$pageArgs\n$js";
+    String jsCode =
+        "bridge.clearAll();\n$pageUuid\n$args\n$context\n$container\n$state\n$pageArgs\n$js";
     //print("\n\nJS CODE BLOCK======================\n$jsCode\n===================FINISH BLOCK\n\n");
     return javascriptRuntime!.evaluate(jsCode).stringResult;
   }
