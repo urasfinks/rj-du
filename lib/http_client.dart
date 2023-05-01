@@ -36,14 +36,6 @@ class HttpClient {
         }), 408);
       },
     );
-    /*request.then((response) {
-      if (kDebugMode) {
-        print("HttpClient.post($logArgs) => HttpCode:  ${response.statusCode}; Body: ${response.body}");
-      }
-      if (fn != null) {
-        fn(response);
-      }
-    });*/
   }
 
   static Map<String, String> upgradeHeadersAuthorization(Map<String, String>? headers) {

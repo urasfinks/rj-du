@@ -69,7 +69,6 @@ class DynamicInvoke {
     javascriptRuntime?.init();
     for (MapEntry<String, Function> item in handler.entries) {
       javascriptRuntime!.onMessage(item.key, (dynamic args) {
-        //print("onMessage: args: $args");
         String pageUuid = args["_rjduPageUuid"];
         args.removeWhere((key, value) => key == "_rjduPageUuid");
         DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
@@ -77,7 +76,6 @@ class DynamicInvoke {
         if(pageByUuid != null){
           result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
         }
-        //print("onMessage [${item.key}]($args) => $result");
         if (result == null) {
           return null;
         }
@@ -139,7 +137,6 @@ class DynamicInvoke {
       dynamic result = Function.apply(this.handler[handler]!, [args, dynamicUIBuilderContext]);
       if (kDebugMode) {
         if (args.containsKey("printResult")) {
-          //print(dynamicUIBuilderContext.dynamicPage.arguments);
           Util.log("$log => $result");
         }
       }

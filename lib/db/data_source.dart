@@ -132,7 +132,6 @@ class DataSource {
   }
 
   void insert(Data curData, String dataString) {
-    //print('INSERT $curData');
     db.rawInsert(
       'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [

@@ -10,10 +10,8 @@ class ListViewWidget extends AbstractWidget {
     bool separated = TypeParser.parseBool(
       getValue(parsedJson, 'separated', false, dynamicUIBuilderContext),
     )!;
-    //print("ListViewWidget.get() on pageUuid: ${dynamicUIBuilderContext.dynamicPage.uuid}");
 
     List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
-    //print(json.encode(children));
 
     if (separated) {
       return ListView.separated(

@@ -13,15 +13,15 @@ class DataMigration {
 
   migration() async {
     bool updateApplication = Storage().get('version', 'v0') != GlobalSettings().version;
-    print("migration() updateApplication = $updateApplication");
+    if (kDebugMode) {
+      print("migration() updateApplication = $updateApplication");
+    }
     if (updateApplication) {
-      print("migration() set new version = ${GlobalSettings().version}");
+      if (kDebugMode) {
+        print("migration() set new version = ${GlobalSettings().version}");
+      }
       Storage().set('version', GlobalSettings().version);
     }
-    /*Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
-    for(MapEntry<dynamic, dynamic> k in assets.entries){
-      print(">> ${k.key}");
-    }*/
     await _sqlExecute([
       updateApplication ? 'db/drop/2023-01-31.sql' : '',
       'db/migration/2023-01-29.sql',
@@ -35,13 +35,14 @@ class DataMigration {
       if (file.trim() == '') {
         continue;
       }
-      print("Migration: $file");
+      if (kDebugMode) {
+        print("Migration: $file");
+      }
       String migration = await rootBundle.loadString('packages/rjdu/lib/assets/$file');
       List<String> split = migration.split(";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
       for (String query in split) {
         query = query.trim();
         if (query.isNotEmpty) {
-          //print("Q: $query");
           DataSource().db.execute(query);
         }
       }
@@ -54,7 +55,6 @@ class DataMigration {
       if (path.startsWith("assets/db/data/")) {
         String fileData = await rootBundle.loadString(path);
         String fileName = path.split("/").last;
-        //print("loadAssetsData() $fileName");
         DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
       }
     }

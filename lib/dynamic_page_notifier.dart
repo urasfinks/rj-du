@@ -18,7 +18,6 @@ class DynamicPageNotifier {
     for (MapEntry<String, ValueNotifier<NotifierObject>> item in mapNotifier.entries) {
       NotifierObject notifierObject = item.value.value;
       if (notifierObject.link.values.toList().contains(uuid)) {
-        //print("DynamicPageNotifier.updateNotifier($uuid) data: $data; link: ${notifierObject.link}");
         notifierObject.set(uuid, data);
         item.value.notifyListeners();
         isNotify = true;
@@ -35,7 +34,6 @@ class DynamicPageNotifier {
     return ValueListenableBuilder<NotifierObject>(
       valueListenable: getNotifier(link),
       builder: (BuildContext context, NotifierObject value, Widget? child) {
-        //print("ValueListenableBuilder.build() data: ${value.data}");
         if (value.data.isNotEmpty) {
           for (MapEntry<String, dynamic> item in value.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;

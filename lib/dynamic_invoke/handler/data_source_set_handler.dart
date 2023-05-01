@@ -20,7 +20,6 @@ class DataSourceSetHandler extends AbstractHandler {
       data.updateIfExist = true;
       if (args["onPersist"] != null) {
         data.onPersist = () {
-          //print("PERSIST DB ${dynamicUIBuilderContext.dynamicPage.stateData.value}");
           AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onPersist");
         };
       }

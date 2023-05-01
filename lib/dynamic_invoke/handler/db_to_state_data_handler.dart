@@ -9,12 +9,9 @@ import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 class DbQueryHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    //print("DbToStateDataHandler($args) => ?");
     if (Util.containsKeys(args, ['sql', 'args'])) {
       DataSource().db.rawQuery(args['sql'], args['args']).then((value) {
-        //print("DbToStateDataHandler($args) => ${value.length}");
         List<Map<String, Object?>> newList = [];
-        //print("DbToStateDataHandler resultSet: $value");
         for (Map<String, Object?> item in value) {
           Map<String, dynamic> newItem = Util.getMutableMap(item);
           if (newItem["value_data"] != null) {
@@ -24,7 +21,6 @@ class DbQueryHandler extends AbstractHandler {
           }
           newList.add(newItem);
         }
-        //print("DbToStateDataHandler resultSet: $newList");
         if (args.containsKey('stateKey')) {
           dynamicUIBuilderContext.dynamicPage.setStateData(args['stateKey'], newList);
         }

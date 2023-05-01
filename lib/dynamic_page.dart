@@ -33,7 +33,6 @@ class DynamicPage extends StatefulWidget {
   }
 
   void constructor() {
-    //print(arguments);
     if (!isRunConstructor) {
       isRunConstructor = true;
       if (arguments.containsKey("constructor") &&
@@ -67,7 +66,6 @@ class DynamicPage extends StatefulWidget {
   void setStateData(String key, dynamic value) {
     if (stateData.value[key] != value) {
       stateData.value[key] = value;
-      //print("setStateData [YES] key: $key; value: $value; pageUuid: $uuid; => ${stateData.value}");
       DataSource().setData(stateData);
     }
   }
@@ -134,7 +132,6 @@ class DynamicPage extends StatefulWidget {
   State<DynamicPage> createState() => _DynamicPage();
 
   void updateNotifier(String uuid, Map<String, dynamic> data) {
-    //print("DynamicPage.updateNotifier() pageUuid: ${this.uuid}; updUuid: $uuid; arg: ${arguments["link"]}; data: $data");
     dynamicPageNotifier.updateNotifier(uuid, data);
     // listenUuid содержит uuid отображённых данных без NotifyWidget
     // Например в ChildrenExtension

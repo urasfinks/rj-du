@@ -120,7 +120,6 @@ class DataSync {
             //Сервер какой-то не очень отзывчивый на 200 код) Остановим долбление
             break;
           }
-          //print("HttpClient.post() => HttpCode:  ${response.statusCode}; Body: ${response.body}");
         }
       } catch (e, stacktrace) {
         if (kDebugMode) {

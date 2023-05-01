@@ -92,7 +92,6 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
         onTap: (index) {
           int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
           if (nowTimeClick - lastTimeClick < 200) {
-            //print("NICE!) IT's Double Tap!)");
             DynamicInvoke().sysInvoke(
               "NavigatorPop",
               {"tab": index, "toBegin": true},
