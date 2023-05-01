@@ -28,7 +28,8 @@ class DataSource {
   init() async {
     debugPrint('DataSource.init()');
     final directory = await getApplicationDocumentsDirectory();
-    db = await openDatabase("${directory.path}/mister-craft-1.sqlite3", version: 1);
+    db = await openDatabase("${directory.path}/mister-craft-1.sqlite3",
+        version: 1);
     await dataMigration.init();
     isInit = true;
     flushQueue();
@@ -59,33 +60,40 @@ class DataSource {
     debugPrint('flushQueue complete: $count');
   }
 
-  void set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) {
+  void set(String uuid, dynamic value, DataType type,
+      [String? key, String? parent, bool updateIfExist = true]) {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.updateIfExist = updateIfExist;
     setData(data);
   }
 
-  void setData(Data data) {
+  void setData(Data data, [bool notifyDynamicPage = true]) {
     if (isInit) {
-      String dataString = data.value.runtimeType != String ? json.encode(data.value) : data.value;
+      String dataString = data.value.runtimeType != String
+          ? json.encode(data.value)
+          : data.value;
       if (data.type == DataType.virtual) {
         //Что бы не было коллизии setState или marketRebuild во время build
-        Util.asyncInvoke((args) {
-          notifyBlock(data);
-        }, data);
+        if (notifyDynamicPage) {
+          Util.asyncInvoke((args) {
+            notifyBlock(args);
+          }, data);
+        }
       } else {
-        db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then((resultSet) {
+        db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then(
+            (resultSet) {
           bool notify = false;
           if (resultSet.isEmpty) {
             insert(data, dataString);
             notify = true;
-          } else if (data.updateIfExist == true && resultSet.first['value_data'] != dataString) {
+          } else if (data.updateIfExist == true &&
+              resultSet.first['value_data'] != dataString) {
             updateNullable(data, resultSet.first);
             update(data, dataString);
             notify = true;
           }
-          if (notify) {
+          if (notify && notifyDynamicPage) {
             notifyBlock(data);
           }
         });
@@ -105,7 +113,8 @@ class DataSource {
       curData.revision ??= dbResult['revision_data'];
       curData.isRemove ??= dbResult['is_remove_data'];
     }
-    if (curData.onUpdateResetRevision && curData.type.runtimeType.toString().endsWith("RSync")) {
+    if (curData.onUpdateResetRevision &&
+        curData.type.runtimeType.toString().endsWith("RSync")) {
       curData.revision = 0;
     }
   }
@@ -157,7 +166,9 @@ class DataSource {
     if (curData.value.runtimeType == String && isJsonDataType(curData.type)) {
       runtimeData = json.decode(curData.value);
     } else if (curData.value.runtimeType != String) {
-      if (curData.value.runtimeType.toString().contains("Map<dynamic, dynamic>")) {
+      if (curData.value.runtimeType
+          .toString()
+          .contains("Map<dynamic, dynamic>")) {
         runtimeData = Util.getMutableMap(curData.value);
       } else {
         runtimeData = curData.value;
@@ -171,7 +182,8 @@ class DataSource {
     }
     //Оповещение программных компонентов, кто подписался на onChange
     if (listener.containsKey(curData.uuid)) {
-      for (Function(Map<String, dynamic>? data) callback in listener[curData.uuid]!) {
+      for (Function(Map<String, dynamic>? data) callback
+          in listener[curData.uuid]!) {
         callback(runtimeData);
       }
     }
@@ -179,9 +191,11 @@ class DataSource {
 
   void get(String uuid, Function(Map<String, dynamic>? data) handler) {
     if (isInit) {
-      db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then((resultSet) {
+      db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then(
+          (resultSet) {
         if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
-          DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
+          DataType dataTypeResult =
+              Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
           if (isJsonDataType(dataTypeResult)) {
             //handler(await Util.asyncInvokeIsolate((arg) => json.decode(arg), resultSet.first['value_data']));
             handler(json.decode(resultSet.first['value_data'] as String));

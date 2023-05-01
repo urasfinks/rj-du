@@ -34,6 +34,10 @@ class TextFieldWidget extends AbstractWidget {
       listInputFormatters.add(FilteringTextInputFormatter.allow(RegExp('^[a-z0-9_-]{3,16}\$')));
     }
 
+    bool onChangedNotify = TypeParser.parseBool(
+      getValue(parsedJson, 'onChangedNotify', true, dynamicUIBuilderContext),
+    )!;
+
     return TextField(
       key: Util.getKey(),
       focusNode: dynamicUIBuilderContext.dynamicPage.getProperty("${key}_FocusNode", FocusNode()),
@@ -95,7 +99,7 @@ class TextFieldWidget extends AbstractWidget {
       decoration: render(parsedJson, 'decoration', null, dynamicUIBuilderContext),
       style: render(parsedJson, 'style', null, dynamicUIBuilderContext),
       onChanged: (value) {
-        dynamicUIBuilderContext.dynamicPage.setStateData(key, value);
+        dynamicUIBuilderContext.dynamicPage.setStateData(key, value, onChangedNotify);
         click(parsedJson, dynamicUIBuilderContext, "onChanged");
       },
       onTap: () async {
