@@ -135,6 +135,9 @@ class DataSync {
   }
 
   void init() {
+    if (kDebugMode) {
+      print("DataSync.init()");
+    }
     DataSource().onChange("DataSync.json", (data) {
       if (data != null) {
         if (kDebugMode) {

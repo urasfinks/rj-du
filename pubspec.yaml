@@ -15,7 +15,6 @@ dependencies:
   sqlite3: ^1.9.1
   path_provider: ^2.0.12
   shared_preferences: ^2.0.17
-  flutter_js: ^0.6.0
   http: ^0.13.5
   uuid: ^3.0.7
   cron: ^0.5.1
@@ -30,6 +29,7 @@ dependencies:
   flutter_margin_widget: ^0.0.3
   flutter_localizations:
     sdk: flutter
+  flutter_js: ^0.7.0
 
 dev_dependencies:
   flutter_test:

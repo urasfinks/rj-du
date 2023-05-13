@@ -26,7 +26,9 @@ class DataSource {
   DataMigration dataMigration = DataMigration();
 
   init() async {
-    debugPrint('DataSource.init()');
+    if (kDebugMode) {
+      print("DataSource.init()");
+    }
     final directory = await getApplicationDocumentsDirectory();
     db = await openDatabase("${directory.path}/mister-craft-1.sqlite3",
         version: 1);

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Storage {
@@ -12,6 +13,9 @@ class Storage {
   Storage._internal();
 
   init() async {
+    if (kDebugMode) {
+      print("Storage.init()");
+    }
     prefs = await SharedPreferences.getInstance();
   }
 

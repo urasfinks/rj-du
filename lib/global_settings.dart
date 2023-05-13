@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class GlobalSettings {
   bool debug = true;
   String version = "v3";
@@ -11,7 +13,11 @@ class GlobalSettings {
 
   GlobalSettings._internal();
 
-  void init() {}
+  void init() {
+    if (kDebugMode) {
+      print("GlobalSettings.init()");
+    }
+  }
 
   void setHost(String host) {
     this.host = host;

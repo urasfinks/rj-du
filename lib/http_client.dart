@@ -1,4 +1,5 @@
 import 'dart:convert' show json, utf8, base64;
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'storage.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,9 @@ class HttpClient {
   static String? cacheAuthorizationBase64;
 
   static void init() {
+    if (kDebugMode) {
+      print("HttpClient.init()");
+    }
     Storage().onChange('uuid', '', onUpdateDeviceUuid);
   }
 

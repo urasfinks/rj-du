@@ -71,6 +71,9 @@ class DynamicInvoke {
   };
 
   init() {
+    if (kDebugMode) {
+      print("DynamicInvoke.init()");
+    }
     javascriptRuntime = getJavascriptRuntime();
     javascriptRuntime?.init();
     for (MapEntry<String, Function> item in handler.entries) {
