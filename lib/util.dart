@@ -29,11 +29,9 @@ class Util {
     return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 
-  static String path2(Map<String, dynamic> data, String path,
-      [String defaultValue = ""]) {
-    if (defaultValue == "") {
-      defaultValue = "[$path]";
-    }
+  static dynamic path2(Map<String, dynamic> data, String path,
+      [dynamic defaultValue]) {
+    defaultValue ??= "[$path]";
     List<String> exp = path.split(".");
     dynamic cur = data;
     bool find = true;
@@ -48,10 +46,12 @@ class Util {
     if (!find) {
       return defaultValue;
     }
-    if (cur == null) {
-      return "null";
-    }
-    return cur.toString();
+    // if (cur == null) {
+    //   return "null";
+    // }
+    //Наткнулся на проблему, надо вернуть Map что бы потом через дерективу сделать jsonEncode
+    return cur;
+    //return cur.toString();
     // if (cur.runtimeType.toString() == "bool") {
     //   return cur == true ? "true" : "false";
     // }
@@ -71,22 +71,9 @@ class Util {
     // }
   }
 
-  static String path(dynamic data, String path) {
-    List<String> exp = path.split(".");
-    dynamic cur = data;
-    for (String key in exp) {
-      if (cur != null && cur[key] != null) {
-        cur = cur[key];
-      }
-    }
-    return cur != null
-        ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"")
-        : "null";
-  }
-
   static String template(
       String template, DynamicUIBuilderContext dynamicUIBuilderContext,
-      [bool autoEscape = true]) {
+      [bool autoEscape = true, debug = false]) {
     List<String> exp = template.split('\${');
 
     for (String expItem in exp) {
@@ -99,7 +86,7 @@ class Util {
       }
       String templateName = exp2[0];
       List<String> expDirective = exp2[0].split("|");
-      String value =
+      dynamic value =
           parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext);
       // if (autoEscape == true && expDirective.isEmpty) {
       //   value = jsonStringEscape(value);
@@ -108,7 +95,7 @@ class Util {
         for (String directive in expDirective) {
           for (MapEntry<
                   String,
-                  String Function(String? data, List<String> arguments,
+                  dynamic Function(dynamic data, List<String> arguments,
                       DynamicUIBuilderContext dynamicUIBuilderContext)> item
               in templateDirective.entries) {
             if (directive.startsWith("${item.key}(")) {
@@ -120,18 +107,22 @@ class Util {
           }
         }
       }
-      template = template.replaceAll("\${$templateName}", value);
+      template = template.replaceAll("\${$templateName}", value.toString());
     }
     return template;
   }
 
   static Map<
           String,
-          String Function(String? data, List<String> arguments,
+          dynamic Function(dynamic data, List<String> arguments,
               DynamicUIBuilderContext dynamicUIBuilderContext)>
       templateDirective = {
     "escape": (data, arguments, ctx) {
       return data != null ? jsonStringEscape(data) : '';
+    },
+    "jsonEncode": (data, arguments, ctx) {
+      //print("jsonEncode ${data.runtimeType} > ${json.encode(data)}");
+      return data != null ? json.encode(data) : '';
     },
     "formatNumber": (data, arguments, ctx) {
       if (data == null || data.toString() == "") {
@@ -157,7 +148,7 @@ class Util {
 
   static Map<
       String,
-      String Function(Map<String, dynamic> data, List<String> arguments,
+      dynamic Function(Map<String, dynamic> data, List<String> arguments,
           DynamicUIBuilderContext dynamicUIBuilderContext)> templateFunction = {
     "context": (data, arguments, ctx) {
       return mapSelector(data, arguments);
@@ -180,14 +171,14 @@ class Util {
     }
   };
 
-  static String parseTemplateQuery(
+  static dynamic parseTemplateQuery(
       String query, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!query.contains("(")) {
       query = "context($query)";
     }
     for (MapEntry<
             String,
-            String Function(Map<String, dynamic> data, List<String> arguments,
+            dynamic Function(Map<String, dynamic> data, List<String> arguments,
                 DynamicUIBuilderContext dynamicUIBuilderContext)> item
         in templateFunction.entries) {
       if (query.startsWith("${item.key}(")) {
@@ -200,16 +191,14 @@ class Util {
     return "Undefined handler for: $query";
   }
 
-  static String mapSelector(Map<String, dynamic> data, List<String> args) {
-    String result = "";
+  static dynamic mapSelector(Map<String, dynamic> data, List<String> args) {
     if (args.length == 1) {
-      result = path2(data, args[0]);
+      return path2(data, args[0]);
     } else if (args.length == 2) {
-      result = path2(data, args[0], args[1]);
+      return path2(data, args[0], args[1]);
     } else {
-      result = "mapSelector($args) length must be 1|2";
+      return "mapSelector($args) length must be 1|2";
     }
-    return result;
   }
 
   static List<String> parseArguments(String args) {
