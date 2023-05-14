@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'dynamic_ui/type_parser.dart';
 
 class ThemeProvider {
+
+  static int alpha = 200;
+  static double blur = 15;
+
   static Brightness deviceBrightness = Brightness.light;
 
   static ThemeData lightThemeData() {
     return ThemeData.light().copyWith(
       appBarTheme: ThemeData.light().appBarTheme.copyWith(
             elevation: 0,
-            backgroundColor: TypeParser.parseColor("#f9f9f9"),
+            backgroundColor: TypeParser.parseColor("#f9f9f9")?.withAlpha(alpha),
             foregroundColor: Colors.black,
             iconTheme: const IconThemeData(color: Colors.black),
           ),
@@ -35,7 +39,7 @@ class ThemeProvider {
                 selectedItemColor: Colors.black,
                 selectedIconTheme: const IconThemeData(color: Colors.black),
                 unselectedIconTheme: IconThemeData(color: Colors.grey[500]),
-                backgroundColor: TypeParser.parseColor("#f9f9f9"),
+                backgroundColor: TypeParser.parseColor("#f9f9f9")?.withAlpha(alpha),
               ),
       scaffoldBackgroundColor: TypeParser.parseColor("#f5f5f5"),
       textSelectionTheme: ThemeData.dark().textSelectionTheme.copyWith(
@@ -48,7 +52,7 @@ class ThemeProvider {
     return ThemeData.dark().copyWith(
       appBarTheme: ThemeData.light().appBarTheme.copyWith(
             elevation: 0,
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Colors.grey[900]?.withAlpha(alpha),
             foregroundColor: Colors.white,
             iconTheme: const IconThemeData(color: Colors.white),
           ),
@@ -75,7 +79,7 @@ class ThemeProvider {
                 selectedItemColor: Colors.white,
                 selectedIconTheme: const IconThemeData(color: Colors.white),
                 unselectedIconTheme: IconThemeData(color: Colors.grey[600]),
-                backgroundColor: Colors.grey[900],
+                backgroundColor: Colors.grey[900]?.withAlpha(alpha),
               ),
       scaffoldBackgroundColor: Colors.black,
       textSelectionTheme: ThemeData.dark().textSelectionTheme.copyWith(
