@@ -7,6 +7,8 @@ class ScaffoldWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      extendBody: false,
       appBar: render(parsedJson, 'appBar', null, dynamicUIBuilderContext),
       body: render(parsedJson, 'body', const SizedBox(), dynamicUIBuilderContext),
       key: Util.getKey(),
