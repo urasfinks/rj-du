@@ -72,7 +72,8 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  void setStateData(String key, dynamic value, [bool notifyDynamicPage = true]) {
+  void setStateData(String key, dynamic value,
+      [bool notifyDynamicPage = true]) {
     if (stateData.value[key] != value) {
       stateData.value[key] = value;
       DataSource().setData(stateData, notifyDynamicPage);
