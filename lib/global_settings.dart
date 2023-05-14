@@ -4,6 +4,8 @@ class GlobalSettings {
   bool debug = true;
   String version = "v3";
   String host = "https://e-humidor.ru:8453";
+  double appBarHeight = 56.0;
+  double bottomNavigationBarHeight = 56.0;
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 
