@@ -165,11 +165,10 @@ abstract class AbstractWidget {
     }
   }
 
-  static void clickStatic(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext,
-      [String key = "onPressed"]) {
-    Map<String, dynamic>? settings =
-        getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
+  static void invoke(
+    Map<String, dynamic>? settings,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
     if (settings != null) {
       if (settings.containsKey('jsInvoke')) {
         DynamicInvoke().jsInvoke(
@@ -177,8 +176,28 @@ abstract class AbstractWidget {
       } else if (settings.containsKey('sysInvoke')) {
         DynamicInvoke().sysInvoke(settings['sysInvoke'], settings['args'] ?? {},
             dynamicUIBuilderContext);
+      } else if (settings.containsKey('list')) {
+        List<dynamic> list = settings["list"];
+        for (dynamic data in list) {
+          invoke(data, dynamicUIBuilderContext);
+        }
       }
     }
+  }
+
+  static void clickStatic(Map<String, dynamic> parsedJson,
+      DynamicUIBuilderContext dynamicUIBuilderContext,
+      [String key = "onPressed"]) {
+    Future(() {
+      Map<String, dynamic>? settings =
+          getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
+      invoke(settings, dynamicUIBuilderContext);
+      return null;
+    }).then((result) {}).catchError((error) {
+      if (kDebugMode) {
+        print("clickStatic exception: $error");
+      }
+    });
   }
 
   void click(Map<String, dynamic> parsedJson,
