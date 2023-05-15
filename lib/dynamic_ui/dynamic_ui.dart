@@ -52,7 +52,7 @@ import 'package:rjdu/dynamic_ui/widget/row_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/scaffold_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/scrollbar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/selectable_text_widget.dart';
-import 'package:rjdu/dynamic_ui/widget/size_box_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/sized_box_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/spacer_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/stack_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_widget.dart';

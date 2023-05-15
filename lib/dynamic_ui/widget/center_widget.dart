@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rjdu/dynamic_ui/widget/size_box_widget.dart';
+import 'package:rjdu/dynamic_ui/dynamic_ui.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../widget/abstract_widget.dart';
 
@@ -13,7 +13,7 @@ class CenterWidget extends AbstractWidget {
       child: render(
         parsedJson,
         'child',
-        SizedBoxWidget().get(parsedJson, dynamicUIBuilderContext),
+        DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),
     );
