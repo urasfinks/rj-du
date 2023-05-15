@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:rjdu/db/data_migration.dart';
 import 'package:rjdu/dynamic_page.dart';
+import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/iterator_theme/iterator_theme_loader.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/translate.dart';
@@ -41,11 +42,14 @@ class RjDu {
 
   static Future<DynamicPage> runApp() async {
     List<String> loadTabData = await DataMigration.loadTabData();
-    for(String tabData in loadTabData){
+    for (String tabData in loadTabData) {
       NavigatorApp.tab.add(
         BottomTabItem(json.decode(tabData)),
       );
     }
+
+    IteratorThemeLoader.load(await DataMigration.loadIteratorTheme());
+
     return DynamicPage(const {
       'flutterType': 'Notify',
       'link': {'template': 'main.json'},

@@ -72,6 +72,24 @@ class DataMigration {
     return result;
   }
 
+  static Future<Map<String, String>> loadIteratorTheme() async {
+    Map<String, String> result = {};
+    Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
+    for (String path in assets.keys) {
+      final regTab = RegExp(r'IteratorTheme[a-zA-Z0-9]+\.json$');
+      if (path.startsWith("assets/db/data/template/") &&
+          regTab.hasMatch(path)) {
+        String fileData = await rootBundle.loadString(path);
+
+        String index = path
+            .split("assets/db/data/template/IteratorTheme")[1]
+            .split(".json")[0];
+        result[index] = fileData;
+      }
+    }
+    return result;
+  }
+
   Future<void> loadAssetsData() async {
     Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
     for (String path in assets.keys) {

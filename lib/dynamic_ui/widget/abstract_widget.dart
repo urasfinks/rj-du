@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/state_data_iterator.dart';
 
 import '../dynamic_ui.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../../dynamic_invoke/dynamic_invoke.dart';
 import '../../util.dart';
+import 'abstract_widget_extension/iterator.dart';
+import 'abstract_widget_extension/state_data_switch.dart';
 
 abstract class AbstractWidget {
   dynamic get(Map<String, dynamic> parsedJson,
@@ -76,10 +79,13 @@ abstract class AbstractWidget {
       if (el.containsKey("ChildrenExtension")) {
         switch (el["ChildrenExtension"]) {
           case "StateDataIterator":
-            extensionStateDataIterator(el, dynamicUIBuilderContext, result);
+            StateDataIterator.extend(el, dynamicUIBuilderContext, result);
             break;
           case "StateDataSwitch":
-            extensionStateDataSwitch(el, dynamicUIBuilderContext, result);
+            StateDataSwitch.extend(el, dynamicUIBuilderContext, result);
+            break;
+          case "Iterator":
+            Iterator.extend(el, dynamicUIBuilderContext, result);
             break;
         }
       } else {
@@ -87,82 +93,6 @@ abstract class AbstractWidget {
       }
     }
     return result;
-  }
-
-  static void extensionStateDataSwitch(Map<String, dynamic> child,
-      DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
-    String key = child["key"];
-
-    //Будем прихранивать неявно объявленные uuid, что бы небыло лишних перерисовок страницы
-    //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
-    //Поэтому удалим их и потом заново добавим уже обновлённые
-    removeLastShadowUuid(key, dynamicUIBuilderContext);
-    String value =
-        dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? "default";
-    List<dynamic> children = child["children"];
-    Map<String, dynamic> map = {};
-    for (Map<String, dynamic> item in children) {
-      if (item.containsKey("case")) {
-        map[item["case"]] = item;
-      } else {
-        if (kDebugMode) {
-          print("extensionStateDataSwitch item key 'case' not exist");
-        }
-      }
-    }
-    if (map.containsKey(value)) {
-      if (map[value].containsKey("uuid_data")) {
-        dynamicUIBuilderContext.dynamicPage
-            .addShadowUuid(map[value]["uuid_data"]);
-      }
-      result.add(map[value]);
-    } else {
-      if (kDebugMode) {
-        print("extensionStateDataSwitch not found 'case' =  $value");
-      }
-    }
-  }
-
-  static void extensionStateDataIterator(Map<String, dynamic> child,
-      DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
-    bool divider = child.containsKey("Divider");
-    String key = child["key"];
-    //Будем прихранивать неявно объявленные uuid, что бы небыло лишних перерисовок страницы
-    //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
-    //Поэтому удалим их и потом заново добавим уже обновлённые
-    removeLastShadowUuid(key, dynamicUIBuilderContext);
-    dynamic value = dynamicUIBuilderContext.dynamicPage.stateData.value[key];
-    bool add = false;
-    if (value != null) {
-      List<dynamic> list = value as List<dynamic>;
-      for (Map<String, dynamic> item in list) {
-        Map<String, dynamic> map = {};
-        map.addAll(child["template"] ??
-            item["template"]); //Шаблон можно заложить в данные
-        map["context"] = item;
-        if (item.containsKey("uuid_data")) {
-          dynamicUIBuilderContext.dynamicPage.addShadowUuid(item["uuid_data"]);
-        }
-        add = true;
-        result.add(map);
-        if (divider && list.last != item) {
-          result.add(child["Divider"]);
-        }
-      }
-    }
-    //Если небыло ничего добавлено в результирующий список, добавим предустановленный ifDataEmpty если есть
-    if (!add && child.containsKey("ifDataEmpty")) {
-      result.add(child["ifDataEmpty"]);
-    }
-  }
-
-  static void removeLastShadowUuid(
-      String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    List earlyUuids =
-        dynamicUIBuilderContext.dynamicPage.getProperty(key, []) as List;
-    for (String earlyUuid in earlyUuids) {
-      dynamicUIBuilderContext.dynamicPage.removeShadowUuid(earlyUuid);
-    }
   }
 
   static void invoke(
