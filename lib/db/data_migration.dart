@@ -58,12 +58,12 @@ class DataMigration {
     Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
     for (String path in assets.keys) {
       final regTab = RegExp(r'tab[0-9]+\.json$');
-      if (path.startsWith("assets/db/data/template/") &&
+      if (path.startsWith("assets/db/data/systemData/") &&
           regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
 
         int? index = TypeParser.parseInt(
-            path.split("assets/db/data/template/tab")[1].split(".json")[0]);
+            path.split("assets/db/data/systemData/tab")[1].split(".json")[0]);
         if (index != null) {
           result.insert(index, fileData);
         }
@@ -77,12 +77,12 @@ class DataMigration {
     Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
     for (String path in assets.keys) {
       final regTab = RegExp(r'IteratorTheme[a-zA-Z0-9]+\.json$');
-      if (path.startsWith("assets/db/data/template/") &&
+      if (path.startsWith("assets/db/data/systemData/") &&
           regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
 
         String index = path
-            .split("assets/db/data/template/IteratorTheme")[1]
+            .split("assets/db/data/systemData/IteratorTheme")[1]
             .split(".json")[0];
         result[index] = fileData;
       }
