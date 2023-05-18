@@ -9,7 +9,6 @@ class Iterator extends AbstractExtension {
 
   static void extend(Map<String, dynamic> child,
       DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
-    bool templateDivider = child.containsKey("template_divider");
     String dataType = child["dataType"];
     dynamic value;
     switch (dataType) {
@@ -29,7 +28,7 @@ class Iterator extends AbstractExtension {
     if (child.containsKey("theme") && theme.containsKey(child["theme"])) {
       child.addAll(theme[child["theme"]]!);
     }
-
+    bool templateDivider = child.containsKey("template_divider");
     bool add = false;
     if (value != null) {
       List<dynamic> list = value as List<dynamic>;
