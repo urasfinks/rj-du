@@ -60,8 +60,10 @@ class CustomScrollViewWidget extends AbstractWidget {
         getValue(parsedJson, 'scrollDirection', 'vertical',
             dynamicUIBuilderContext)!,
       )!,
+      //False по умолчанию, потому что высота самого ScrollView будет в размер всех блоков
+      //Когда блоков не так много при скроле вниз будет скрывать содержимое не доходя до bottomTab
       shrinkWrap: TypeParser.parseBool(
-        getValue(parsedJson, 'shrinkWrap', true, dynamicUIBuilderContext),
+        getValue(parsedJson, 'shrinkWrap', false, dynamicUIBuilderContext),
       )!,
       cacheExtent: TypeParser.parseDouble(
         getValue(parsedJson, 'radius', null, dynamicUIBuilderContext),
