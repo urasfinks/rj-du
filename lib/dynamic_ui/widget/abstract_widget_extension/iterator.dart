@@ -1,10 +1,10 @@
 import '../../dynamic_ui_builder_context.dart';
 import 'abstract_extension.dart';
-import 'iterator_theme/button_group.dart';
+//import 'iterator_theme/button_group.dart';
 
 class Iterator extends AbstractExtension {
   static Map<String, Map<String, dynamic>> theme = {
-    "ButtonGroup": ButtonGroup().getTheme()
+    //"ButtonGroup": ButtonGroup().getTheme()
   };
 
   static void extend(Map<String, dynamic> child,

@@ -31,7 +31,6 @@ abstract class AbstractTheme {
     if (x != null) {
       result["template"] = x;
     }
-    print(result);
     return result;
   }
 }
