@@ -25,8 +25,16 @@ class Iterator extends AbstractExtension {
         break;
     }
 
-    if (child.containsKey("theme") && theme.containsKey(child["theme"])) {
-      child.addAll(theme[child["theme"]]!);
+    if (child.containsKey("theme")) {
+      if (theme.containsKey(child["theme"])) {
+        child.addAll(theme[child["theme"]]!);
+      } else {
+        result.add({
+          "flutterType": "Text",
+          "label": "Theme [${child["theme"]}] is not defined"
+        });
+        return;
+      }
     }
     bool templateDivider = child.containsKey("template_divider");
     bool add = false;
