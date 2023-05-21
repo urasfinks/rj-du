@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:rjdu/db/data_migration.dart';
 import 'package:rjdu/dynamic_page.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/iterator_theme/iterator_theme_loader.dart';
+import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/translate.dart';
@@ -33,7 +34,7 @@ class RjDu {
 
     HttpClient.init();
     Translate().init();
-    //DataSync().init(); wefå
+    //DataSync().init();
 
     SystemNotify().listen(SystemNotifyEnum.changeTabOrHistoryPop, (state) {
       NavigatorApp.getLast()?.renderFloatingActionButton();
@@ -48,7 +49,8 @@ class RjDu {
       );
     }
 
-    IteratorThemeLoader.load(await DataMigration.loadIteratorTheme());
+    IteratorThemeLoader.load(await DataMigration.loadIAsset("systemData", "IteratorTheme"));
+    TemplateWidget.load(await DataMigration.loadIAsset("template", "TemplateWidget"));
 
     return DynamicPage(const {
       'flutterType': 'Notify',

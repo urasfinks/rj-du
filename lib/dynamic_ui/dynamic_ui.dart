@@ -36,6 +36,7 @@ import 'package:rjdu/dynamic_ui/widget/material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
 import 'package:rjdu/dynamic_ui/widget_property/box_constraints_property.dart';
@@ -129,6 +130,7 @@ class DynamicUI {
     'GestureDetector': GestureDetectorWidget().get,
     'Material': MaterialWidget().get,
     'MaterialButton': MaterialButtonWidget().get,
+    'Template': TemplateWidget().get,
 
     //Property
     'TextStyle': TextStyleProperty().get,
