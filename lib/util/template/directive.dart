@@ -37,6 +37,33 @@ class TemplateDirective {
             .format(DateTime.fromMillisecondsSinceEpoch(x));
       }
       return "timestampToDate exception; Data: $data; Args: $arguments";
+    },
+    "partHideEmail": (data, arguments, ctx){
+      String email = data.toString();
+      int indexOf = email.indexOf("@");
+      String result = "";
+      if (indexOf > 2) {
+        result = email.substring(0, 1);
+        for (int i = 0; i < indexOf - 2; i++) {
+          result += "*";
+        }
+        result += email.substring(indexOf - 1);
+      } else if (indexOf >= 0 && email.length >= 6) {
+        result = email.substring(0, indexOf + 2);
+        for (int i = 0; i < email.length - result.length; i++) {
+          result += "*";
+        }
+        result += email.substring(email.length - 1);
+      } else if (email.length >= 3) {
+        result = email.substring(0, 1);
+        for (int i = 0; i < email.length - 2; i++) {
+          result += "*";
+        }
+        result += email.substring(email.length - 1, email.length);
+      } else {
+        result = "*";
+      }
+      return result;
     }
   };
 }
