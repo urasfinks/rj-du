@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rjdu/util/template.dart';
 import 'data_type.dart';
 import 'db/data.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
@@ -154,7 +155,7 @@ class DynamicPage extends StatefulWidget {
     if (parseArguments.length == 2) {
       String uuid = parseArguments[0];
       if (container.containsKey(uuid)) {
-        return Util.path2(container[uuid]!.data, parseArguments[1]);
+        return Template.stringSelector(container[uuid]!.data, parseArguments[1]);
       }
     }
     return "DynamicPage.template() args: ${parseArguments.join(",")} container not exists";
