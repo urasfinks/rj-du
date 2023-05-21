@@ -25,4 +25,9 @@ class ButtonGroup extends AbstractTheme {
   getTemplate() {
     return null;
   }
+
+  @override
+  Map<String, dynamic>? getSingle() {
+    return null;
+  }
 }

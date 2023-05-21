@@ -43,17 +43,21 @@ class Iterator extends AbstractExtension {
       for (Map<String, dynamic> item in list) {
         Map<String, dynamic> map = {};
         String seqType;
-        if (list.first == item) {
-          seqType = "first";
+        if (item.containsKey("customSeqType")) {
+          seqType = item["customSeqType"];
+        } else if (list.length == 1) {
+          seqType = "template_single";
+        } else if (list.first == item) {
+          seqType = "template_first";
         } else if (list.last == item) {
-          seqType = "last";
+          seqType = "template_last";
         } else {
-          seqType = "middle";
+          seqType = "template_middle";
         }
-        map.addAll(child["template_$seqType"] ??
-            child["template"] ??
-            item["template_$seqType"] ??
-            item["template"]); //Шаблон можно заложить в данные
+        map.addAll(item[seqType] ??
+            item["template"] ??
+            child[seqType] ??
+            child["template"]); //Шаблон можно заложить в данные
         map["context"] = item;
 
         if (item.containsKey("uuid_data")) {

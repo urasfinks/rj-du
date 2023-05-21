@@ -5,6 +5,8 @@ abstract class AbstractTheme {
 
   Map<String, dynamic>? getLast();
 
+  Map<String, dynamic>? getSingle();
+
   Map<String, dynamic>? getDivider();
 
   Map<String, dynamic>? getTemplate();
@@ -30,6 +32,10 @@ abstract class AbstractTheme {
     x = getTemplate();
     if (x != null) {
       result["template"] = x;
+    }
+    x = getSingle();
+    if (x != null) {
+      result["template_single"] = x;
     }
     return result;
   }

@@ -16,7 +16,7 @@ class TemplateWidget extends AbstractWidget {
     Map<String, dynamic> args = DynamicInvoke().templateArguments(
         Util.getMutableMap(parsedJson), dynamicUIBuilderContext);
     return render(Util.getMutableMap(template[args["src"]]), null,
-        Text("TemplateWidget: $parsedJson"), dynamicUIBuilderContext);
+        Text("Error render TemplateWidget: $args"), dynamicUIBuilderContext);
   }
 
   static void load(Map<String, String> map) {
