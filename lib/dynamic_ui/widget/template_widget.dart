@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:rjdu/dynamic_invoke/dynamic_invoke.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,10 @@ class TemplateWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return render(Util.getMutableMap(template[parsedJson["src"]]), null, Text("TemplateWidget: $parsedJson"), dynamicUIBuilderContext);
+    Map<String, dynamic> args = DynamicInvoke().templateArguments(
+        Util.getMutableMap(parsedJson), dynamicUIBuilderContext);
+    return render(Util.getMutableMap(template[args["src"]]), null,
+        Text("TemplateWidget: $parsedJson"), dynamicUIBuilderContext);
   }
 
   static void load(Map<String, String> map) {
