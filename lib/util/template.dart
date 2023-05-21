@@ -17,6 +17,9 @@ class Template {
   static String template(
       String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
+    if (!template.contains('\${')) {
+      return template;
+    }
     List<String> exp = template.split('\${');
 
     for (String expItem in exp) {
@@ -30,17 +33,17 @@ class Template {
       String templateName = exp2[0];
       List<String> expDirective = exp2[0].split("|");
       dynamic value =
-      parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext);
+          parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext);
       // if (autoEscape == true && expDirective.isEmpty) {
       //   value = jsonStringEscape(value);
       // }
       if (expDirective.isNotEmpty) {
         for (String directive in expDirective) {
           for (MapEntry<
-              String,
-              dynamic Function(dynamic data, List<String> arguments,
-                  DynamicUIBuilderContext dynamicUIBuilderContext)> item
-          in TemplateDirective.map.entries) {
+                  String,
+                  dynamic Function(dynamic data, List<String> arguments,
+                      DynamicUIBuilderContext dynamicUIBuilderContext)> item
+              in TemplateDirective.map.entries) {
             if (directive.startsWith("${item.key}(")) {
               List<String> arguments = parseArguments(directive.substring(
                   item.key.length + 1, directive.length - 1));
@@ -61,10 +64,10 @@ class Template {
       query = "context($query)";
     }
     for (MapEntry<
-        String,
-        dynamic Function(Map<String, dynamic> data, List<String> arguments,
-            DynamicUIBuilderContext dynamicUIBuilderContext)> item
-    in TemplateFunction.map.entries) {
+            String,
+            dynamic Function(Map<String, dynamic> data, List<String> arguments,
+                DynamicUIBuilderContext dynamicUIBuilderContext)> item
+        in TemplateFunction.map.entries) {
       if (query.startsWith("${item.key}(")) {
         List<String> arguments = parseArguments(
             query.substring(item.key.length + 1, query.length - 1));
