@@ -330,7 +330,7 @@ class Util {
     });
   }
 
-  static Map<String, dynamic> getMutableMap(Map map) {
-    return json.decode(json.encode(map));
+  static Map<String, dynamic> getMutableMap(Map? map) {
+    return map == null ? {} : json.decode(json.encode(map));
   }
 }

@@ -12,7 +12,7 @@ class TemplateWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return render(Util.getMutableMap(template["Test"]!), null, const Text("Template: ??"), dynamicUIBuilderContext);
+    return render(Util.getMutableMap(template[parsedJson["src"]]), null, Text("TemplateWidget: $parsedJson"), dynamicUIBuilderContext);
   }
 
   static void load(Map<String, String> map) {
