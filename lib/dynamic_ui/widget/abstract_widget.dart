@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/state_data_iterator.dart';
 
@@ -119,13 +121,25 @@ abstract class AbstractWidget {
       DynamicUIBuilderContext dynamicUIBuilderContext,
       [String key = "onPressed"]) {
     Future(() {
-      Map<String, dynamic>? settings =
+      Map<String, dynamic>? settings;
+      dynamic prev =
           getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
-      invoke(settings, dynamicUIBuilderContext);
+      if (prev.runtimeType.toString().contains("Map")) {
+        settings = prev as Map<String, dynamic>?;
+      } else {
+        try {
+          settings = json.decode(prev) as Map<String, dynamic>?;
+        } catch (e) {
+          print("clickStatic exception: $e");
+        }
+      }
+      if (settings != null) {
+        invoke(settings, dynamicUIBuilderContext);
+      }
       return null;
-    }).then((result) {}).catchError((error) {
+    }).then((result) {}).catchError((error, stacktrace) {
       if (kDebugMode) {
-        print("clickStatic exception: $error");
+        print("clickStatic exception: $error $stacktrace");
       }
     });
   }
