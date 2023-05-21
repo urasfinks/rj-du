@@ -19,7 +19,8 @@ class Storage {
     prefs = await SharedPreferences.getInstance();
   }
 
-  void onChange(String key, String defaultValue, Function(String value) callback) {
+  void onChange(
+      String key, String defaultValue, Function(String value) callback) {
     if (!mapWatcher.containsKey(key)) {
       mapWatcher[key] = [];
     }
@@ -32,6 +33,13 @@ class Storage {
   String get(String key, String defaultValue) {
     String? result = prefs!.getString(key);
     return result ?? defaultValue;
+  }
+
+  String getByTemplate(String key, String defaultValue) {
+    if (key == "uuid") {
+      return "***";
+    }
+    return get(key, defaultValue);
   }
 
   void set(String key, String value, [bool updateIfExist = true]) {

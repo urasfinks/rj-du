@@ -1,3 +1,4 @@
+import 'package:rjdu/storage.dart';
 import 'package:rjdu/util/template.dart';
 
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -27,6 +28,15 @@ class TemplateFunction {
     },
     "undefined": (data, arguments, ctx) {
       return DynamicUIBuilderContext.template(arguments);
+    },
+    "storage": (data, arguments, ctx) {
+      if (arguments.length == 1) {
+        return Storage().getByTemplate(arguments[0], "[${arguments[0]}]");
+      } else if (arguments.length == 2) {
+        return Storage().getByTemplate(arguments[0], arguments[1]);
+      } else {
+        return "storage($arguments) length must be 1|2";
+      }
     }
   };
 }
