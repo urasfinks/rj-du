@@ -15,7 +15,7 @@ class TemplateDirective {
       return data != null ? Util.jsonStringEscape(data) : '';
     },
     "jsonEncode": (data, arguments, ctx) {
-      //print("jsonEncode ${data.runtimeType} > ${json.encode(data)}");
+      //print("TemplateDirective.jsonEncode ${data.runtimeType} > ${json.encode(data)}");
       return data != null ? json.encode(data) : '';
     },
     "formatNumber": (data, arguments, ctx) {
