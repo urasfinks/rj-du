@@ -45,6 +45,7 @@ class DynamicPage extends StatefulWidget {
   }
 
   void reload() {
+    properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
     isRunConstructor = false;
     if (dynamicPageSate != null) {
       dynamicPageSate!.setState(() {});
