@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../global_settings.dart';
 import '../dynamic_ui_builder_context.dart';
@@ -9,23 +10,47 @@ class CustomScrollViewWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
-    List<SliverList> sliverList = [];
+    List<Widget> sliverList = [];
     const numberOfItemsPerList = 10;
     List children =
         updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
 
     List<Widget> list = [];
+
     bool includeTopOffset = TypeParser.parseBool(
       getValue(parsedJson, 'includeTopOffset', true, dynamicUIBuilderContext),
     )!;
     double extraTopOffset = TypeParser.parseDouble(
       getValue(parsedJson, 'extraTopOffset', 0, dynamicUIBuilderContext),
     )!;
+
     if (includeTopOffset) {
       list.add(SizedBox(
-        height: GlobalSettings().appBarHeight + extraTopOffset,
+        //height: GlobalSettings().appBarHeight + extraTopOffset,
+        height: extraTopOffset,
       ));
     }
+
+    sliverList.add(const SliverAppBar(
+      //Выправляет пространство под extendBodyBehindAppBar: true
+      toolbarHeight: 0,
+    ));
+
+    bool pullToRefresh = TypeParser.parseBool(
+      getValue(parsedJson, 'pullToRefresh', true, dynamicUIBuilderContext),
+    )!;
+    if (pullToRefresh) {
+      sliverList.add(
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              dynamicUIBuilderContext.dynamicPage.reload();
+            });
+          },
+        ),
+      );
+    }
+
     for (int i = 0; i < children.length; i++) {
       list.add(getRender(i, children, dynamicUIBuilderContext));
       if (i > 0 && i % numberOfItemsPerList == 0) {
