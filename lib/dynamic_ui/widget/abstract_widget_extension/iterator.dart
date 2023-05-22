@@ -63,7 +63,7 @@ class Iterator extends AbstractExtension {
         if (parsedJson.containsKey("extendDataElement")) {
           data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
         }
-        newUIElement["context"] = data;
+        newUIElement["context"] = Util.templateArguments(data, dynamicUIBuilderContext);
 
         if (data.containsKey("uuid_data")) {
           dynamicUIBuilderContext.dynamicPage.addShadowUuid(data["uuid_data"]);
