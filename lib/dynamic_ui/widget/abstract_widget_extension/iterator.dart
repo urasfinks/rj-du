@@ -1,3 +1,4 @@
+import '../../../util.dart';
 import '../../dynamic_ui_builder_context.dart';
 import 'abstract_extension.dart';
 //import 'iterator_theme/button_group.dart';
@@ -7,72 +8,76 @@ class Iterator extends AbstractExtension {
     //"ButtonGroup": ButtonGroup().getTheme()
   };
 
-  static void extend(Map<String, dynamic> child,
+  static void extend(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
-    String dataType = child["dataType"];
-    dynamic value;
+    String dataType = parsedJson["dataType"];
+    dynamic listData;
     switch (dataType) {
       case "state":
-        String key = child["key"];
+        String key = parsedJson["key"];
         //Будем прихранивать неявно объявленные uuid, что бы небыло лишних перерисовок страницы
         //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
         //Поэтому удалим их и потом заново добавим уже обновлённые
         AbstractExtension.removeLastShadowUuid(key, dynamicUIBuilderContext);
-        value = dynamicUIBuilderContext.dynamicPage.stateData.value[key];
+        listData = dynamicUIBuilderContext.dynamicPage.stateData.value[key];
         break;
       case "list":
-        value = child["list"];
+        listData = parsedJson["list"];
         break;
     }
 
-    if (child.containsKey("theme")) {
-      if (theme.containsKey(child["theme"])) {
-        child.addAll(theme[child["theme"]]!);
+    if (parsedJson.containsKey("theme")) {
+      if (theme.containsKey(parsedJson["theme"])) {
+        parsedJson.addAll(theme[parsedJson["theme"]]!);
       } else {
         result.add({
           "flutterType": "Text",
-          "label": "Theme [${child["theme"]}] is not defined"
+          "label": "Theme [${parsedJson["theme"]}] is not defined"
         });
         return;
       }
     }
-    bool templateDivider = child.containsKey("template_divider");
+    bool templateDivider = parsedJson.containsKey("template_divider");
     bool add = false;
-    if (value != null) {
-      List<dynamic> list = value as List<dynamic>;
-      for (Map<String, dynamic> item in list) {
-        Map<String, dynamic> map = {};
+    if (listData != null) {
+      List<dynamic> list = listData as List<dynamic>;
+      for (Map<String, dynamic> data in list) {
+        Map<String, dynamic> newUIElement = {};
         String seqType;
-        if (item.containsKey("customSeqType")) {
-          seqType = item["customSeqType"];
+        if (data.containsKey("customSeqType")) {
+          seqType = data["customSeqType"];
         } else if (list.length == 1) {
           seqType = "template_single";
-        } else if (list.first == item) {
+        } else if (list.first == data) {
           seqType = "template_first";
-        } else if (list.last == item) {
+        } else if (list.last == data) {
           seqType = "template_last";
         } else {
           seqType = "template_middle";
         }
-        map.addAll(item[seqType] ??
-            item["template"] ??
-            child[seqType] ??
-            child["template"]); //Шаблон можно заложить в данные
-        map["context"] = item;
+        newUIElement.addAll(data[seqType] ??
+            data["template"] ??
+            parsedJson[seqType] ??
+            parsedJson["template"]); //Шаблон можно заложить в данные
 
-        if (item.containsKey("uuid_data")) {
-          dynamicUIBuilderContext.dynamicPage.addShadowUuid(item["uuid_data"]);
+        if (parsedJson.containsKey("extendDataElement")) {
+          data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
+        }
+        newUIElement["context"] = data;
+
+        if (data.containsKey("uuid_data")) {
+          dynamicUIBuilderContext.dynamicPage.addShadowUuid(data["uuid_data"]);
         }
         add = true;
-        result.add(map);
-        if (templateDivider && list.last != item) {
-          result.add(child["template_divider"]);
+        result.add(newUIElement);
+        if (templateDivider && list.last != data) {
+          result.add(parsedJson["template_divider"]);
         }
       }
     }
     //Если небыло ничего добавлено в результирующий список, добавим предустановленный ifDataEmpty если есть
-    if (!add && child.containsKey("ifDataEmpty")) {
-      result.add(child["ifDataEmpty"]);
+    if (!add && parsedJson.containsKey("ifDataEmpty")) {
+      result.add(parsedJson["ifDataEmpty"]);
     }
   }
 }
