@@ -108,40 +108,14 @@ class DynamicInvoke {
     return dynamicUIBuilderContext;
   }
 
-  Map<String, dynamic> templateArguments(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (args.containsKey("templateArguments")) {
-      Map<String, dynamic> newArgs = {};
-      newArgs.addAll(args);
-      for (String query in newArgs["templateArguments"]) {
-        tmp(query, newArgs, dynamicUIBuilderContext);
-      }
-      return newArgs;
-    }
-    return args;
-  }
 
-  void tmp(
-      String path, Map data, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    List<String> exp = path.split(".");
-    dynamic cur = data;
-    dynamic curParent = data;
-    for (String key in exp) {
-      if (cur != null && cur[key] != null) {
-        curParent = cur;
-        cur = cur[key];
-      }
-    }
-    curParent[exp[exp.length - 1]] =
-        Util.template(cur, dynamicUIBuilderContext);
-  }
 
   dynamic sysInvoke(String handler, Map<String, dynamic> inArgs,
       DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool jsContext = false]) {
     if (this.handler.containsKey(handler)) {
       dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
-      Map<String, dynamic> args = templateArguments(
+      Map<String, dynamic> args = Util.templateArguments(
           Util.getMutableMap(inArgs), dynamicUIBuilderContext);
       String log = "";
       if (kDebugMode) {
@@ -178,7 +152,7 @@ class DynamicInvoke {
     bool includeStateData = false,
     bool includePageArgument = false,
   ]) {
-    args = templateArguments(args, dynamicUIBuilderContext);
+    args = Util.templateArguments(args, dynamicUIBuilderContext);
 
     if (args.containsKey("includeAll") && args["includeAll"] == true) {
       includeStateData = true;

@@ -34,6 +34,11 @@ class Util {
         template, dynamicUIBuilderContext, autoEscape, debug);
   }
 
+  static Map<String, dynamic> templateArguments(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    return Template.templateArguments(args, dynamicUIBuilderContext);
+  }
+
   static void log(dynamic mes) {
     developer.log(mes.toString());
   }
