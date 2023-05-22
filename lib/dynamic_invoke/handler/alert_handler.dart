@@ -11,7 +11,7 @@ class AlertHandler extends AbstractHandler {
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> config = Util.merge({
       "label": "Сохранено",
-      "backgroundColor": "schema:primary", // "rgba:30,136,229,0.95",
+      "backgroundColor": "schema:background", // "rgba:30,136,229,0.95",
       "color": "schema:inversePrimary",
       "duration": 750,
       "action": false,
@@ -47,8 +47,8 @@ class AlertHandler extends AbstractHandler {
         duration: Duration(milliseconds: config["duration"]),
         content: Text(config["label"], style: TextStyle(color: TypeParser.parseColor(config["color"]))),
         backgroundColor: TypeParser.parseColor(config["backgroundColor"]),
+        behavior: SnackBarBehavior.fixed,
         elevation: 0,
-        behavior: SnackBarBehavior.floating,
         action: action,
       ),
     );
