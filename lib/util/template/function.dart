@@ -37,6 +37,9 @@ class TemplateFunction {
       } else {
         return "storage($arguments) length must be 1|2";
       }
+    },
+    "timestamp": (data, arguments, ctx) {
+      return DateTime.now().millisecondsSinceEpoch.toString();
     }
   };
 }
