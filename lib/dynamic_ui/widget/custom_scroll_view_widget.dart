@@ -43,7 +43,7 @@ class CustomScrollViewWidget extends AbstractWidget {
       sliverList.add(
         CupertinoSliverRefreshControl(
           onRefresh: () async {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 700), () {
               dynamicUIBuilderContext.dynamicPage.reload();
             });
           },
