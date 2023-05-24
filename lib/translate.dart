@@ -26,17 +26,17 @@ class Translate {
     });
   }
 
-  String getByArgs(List<String> args) {
+  String get(List<String> args) {
     if (args.length == 1) {
-      return get(args[0]);
+      return _get(args[0]);
     } else if (args.length == 2) {
-      return get(args[0], args[1]);
+      return _get(args[0], args[1]);
     } else {
       return "Undefined arguments size: $args";
     }
   }
 
-  String get(String id, [String? language]) {
+  String _get(String id, [String? language]) {
     language ??= Storage().get("language", "ru");
     if (map.containsKey(id)) {
       Map<String, dynamic> dict = map[id] as Map<String, dynamic>;

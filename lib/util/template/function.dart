@@ -24,7 +24,7 @@ class TemplateFunction {
       return ctx.dynamicPage.templateByContainer(arguments);
     },
     "translate": (data, arguments, ctx) {
-      return Translate().getByArgs(arguments);
+      return Translate().get(arguments);
     },
     "undefined": (data, arguments, ctx) {
       return DynamicUIBuilderContext.template(arguments);

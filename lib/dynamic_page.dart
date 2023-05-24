@@ -45,14 +45,23 @@ class DynamicPage extends StatefulWidget {
   }
 
   void reload() {
-    properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
+    properties
+        .clear(); //Что бы стереть TextFieldController при перезагрузке страницы
     isRunConstructor = false;
     if (dynamicPageSate != null) {
       dynamicPageSate!.setState(() {});
     }
   }
 
-  void setStateDataMap(Map<String, dynamic> map) {
+  void setStateData(String key, dynamic value,
+      [bool notifyDynamicPage = true]) {
+    if (stateData.value[key] != value) {
+      stateData.value[key] = value;
+      DataSource().setData(stateData, notifyDynamicPage);
+    }
+  }
+
+  void setStateDataMap(Map<String, dynamic> map, [bool notifyDynamicPage = true]) {
     bool change = false;
     for (MapEntry<String, dynamic> item in map.entries) {
       if (stateData.value[item.key] != item.value) {
@@ -61,7 +70,7 @@ class DynamicPage extends StatefulWidget {
       }
     }
     if (change) {
-      DataSource().setData(stateData);
+      DataSource().setData(stateData, notifyDynamicPage);
     }
   }
 
@@ -71,14 +80,6 @@ class DynamicPage extends StatefulWidget {
       return map[key];
     } else {
       return defaultValue;
-    }
-  }
-
-  void setStateData(String key, dynamic value,
-      [bool notifyDynamicPage = true]) {
-    if (stateData.value[key] != value) {
-      stateData.value[key] = value;
-      DataSource().setData(stateData, notifyDynamicPage);
     }
   }
 
@@ -156,7 +157,8 @@ class DynamicPage extends StatefulWidget {
     if (parseArguments.length == 2) {
       String uuid = parseArguments[0];
       if (container.containsKey(uuid)) {
-        return Template.stringSelector(container[uuid]!.data, parseArguments[1]);
+        return Template.stringSelector(
+            container[uuid]!.data, parseArguments[1]);
       }
     }
     return "DynamicPage.template() args: ${parseArguments.join(",")} container not exists";

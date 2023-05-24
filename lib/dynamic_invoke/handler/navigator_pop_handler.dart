@@ -18,15 +18,15 @@ class NavigatorPopHandler extends AbstractHandler {
     int delay = args.containsKey("delay") ? args["delay"] : 0;
     if (delay > 0) {
       Future.delayed(Duration(milliseconds: delay), () {
-        pop(count, indexTab, args);
+        _pop(count, indexTab, args);
       });
     } else {
-      pop(count, indexTab, args);
+      _pop(count, indexTab, args);
     }
-    updateLast(args, indexTab);
+    _updateLast(args, indexTab);
   }
 
-  void updateLast(Map<String, dynamic> args, int indexTab) {
+  void _updateLast(Map<String, dynamic> args, int indexTab) {
     DynamicPage dynamicPage = NavigatorApp.getLast(indexTab)!;
     if (args.containsKey("setStateDataMap")) {
       dynamicPage.setStateDataMap(args["setStateDataMap"]);
@@ -36,7 +36,7 @@ class NavigatorPopHandler extends AbstractHandler {
     }
   }
 
-  void pop(int count, int indexTab, Map<String, dynamic> args) {
+  void _pop(int count, int indexTab, Map<String, dynamic> args) {
     while (count > 0) {
       if (!NavigatorApp.isLast(indexTab)) {
         NavigatorApp.removePage(NavigatorApp.getLast(indexTab)!);
