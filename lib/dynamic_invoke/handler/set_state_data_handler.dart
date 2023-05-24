@@ -5,12 +5,17 @@ import '../../util.dart';
 
 class SetStateDataHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  handle(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ['key', 'value'])) {
-      dynamicUIBuilderContext.dynamicPage.setStateData(args['key'], args['value']);
+      dynamicUIBuilderContext.dynamicPage
+          .setStateData(args['key'], args['value'], args['notify'] ?? true);
+    } else if (Util.containsKeys(args, ['map'])) {
+      dynamicUIBuilderContext.dynamicPage
+          .setStateDataMap(args['map'], args['notify'] ?? true);
     } else {
       if (kDebugMode) {
-        print("SetStateDataHandler not contains Keys: [key, value] in args: $args");
+        print("SetStateDataHandler undefined scheme args: $args");
       }
     }
   }
