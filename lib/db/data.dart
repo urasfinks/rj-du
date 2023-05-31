@@ -14,6 +14,7 @@ class Data {
   bool updateIfExist = true;
   bool cloneFieldIfNull = true;
   bool onUpdateResetRevision = true;
+  bool saveToDb = true;
   Function? onPersist;
 
   Data(
