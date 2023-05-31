@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class GlobalSettings {
   bool debug = true;
-  String version = "v3";
+  String version = "v4";
   String host = "https://e-humidor.ru:8453";
   double appBarHeight = 56.0;
   double bottomNavigationBarHeight = 56.0;
