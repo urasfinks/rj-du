@@ -16,7 +16,7 @@ class DataMigration {
     bool updateApplication =
         Storage().get('version', 'v0') != GlobalSettings().version;
     if (kDebugMode) {
-      print("migration() updateApplication = $updateApplication");
+      print("migration() current versionL ${GlobalSettings().version}; updateApplication = $updateApplication");
     }
     if (updateApplication) {
       if (kDebugMode) {
