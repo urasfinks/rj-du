@@ -83,22 +83,28 @@ class DataSource {
           }, data);
         }
       } else {
-        db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then(
-            (resultSet) {
-          bool notify = false;
-          if (resultSet.isEmpty) {
-            insert(data, dataString);
-            notify = true;
-          } else if (data.updateIfExist == true &&
-              resultSet.first['value_data'] != dataString) {
-            updateNullable(data, resultSet.first);
-            update(data, dataString);
-            notify = true;
-          }
-          if (notify && notifyDynamicPage) {
+        if (data.saveToDb) {
+          db.rawQuery('SELECT * FROM data where uuid_data = ?',
+              [data.uuid]).then((resultSet) {
+            bool notify = false;
+            if (resultSet.isEmpty) {
+              insert(data, dataString);
+              notify = true;
+            } else if (data.updateIfExist == true &&
+                resultSet.first['value_data'] != dataString) {
+              updateNullable(data, resultSet.first);
+              update(data, dataString);
+              notify = true;
+            }
+            if (notify && notifyDynamicPage) {
+              notifyBlock(data);
+            }
+          });
+        } else { //Для случаев с socket
+          if (notifyDynamicPage) {
             notifyBlock(data);
           }
-        });
+        }
       }
     } else {
       list.add(data);
