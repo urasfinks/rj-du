@@ -14,6 +14,12 @@ class DataGetter {
         [DataType.socket.name]);
   }
 
+  static Future<List<Map<String, dynamic>>> resetRevision(DataType dataType, int fromRevision, int toRevision) async {
+    return await DataSource().db.rawQuery(
+        'UPDATE data SET revision_data = 0 WHERE type_data = ? AND revision_data >= ? AND revision_data <= ?',
+        [dataType.name, fromRevision, toRevision]);
+  }
+
   static Future<Map<String, int>> getMaxRevisionByType() async {
     Map<String, int> result = {};
     var resultSet = await DataSource().db.rawQuery(

@@ -64,7 +64,8 @@ class DataSync {
         Map<String, int> maxRevisionByType =
             await DataGetter.getMaxRevisionByType();
         while (true) {
-          if (counter > 20) {
+          if (counter > 1) {
+            //Default = 20
             if (kDebugMode) {
               print('DataSync.handler() break infinity while');
             }
@@ -73,62 +74,14 @@ class DataSync {
           counter++;
           Map<String, dynamic> postDataRequest = {
             "maxRevisionByType": maxRevisionByType,
-            "userData": Storage().get("isAuth", "false") ==
-                    "true" //Добавляем только в том случаи если пользователь авторизовался, а то на сервере не к чему будет привязывать данные
-                ? await DataGetter.getUpdatedUserData()
-                : [],
-            "socketData": await DataGetter.getAddSocketData()
+            "userDataRSync": //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while, а то на сервере не к чему будет привязывать данные
+                (Storage().get("isAuth", "false") == "true" && counter == 1)
+                    ? await DataGetter.getUpdatedUserData()
+                    : [],
+            "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные, все остальные итерации нужны для дозагрузки данных, которые переваливают за 1000 ревизий на сервере
+                counter == 1 ? await DataGetter.getAddSocketData() : []
           };
-          var example = {
-            "maxRevisionByType": {
-              "js": 0,
-              "socket": 0,
-              "systemData": 0,
-              "template": 0,
-              "userDataRSync": 0,
-              "any": 0
-            },
-            "userData": [
-              {
-                "id_data": 26,
-                "uuid_data": "500efb3e-8dfe-4b77-a536-9ea866a1ffe4",
-                "value_data": "{\"label\":\"Хьюмидор\"}",
-                "type_data": "userDataRSync",
-                "parent_uuid_data": null,
-                "key_data": "humidor",
-                "date_add_data": 1685559500427,
-                "date_update_data": null,
-                "revision_data": 0,
-                "is_remove_data": 0
-              }
-            ],
-            "socketData": [
-              {
-                "id_data": 27,
-                "uuid_data": "test",
-                "value_data": "{}",
-                "type_data": "socket",
-                "parent_uuid_data": null,
-                "key_data": null,
-                "date_add_data": 1685559656447,
-                "date_update_data": null,
-                "revision_data": 0,
-                "is_remove_data": 0
-              },
-              {
-                "id_data": 28,
-                "uuid_data": "test2",
-                "value_data": "{}",
-                "type_data": "socket",
-                "parent_uuid_data": "test",
-                "key_data": null,
-                "date_add_data": 1685559656448,
-                "date_update_data": null,
-                "revision_data": 0,
-                "is_remove_data": 0
-              }
-            ]
-          };
+
           if (kDebugMode) {
             print(
                 "DataSync.sync(${GlobalSettings().host}/sync) ${Util.jsonPretty(postDataRequest)}");
@@ -166,9 +119,18 @@ class DataSync {
                   dataObject.cloneFieldIfNull = true;
                   dataObject.isRemove = curData['is_remove'];
                   DataSource().setData(dataObject);
+                  //Сервер должен выдавать отсортированные ревизии
                   maxRevisionByType[dataType.name] = dataObject.revision!;
                   insertion++;
                   allInsertion++;
+                } else if (curData['needUpgrade'] != null) {
+                  print(
+                      "!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
+                  await DataGetter.resetRevision(
+                    dataType,
+                    curData['needUpgrade'],
+                    maxRevisionByType[dataType.name]!,
+                  );
                 }
               }
             }
