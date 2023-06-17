@@ -7,7 +7,7 @@ class DecorationImageProperty extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return DecorationImage(
-      image: getValue(parsedJson, 'image', null, dynamicUIBuilderContext),
+      image: render(parsedJson, 'image', null, dynamicUIBuilderContext),
       fit: TypeParser.parseBoxFit(
         getValue(parsedJson, 'fit', null, dynamicUIBuilderContext),
       ),
