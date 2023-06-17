@@ -36,6 +36,8 @@ import 'package:rjdu/dynamic_ui/widget/material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/sized_box_app_bar_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
@@ -93,6 +95,8 @@ class DynamicUI {
     'Column': ColumnWidget().get,
     'Row': RowWidget().get,
     'SizedBox': SizedBoxWidget().get,
+    'SizedBoxAppBar': SizedBoxAppBarWidget().get,
+    'SizedBoxBottomNavigationBar': SizedBoxBottomNavigationBarWidget().get,
     'Expanded': ExpandedWidget().get,
     'Padding': PaddingWidget().get,
     'Margin': MarginWidget().get,
