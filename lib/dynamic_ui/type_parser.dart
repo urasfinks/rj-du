@@ -347,9 +347,12 @@ class TypeParser {
       'emailAddress': TextInputType.emailAddress,
       'multiline': TextInputType.multiline,
       'number': TextInputType.number,
-      'numberS': const TextInputType.numberWithOptions(signed: true, decimal: false),
-      'numberD': const TextInputType.numberWithOptions(signed: false, decimal: true),
-      'numberSD': const TextInputType.numberWithOptions(signed: true, decimal: true),
+      'numberS':
+          const TextInputType.numberWithOptions(signed: true, decimal: false),
+      'numberD':
+          const TextInputType.numberWithOptions(signed: false, decimal: true),
+      'numberSD':
+          const TextInputType.numberWithOptions(signed: true, decimal: true),
       'phone': TextInputType.phone,
       'streetAddress': TextInputType.streetAddress,
       'text': TextInputType.text,
@@ -558,5 +561,13 @@ class TypeParser {
       'words': TextCapitalization.words,
     };
     return map.containsKey(value) ? map[value] : null;
+  }
+
+  static Size? parseSize(String? value) {
+    if (value == null) {
+      return null;
+    }
+    var split = value.split(",");
+    return Size(parseDouble(split[0])!, parseDouble(split[1])!);
   }
 }

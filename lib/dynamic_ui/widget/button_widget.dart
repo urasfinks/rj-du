@@ -1,52 +1,49 @@
-import 'package:flutter/material.dart';
 import '../dynamic_ui_builder_context.dart';
-import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
-import '../../util.dart';
+import 'package:flutter/material.dart';
+
+import 'button/abstract_button_style.dart';
+import 'button/elevated_button_style.dart';
+import 'button/outlined_button_style.dart';
+import 'button/text_button_style.dart';
 
 class ButtonWidget extends AbstractWidget {
   @override
-  Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return RawMaterialButton(
-      key: Util.getKey(),
-      fillColor: TypeParser.parseColor(
-        getValue(parsedJson, 'fillColor', null, dynamicUIBuilderContext),
-      ),
-      focusColor: TypeParser.parseColor(
-        getValue(parsedJson, 'focusColor', null, dynamicUIBuilderContext),
-      ),
-      hoverColor: TypeParser.parseColor(
-        getValue(parsedJson, 'hoverColor', null, dynamicUIBuilderContext),
-      ),
-      splashColor: TypeParser.parseColor(
-        getValue(parsedJson, 'splashColor', null, dynamicUIBuilderContext),
-      ),
-      highlightColor: TypeParser.parseColor(
-        getValue(parsedJson, 'highlightColor', null, dynamicUIBuilderContext),
-      ),
-      padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', 0, dynamicUIBuilderContext),
-      )!,
-      elevation: 0,
-      constraints: BoxConstraints(
-        minWidth: TypeParser.parseDouble(
-          getValue(parsedJson, 'minWidth', 0.0, dynamicUIBuilderContext),
-        )!,
-        maxWidth: TypeParser.parseDouble(
-          getValue(parsedJson, 'maxWidth', "infinity", dynamicUIBuilderContext),
-        )!,
-        minHeight: TypeParser.parseDouble(
-          getValue(parsedJson, 'minHeight', 0.0, dynamicUIBuilderContext),
-        )!,
-        maxHeight: TypeParser.parseDouble(
-          getValue(parsedJson, 'maxHeight', "infinity", dynamicUIBuilderContext),
-        )!,
-      ),
-      onPressed: () {
-        click(parsedJson, dynamicUIBuilderContext);
-      },
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
-      shape: const CircleBorder(),
-    );
+  get(Map<String, dynamic> parsedJson,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    AbstractButtonStyle? styleResource;
+    String? buttonStyle = getValue(
+        parsedJson, 'buttonStyle', 'Elevated', dynamicUIBuilderContext);
+    switch (buttonStyle) {
+      case "Elevated":
+        styleResource =
+            ElevatedButtonStyle(dynamicUIBuilderContext, this, parsedJson);
+        break;
+      case "Outlined":
+        styleResource =
+            OutlinedButtonStyle(dynamicUIBuilderContext, this, parsedJson);
+        break;
+      case "Text":
+        styleResource =
+            TextButtonStyle(dynamicUIBuilderContext, this, parsedJson);
+        break;
+    }
+    String? borderStyle = getValue(parsedJson, 'borderStyle',
+        'RoundedRectangleBorder', dynamicUIBuilderContext);
+    ButtonStyle? resultButtonStyle;
+    if (borderStyle != null && styleResource != null) {
+      switch (borderStyle) {
+        case "StadiumBorder":
+          resultButtonStyle = styleResource.getStadiumBorder();
+          break;
+        case "RoundedRectangleBorder":
+          resultButtonStyle = styleResource.getRoundedRectangleBorder();
+          break;
+        case "CircleBorder":
+          resultButtonStyle = styleResource.getCircleBorder();
+          break;
+      }
+    }
+    return styleResource!.getButton(resultButtonStyle);
   }
 }

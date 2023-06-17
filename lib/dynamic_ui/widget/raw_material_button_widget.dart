@@ -6,7 +6,7 @@ import '../../util.dart';
 
 class RawMaterialButtonWidget extends AbstractWidget {
   @override
-  get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return RawMaterialButton(
       key: Util.getKey(),
       fillColor: TypeParser.parseColor(
@@ -45,7 +45,7 @@ class RawMaterialButtonWidget extends AbstractWidget {
       onPressed: () {
         click(parsedJson, dynamicUIBuilderContext);
       },
-      child: render(parsedJson, 'icon', null, dynamicUIBuilderContext),
+      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
       shape: const CircleBorder(),
     );
   }

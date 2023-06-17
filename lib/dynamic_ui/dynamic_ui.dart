@@ -19,7 +19,6 @@ import 'package:rjdu/dynamic_ui/widget/column_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/container_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/divider_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/elevated_button_icon_widget.dart';
-import 'package:rjdu/dynamic_ui/widget/elevated_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/expanded_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/fitted_box_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/floating_action_button_widget.dart';
@@ -77,11 +76,10 @@ class DynamicUI {
     //Button
     'Button': ButtonWidget().get,
     'ElevatedButtonIcon': ElevatedButtonIconWidget().get,
-    'ElevatedButton': ElevatedButtonWidget().get,
     'InkWell': InkWellWidget().get,
-    'IconButton': IconButtonWidget().get,
-    'FloatingActionButton': FloatingActionButtonWidget().get,
-    'RawMaterialButton': RawMaterialButtonWidget().get,
+    'IconButton': IconButtonWidget().get, //Кнопка с иконкой
+    'FloatingActionButton': FloatingActionButtonWidget().get, //Кругляш на BottomNavigationBar
+    'RawMaterialButton': RawMaterialButtonWidget().get, //Кнопка без фона (можно обернуть в Material)
 
     //Widget
     "MaterialApp": MaterialAppWidget().get,
