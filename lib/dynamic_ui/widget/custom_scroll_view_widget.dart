@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rjdu/data_sync.dart';
 import '../../global_settings.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
@@ -57,6 +58,7 @@ class CustomScrollViewWidget extends AbstractWidget {
             Future.delayed(const Duration(milliseconds: 700), () {
               //dynamicUIBuilderContext.dynamicPage.reload();
               dynamicUIBuilderContext.dynamicPage.safeReload();
+              DataSync().sync();
             });
           },
         ),
