@@ -87,44 +87,42 @@ class DataSource {
             notifyBlock(args);
           }, data);
         }
+      } else if (data.type == DataType.socket && data.beforeSync == false) {
+        //Обновление сокетных данных не должно обновлять локальную БД
+        transaction.add("update socket data");
+
+        if (notifyDynamicPage) {
+          transaction.add("notifyBlock()");
+          notifyBlock(data);
+        }
       } else {
-        transaction.add("is not virtual");
-        if (data.saveToDb) {
-          transaction.add("saveToDB");
-          db.rawQuery('SELECT * FROM data where uuid_data = ?',
-              [data.uuid]).then((resultSet) {
-            bool notify = false;
-            if (resultSet.isEmpty) {
-              transaction.add("result is empty > insert");
-              insert(data, dataString);
-              notify = true;
-            } else if (data.updateIfExist == true) {
-              //resultSet.first['value_data'] != dataString
-              // данные надо иногда обновлять не только потому что изменились
-              // сами данные, бывает что надо бновить флаг удаления или ревизию
-              transaction.add("result not empty > update");
-              updateNullable(data, resultSet.first);
-              update(data, dataString);
-              notify = true;
-            } else {
-              transaction.add("WTF?");
-            }
-            if (notify && notifyDynamicPage) {
-              transaction.add("notifyBlock()");
-              notifyBlock(data);
-            }
-            if (kDebugMode && debugTransaction) {
-              print("continue: ${data.uuid} transaction: $transaction");
-            }
-          });
-        } else {
-          //Для случаев с socket
-          transaction.add("not saveToDB");
-          if (notifyDynamicPage) {
+        transaction.add("saveToDB");
+        db.rawQuery('SELECT * FROM data where uuid_data = ?',
+            [data.uuid]).then((resultSet) {
+          bool notify = false;
+          if (resultSet.isEmpty) {
+            transaction.add("result is empty > insert");
+            insert(data, dataString);
+            notify = true;
+          } else if (data.updateIfExist == true) {
+            //resultSet.first['value_data'] != dataString
+            // данные надо иногда обновлять не только потому что изменились
+            // сами данные, бывает что надо бновить флаг удаления или ревизию
+            transaction.add("result not empty > update");
+            updateNullable(data, resultSet.first);
+            update(data, dataString);
+            notify = true;
+          } else {
+            transaction.add("WTF?");
+          }
+          if (notify && notifyDynamicPage) {
             transaction.add("notifyBlock()");
             notifyBlock(data);
           }
-        }
+          if (kDebugMode && debugTransaction) {
+            print("continue: ${data.uuid} transaction: $transaction");
+          }
+        });
       }
     } else {
       transaction.add("not init");

@@ -26,9 +26,8 @@ class Data {
   // Отклчаем занулениии ревизии
   bool onUpdateResetRevision = true;
 
-  // Если данные попадут в SetDataSource и флаг будет false они не обновятся
-  // в локальной БД
-  bool saveToDb = true;
+  // Данные залетают после синхронизации
+  bool beforeSync = false;
 
   // Функция выполнится когда данные будут закомичены в локальной БД
   Function? onPersist;
@@ -42,6 +41,6 @@ class Data {
 
   @override
   String toString() {
-    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value, type: $type, key: $key, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, cloneFieldIfNull: $onUpdateOverlayNullField, onUpdateResetRevision: $onUpdateResetRevision, saveToDb: $saveToDb, onPersist: $onPersist}';
+    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value, type: $type, key: $key, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, onPersist: $onPersist}';
   }
 }
