@@ -34,7 +34,7 @@ class RjDu {
 
     HttpClient.init();
     Translate().init();
-    //DataSync().init();
+    DataSync().init();
 
     SystemNotify().listen(SystemNotifyEnum.changeTabOrHistoryPop, (state) {
       NavigatorApp.getLast()?.renderFloatingActionButton();
