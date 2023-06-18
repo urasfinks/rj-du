@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../global_settings.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
@@ -11,13 +10,17 @@ class CustomScrollViewWidget extends AbstractWidget {
   Widget get(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     List<Widget> sliverList = [];
+
     const numberOfItemsPerList = 10;
-    List children =
-        updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
+    List children = [];
+    if (parsedJson.containsKey('children')) {
+      children =
+          updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
+    }
 
     List<Widget> list = [];
 
-    bool includeTopOffset = TypeParser.parseBool(
+    /*bool includeTopOffset = TypeParser.parseBool(
       getValue(parsedJson, 'includeTopOffset', true, dynamicUIBuilderContext),
     )!;
     double extraTopOffset = TypeParser.parseDouble(
@@ -29,12 +32,17 @@ class CustomScrollViewWidget extends AbstractWidget {
         //height: GlobalSettings().appBarHeight + extraTopOffset,
         height: extraTopOffset,
       ));
-    }
+    }*/
 
-    sliverList.add(const SliverAppBar(
+    if (parsedJson.containsKey("appBar")) {
+      sliverList
+          .add(render(parsedJson, 'appBar', null, dynamicUIBuilderContext));
+    } else {
       //Выправляет пространство под extendBodyBehindAppBar: true
-      toolbarHeight: 0,
-    ));
+      sliverList.add(const SliverAppBar(
+        toolbarHeight: 0,
+      ));
+    }
 
     bool pullToRefresh = TypeParser.parseBool(
       getValue(parsedJson, 'pullToRefresh', true, dynamicUIBuilderContext),
@@ -61,7 +69,8 @@ class CustomScrollViewWidget extends AbstractWidget {
         list.clear();
       }
     }
-    bool includeBottomOffset = TypeParser.parseBool(
+
+    /*bool includeBottomOffset = TypeParser.parseBool(
       getValue(
           parsedJson, 'includeBottomOffset', true, dynamicUIBuilderContext),
     )!;
@@ -72,10 +81,24 @@ class CustomScrollViewWidget extends AbstractWidget {
       list.add(SizedBox(
         height: GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
       ));
+    }*/
+
+    if (parsedJson.containsKey("startFill")) {
+      // SliverFillRemaining
+      sliverList
+          .add(render(parsedJson, 'startFill', null, dynamicUIBuilderContext));
     }
+
     if (list.isNotEmpty) {
       sliverList.add(getSliverList(list));
     }
+
+    if (parsedJson.containsKey("endFill")) {
+      //SliverFillRemaining
+      sliverList
+          .add(render(parsedJson, 'endFill', null, dynamicUIBuilderContext));
+    }
+
     return CustomScrollView(
       key: Util.getKey(),
       primary: TypeParser.parseBool(

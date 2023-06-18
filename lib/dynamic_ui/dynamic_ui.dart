@@ -37,6 +37,8 @@ import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/sliver_app_bar_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/sliver_fill_remaining_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
@@ -86,6 +88,8 @@ class DynamicUI {
     "Text": TextWidget().get,
     "Scaffold": ScaffoldWidget().get,
     'AppBar': AppBarWidget().get,
+    'SliverAppBar': SliverAppBarWidget().get,
+    'SliverFillRemaining': SliverFillRemainingWidget().get,
     'Scrollbar': ScrollbarWidget().get,
     'CustomScrollView': CustomScrollViewWidget().get,
     'ListView': ListViewWidget().get,
