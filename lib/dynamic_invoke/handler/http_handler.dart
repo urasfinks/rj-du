@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:rjdu/dynamic_invoke/handler/abstract_handler.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
@@ -25,22 +26,34 @@ class HttpHandler extends AbstractHandler {
       response = HttpClient.post(
           "${args["host"]}${args["uri"]}", args["body"], args["headers"]);
     } else {
-      response =
+       response =
           HttpClient.get("${args["host"]}${args["uri"]}", args["headers"]);
     }
     response.then((value) {
       if (args.containsKey("onResponse")) {
-        try {
-          args["onResponse"]["args"]["body"] = json.decode(value.body);
-        } catch (e) {
-          args["onResponse"]["args"]["body"] = {
-            'status': false,
-            'exception': [e.toString()]
-          };
+        Map<String, Object> httpResponseObject = {};
+        httpResponseObject["status"] = value.statusCode == 200;
+        httpResponseObject["headers"] = value.headers;
+        httpResponseObject["statusCode"] = value.statusCode;
+
+        if (httpResponseObject["status"] != true) {
+          httpResponseObject["error"] = value.body;
         }
-        args["onResponse"]["args"]["headers"] = value.headers;
-        args["onResponse"]["args"]["statusCode"] = value.statusCode;
+
+        try {
+          httpResponseObject["data"] = json.decode(value.body);
+        } catch (e) {
+          httpResponseObject["status"] = false;
+          httpResponseObject["error"] = e.toString();
+        }
+
+        args["onResponse"]["args"]["httpResponse"] = httpResponseObject;
         AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onResponse");
+      }
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+        print(stackTrace);
       }
     });
   }

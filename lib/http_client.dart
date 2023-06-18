@@ -18,7 +18,7 @@ class HttpClient {
 
   static Future<Response> get(String url, Map<String, String>? headers) {
     return _configureRequest(
-      http.post(Uri.parse(url), headers: headers),
+      http.get(Uri.parse(url), headers: headers),
       "$url, $headers",
     );
   }

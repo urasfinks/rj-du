@@ -78,6 +78,7 @@ class DynamicInvoke {
     javascriptRuntime?.init();
     for (MapEntry<String, Function> item in handler.entries) {
       javascriptRuntime!.onMessage(item.key, (dynamic args) {
+        //print("DynamicInvoke.onMessage() args: $args");
         String pageUuid = args["_rjduPageUuid"];
         args.removeWhere((key, value) => key == "_rjduPageUuid");
         DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
