@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../global_settings.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
@@ -20,7 +21,7 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     List<Widget> list = [];
 
-    /*bool includeTopOffset = TypeParser.parseBool(
+    bool includeTopOffset = TypeParser.parseBool(
       getValue(parsedJson, 'includeTopOffset', true, dynamicUIBuilderContext),
     )!;
     double extraTopOffset = TypeParser.parseDouble(
@@ -32,7 +33,7 @@ class CustomScrollViewWidget extends AbstractWidget {
         //height: GlobalSettings().appBarHeight + extraTopOffset,
         height: extraTopOffset,
       ));
-    }*/
+    }
 
     if (parsedJson.containsKey("appBar")) {
       sliverList
@@ -70,7 +71,7 @@ class CustomScrollViewWidget extends AbstractWidget {
       }
     }
 
-    /*bool includeBottomOffset = TypeParser.parseBool(
+    bool includeBottomOffset = TypeParser.parseBool(
       getValue(
           parsedJson, 'includeBottomOffset', true, dynamicUIBuilderContext),
     )!;
@@ -81,7 +82,7 @@ class CustomScrollViewWidget extends AbstractWidget {
       list.add(SizedBox(
         height: GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
       ));
-    }*/
+    }
 
     if (parsedJson.containsKey("startFill")) {
       // SliverFillRemaining
