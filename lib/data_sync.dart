@@ -148,6 +148,7 @@ class DataSync {
       dataObject.key = curData['key'];
       dataObject.revision = curData['revision'];
       dataObject.onUpdateResetRevision = false;
+      dataObject.beforeSync = true;
       dataObject.onUpdateOverlayNullField = true;
       dataObject.isRemove = curData['is_remove'];
       print("! $dataObject");
@@ -163,7 +164,7 @@ class DataSync {
           "!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
       // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
       // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
-       DataGetter.resetRevision(
+      DataGetter.resetRevision(
         dataType,
         curData['needUpgrade'],
         maxRevisionByType[dataType.name]!,
@@ -186,6 +187,9 @@ class DataSync {
     });
     SystemNotify().listen(SystemNotifyEnum.appLifecycleState, (state) {
       isActive = state == AppLifecycleState.resumed.name;
+      if (isActive) {
+        sync();
+      }
       if (kDebugMode) {
         print(
             "DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $isActive");
