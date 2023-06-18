@@ -84,12 +84,12 @@ class DataSync {
 
           if (kDebugMode) {
             print(
-                "DataSync.sync(${GlobalSettings().host}/sync) ${Util.jsonPretty(postDataRequest)}");
+                "DataSync.sync(${GlobalSettings().host}/Sync) ${Util.jsonPretty(postDataRequest)}");
           }
 
           Response response = await Util.asyncInvokeIsolate((args) {
             return HttpClient.post(
-                "${args["host"]}/sync", args["body"], args["headers"]);
+                "${args["host"]}/Sync", args["body"], args["headers"]);
           }, {
             "headers": HttpClient.upgradeHeadersAuthorization({}),
             "body": postDataRequest,
@@ -97,40 +97,21 @@ class DataSync {
           });
           if (kDebugMode) {
             print(
-                "ResponseCode: ${response.statusCode} Response: ${response.body}");
+                "Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
           }
           if (response.statusCode == 200) {
             int insertion = 0;
             Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate(
                 (arg) => json.decode(arg), response.body);
-
-            for (MapEntry<String, dynamic> item in parseJson.entries) {
-              DataType dataType = Util.dataTypeValueOf(item.key);
-              List<dynamic> list = item.value;
-              for (Map<String, dynamic> curData in list) {
-                if (curData['uuid'] != null && curData['uuid'] != "") {
-                  Data dataObject = Data(curData['uuid'], curData['value'],
-                      dataType, curData['parent_uuid']);
-                  dataObject.dateAdd = curData['date_add'];
-                  dataObject.dateUpdate = curData['date_update'];
-                  dataObject.key = curData['key'];
-                  dataObject.revision = curData['revision'];
-                  dataObject.onUpdateResetRevision = false;
-                  dataObject.cloneFieldIfNull = true;
-                  dataObject.isRemove = curData['is_remove'];
-                  DataSource().setData(dataObject);
-                  //Сервер должен выдавать отсортированные ревизии
-                  maxRevisionByType[dataType.name] = dataObject.revision!;
-                  insertion++;
-                  allInsertion++;
-                } else if (curData['needUpgrade'] != null) {
-                  print(
-                      "!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
-                  await DataGetter.resetRevision(
-                    dataType,
-                    curData['needUpgrade'],
-                    maxRevisionByType[dataType.name]!,
-                  );
+            if (parseJson["status"] == true) {
+              for (MapEntry<String, dynamic> item
+                  in parseJson["data"]["response"].entries) {
+                DataType dataType = Util.dataTypeValueOf(item.key);
+                for (Map<String, dynamic> curData in item.value) {
+                  if (upgradeData(curData, dataType, maxRevisionByType)) {
+                    insertion++;
+                    allInsertion++;
+                  }
                 }
               }
             }
@@ -155,6 +136,40 @@ class DataSync {
       }
       isRun = false;
     }
+  }
+
+  bool upgradeData(Map<String, dynamic> curData, DataType dataType,
+      Map<String, int> maxRevisionByType) {
+    if (curData['uuid'] != null && curData['uuid'] != "") {
+      Data dataObject = Data(
+          curData['uuid'], curData['value'], dataType, curData['parent_uuid']);
+      dataObject.dateAdd = curData['date_add'];
+      dataObject.dateUpdate = curData['date_update'];
+      dataObject.key = curData['key'];
+      dataObject.revision = curData['revision'];
+      dataObject.onUpdateResetRevision = false;
+      dataObject.onUpdateOverlayNullField = true;
+      dataObject.isRemove = curData['is_remove'];
+      print("! $dataObject");
+      DataSource().setData(dataObject);
+      //Сервер должен выдавать отсортированные ревизии
+      maxRevisionByType[dataType.name] = dataObject.revision!;
+      return true;
+    } else if (curData['needUpgrade'] != null) {
+      //Если ревизия на сервере оказалась меньше чем на устройстве
+      //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
+      // Что бы мы ему повторно выслали данные с устройства этот лаг недастающих ревизий
+      print(
+          "!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
+      // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
+      // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
+       DataGetter.resetRevision(
+        dataType,
+        curData['needUpgrade'],
+        maxRevisionByType[dataType.name]!,
+      );
+    }
+    return false;
   }
 
   void init() {

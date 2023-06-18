@@ -71,48 +71,72 @@ class DataSource {
   }
 
   void setData(Data data, [bool notifyDynamicPage = true]) {
+    bool debugTransaction = false;
+    List<String> transaction = [];
     if (isInit) {
+      transaction.add("is init");
       String dataString = data.value.runtimeType != String
           ? json.encode(data.value)
           : data.value;
       if (data.type == DataType.virtual) {
+        transaction.add("is virtual");
         //Что бы не было коллизии setState или marketRebuild во время build
         if (notifyDynamicPage) {
+          transaction.add("notifyBlock()");
           Util.asyncInvoke((args) {
             notifyBlock(args);
           }, data);
         }
       } else {
+        transaction.add("is not virtual");
         if (data.saveToDb) {
+          transaction.add("saveToDB");
           db.rawQuery('SELECT * FROM data where uuid_data = ?',
               [data.uuid]).then((resultSet) {
             bool notify = false;
             if (resultSet.isEmpty) {
+              transaction.add("result is empty > insert");
               insert(data, dataString);
               notify = true;
-            } else if (data.updateIfExist == true &&
-                resultSet.first['value_data'] != dataString) {
+            } else if (data.updateIfExist == true) {
+              //resultSet.first['value_data'] != dataString
+              // данные надо иногда обновлять не только потому что изменились
+              // сами данные, бывает что надо бновить флаг удаления или ревизию
+              transaction.add("result not empty > update");
               updateNullable(data, resultSet.first);
               update(data, dataString);
               notify = true;
+            } else {
+              transaction.add("WTF?");
             }
             if (notify && notifyDynamicPage) {
+              transaction.add("notifyBlock()");
               notifyBlock(data);
             }
+            if (kDebugMode && debugTransaction) {
+              print("continue: ${data.uuid} transaction: $transaction");
+            }
           });
-        } else { //Для случаев с socket
+        } else {
+          //Для случаев с socket
+          transaction.add("not saveToDB");
           if (notifyDynamicPage) {
+            transaction.add("notifyBlock()");
             notifyBlock(data);
           }
         }
       }
     } else {
+      transaction.add("not init");
       list.add(data);
+    }
+    if (kDebugMode && debugTransaction) {
+      print("${data.uuid} transaction: $transaction");
     }
   }
 
   void updateNullable(Data curData, dynamic dbResult) {
-    if (curData.cloneFieldIfNull) {
+    if (curData.onUpdateOverlayNullField) {
       curData.value ??= dbResult['value_data'];
       curData.parentUuid ??= dbResult['parent_uuid_data'];
       curData.key ??= dbResult['key_data'];
@@ -121,13 +145,13 @@ class DataSource {
       curData.revision ??= dbResult['revision_data'];
       curData.isRemove ??= dbResult['is_remove_data'];
     }
+  }
+
+  void update(Data curData, String dataString) {
     if (curData.onUpdateResetRevision &&
         curData.type.runtimeType.toString().endsWith("RSync")) {
       curData.revision = 0;
     }
-  }
-
-  void update(Data curData, String dataString) {
     db.rawUpdate(
       'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
       [
