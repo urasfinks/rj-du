@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rjdu/data_sync.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data_type.dart';
+import '../../http_client.dart';
+import '../global_settings.dart';
 import '../navigator_app.dart';
 import '../util.dart';
 import 'data_migration.dart';
@@ -71,65 +75,97 @@ class DataSource {
   }
 
   void setData(Data data, [bool notifyDynamicPage = true]) {
-    bool debugTransaction = false;
     List<String> transaction = [];
     if (isInit) {
-      transaction.add("is init");
-      String dataString = data.value.runtimeType != String
-          ? json.encode(data.value)
-          : data.value;
+      transaction.add("1 is init");
       if (data.type == DataType.virtual) {
-        transaction.add("is virtual");
+        transaction.add("2 is virtual");
         //Что бы не было коллизии setState или marketRebuild во время build
         if (notifyDynamicPage) {
-          transaction.add("notifyBlock()");
+          transaction.add("3 notifyBlock()");
           Util.asyncInvoke((args) {
             notifyBlock(args);
           }, data);
         }
+        if (kDebugMode && data.debugTransaction) {
+          print("setData: ${data.uuid} transaction: $transaction");
+        }
       } else if (data.type == DataType.socket && data.beforeSync == false) {
         //Обновление сокетных данных не должно обновлять локальную БД
-        transaction.add("update socket data");
+        transaction.add("4 update socket data");
 
         if (notifyDynamicPage) {
-          transaction.add("notifyBlock()");
+          transaction.add("4.1 notifyBlock()");
           notifyBlock(data);
         }
+        sendSocketUpdate(data);
+        if (kDebugMode && data.debugTransaction) {
+          print("setData: ${data.uuid} transaction: $transaction");
+        }
       } else {
-        transaction.add("saveToDB");
-        db.rawQuery('SELECT * FROM data where uuid_data = ?',
-            [data.uuid]).then((resultSet) {
+        transaction.add("5 saveToDB");
+        String dataString = data.value.runtimeType != String
+            ? json.encode(data.value)
+            : data.value;
+        db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then(
+            (resultSet) {
           bool notify = false;
           if (resultSet.isEmpty) {
-            transaction.add("result is empty > insert");
+            transaction.add("6 result is empty > insert");
             insert(data, dataString);
             notify = true;
+            if (data.type == DataType.socket) {
+              // После того как мы вставили сокетные данные
+              // Надо запустить синхронизацию
+              // Что бы эта запись на сервер эта запись уползла на сервер
+              transaction.add("6.1 DataSync().sync()");
+              DataSync().sync();
+            }
           } else if (data.updateIfExist == true) {
             //resultSet.first['value_data'] != dataString
             // данные надо иногда обновлять не только потому что изменились
             // сами данные, бывает что надо бновить флаг удаления или ревизию
-            transaction.add("result not empty > update");
+            transaction.add("7 result not empty > update");
             updateNullable(data, resultSet.first);
             update(data, dataString);
             notify = true;
           } else {
-            transaction.add("WTF?");
+            transaction.add("8 WTF?");
           }
           if (notify && notifyDynamicPage) {
-            transaction.add("notifyBlock()");
+            transaction.add("9 notifyBlock()");
             notifyBlock(data);
           }
-          if (kDebugMode && debugTransaction) {
-            print("continue: ${data.uuid} transaction: $transaction");
+          if (kDebugMode && data.debugTransaction) {
+            print("setData: ${data.uuid} transaction: $transaction");
           }
         });
       }
     } else {
-      transaction.add("not init");
+      transaction.add("10 not init");
       list.add(data);
+      if (kDebugMode && data.debugTransaction) {
+        print("setData: ${data.uuid} transaction: $transaction");
+      }
     }
-    if (kDebugMode && debugTransaction) {
-      print("${data.uuid} transaction: $transaction");
+  }
+
+  void sendSocketUpdate(Data data) async {
+    Map<String, dynamic> postData = {
+      "uuid_data": data.uuid,
+      "data": data.value
+    };
+    Response response = await Util.asyncInvokeIsolate((args) {
+      return HttpClient.post(
+          "${args["host"]}/SocketUpdate", args["body"], args["headers"]);
+    }, {
+      "headers": HttpClient.upgradeHeadersAuthorization({}),
+      "body": postData,
+      "host": GlobalSettings().host,
+    });
+    if (kDebugMode) {
+      print(
+          "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
     }
   }
 
