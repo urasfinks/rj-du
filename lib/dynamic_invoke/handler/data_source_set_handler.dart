@@ -8,7 +8,8 @@ import 'abstract_handler.dart';
 
 class DataSourceSetHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  handle(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ['uuid', 'value'])) {
       Data data = Data(
         args['uuid'],
@@ -16,17 +17,26 @@ class DataSourceSetHandler extends AbstractHandler {
         Util.dataTypeValueOf(args['type']),
         args['parent'],
       );
+      if (args.containsKey("debugTransaction")) {
+        data.debugTransaction = args["debugTransaction"];
+      }
+      if (args.containsKey("addSocketData")) {
+        data.beforeSync =
+            true; //Немного обманем систему, что бы удалось в БД запихать данные с типо socket
+      }
       data.key = args['key'];
       data.updateIfExist = true;
       if (args["onPersist"] != null) {
         data.onPersist = () {
-          AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onPersist");
+          AbstractWidget.clickStatic(
+              args, dynamicUIBuilderContext, "onPersist");
         };
       }
       DataSource().setData(data);
     } else {
       if (kDebugMode) {
-        print("DataSourceSetHandler not contains Keys: [uuid, value] in args: $args");
+        print(
+            "DataSourceSetHandler not contains Keys: [uuid, value] in args: $args");
         print(StackTrace.current);
       }
     }
