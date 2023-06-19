@@ -29,6 +29,9 @@ class Data {
   // Данные залетают после синхронизации
   bool beforeSync = false;
 
+  // Вывод отлаточной информации как прошёл DataSource.setData
+  bool debugTransaction = false;
+
   // Функция выполнится когда данные будут закомичены в локальной БД
   Function? onPersist;
 
