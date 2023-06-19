@@ -97,7 +97,7 @@ class DataSync {
           });
           if (kDebugMode) {
             print(
-                "Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+                "DataSync.sync() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
           }
           if (response.statusCode == 200) {
             int insertion = 0;
@@ -151,7 +151,7 @@ class DataSync {
       dataObject.beforeSync = true;
       dataObject.onUpdateOverlayNullField = true;
       dataObject.isRemove = curData['is_remove'];
-      print("! $dataObject");
+      //print("! $dataObject");
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
