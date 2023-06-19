@@ -10,7 +10,7 @@ class DataGetter {
 
   static Future<List<Map<String, dynamic>>> getAddSocketData() async {
     return await DataSource().db.rawQuery(
-        'SELECT * FROM data WHERE type_data = ? AND revision_data = 0',
+        'SELECT * FROM data WHERE type_data = ? AND revision_data = 0 and is_remove_data = 0',
         [DataType.socket.name]);
   }
 
@@ -23,7 +23,7 @@ class DataGetter {
   static Future<Map<String, int>> getMaxRevisionByType() async {
     Map<String, int> result = {};
     var resultSet = await DataSource().db.rawQuery(
-        'SELECT type_data, max(revision_data) as max FROM data GROUP BY type_data',
+        'SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 GROUP BY type_data',
         []);
     for (Map<String, dynamic> item in resultSet) {
       result[item['type_data']] = item['max'];
