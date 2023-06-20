@@ -4,6 +4,7 @@ class GlobalSettings {
   bool debug = true;
   String version = "v4";
   String host = "https://e-humidor.ru:8453";
+  String ws = "https://e-humidor.ru:8453";
   double appBarHeight = 56.0;
   double bottomNavigationBarHeight = 56.0;
 
@@ -23,5 +24,9 @@ class GlobalSettings {
 
   void setHost(String host) {
     this.host = host;
+  }
+
+  void setWs(String ws) {
+    this.ws = ws;
   }
 }
