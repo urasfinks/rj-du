@@ -151,10 +151,11 @@ class DynamicPage extends StatefulWidget {
 
   void updateNotifier(String uuid, Map<String, dynamic> data) {
     dynamicPageNotifier.updateNotifier(uuid, data);
-    // listenUuid содержит uuid отображённых данных без NotifyWidget
+    // shadowUuidList содержит uuid отображённых данных без NotifyWidget
     // Например в ChildrenExtension
     if (shadowUuidList.contains(uuid)) {
-      DataSource().setData(stateData);
+      print("TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
+      //DataSource().setData(stateData);
     }
   }
 
