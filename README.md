@@ -1,39 +1,29 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+RJDU - Jamsys.ru DynamicUI
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+Общая получаемая иерархия виджетов:
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+1 BottomNavigationBar (+FloatingActionButton)
+   1.1 Scaffold (+AppBar)
+      1.1.1 ListView
+      1.1.2 Sliver (+AppBar)
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+У каждого BottomTab своя история навигации
+Элемент навигации - DynamicPage
 
-## Features
+DynamicPage состоит из:
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+1) State - состояния (ввод данных с клавиатуры, что-то присвоеное в runtime) Авто создание Notify при установки флага в шаблон onStateDataUpdate: true
+2) Properties - программные контролеры (ScrollBarController, TextEditingController, ShadowUuid) - при reload контролеры зануляются, что приводит к сбросу состояний
+3) Container - словарь uuid всех подгруженных данных через DataSource/State. Для удобства работы в шаблонах, когда разные блоки имеют разный контекст данных, но очень надо получить данные из другова контекста
+4) Arguments - параметры запуска DynamicPage, это как аргументы для создания экземпляра
 
-## Getting started
+StatefulWidget DynamicPage динамически строит Widget/ы из аргументов запуска.
+Аргументы первичного уровня могут содержать ключ constructor, что приведёт к выполнению DynamicInvoke перед отрисовкой UI.
+В constructor DynamicInvoke можно динамически установить данные, которые в конечном итоге отрисуются в UI.
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Аргумент первичного уровня может содержать ключ socket: {onRead: DynamicInvoke, listUuid: []}, что приведёт к открытию коннекта на сервер
 
-## Usage
+Перезагрузка DynamicPage:
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+1) reload - полная перерисовка DynamicPage с вытекающим запуском конструктора перед отрисовкой
+2) safeReload - выполнение только constructor, дальше всё на откуп Notify блокам
