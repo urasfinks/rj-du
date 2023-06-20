@@ -79,78 +79,88 @@ class DataSource {
     if (isInit) {
       transaction.add("1 is init");
       if (data.type == DataType.virtual) {
-        transaction.add("2 is virtual");
-        //Что бы не было коллизии setState или marketRebuild во время build
-        if (notifyDynamicPage) {
-          transaction.add("3 notifyBlock()");
-          Util.asyncInvoke((args) {
-            notifyBlock(args);
-          }, data);
-        }
-        if (kDebugMode && data.debugTransaction) {
-          print("setData: ${data.uuid} transaction: $transaction");
-        }
+        setDataVirtual(data, transaction, notifyDynamicPage);
       } else if (data.type == DataType.socket && data.beforeSync == false) {
-        //Обновление сокетных данных не должно обновлять локальную БД
-        transaction.add("4 update socket data");
-
-        if (notifyDynamicPage) {
-          transaction.add("4.1 notifyBlock()");
-          notifyBlock(data);
-        }
-        sendSocketUpdate(data);
-        if (kDebugMode && data.debugTransaction) {
-          print("setData: ${data.uuid} transaction: $transaction");
-        }
+        setDataSocket(data, transaction, notifyDynamicPage);
       } else {
-        transaction.add("5 saveToDB");
-        String dataString = data.value.runtimeType != String
-            ? json.encode(data.value)
-            : data.value;
-        db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then(
-            (resultSet) {
-          bool notify = false;
-          if (resultSet.isEmpty) {
-            transaction.add("6 result is empty > insert");
-            insert(data, dataString);
-            notify = true;
-            if (data.type == DataType.socket) {
-              // После того как мы вставили сокетные данные
-              // Надо запустить синхронизацию
-              // Что бы эта запись на сервер эта запись уползла на сервер
-              transaction.add("6.1 DataSync().sync()");
-              DataSync().sync();
-            }
-          } else if (data.updateIfExist == true) {
-            //resultSet.first['value_data'] != dataString
-            // данные надо иногда обновлять не только потому что изменились
-            // сами данные, бывает что надо бновить флаг удаления или ревизию
-            transaction.add("7 result not empty > update");
-            updateNullable(data, resultSet.first);
-            update(data, dataString);
-            notify = true;
-          } else {
-            transaction.add("8 WTF?");
-          }
-          if (notify && notifyDynamicPage) {
-            transaction.add("9 notifyBlock()");
-            notifyBlock(data);
-          }
-          if (kDebugMode && data.debugTransaction) {
-            print("setData: ${data.uuid} transaction: $transaction");
-          }
-        });
+        setDataStandard(data, transaction, notifyDynamicPage);
       }
     } else {
       transaction.add("10 not init");
       list.add(data);
-      if (kDebugMode && data.debugTransaction) {
-        print("setData: ${data.uuid} transaction: $transaction");
-      }
+      printTransaction(data, transaction);
     }
   }
 
-  void sendSocketUpdate(Data data) async {
+  void printTransaction(Data data, List<String> transaction) {
+    if (kDebugMode && data.debugTransaction) {
+      print("setData: ${data.uuid} transaction: $transaction");
+    }
+  }
+
+  void setDataStandard(
+      Data data, List<String> transaction, bool notifyDynamicPage) {
+    transaction.add("5 saveToDB");
+    String dataString =
+        data.value.runtimeType != String ? json.encode(data.value) : data.value;
+    db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then(
+        (resultSet) {
+      bool notify = false;
+      if (resultSet.isEmpty) {
+        transaction.add("6 result is empty > insert");
+        insert(data, dataString);
+        notify = true;
+        if (data.type == DataType.socket) {
+          // После того как мы вставили сокетные данные
+          // Надо запустить синхронизацию
+          // Что бы эта запись на сервер уползла
+          transaction.add("6.1 DataSync().sync()");
+          DataSync().sync();
+        }
+      } else if (data.updateIfExist == true) {
+        //resultSet.first['value_data'] != dataString
+        // данные надо иногда обновлять не только потому что изменились
+        // сами данные, бывает что надо бновить флаг удаления или ревизию
+        transaction.add("7 result not empty > update");
+        updateNullable(data, resultSet.first);
+        update(data, dataString);
+        notify = true;
+      } else {
+        transaction.add("8 WTF?");
+      }
+      if (notify) {
+        notifyBlockAsync(data, transaction, notifyDynamicPage);
+      }
+    });
+  }
+
+  void notifyBlockAsync(
+      Data data, List<String> transaction, bool notifyDynamicPage) {
+    if (notifyDynamicPage) {
+      transaction.add("3 notifyBlock()");
+      //Что бы не было коллизии setState или marketRebuild во время build
+      Util.asyncInvoke((args) {
+        notifyBlock(args);
+      }, data);
+    }
+    printTransaction(data, transaction);
+  }
+
+  void setDataVirtual(
+      Data data, List<String> transaction, bool notifyDynamicPage) {
+    transaction.add("2 is virtual");
+    notifyBlockAsync(data, transaction, notifyDynamicPage);
+  }
+
+  void setDataSocket(
+      Data data, List<String> transaction, bool notifyDynamicPage) {
+    //Обновление сокетных данных не должно обновлять локальную БД
+    transaction.add("4 update socket data");
+    sendDataSocket(data);
+    notifyBlockAsync(data, transaction, notifyDynamicPage);
+  }
+
+  void sendDataSocket(Data data) async {
     Map<String, dynamic> postData = {
       "uuid_data": data.uuid,
       "data": data.value
@@ -167,6 +177,9 @@ class DataSource {
       print(
           "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
     }
+    // тут не будем вызывать синхронизацию данных,
+    // так как событие на синхронизацию должно прийти по сокету
+    // После http запроса
   }
 
   void updateNullable(Data curData, dynamic dbResult) {
