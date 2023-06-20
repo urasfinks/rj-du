@@ -10,6 +10,7 @@ import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/translate.dart';
+import 'package:rjdu/web_socket_service.dart';
 import 'package:uuid/uuid.dart';
 import 'bottom_tab_item.dart';
 import 'data_sync.dart';
@@ -35,6 +36,7 @@ class RjDu {
     HttpClient.init();
     Translate().init();
     DataSync().init();
+    WebSocketService().init();
 
     SystemNotify().listen(SystemNotifyEnum.changeTabOrHistoryPop, (state) {
       NavigatorApp.getLast()?.renderFloatingActionButton();

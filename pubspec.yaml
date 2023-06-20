@@ -30,6 +30,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_js: ^0.7.0
+  web_socket_channel: ^2.4.0
 
 dev_dependencies:
   flutter_test:
