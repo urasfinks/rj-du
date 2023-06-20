@@ -8,7 +8,8 @@ import 'abstract_handler.dart';
 
 class AlertHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  handle(Map<String, dynamic> args,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> config = Util.merge({
       "label": "Сохранено",
       "backgroundColor": "schema:background", // "rgba:30,136,229,0.95",
@@ -19,7 +20,8 @@ class AlertHandler extends AbstractHandler {
       "actionLabel": "Удалить",
     }, args);
 
-    config["backgroundColor"] = Util.template(config["backgroundColor"], dynamicUIBuilderContext);
+    config["backgroundColor"] =
+        Util.template(config["backgroundColor"], dynamicUIBuilderContext);
     config["color"] = Util.template(config["color"], dynamicUIBuilderContext);
 
     SnackBarAction? action = config["action"] == true
@@ -42,11 +44,22 @@ class AlertHandler extends AbstractHandler {
       config["duration"] = 3000;
     }
 
+    alert(config["duration"], config["label"], config["color"],
+        config["backgroundColor"], action);
+  }
+
+  static void alertSimple(String label) {
+    alert(700, label, "schema:inversePrimary", "schema:background", null);
+  }
+
+  static void alert(int milliseconds, String label, String color,
+      String backgroundColor, SnackBarAction? action) {
     ScaffoldMessenger.of(NavigatorApp.getLast()!.context!).showSnackBar(
       SnackBar(
-        duration: Duration(milliseconds: config["duration"]),
-        content: Text(config["label"], style: TextStyle(color: TypeParser.parseColor(config["color"]))),
-        backgroundColor: TypeParser.parseColor(config["backgroundColor"]),
+        duration: Duration(milliseconds: milliseconds),
+        content:
+            Text(label, style: TextStyle(color: TypeParser.parseColor(color))),
+        backgroundColor: TypeParser.parseColor(backgroundColor),
         behavior: SnackBarBehavior.fixed,
         elevation: 0,
         action: action,

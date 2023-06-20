@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rjdu/data_sync.dart';
+import 'package:rjdu/dynamic_invoke/handler/alert_handler.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data_type.dart';
 import '../../http_client.dart';
@@ -173,6 +174,9 @@ class DataSource {
       "body": postData,
       "host": GlobalSettings().host,
     });
+    if (response.statusCode != 200) {
+      AlertHandler.alertSimple('Данные не зафиксированы на сервере');
+    }
     if (kDebugMode) {
       print(
           "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
