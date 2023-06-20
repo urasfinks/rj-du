@@ -20,7 +20,7 @@ class DataSourceSetHandler extends AbstractHandler {
       if (args.containsKey("debugTransaction")) {
         data.debugTransaction = args["debugTransaction"];
       }
-      if (args.containsKey("addSocketData")) {
+      if (args.containsKey("addNewSocketData")) {
         data.beforeSync =
             true; //Немного обманем систему, что бы удалось в БД запихать данные с типо socket
       }
