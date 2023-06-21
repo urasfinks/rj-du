@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rjdu/util/template.dart';
+import 'package:rjdu/web_socket_service.dart';
 import 'data_type.dart';
 import 'db/data.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
@@ -27,6 +28,8 @@ class DynamicPage extends StatefulWidget {
   List<String> shadowUuidList = [];
   _DynamicPage? dynamicPageSate;
 
+  String subscribeOnChangeUuid = "subscribeOnChangeUuid";
+
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
     stateData = Data(uuid, {}, DataType.virtual, null);
@@ -41,10 +44,39 @@ class DynamicPage extends StatefulWidget {
         AbstractWidget.clickStatic(
             arguments, dynamicUIBuilderContext, "constructor");
       }
+
+      if (arguments.containsKey("socket") && arguments["socket"] == true) {
+        WebSocketService().addListener(this);
+      }
+
+      if (arguments.containsKey(subscribeOnChangeUuid)) {
+        List listUuid =
+            arguments[subscribeOnChangeUuid]["list"] as List;
+        for (String uuid in listUuid) {
+          DataSource().subscribe(uuid, onChangeUuid);
+        }
+      }
     }
   }
 
-  void safeReload(){
+  void destructor() {
+    WebSocketService().removeListener(this);
+    SystemNotify().emit(SystemNotifyEnum.changeTabOrHistoryPop, "HistoryPop");
+    DataSource().unsubscribe(onChangeUuid);
+  }
+
+  void onChangeUuid(String uuid, Map<String, dynamic>? data) {
+    if (arguments.containsKey(subscribeOnChangeUuid) &&
+        arguments[subscribeOnChangeUuid].containsKey("onChange")) {
+      Map<String, dynamic> args =
+          arguments[subscribeOnChangeUuid]["onChange"]["args"];
+      args["subscribe"] = {"uuid": uuid, "data": data};
+      AbstractWidget.clickStatic(arguments[subscribeOnChangeUuid],
+          dynamicUIBuilderContext, "onChange");
+    }
+  }
+
+  void safeReload() {
     isRunConstructor = false;
     constructor();
   }
@@ -66,7 +98,8 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  void setStateDataMap(Map<String, dynamic> map, [bool notifyDynamicPage = true]) {
+  void setStateDataMap(Map<String, dynamic> map,
+      [bool notifyDynamicPage = true]) {
     bool change = false;
     for (MapEntry<String, dynamic> item in map.entries) {
       if (stateData.value[item.key] != item.value) {
@@ -154,7 +187,8 @@ class DynamicPage extends StatefulWidget {
     // shadowUuidList содержит uuid отображённых данных без NotifyWidget
     // Например в ChildrenExtension
     if (shadowUuidList.contains(uuid)) {
-      print("TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
+      print(
+          "TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
       //DataSource().setData(stateData);
     }
   }
@@ -192,7 +226,6 @@ class _DynamicPage extends State<DynamicPage> {
   @override
   void dispose() {
     NavigatorApp.removePage(widget);
-    SystemNotify().emit(SystemNotifyEnum.changeTabOrHistoryPop, "HistoryPop");
     super.dispose();
   }
 
