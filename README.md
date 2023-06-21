@@ -18,10 +18,12 @@ DynamicPage состоит из:
 4) Arguments - параметры запуска DynamicPage, это как аргументы для создания экземпляра
 
 StatefulWidget DynamicPage динамически строит Widget/ы из аргументов запуска.
-Аргументы первичного уровня могут содержать ключ constructor, что приведёт к выполнению DynamicInvoke перед отрисовкой UI.
-В constructor DynamicInvoke можно динамически установить данные, которые в конечном итоге отрисуются в UI.
 
-Аргумент первичного уровня может содержать ключ socket: {onRead: DynamicInvoke, listUuid: []}, что приведёт к открытию коннекта на сервер
+Особые аргументы первичного уровня:
+
+1) constructor, что приведёт к выполнению DynamicInvoke перед отрисовкой UI. В constructor DynamicInvoke можно динамически установить данные, которые в конечном итоге отрисуются в UI.
+2) socket: true, что приведёт к открытию коннекта на сервер
+3) subscribeOnChangeUuid: {list: [], onChange: DynamicInvoke}
 
 Перезагрузка DynamicPage:
 
