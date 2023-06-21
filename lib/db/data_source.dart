@@ -304,7 +304,7 @@ class DataSource {
     }
   }
 
-  void unsubscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
+  void unsubscribe(Function(String uuid, Map<String, dynamic>? data) callback) {
     for (MapEntry<String, List<Function(String uuid, Map<String, dynamic>? data)>> item
         in listener.entries) {
       if (item.value.contains(callback)) {
