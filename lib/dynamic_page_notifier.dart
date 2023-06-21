@@ -60,7 +60,7 @@ class DynamicPageNotifier {
       NotifierObject notifierObject = NotifierObject(link);
       ValueNotifier<NotifierObject> valueNotifier = ValueNotifier<NotifierObject>(notifierObject);
       for (MapEntry<String, dynamic> item in link.entries) {
-        DataSource().get(item.value, (data) {
+        DataSource().get(item.value, (uuid, data) {
           if (data != null && data.isNotEmpty) {
             notifierObject.set(item.value, data);
             valueNotifier.notifyListeners();

@@ -93,7 +93,7 @@ class DynamicInvoke {
         return result is String ? result : json.encode(result);
       });
     }
-    DataSource().onChange("global.js", (data) {
+    DataSource().subscribe("global.js", (uuid, data) {
       if (data != null && data.containsKey("js")) {
         javascriptRuntime?.evaluate(data["js"]);
       }
@@ -180,7 +180,7 @@ class DynamicInvoke {
     }
 
     dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
-    DataSource().get(uuid, (data) {
+    DataSource().get(uuid, (uuid, data) {
       if (data != null && data.containsKey(DataType.js.name)) {
         String? result = _eval(
           dynamicUIBuilderContext.dynamicPage.uuid,

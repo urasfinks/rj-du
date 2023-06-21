@@ -177,7 +177,7 @@ class DataSync {
     if (kDebugMode) {
       print("DataSync.init()");
     }
-    DataSource().onChange("DataSync.json", (data) {
+    DataSource().subscribe("DataSync.json", (uuid, data) {
       if (data != null) {
         if (kDebugMode) {
           print("DataSync.init.onChange() => $data");

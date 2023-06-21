@@ -19,7 +19,7 @@ class Translate {
     if (kDebugMode) {
       print("Translate.init()");
     }
-    DataSource().onChange("Translate.json", (data) {
+    DataSource().subscribe("Translate.json", (uuid, data) {
       if (data != null) {
         map = data;
       }
