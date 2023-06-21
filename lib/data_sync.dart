@@ -36,7 +36,7 @@ class DataSync {
   DataSync._internal();
 
   Cron? cron;
-  bool isActive = true;
+  bool appIsActive = true;
   bool isRun = false;
 
   void restart(String template) async {
@@ -55,7 +55,7 @@ class DataSync {
   }
 
   void sync() async {
-    if (isActive && !isRun) {
+    if (appIsActive && !isRun) {
       isRun = true;
       int start = Util.getTimestamp();
       int allInsertion = 0;
@@ -115,7 +115,7 @@ class DataSync {
                 }
               }
             }
-            if (insertion == 0) {
+            if (insertion == 0 || insertion < 10) { //Подумал, что слишком много запросов на синхронизацию
               //Если не было инсертов, нет смысла более опрашивать сервер на предмет новых ревизий
               break;
             }
@@ -186,13 +186,13 @@ class DataSync {
       }
     });
     SystemNotify().listen(SystemNotifyEnum.appLifecycleState, (state) {
-      isActive = state == AppLifecycleState.resumed.name;
-      if (isActive) {
+      appIsActive = state == AppLifecycleState.resumed.name;
+      if (appIsActive) {
         sync();
       }
       if (kDebugMode) {
         print(
-            "DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $isActive");
+            "DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
       }
     });
   }
