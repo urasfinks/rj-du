@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rjdu/data_sync.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:web_socket_channel/io.dart';
@@ -14,30 +14,31 @@ import 'package:web_socket_channel/status.dart' as status;
 
 class WebSocketService {
   static final WebSocketService _singleton = WebSocketService._internal();
-  Cron? cron;
+  Cron? _cron;
+  bool appIsActive = true;
 
   factory WebSocketService() {
     return _singleton;
   }
 
   void init() {
-    cron = Cron();
-    cron!.schedule(Schedule.parse("*/5 * * * * *"), check);
+    _cron = Cron();
+    _cron!.schedule(Schedule.parse("*/5 * * * * *"), check);
     SystemNotify().listen(SystemNotifyEnum.appLifecycleState, (state) {
-      var isActive = state == AppLifecycleState.resumed.name;
-      if (isActive) {
+      appIsActive = state == AppLifecycleState.resumed.name;
+      if (appIsActive) {
         check();
       } else {
         _disconnect();
       }
       if (kDebugMode) {
         print(
-            "WebSocketService:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $isActive");
+            "WebSocketService:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
       }
     });
   }
 
-  List<DynamicPage> list = [];
+  List<DynamicPage> _list = [];
 
   WebSocketService._internal();
 
@@ -50,7 +51,7 @@ class WebSocketService {
           print('WebSocketService._connect() start connect');
         }
         WebSocket.connect(
-                "${GlobalSettings().host}/${Storage().get('uuid', 'undefined')}")
+                "${GlobalSettings().ws}/${Storage().get('uuid', 'undefined')}")
             .timeout(const Duration(seconds: 4))
             .then((ws) {
           try {
@@ -83,7 +84,10 @@ class WebSocketService {
         if (kDebugMode) {
           print("WebSocketService._listen()::onRead($message)");
         }
-        Map<String, dynamic> jsonDecoded = json.decode(message);
+        // TODO: доработать парсинг сообщения,
+        // Map<String, dynamic> jsonDecoded = json.decode(message);
+        // но пока обработчик будет только запуск синхронизации
+        DataSync().sync();
       },
       onDone: () {
         _disconnect();
@@ -120,23 +124,25 @@ class WebSocketService {
   }
 
   void check() {
-    if (list.isNotEmpty) {
-      _connect();
-    } else {
-      _disconnect();
+    if (appIsActive) {
+      if (_list.isNotEmpty) {
+        _connect();
+      } else {
+        _disconnect();
+      }
     }
   }
 
-  void addPage(DynamicPage dynamicPage) {
-    if (!list.contains(dynamicPage)) {
-      list.add(dynamicPage);
+  void addListener(DynamicPage dynamicPage) {
+    if (!_list.contains(dynamicPage)) {
+      _list.add(dynamicPage);
     }
     check();
   }
 
-  void removePage(DynamicPage dynamicPage) {
-    if (list.contains(dynamicPage)) {
-      list.remove(dynamicPage);
+  void removeListener(DynamicPage dynamicPage) {
+    if (_list.contains(dynamicPage)) {
+      _list.remove(dynamicPage);
     }
     check();
   }

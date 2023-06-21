@@ -1,5 +1,4 @@
 import 'bottom_tab.dart';
-
 import 'bottom_tab_item.dart';
 import 'dynamic_page.dart';
 
@@ -16,7 +15,7 @@ class NavigatorApp {
 
   static DynamicPage? getPageByUuid(String uuid) {
     for (DynamicPage dynamicPage in allDynamicPage) {
-      if(dynamicPage.uuid == uuid){
+      if (dynamicPage.uuid == uuid) {
         return dynamicPage;
       }
     }
@@ -38,16 +37,21 @@ class NavigatorApp {
     if (tabNavigator.containsKey(selectedTab)) {
       tabNavigator[selectedTab]!.remove(dynamicPage);
     }
+    dynamicPage.destructor();
   }
 
   static DynamicPage? getLast([int? indexTab]) {
     indexTab ??= selectedTab;
-    return tabNavigator.containsKey(indexTab) ? tabNavigator[indexTab]!.last : null;
+    return tabNavigator.containsKey(indexTab)
+        ? tabNavigator[indexTab]!.last
+        : null;
   }
 
   static bool isLast([int? indexTab]) {
     indexTab ??= selectedTab;
-    return tabNavigator.containsKey(indexTab) ? (tabNavigator[indexTab]!.length == 1) : true;
+    return tabNavigator.containsKey(indexTab)
+        ? (tabNavigator[indexTab]!.length == 1)
+        : true;
   }
 
   static void updatePageNotifier(String uuid, Map<String, dynamic> data) {
@@ -58,7 +62,8 @@ class NavigatorApp {
 
   static void reloadPageByArguments(String key, String value) {
     for (DynamicPage dynamicPage in allDynamicPage) {
-      if (dynamicPage.arguments.containsKey(key) && dynamicPage.arguments[key] == value) {
+      if (dynamicPage.arguments.containsKey(key) &&
+          dynamicPage.arguments[key] == value) {
         dynamicPage.reload();
       }
     }
