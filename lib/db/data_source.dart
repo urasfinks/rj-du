@@ -81,8 +81,10 @@ class DataSource {
     if (isInit) {
       transaction.add("1 is init");
       if (data.type == DataType.virtual) {
+        //Состояние страницы
         setDataVirtual(data, transaction, notifyDynamicPage);
       } else if (data.type == DataType.socket && data.beforeSync == false) {
+        //В runtime изменили данные
         setDataSocket(data, transaction, notifyDynamicPage);
       } else {
         setDataStandard(data, transaction, notifyDynamicPage);
@@ -120,13 +122,18 @@ class DataSource {
           DataSync().sync();
         }
       } else if (data.updateIfExist == true) {
+        transaction.add("7 result not empty > update");
         //resultSet.first['value_data'] != dataString
         // данные надо иногда обновлять не только потому что изменились
         // сами данные, бывает что надо бновить флаг удаления или ревизию
-        transaction.add("7 result not empty > update");
-        updateNullable(data, resultSet.first);
-        update(data, dataString);
-        notify = true;
+        if (data.type == DataType.socket) {
+          transaction.add("7.1 socket data not support standard update");
+          printTransaction(data, transaction);
+        } else {
+          updateNullable(data, resultSet.first);
+          update(data, dataString);
+          notify = true;
+        }
       } else {
         transaction.add("8 WTF?");
       }
