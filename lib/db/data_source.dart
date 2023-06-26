@@ -130,10 +130,12 @@ class DataSource {
         update(data, dataString);
         notify = true;
       } else {
-        transaction.add("8 WTF?");
+        transaction.add("8 NOTHING!");
       }
       if (notify) {
         notifyBlockAsync(data, transaction, notifyDynamicPage);
+      } else {
+        printTransaction(data, transaction);
       }
     });
   }

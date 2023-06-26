@@ -66,6 +66,7 @@ class DynamicPage extends StatefulWidget {
   }
 
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {
+    //print("!onChangeUuid: $uuid; data: $data");
     if (arguments.containsKey(subscribeOnChangeUuid) &&
         arguments[subscribeOnChangeUuid].containsKey("onChange")) {
       Map<String, dynamic> args =

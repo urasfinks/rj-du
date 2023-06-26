@@ -27,7 +27,6 @@ class DataSourceSetHandler extends AbstractHandler {
         data.updateIfExist = args["updateIfExist"];
       }
       data.key = args['key'];
-      data.updateIfExist = true;
       if (args["onPersist"] != null) {
         data.onPersist = () {
           AbstractWidget.clickStatic(
