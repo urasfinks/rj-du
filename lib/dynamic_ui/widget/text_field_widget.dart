@@ -17,7 +17,7 @@ class TextFieldWidget extends AbstractWidget {
     bool rewriteState = parsedJson["rewriteState"] ?? false;
 
     TextEditingController textController =
-        dynamicUIBuilderContext.dynamicPage.getProperty("${key}_TextEditingController", TextEditingController());
+        dynamicUIBuilderContext.dynamicPage.getProperty("${key}_TextEditingController", TextEditingController(text: defaultData));
 
     if (rewriteState == true) {
       dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
