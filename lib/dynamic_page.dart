@@ -50,8 +50,7 @@ class DynamicPage extends StatefulWidget {
       }
 
       if (arguments.containsKey(subscribeOnChangeUuid)) {
-        List listUuid =
-            arguments[subscribeOnChangeUuid]["list"] as List;
+        List listUuid = arguments[subscribeOnChangeUuid]["list"] as List;
         for (String uuid in listUuid) {
           DataSource().subscribe(uuid, onChangeUuid);
         }
@@ -152,21 +151,30 @@ class DynamicPage extends StatefulWidget {
 
   void renderFloatingActionButton() {
     if (NavigatorApp.getLast() == this) {
+      bool hide = true;
       if (container.containsKey("root") &&
-          container["root"]!.data.containsKey("template") &&
-          container["root"]!
-              .data["template"]!
-              .containsKey("floatingActionButton")) {
-        DynamicInvoke().sysInvoke(
-          "DataSourceSet",
-          {
-            "uuid": "FloatingActionButton.json",
-            "type": "virtual",
-            "value": container['root']!.data["template"]["floatingActionButton"]
-          },
-          dynamicUIBuilderContext,
-        );
-      } else {
+          container["root"]!.data.containsKey("template")) {
+        if (container["root"]!
+            .data["template"]!
+            .containsKey("floatingActionButton")) {
+          DynamicInvoke().sysInvoke(
+            "DataSourceSet",
+            {
+              "uuid": "FloatingActionButton.json",
+              "type": "virtual",
+              "value": container['root']!.data["template"]
+                  ["floatingActionButton"]
+            },
+            dynamicUIBuilderContext,
+          );
+        } else if (container["root"]!
+            .data["template"]!
+            .containsKey("floatingActionButtonAutoHide")) {
+          hide = container['root']!.data["template"]
+              ["floatingActionButtonAutoHide"];
+        }
+      }
+      if (hide) {
         DynamicInvoke().sysInvoke(
           "DataSourceSet",
           {
