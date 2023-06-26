@@ -27,7 +27,8 @@ class DataSource {
   List<dynamic> list = [];
   List<DataType> notJsonList = [DataType.js, DataType.any];
   late Database db;
-  Map<String, List<Function(String uuid, Map<String, dynamic>? data)>> listener = {};
+  Map<String, List<Function(String uuid, Map<String, dynamic>? data)>>
+      listener = {};
   DataMigration dataMigration = DataMigration();
 
   init() async {
@@ -272,7 +273,8 @@ class DataSource {
     }
   }
 
-  void get(String uuid, Function(String uuid, Map<String, dynamic>? data) handler) {
+  void get(
+      String uuid, Function(String uuid, Map<String, dynamic>? data) handler) {
     if (isInit) {
       db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then(
           (resultSet) {
@@ -281,9 +283,11 @@ class DataSource {
               Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
           if (isJsonDataType(dataTypeResult)) {
             //handler(await Util.asyncInvokeIsolate((arg) => json.decode(arg), resultSet.first['value_data']));
-            handler(resultSet.first['uuid_data'] as String, json.decode(resultSet.first['value_data'] as String));
+            handler(resultSet.first['uuid_data'] as String,
+                json.decode(resultSet.first['value_data'] as String));
           } else {
-            handler(resultSet.first['uuid_data'] as String, {dataTypeResult.name: resultSet.first['value_data']});
+            handler(resultSet.first['uuid_data'] as String,
+                {dataTypeResult.name: resultSet.first['value_data']});
           }
         } else {
           handler(uuid, null);
@@ -294,7 +298,9 @@ class DataSource {
     }
   }
 
-  void subscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
+  void subscribe(
+      String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
+    //print("subscribe: ${uuid}");
     get(uuid, callback);
     if (!listener.containsKey(uuid)) {
       listener[uuid] = [];
@@ -305,14 +311,20 @@ class DataSource {
   }
 
   void unsubscribe(Function(String uuid, Map<String, dynamic>? data) callback) {
-    for (MapEntry<String, List<Function(String uuid, Map<String, dynamic>? data)>> item
+    List<String> clear = [];
+    for (MapEntry<String,
+            List<Function(String uuid, Map<String, dynamic>? data)>> item
         in listener.entries) {
       if (item.value.contains(callback)) {
+        //print("unsubscribe: ${item.key}");
         item.value.remove(callback);
       }
       if (item.value.isEmpty) {
-        listener.remove(item.key);
+        clear.add(item.key);
       }
+    }
+    for (String key in clear) {
+      listener.remove(key);
     }
   }
 }
