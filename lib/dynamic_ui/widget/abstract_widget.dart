@@ -124,6 +124,9 @@ abstract class AbstractWidget {
       Map<String, dynamic>? settings;
       dynamic prev =
           getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
+      if (prev == null) {
+        return null;
+      }
       if (prev.runtimeType.toString().contains("Map")) {
         settings = prev as Map<String, dynamic>?;
       } else {
