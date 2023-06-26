@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/foundation.dart';
+import 'package:rjdu/storage.dart';
 import '../db/data_source.dart';
 import '../dynamic_page.dart';
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -108,8 +109,6 @@ class DynamicInvoke {
     }
     return dynamicUIBuilderContext;
   }
-
-
 
   dynamic sysInvoke(String handler, Map<String, dynamic> inArgs,
       DynamicUIBuilderContext dynamicUIBuilderContext,
@@ -228,7 +227,8 @@ class DynamicInvoke {
     if (pageArgs.isNotEmpty) {
       pageArgs = "bridge.pageArgs = $pageArgs;";
     }
-    pageUuid = "bridge.pageUuid = '$pageUuid';";
+    pageUuid =
+        "bridge.pageUuid = '$pageUuid'; bridge.unique = '${Storage().get('unique', '')}';";
     String jsCode =
         "bridge.clearAll();\n$pageUuid\n$args\n$context\n$container\n$state\n$pageArgs\n$js";
     //print("\n\nJS CODE BLOCK======================\n$jsCode\n===================FINISH BLOCK\n\n");
