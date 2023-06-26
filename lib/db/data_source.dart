@@ -163,10 +163,15 @@ class DataSource {
 
   void setDataSocket(
       Data data, List<String> transaction, bool notifyDynamicPage) {
-    //Обновление сокетных данных не должно обновлять локальную БД
+    // Обновление сокетных данных не должно обновлять локальную БД
     transaction.add("4 update socket data");
     sendDataSocket(data);
-    notifyBlockAsync(data, transaction, notifyDynamicPage);
+    // Так как сокетные данные обновляются diff
+    // надо либо его наложить на все данные и оповестить
+    // либо не оповещать вообще
+    //TODO: сделать мерж и оповестить
+    //notifyBlockAsync(data, transaction, notifyDynamicPage);
+    printTransaction(data, transaction);
   }
 
   void sendDataSocket(Data data) async {
