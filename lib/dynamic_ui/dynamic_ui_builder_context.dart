@@ -5,9 +5,9 @@ class DynamicUIBuilderContext {
   int? index;
   String? key;
   Map<String, dynamic> data = {};
-  bool isRoot = false;
+  bool isRoot = false; //Корневой контекст данных
 
-  void updateComplete() {
+  void updateDataComplete() {
     if(isRoot){
       dynamicPage.renderFloatingActionButton();
     }

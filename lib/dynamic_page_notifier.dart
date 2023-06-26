@@ -38,7 +38,7 @@ class DynamicPageNotifier {
           for (MapEntry<String, dynamic> item in value.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
           }
-          dynamicUIBuilderContext.updateComplete();
+          dynamicUIBuilderContext.updateDataComplete();
         }
         dynamic resultWidget = builder(context, child);
         if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {
