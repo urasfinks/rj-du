@@ -19,10 +19,10 @@ class Iterator extends AbstractExtension {
         //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
         //Поэтому удалим их и потом заново добавим уже обновлённые
         AbstractExtension.removeLastShadowUuid(key, dynamicUIBuilderContext);
-        listData = dynamicUIBuilderContext.dynamicPage.stateData.value[key];
+        listData = dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? [];
         break;
       case "list":
-        listData = parsedJson["list"];
+        listData = parsedJson["list"] ?? [];
         break;
     }
 

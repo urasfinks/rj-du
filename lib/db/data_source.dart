@@ -146,7 +146,15 @@ class DataSource {
       transaction.add("3 notifyBlock()");
       //Что бы не было коллизии setState или marketRebuild во время build
       Util.asyncInvoke((args) {
-        notifyBlock(args);
+        try {
+          notifyBlock(args);
+        } catch (e, stacktrace) {
+          if (kDebugMode) {
+            print("Exception data: $args");
+            print(e);
+            print(stacktrace);
+          }
+        }
       }, data);
     }
     printTransaction(data, transaction);
