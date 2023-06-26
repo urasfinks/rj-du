@@ -28,6 +28,7 @@ class RjDu {
     GlobalSettings().init();
 
     Storage().set('uuid', const Uuid().v4(), false);
+    Storage().set('unique', const Uuid().v4(), false);
     Storage().set('version', GlobalSettings().version, false);
     Storage().set('isAuth', "false", false);
 
