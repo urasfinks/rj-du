@@ -126,14 +126,9 @@ class DataSource {
         //resultSet.first['value_data'] != dataString
         // данные надо иногда обновлять не только потому что изменились
         // сами данные, бывает что надо бновить флаг удаления или ревизию
-        if (data.type == DataType.socket) {
-          transaction.add("7.1 socket data not support standard update");
-          printTransaction(data, transaction);
-        } else {
-          updateNullable(data, resultSet.first);
-          update(data, dataString);
-          notify = true;
-        }
+        updateNullable(data, resultSet.first);
+        update(data, dataString);
+        notify = true;
       } else {
         transaction.add("8 WTF?");
       }

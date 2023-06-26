@@ -21,7 +21,10 @@ class DataSourceSetHandler extends AbstractHandler {
         data.debugTransaction = args["debugTransaction"];
       }
       if (args.containsKey("beforeSync")) {
-        data.beforeSync = true;
+        data.beforeSync = args["beforeSync"];
+      }
+      if (args.containsKey("updateIfExist")) {
+        data.updateIfExist = args["updateIfExist"];
       }
       data.key = args['key'];
       data.updateIfExist = true;
