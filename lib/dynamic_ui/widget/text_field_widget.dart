@@ -14,14 +14,15 @@ class TextFieldWidget extends AbstractWidget {
 
     String type = getValue(parsedJson, 'keyboardType', 'text', dynamicUIBuilderContext);
 
-    bool rewriteState = parsedJson["rewriteState"] ?? false;
+    TextEditingController textController = dynamicUIBuilderContext.dynamicPage
+        .getProperty("${key}_TextEditingController", TextEditingController(text: defaultData));
 
-    TextEditingController textController =
-        dynamicUIBuilderContext.dynamicPage.getProperty("${key}_TextEditingController", TextEditingController(text: defaultData));
-
-    if (rewriteState == true) {
-      dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
+    if (parsedJson["clearControllerState"] ?? false == true) { //Очищает временное состояние контроллера при rebuild
       textController.text = defaultData;
+    }
+
+    if (parsedJson["setState"] ?? false == true) { //При инициализации устанавливает значение в состояние
+      dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
     }
 
     if (textController.text.isNotEmpty) {
@@ -107,7 +108,8 @@ class TextFieldWidget extends AbstractWidget {
           DateTime? pickedDate = await showDatePicker(
             locale: const Locale('ru', 'ru_Ru'),
             context: dynamicUIBuilderContext.dynamicPage.context!,
-            initialDate: textController.text.isNotEmpty ? DateFormat("dd.MM.yyyy").parse(textController.text) : DateTime.now(),
+            initialDate:
+                textController.text.isNotEmpty ? DateFormat("dd.MM.yyyy").parse(textController.text) : DateTime.now(),
             firstDate: DateTime(1931),
             lastDate: DateTime(2101),
           );
