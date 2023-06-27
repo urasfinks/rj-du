@@ -5,6 +5,7 @@ import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/theme_provider.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'dynamic_ui/dynamic_ui.dart';
+import 'dynamic_ui/type_parser.dart';
 import 'system_notify.dart';
 import 'util.dart';
 import 'bottom_tab_item.dart';
@@ -25,8 +26,8 @@ class BottomTabState extends State<BottomTab>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   @override
   void didChangePlatformBrightness() {
-    Storage()
-        .set('theme', View.of(context).platformDispatcher.platformBrightness.name);
+    Storage().set(
+        'theme', View.of(context).platformDispatcher.platformBrightness.name);
   }
 
   @override
@@ -75,8 +76,10 @@ class BottomTabState extends State<BottomTab>
 
   @override
   Widget build(BuildContext context) {
-    GlobalSettings().appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight + 1;
-    GlobalSettings().bottomNavigationBarHeight = MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight;
+    GlobalSettings().appBarHeight =
+        MediaQuery.of(context).padding.top + kToolbarHeight + 1;
+    GlobalSettings().bottomNavigationBarHeight =
+        MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight;
 
     int lastTimeClick = DateTime.now().millisecondsSinceEpoch;
 
@@ -97,25 +100,38 @@ class BottomTabState extends State<BottomTab>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: ClipRRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
-          child: BottomNavigationBar(
-            elevation: 0,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: getTabList(),
-            currentIndex: NavigatorApp.selectedTab,
-            onTap: (index) {
-              int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
-              if (nowTimeClick - lastTimeClick < 200) {
-                DynamicInvoke().sysInvoke(
-                  "NavigatorPop",
-                  {"tab": index, "toBegin": true},
-                  widget.dynamicUIBuilderContext,
-                );
-              }
-              lastTimeClick = nowTimeClick;
-              selectTab(index);
-            },
+          filter: ImageFilter.blur(
+              sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: TypeParser.parseColor("schema:secondary", context)!.withOpacity(0.2),
+                  width: 1.0,
+                ),
+              ),
+            ),
+            child: BottomNavigationBar(
+              elevation: 0,
+              showSelectedLabels: false,
+              //Убираем подпись к выбранному табу
+              showUnselectedLabels: false,
+              //Убираем подписи к невыбранным табам
+              items: getTabList(),
+              currentIndex: NavigatorApp.selectedTab,
+              onTap: (index) {
+                int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
+                if (nowTimeClick - lastTimeClick < 200) {
+                  DynamicInvoke().sysInvoke(
+                    "NavigatorPop",
+                    {"tab": index, "toBegin": true},
+                    widget.dynamicUIBuilderContext,
+                  );
+                }
+                lastTimeClick = nowTimeClick;
+                selectTab(index);
+              },
+            ),
           ),
         ),
       ),
