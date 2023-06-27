@@ -39,10 +39,8 @@ class DynamicPage extends StatefulWidget {
   void constructor() {
     if (!isRunConstructor) {
       isRunConstructor = true;
-      if (arguments.containsKey("constructor") &&
-          arguments["constructor"].isNotEmpty) {
-        AbstractWidget.clickStatic(
-            arguments, dynamicUIBuilderContext, "constructor");
+      if (arguments.containsKey("constructor") && arguments["constructor"].isNotEmpty) {
+        AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "constructor");
       }
 
       if (arguments.containsKey("socket") && arguments["socket"] == true) {
@@ -66,42 +64,35 @@ class DynamicPage extends StatefulWidget {
 
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {
     //print("!onChangeUuid: $uuid; data: $data");
-    if (arguments.containsKey(subscribeOnChangeUuid) &&
-        arguments[subscribeOnChangeUuid].containsKey("onChange")) {
-      Map<String, dynamic> args =
-          arguments[subscribeOnChangeUuid]["onChange"]["args"];
+    if (arguments.containsKey(subscribeOnChangeUuid) && arguments[subscribeOnChangeUuid].containsKey("onChange")) {
+      Map<String, dynamic> args = arguments[subscribeOnChangeUuid]["onChange"]["args"];
       args["subscribe"] = {"uuid": uuid, "data": data};
-      AbstractWidget.clickStatic(arguments[subscribeOnChangeUuid],
-          dynamicUIBuilderContext, "onChange");
+      AbstractWidget.clickStatic(arguments[subscribeOnChangeUuid], dynamicUIBuilderContext, "onChange");
     }
   }
 
   void reloadWithoutSetState() {
-    properties
-        .clear(); //Что бы стереть TextFieldController при перезагрузке страницы
+    properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
     isRunConstructor = false;
     constructor();
   }
 
   void reload() {
-    properties
-        .clear(); //Что бы стереть TextFieldController при перезагрузке страницы
+    properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
     isRunConstructor = false;
     if (dynamicPageSate != null) {
       dynamicPageSate!.setState(() {});
     }
   }
 
-  void setStateData(String key, dynamic value,
-      [bool notifyDynamicPage = true]) {
+  void setStateData(String key, dynamic value, [bool notifyDynamicPage = true]) {
     if (stateData.value[key] != value) {
       stateData.value[key] = value;
       DataSource().setData(stateData, notifyDynamicPage);
     }
   }
 
-  void setStateDataMap(Map<String, dynamic> map,
-      [bool notifyDynamicPage = true]) {
+  void setStateDataMap(Map<String, dynamic> map, [bool notifyDynamicPage = true]) {
     bool change = false;
     for (MapEntry<String, dynamic> item in map.entries) {
       if (stateData.value[item.key] != item.value) {
@@ -135,8 +126,7 @@ class DynamicPage extends StatefulWidget {
     return defValue;
   }
 
-  void setContainer(
-      String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void setContainer(String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     container[key] = dynamicUIBuilderContext;
     if (key == "root") {
       dynamicUIBuilderContext.isRoot = true;
@@ -154,24 +144,18 @@ class DynamicPage extends StatefulWidget {
   void renderFloatingActionButton() {
     if (NavigatorApp.getLast() == this) {
       bool hide = true;
-      if (container.containsKey("root") &&
-          container["root"]!.data.containsKey("template")) {
-        if (container["root"]!
-            .data["template"]!
-            .containsKey("floatingActionButton")) {
+      if (container.containsKey("root") && container["root"]!.data.containsKey("template")) {
+        if (container["root"]!.data["template"]!.containsKey("floatingActionButton")) {
           DynamicInvoke().sysInvoke(
             "DataSourceSet",
             {
               "uuid": "FloatingActionButton.json",
               "type": "virtual",
-              "value": container['root']!.data["template"]
-                  ["floatingActionButton"]
+              "value": container['root']!.data["template"]["floatingActionButton"]
             },
             dynamicUIBuilderContext,
           );
-        } else if (container["root"]!
-            .data["template"]!
-            .containsKey("onRenderFloatingActionButton")) {
+        } else if (container["root"]!.data["template"]!.containsKey("onRenderFloatingActionButton")) {
           AbstractWidget.clickStatic(
             container['root']!.data["template"],
             dynamicUIBuilderContext,
@@ -201,8 +185,7 @@ class DynamicPage extends StatefulWidget {
     // shadowUuidList содержит uuid отображённых данных без NotifyWidget
     // Например в ChildrenExtension
     if (shadowUuidList.contains(uuid)) {
-      print(
-          "TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
+      print("TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
       //DataSource().setData(stateData);
     }
   }
@@ -211,8 +194,7 @@ class DynamicPage extends StatefulWidget {
     if (parseArguments.length == 2) {
       String uuid = parseArguments[0];
       if (container.containsKey(uuid)) {
-        return Template.stringSelector(
-            container[uuid]!.data, parseArguments[1]);
+        return Template.stringSelector(container[uuid]!.data, parseArguments[1]);
       }
     }
     return "DynamicPage.template() args: ${parseArguments.join(",")} container not exists";
@@ -247,12 +229,9 @@ class _DynamicPage extends State<DynamicPage> {
   Widget build(BuildContext context) {
     widget.context = context;
     widget.constructor();
-    dynamic resultWidget = DynamicUI.render(widget.arguments, null,
-        const SizedBox(), widget.dynamicUIBuilderContext);
-    if (resultWidget == null ||
-        resultWidget.runtimeType.toString().contains('Map<String,')) {
-      return Text(
-          "DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+    dynamic resultWidget = DynamicUI.render(widget.arguments, null, const SizedBox(), widget.dynamicUIBuilderContext);
+    if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {
+      return Text("DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;
   }
