@@ -57,7 +57,7 @@ class CustomScrollViewWidget extends AbstractWidget {
           onRefresh: () async {
             Future.delayed(const Duration(milliseconds: 700), () {
               //dynamicUIBuilderContext.dynamicPage.reload();
-              dynamicUIBuilderContext.dynamicPage.safeReload();
+              dynamicUIBuilderContext.dynamicPage.reloadWithoutSetState();
               DataSync().sync();
             });
           },
