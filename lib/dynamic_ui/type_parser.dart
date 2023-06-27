@@ -70,13 +70,13 @@ class TypeParser {
     "teal": Colors.teal
   };
 
-  static Color? parseColor(String? value) {
+  static Color? parseColor(String? value, [BuildContext? buildContext]) {
     if (value == null || value.trim() == '') {
       return null;
     }
 
     if (value.startsWith("schema:")) {
-      var colorScheme = Theme.of(NavigatorApp.getLast()!.context!).colorScheme;
+      var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
       Map<String, dynamic> schema = {
         "primary": colorScheme.primary,
         "inversePrimary": colorScheme.inversePrimary,
