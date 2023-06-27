@@ -19,7 +19,7 @@ class ThemeProvider {
       colorScheme: ThemeData.light().colorScheme.copyWith(
             background: TypeParser.parseColor("#f5f5f5"),
             primary: Colors.white,
-            secondary: Colors.grey[700],
+            secondary: Colors.grey[500],
             inversePrimary: Colors.black,
             onBackground: TypeParser.parseColor("#ffffff"), //e9e9eb
           ),
