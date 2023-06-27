@@ -85,11 +85,14 @@ class NavigatorPushHandler extends AbstractHandler {
         },
       );
     }
+    DynamicPage dynamicPage = DynamicPage(dataPage);
+    NavigatorApp.addNavigatorPage(dynamicPage);
+    //showModalBottomSheet вызывает builder при скроле
+    //Постоянное пересоздание страницы создаёт мерцание
+    //Подкешируем для избежания лагов UI
     showModalBottomSheet(
       context: buildContext,
       builder: (context) {
-        DynamicPage dynamicPage = DynamicPage(dataPage);
-        NavigatorApp.addNavigatorPage(dynamicPage);
         return dynamicPage;
       },
     );
