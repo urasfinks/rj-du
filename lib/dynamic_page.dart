@@ -169,9 +169,12 @@ class DynamicPage extends StatefulWidget {
           );
         } else if (container["root"]!
             .data["template"]!
-            .containsKey("floatingActionButtonAutoHide")) {
-          hide = container['root']!.data["template"]
-              ["floatingActionButtonAutoHide"];
+            .containsKey("onRenderFloatingActionButton")) {
+          AbstractWidget.clickStatic(
+            container['root']!.data["template"],
+            dynamicUIBuilderContext,
+            "onRenderFloatingActionButton",
+          );
         }
       }
       if (hide) {
