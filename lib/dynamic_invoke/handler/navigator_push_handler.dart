@@ -1,3 +1,5 @@
+import 'package:rjdu/dynamic_ui/type_parser.dart';
+
 import '../../navigator_app.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -90,8 +92,15 @@ class NavigatorPushHandler extends AbstractHandler {
     //showModalBottomSheet вызывает builder при скроле
     //Постоянное пересоздание страницы создаёт мерцание
     //Подкешируем для избежания лагов UI
+
     showModalBottomSheet(
       context: buildContext,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(TypeParser.parseDouble(dataPage["borderRadius"]) ?? 15.0),
+        ),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       builder: (context) {
         return dynamicPage;
       },
