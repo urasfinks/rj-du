@@ -64,7 +64,7 @@ class DataSync {
         Map<String, int> maxRevisionByType =
             await DataGetter.getMaxRevisionByType();
         while (true) {
-          if (counter > 1) {
+          if (counter > 20) {
             //Default = 20
             if (kDebugMode) {
               print('DataSync.handler() break infinity while');
