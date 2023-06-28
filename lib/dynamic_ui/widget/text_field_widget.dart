@@ -14,15 +14,17 @@ class TextFieldWidget extends AbstractWidget {
 
     String type = getValue(parsedJson, 'keyboardType', 'text', dynamicUIBuilderContext);
 
-    TextEditingController textController = dynamicUIBuilderContext.dynamicPage
-        .getProperty("${key}_TextEditingController", TextEditingController(text: defaultData));
-
-    if (parsedJson["clearControllerState"] ?? false == true) { //Очищает временное состояние контроллера при rebuild
-      textController.text = defaultData;
-    }
-
-    if (parsedJson["setState"] ?? false == true) { //При инициализации устанавливает значение в состояние
+    String propKey = "${key}_TextEditingController";
+    //При первичной инициализации устанавливает значение в состояние
+    if (!dynamicUIBuilderContext.dynamicPage.isProperty(propKey) && (parsedJson["setState"] ?? false == true)) {
       dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
+    }
+    TextEditingController textController =
+        dynamicUIBuilderContext.dynamicPage.getProperty(propKey, TextEditingController(text: defaultData));
+
+    if (parsedJson["clearControllerState"] ?? false == true) {
+      //Очищает временное состояние контроллера при rebuild
+      textController.text = defaultData;
     }
 
     if (textController.text.isNotEmpty) {

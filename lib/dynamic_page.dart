@@ -118,6 +118,10 @@ class DynamicPage extends StatefulWidget {
     properties[key] = value;
   }
 
+  dynamic isProperty(String key) {
+    return properties.containsKey(key);
+  }
+
   dynamic getProperty(String key, dynamic defValue) {
     if (properties.containsKey(key)) {
       return properties[key];
