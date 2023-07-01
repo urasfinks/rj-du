@@ -9,6 +9,9 @@ import 'abstract_handler.dart';
 class AlertHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    try {
+      ScaffoldMessenger.of(dynamicUIBuilderContext.dynamicPage.context!).hideCurrentSnackBar();
+    } catch (e) {}
     Map<String, dynamic> config = Util.merge({
       "label": "Сохранено",
       "backgroundColor": "schema:background", // "rgba:30,136,229,0.95",
