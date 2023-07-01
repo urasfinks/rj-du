@@ -45,9 +45,15 @@ class TextFieldWidget extends AbstractWidget {
       key: Util.getKey(),
       focusNode: dynamicUIBuilderContext.dynamicPage.getProperty("${key}_FocusNode", FocusNode()),
       onSubmitted: (_) {
+        if (parsedJson["hideKeyboardOnSubmitted"] ?? true == true) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
         click(parsedJson, dynamicUIBuilderContext, "onSubmitted");
       },
       onEditingComplete: () {
+        if (parsedJson["hideKeyboardOnEditingComplete"] ?? false == true) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
         click(parsedJson, dynamicUIBuilderContext, "onEditingComplete");
       },
       inputFormatters: listInputFormatters,
@@ -117,7 +123,7 @@ class TextFieldWidget extends AbstractWidget {
           );
           if (pickedDate != null) {
             defaultData = DateFormat('dd.MM.yyyy').format(pickedDate);
-            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
+            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedNotify);
             textController.text = defaultData;
           } else {
             textController.text = "";
@@ -143,7 +149,7 @@ class TextFieldWidget extends AbstractWidget {
           );
           if (result != null) {
             defaultData = "${Util.intLPad(result.hour, pad: 2)}:${Util.intLPad(result.minute, pad: 2)}";
-            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
+            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedNotify);
             textController.text = defaultData;
           }
         }
