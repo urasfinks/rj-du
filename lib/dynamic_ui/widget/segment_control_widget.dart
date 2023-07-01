@@ -8,11 +8,12 @@ import '../../util.dart';
 class SegmentControlWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String key = getValue(parsedJson, 'name', '-', dynamicUIBuilderContext);
-    int value = TypeParser.parseInt(
-      getValue(parsedJson, 'value', 0, dynamicUIBuilderContext),
-    )!;
-    dynamicUIBuilderContext.dynamicPage.setStateData(key, value);
+    String keyState = getValue(parsedJson, 'name', '-', dynamicUIBuilderContext);
+
+    String data = getValue(parsedJson, 'data', '-', dynamicUIBuilderContext);
+    if (parsedJson["setState"] ?? false == true) {
+      dynamicUIBuilderContext.dynamicPage.setStateData(keyState, data);
+    }
 
     List<Widget> children = renderList(parsedJson, 'children', dynamicUIBuilderContext);
     Map<int, Widget> ch = {};
@@ -20,13 +21,6 @@ class SegmentControlWidget extends AbstractWidget {
     for (Widget w in children) {
       ch[count++] = w;
     }
-    if (value < 0) {
-      value = 0;
-    }
-    if (value > ch.length) {
-      value = ch.length - 1;
-    }
-
     bool onChangedNotify = TypeParser.parseBool(
       getValue(parsedJson, 'onChangedNotify', true, dynamicUIBuilderContext),
     )!;
@@ -61,14 +55,27 @@ class SegmentControlWidget extends AbstractWidget {
           getValue(parsedJson, 'isStretch', true, dynamicUIBuilderContext),
         )!,
         onValueChanged: (int index) {
-          dynamicUIBuilderContext.dynamicPage.setStateData(key, index, onChangedNotify);
+          dynamicUIBuilderContext.dynamicPage
+              .setStateData(keyState, parsedJson["children"][index]["case"], onChangedNotify);
           click(parsedJson, dynamicUIBuilderContext, "onChanged");
         },
-        initialValue: value,
+        initialValue: getIndex(parsedJson, data),
         innerPadding: TypeParser.parseEdgeInsets(
           getValue(parsedJson, 'padding', 2.0, dynamicUIBuilderContext),
         )!,
       ),
     );
+  }
+
+  int getIndex(Map<String, dynamic> parsedJson, String data) {
+    List<dynamic> list = parsedJson["children"];
+    int index = 0;
+    for (Map<String, dynamic> item in list) {
+      if (data == item["case"]) {
+        return index;
+      }
+      index++;
+    }
+    return 0;
   }
 }
