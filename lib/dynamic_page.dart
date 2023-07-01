@@ -204,7 +204,10 @@ class DynamicPage extends StatefulWidget {
     return "DynamicPage.template() args: ${parseArguments.join(",")} container not exists";
   }
 
-  void addShadowUuid(String uuid) {
+  void addShadowUuid(String? uuid) {
+    if (uuid == null) {
+      return;
+    }
     if (!shadowUuidList.contains(uuid)) {
       shadowUuidList.add(uuid);
     }

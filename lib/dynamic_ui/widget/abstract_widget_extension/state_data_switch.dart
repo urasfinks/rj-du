@@ -4,16 +4,15 @@ import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/abstract_extens
 import '../../dynamic_ui_builder_context.dart';
 
 class StateDataSwitch extends AbstractExtension {
-  static void extend(Map<String, dynamic> child,
-      DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
+  static void extend(
+      Map<String, dynamic> child, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
     String key = child["key"];
 
     //Будем прихранивать неявно объявленные uuid, что бы небыло лишних перерисовок страницы
     //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
     //Поэтому удалим их и потом заново добавим уже обновлённые
     AbstractExtension.removeLastShadowUuid(key, dynamicUIBuilderContext);
-    String value =
-        dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? "default";
+    String value = dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? "default";
     List<dynamic> children = child["children"];
     Map<String, dynamic> map = {};
     for (Map<String, dynamic> item in children) {
@@ -25,15 +24,21 @@ class StateDataSwitch extends AbstractExtension {
         }
       }
     }
+    bool flagAdd = false;
     if (map.containsKey(value)) {
       if (map[value].containsKey("uuid_data")) {
-        dynamicUIBuilderContext.dynamicPage
-            .addShadowUuid(map[value]["uuid_data"]);
+        dynamicUIBuilderContext.dynamicPage.addShadowUuid(map[value]["uuid_data"]);
       }
       result.add(map[value]);
-    } else {
+      flagAdd = true;
+    }
+    if (!flagAdd && map.containsKey("default")) {
+      result.add(map["default"]);
+      flagAdd = true;
+    }
+    if (!flagAdd) {
       if (kDebugMode) {
-        print("extensionStateDataSwitch not found 'case' =  $value");
+        print("extensionStateDataSwitch not found 'case' =  $value || default");
       }
     }
   }
