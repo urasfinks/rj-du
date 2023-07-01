@@ -229,16 +229,20 @@ class DynamicInvoke {
       pageArgs = "bridge.pageArgs = $pageArgs;";
     }
     String jsCode = """
-      bridge.clearAll();
-      bridge.pageUuid = '$pageUuid';
-      bridge.unique = '${Storage().get('unique', '')}';
-      bridge.scriptUuid = '$scriptUuid';
-      $args
-      $context
-      $container
-      $state
-      $pageArgs
-      $js
+      try {
+        bridge.clearAll();
+        bridge.pageUuid = '$pageUuid';
+        bridge.unique = '${Storage().get('unique', '')}';
+        bridge.scriptUuid = '$scriptUuid';
+        $args
+        $context
+        $container
+        $state
+        $pageArgs
+        $js
+      } catch(e) {
+        bridge.log('Exception evaluate: ' + e);
+      }
     """;
     //print("\n\nJS CODE BLOCK======================\n$jsCode\n===================FINISH BLOCK\n\n");
     return javascriptRuntime!.evaluate(jsCode).stringResult;
