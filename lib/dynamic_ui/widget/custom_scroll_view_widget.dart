@@ -55,10 +55,10 @@ class CustomScrollViewWidget extends AbstractWidget {
           refreshTriggerPullDistance: 125,
           refreshIndicatorExtent: 125,
           onRefresh: () async {
-            Future.delayed(const Duration(milliseconds: 700), () {
+            await DataSync().sync();
+            await Future.delayed(const Duration(milliseconds: 700), () {
               //dynamicUIBuilderContext.dynamicPage.reload();
               dynamicUIBuilderContext.dynamicPage.reloadWithoutSetState();
-              DataSync().sync();
             });
           },
         ),

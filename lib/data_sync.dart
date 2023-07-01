@@ -54,7 +54,7 @@ class DataSync {
     }
   }
 
-  void sync() async {
+  Future<void> sync() async {
     if (appIsActive && !isRun) {
       isRun = true;
       int start = Util.getTimestamp();
