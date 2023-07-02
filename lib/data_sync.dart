@@ -185,7 +185,7 @@ class DataSync {
         restart(data["cron"]);
       }
     });
-    SystemNotify().listen(SystemNotifyEnum.appLifecycleState, (state) {
+    SystemNotify().subscribe(SystemNotifyEnum.appLifecycleState, (state) {
       appIsActive = state == AppLifecycleState.resumed.name;
       if (appIsActive) {
         sync();

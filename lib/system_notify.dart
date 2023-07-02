@@ -10,23 +10,29 @@ class SystemNotify {
   Map<SystemNotifyEnum, List<Function(String state)>> notify = {};
 
   void emit(SystemNotifyEnum key, String value) {
-    if (!notify.containsKey(key)) {
-      notify[key] = [];
-    }
-    for (Function(String state) callback in notify[key]!) {
-      callback(value);
+    //print("SystemNotify().emit($key, $value)");
+    if (notify.containsKey(key)) {
+      for (Function(String state) callback in notify[key]!) {
+        callback(value);
+      }
     }
   }
 
-  void listen(SystemNotifyEnum key, Function(String state) callback) {
+  void subscribe(SystemNotifyEnum key, Function(String state) callback) {
+    //print("SystemNotify().subscribe($key)");
     if (!notify.containsKey(key)) {
       notify[key] = [];
     }
-    notify[key]!.add(callback);
+    if (!notify[key]!.contains(callback)) {
+      notify[key]!.add(callback);
+    }
+  }
+
+  void unsubscribe(SystemNotifyEnum key, Function(String state) callback) {
+    if (notify.containsKey(key)) {
+      notify[key]!.remove(callback);
+    }
   }
 }
 
-enum SystemNotifyEnum {
-  appLifecycleState,
-  changeTabOrHistoryPop,
-}
+enum SystemNotifyEnum { appLifecycleState, changeTabOrHistoryPop, changeOrientation }

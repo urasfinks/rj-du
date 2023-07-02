@@ -34,6 +34,7 @@ class DynamicPage extends StatefulWidget {
     arguments = Util.getMutableMap(parseJson);
     stateData = Data(uuid, {}, DataType.virtual, null);
     dynamicUIBuilderContext = DynamicUIBuilderContext(this);
+    SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
   }
 
   void constructor() {
@@ -60,6 +61,11 @@ class DynamicPage extends StatefulWidget {
     WebSocketService().removeListener(this);
     SystemNotify().emit(SystemNotifyEnum.changeTabOrHistoryPop, "HistoryPop");
     DataSource().unsubscribe(onChangeUuid);
+    SystemNotify().unsubscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
+  }
+
+  void onChangeOrientation(String orientation) {
+    print("DynamicPage.onChangeOrientation() $orientation");
   }
 
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {

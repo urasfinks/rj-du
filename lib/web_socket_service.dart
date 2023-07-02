@@ -24,7 +24,7 @@ class WebSocketService {
   void init() {
     _cron = Cron();
     _cron!.schedule(Schedule.parse("*/5 * * * * *"), check);
-    SystemNotify().listen(SystemNotifyEnum.appLifecycleState, (state) {
+    SystemNotify().subscribe(SystemNotifyEnum.appLifecycleState, (state) {
       appIsActive = state == AppLifecycleState.resumed.name;
       if (appIsActive) {
         check();
