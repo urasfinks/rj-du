@@ -57,7 +57,7 @@ class DataMigration {
     List<String> result = [];
     Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
     for (String path in assets.keys) {
-      final regTab = RegExp(r'tab[0-9]+\.json$');
+      final regTab = RegExp(r'/tab[0-9]+\.json$');
       if (path.startsWith("assets/db/data/systemData/") &&
           regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
@@ -72,17 +72,17 @@ class DataMigration {
     return result;
   }
 
-  static Future<Map<String, String>> loadIAsset(String folder, String prefix) async {
+  static Future<Map<String, String>> loadAssetByMask(String folder, String mask) async {
     Map<String, String> result = {};
     Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
     for (String path in assets.keys) {
-      final regTab = RegExp("$prefix[a-zA-Z0-9]+\.json\$");
+      final regTab = RegExp("$mask[a-zA-Z0-9]+\.json\$");
       if (path.startsWith("assets/db/data/$folder/") &&
           regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
 
         String index = path
-            .split("assets/db/data/$folder/$prefix")[1]
+            .split("assets/db/data/$folder/$mask")[1]
             .split(".json")[0];
         result[index] = fileData;
       }

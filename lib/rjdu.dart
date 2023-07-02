@@ -53,9 +53,9 @@ class RjDu {
     }
 
     IteratorThemeLoader.load(
-        await DataMigration.loadIAsset("systemData", "IteratorTheme"));
+        await DataMigration.loadAssetByMask("systemData", "IteratorTheme"));
     TemplateWidget.load(
-        await DataMigration.loadIAsset("template", "TemplateWidget"));
+        await DataMigration.loadAssetByMask("template", "TemplateWidget"));
 
     return DynamicPage(const {
       'flutterType': 'Notify',
