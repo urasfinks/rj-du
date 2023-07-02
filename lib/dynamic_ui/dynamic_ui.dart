@@ -39,6 +39,7 @@ import 'package:rjdu/dynamic_ui/widget/sized_box_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sliver_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sliver_fill_remaining_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/state_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
@@ -137,6 +138,7 @@ class DynamicUI {
     'Material': MaterialWidget().get,
     'MaterialButton': MaterialButtonWidget().get,
     'Template': TemplateWidget().get,
+    'State': StateWidget().get,
 
     //Property
     'TextStyle': TextStyleProperty().get,
@@ -202,7 +204,8 @@ class DynamicUI {
     return selector;
   }
 
-  static List<Widget> renderList(Map<String, dynamic> parsedJson, String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<Widget> renderList(
+      Map<String, dynamic> parsedJson, String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     List<Widget> resultList = [];
     List list = parsedJson[key] ?? [];
     if (list.runtimeType.toString().contains('List')) {
