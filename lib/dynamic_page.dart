@@ -29,6 +29,7 @@ class DynamicPage extends StatefulWidget {
   _DynamicPage? dynamicPageSate;
 
   String subscribeOnChangeUuid = "subscribeOnChangeUuid";
+  String subscribeOnChangeOrientation = "subscribeOnChangeOrientation";
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
@@ -65,7 +66,13 @@ class DynamicPage extends StatefulWidget {
   }
 
   void onChangeOrientation(String orientation) {
-    print("DynamicPage.onChangeOrientation() $orientation");
+    //print("DynamicPage.onChangeOrientation() $orientation");
+    if (arguments.containsKey(subscribeOnChangeOrientation) &&
+        arguments[subscribeOnChangeOrientation].containsKey("onChange")) {
+      Map<String, dynamic> args = arguments[subscribeOnChangeOrientation]["onChange"]["args"];
+      args["subscribe"] = {"orientation": orientation};
+      AbstractWidget.clickStatic(arguments[subscribeOnChangeOrientation], dynamicUIBuilderContext, "onChange");
+    }
   }
 
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/foundation.dart';
+import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/storage.dart';
 import '../db/data_source.dart';
 import '../dynamic_page.dart';
@@ -234,6 +235,7 @@ class DynamicInvoke {
         bridge.pageUuid = '$pageUuid';
         bridge.unique = '${Storage().get('unique', '')}';
         bridge.scriptUuid = '$scriptUuid';
+        bridge.orientation = '${GlobalSettings().orientation}';
         $args
         $context
         $container
