@@ -8,9 +8,10 @@ class GridViewWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return GridView.count(
+
       key: Util.getKey(),
       crossAxisCount: TypeParser.parseInt(
-        getValue(parsedJson, 'crossAxisCount', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, 'crossAxisCount', 1, dynamicUIBuilderContext),
       )!,
       mainAxisSpacing: TypeParser.parseDouble(
         getValue(parsedJson, 'mainAxisSpacing', 0.0, dynamicUIBuilderContext),
@@ -32,7 +33,7 @@ class GridViewWidget extends AbstractWidget {
       )!,
       padding: TypeParser.parseEdgeInsets(
         getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
-      )!,
+      ),
       physics: Util.getPhysics(),
       children: renderList(parsedJson, 'children', dynamicUIBuilderContext),
     );
