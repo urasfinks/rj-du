@@ -24,6 +24,9 @@ class BottomTab extends StatefulWidget {
 
 class BottomTabState extends State<BottomTab>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+
+  bool visible = true;
+
   @override
   void didChangePlatformBrightness() {
     Storage().set(
@@ -40,6 +43,10 @@ class BottomTabState extends State<BottomTab>
     super.initState();
     NavigatorApp.bottomTabState = this;
     WidgetsBinding.instance.addObserver(this);
+    SystemNotify().subscribe(SystemNotifyEnum.changeBottomNavigationTab, (state) {
+      visible = TypeParser.parseBool(state) ?? true;
+      setState(() {});
+    });
   }
 
   @override
@@ -98,39 +105,42 @@ class BottomTabState extends State<BottomTab>
         widget.dynamicUIBuilderContext,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-              sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: TypeParser.parseColor("schema:secondary", context)!.withOpacity(0.2),
-                  width: 1.0,
+      bottomNavigationBar: Visibility(
+        visible: visible,
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+                sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: TypeParser.parseColor("schema:secondary", context)!.withOpacity(0.2),
+                    width: 1.0,
+                  ),
                 ),
               ),
-            ),
-            child: BottomNavigationBar(
-              elevation: 0,
-              showSelectedLabels: false,
-              //Убираем подпись к выбранному табу
-              showUnselectedLabels: false,
-              //Убираем подписи к невыбранным табам
-              items: getTabList(),
-              currentIndex: NavigatorApp.selectedTab,
-              onTap: (index) {
-                int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
-                if (nowTimeClick - lastTimeClick < 200) {
-                  DynamicInvoke().sysInvoke(
-                    "NavigatorPop",
-                    {"tab": index, "toBegin": true},
-                    widget.dynamicUIBuilderContext,
-                  );
-                }
-                lastTimeClick = nowTimeClick;
-                selectTab(index);
-              },
+              child: BottomNavigationBar(
+                elevation: 0,
+                showSelectedLabels: false,
+                //Убираем подпись к выбранному табу
+                showUnselectedLabels: false,
+                //Убираем подписи к невыбранным табам
+                items: getTabList(),
+                currentIndex: NavigatorApp.selectedTab,
+                onTap: (index) {
+                  int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
+                  if (nowTimeClick - lastTimeClick < 200) {
+                    DynamicInvoke().sysInvoke(
+                      "NavigatorPop",
+                      {"tab": index, "toBegin": true},
+                      widget.dynamicUIBuilderContext,
+                    );
+                  }
+                  lastTimeClick = nowTimeClick;
+                  selectTab(index);
+                },
+              ),
             ),
           ),
         ),
