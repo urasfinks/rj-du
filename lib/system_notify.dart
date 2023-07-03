@@ -35,4 +35,4 @@ class SystemNotify {
   }
 }
 
-enum SystemNotifyEnum { appLifecycleState, changeTabOrHistoryPop, changeOrientation, changeBottomNavigationTab }
+enum SystemNotifyEnum { appLifecycleState, changeViewport, changeOrientation, changeBottomNavigationTab }

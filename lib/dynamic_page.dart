@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/util/template.dart';
 import 'package:rjdu/web_socket_service.dart';
@@ -28,8 +29,6 @@ class DynamicPage extends StatefulWidget {
   List<String> shadowUuidList = [];
   _DynamicPage? dynamicPageSate;
 
-  String subscribeOnChangeUuid = "subscribeOnChangeUuid";
-
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
     stateData = Data(uuid, {}, DataType.virtual, null);
@@ -48,8 +47,8 @@ class DynamicPage extends StatefulWidget {
         WebSocketService().addListener(this);
       }
 
-      if (arguments.containsKey(subscribeOnChangeUuid)) {
-        List listUuid = arguments[subscribeOnChangeUuid]["list"] as List;
+      if (arguments.containsKey("subscribeOnChangeUuid")) {
+        List listUuid = arguments["subscribeOnChangeUuid"] as List;
         for (String uuid in listUuid) {
           DataSource().subscribe(uuid, onChangeUuid);
         }
@@ -59,25 +58,38 @@ class DynamicPage extends StatefulWidget {
 
   void destructor() {
     WebSocketService().removeListener(this);
-    SystemNotify().emit(SystemNotifyEnum.changeTabOrHistoryPop, "HistoryPop");
+    SystemNotify().emit(SystemNotifyEnum.changeViewport, "onHistoryPop");
     DataSource().unsubscribe(onChangeUuid);
     SystemNotify().unsubscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
   }
 
-  void onChangeOrientation(String orientation) {
-    //print("DynamicPage.onChangeOrientation() $orientation");
-    if (arguments.containsKey("onChangeOrientation")) {
-      AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "onChangeOrientation");
+  void onEvent(String key, Map<String, dynamic> args) {
+    if (kDebugMode) {
+      print("DynamicPage.onEvent($key); args: $args");
+    }
+    if (arguments.containsKey(key)) {
+      var event = arguments[key] as Map<String, dynamic>;
+      if (event.containsKey("args")) {
+        Map<String, dynamic> eventArgs = event["args"];
+        Util.merge(eventArgs, args);
+      } else {
+        event["args"] = args;
+      }
+      AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, key);
     }
   }
 
+  void onChangeOrientation(String orientation) {
+    onEvent("onChangeOrientation", {orientation: orientation});
+  }
+
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {
-    //print("!onChangeUuid: $uuid; data: $data");
-    if (arguments.containsKey(subscribeOnChangeUuid) && arguments[subscribeOnChangeUuid].containsKey("onChange")) {
-      Map<String, dynamic> args = arguments[subscribeOnChangeUuid]["onChange"]["args"];
-      args["subscribe"] = {"uuid": uuid, "data": data};
-      AbstractWidget.clickStatic(arguments[subscribeOnChangeUuid], dynamicUIBuilderContext, "onChange");
-    }
+    onEvent("onChangeUuid", {"uuid": uuid, "data": data});
+  }
+
+  void onActive() {
+    onEvent("onActive", {});
+    renderFloatingActionButton();
   }
 
   void reloadWithoutSetState() {

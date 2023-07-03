@@ -76,7 +76,7 @@ class BottomTabState extends State<BottomTab>
       setState(() {
         NavigatorApp.selectedTab = index;
         SystemNotify()
-            .emit(SystemNotifyEnum.changeTabOrHistoryPop, "ChangeTab");
+            .emit(SystemNotifyEnum.changeViewport, "onChangeTab");
       });
     }
   }

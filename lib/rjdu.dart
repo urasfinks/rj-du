@@ -39,8 +39,8 @@ class RjDu {
     DataSync().init();
     WebSocketService().init();
 
-    SystemNotify().subscribe(SystemNotifyEnum.changeTabOrHistoryPop, (state) {
-      NavigatorApp.getLast()?.renderFloatingActionButton();
+    SystemNotify().subscribe(SystemNotifyEnum.changeViewport, (state) {
+      NavigatorApp.getLast()?.onActive();
     });
   }
 

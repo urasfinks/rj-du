@@ -11,29 +11,29 @@ import 'abstract_widget_extension/iterator.dart';
 import 'abstract_widget_extension/state_data_switch.dart';
 
 abstract class AbstractWidget {
-  dynamic get(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext);
+  dynamic get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext);
 
-  static dynamic getValueStatic(Map<String, dynamic> parsedJson,
-      String? key,
-      dynamic defaultValue,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
-    dynamic selector = key == null
-        ? parsedJson
-        : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue);
+  static dynamic getValueStatic(
+    Map<String, dynamic> parsedJson,
+    String? key,
+    dynamic defaultValue,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
+    dynamic selector = key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue);
     if (selector.runtimeType.toString() == "String") {
       selector = Util.template(selector, dynamicUIBuilderContext);
     }
     return selector;
   }
 
-  dynamic getValue(Map<String, dynamic> parsedJson,
-      String? key,
-      dynamic defaultValue,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
+  dynamic getValue(
+    Map<String, dynamic> parsedJson,
+    String? key,
+    dynamic defaultValue,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
     try {
-      return getValueStatic(
-          parsedJson, key, defaultValue, dynamicUIBuilderContext);
+      return getValueStatic(parsedJson, key, defaultValue, dynamicUIBuilderContext);
     } catch (e, stacktrace) {
       if (kDebugMode) {
         print(e);
@@ -43,24 +43,26 @@ abstract class AbstractWidget {
     }
   }
 
-  dynamic render(Map<String, dynamic> parsedJson,
-      String? key,
-      dynamic defaultValue,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
-    return DynamicUI.render(
-        parsedJson, key, defaultValue, dynamicUIBuilderContext);
+  dynamic render(
+    Map<String, dynamic> parsedJson,
+    String? key,
+    dynamic defaultValue,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
+    return DynamicUI.render(parsedJson, key, defaultValue, dynamicUIBuilderContext);
   }
 
-  dynamic renderList(Map<String, dynamic> parsedJson,
-      String key,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
+  dynamic renderList(
+    Map<String, dynamic> parsedJson,
+    String key,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
     if (!parsedJson.containsKey(key)) {
       return null;
     }
     String keyDefaultBeforeUpdate = "${key}DefaultBeforeUpdate";
     if (parsedJson.containsKey(keyDefaultBeforeUpdate)) {
-      parsedJson[key] = updateList(
-          parsedJson[keyDefaultBeforeUpdate] as List, dynamicUIBuilderContext);
+      parsedJson[key] = updateList(parsedJson[keyDefaultBeforeUpdate] as List, dynamicUIBuilderContext);
     } else {
       List saveList = [];
       saveList.addAll(parsedJson[key]);
@@ -71,8 +73,10 @@ abstract class AbstractWidget {
     return DynamicUI.renderList(parsedJson, key, dynamicUIBuilderContext);
   }
 
-  List updateList(List list,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
+  List updateList(
+    List list,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
     List<dynamic> result = [];
     for (var element in list) {
       Map<String, dynamic> el = element as Map<String, dynamic>;
@@ -95,15 +99,15 @@ abstract class AbstractWidget {
     return result;
   }
 
-  static void invoke(Map<String, dynamic>? settings,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
+  static void invoke(
+    Map<String, dynamic>? settings,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
     if (settings != null) {
       if (settings.containsKey('jsInvoke')) {
-        DynamicInvoke().jsInvoke(
-            settings['jsInvoke'], settings['args'], dynamicUIBuilderContext);
+        DynamicInvoke().jsInvoke(settings['jsInvoke'], settings['args'], dynamicUIBuilderContext);
       } else if (settings.containsKey('sysInvoke')) {
-        DynamicInvoke().sysInvoke(settings['sysInvoke'], settings['args'] ?? {},
-            dynamicUIBuilderContext);
+        DynamicInvoke().sysInvoke(settings['sysInvoke'], settings['args'] ?? {}, dynamicUIBuilderContext);
       } else if (settings.containsKey('list')) {
         List<dynamic> list = settings["list"];
         for (dynamic data in list) {
@@ -113,21 +117,19 @@ abstract class AbstractWidget {
     }
   }
 
-  static void clickStatic(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext,
+  static void clickStatic(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,
       [String key = "onPressed"]) {
     Future(() {
       Map<String, dynamic>? settings;
-      dynamic prev =
-      getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
-      if (prev == null) {
+      dynamic tmp = getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
+      if (tmp == null) {
         return null;
       }
-      if (prev.runtimeType.toString().contains("Map")) {
-        settings = prev as Map<String, dynamic>?;
+      if (tmp.runtimeType.toString().contains("Map")) {
+        settings = tmp as Map<String, dynamic>?;
       } else {
         try {
-          settings = json.decode(prev) as Map<String, dynamic>?;
+          settings = json.decode(tmp) as Map<String, dynamic>?;
         } catch (e) {
           print("clickStatic exception: $e");
         }
@@ -143,8 +145,7 @@ abstract class AbstractWidget {
     });
   }
 
-  void click(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext,
+  void click(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,
       [String key = "onPressed"]) {
     clickStatic(parsedJson, dynamicUIBuilderContext, key);
   }
