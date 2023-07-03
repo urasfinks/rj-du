@@ -27,15 +27,13 @@ class Util {
     return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 
-  static String template(
-      String template, DynamicUIBuilderContext dynamicUIBuilderContext,
+  static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
-    return Template.template(
-        template, dynamicUIBuilderContext, autoEscape, debug);
+    return Template.template(template, dynamicUIBuilderContext, autoEscape, debug);
   }
 
-  static Map<String, dynamic> templateArguments(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static Map<String, dynamic> templateArguments(
+      Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Template.templateArguments(args, dynamicUIBuilderContext);
   }
 
@@ -60,8 +58,7 @@ class Util {
     return escaped;
   }
 
-  static Map<String, dynamic> merge(
-      Map<String, dynamic> def, Map<String, dynamic>? input) {
+  static Map<String, dynamic> merge(Map<String, dynamic> def, Map<String, dynamic>? input) {
     if (input == null || input.isEmpty) {
       return def;
     }
@@ -71,11 +68,9 @@ class Util {
     return def;
   }
 
-  static String intLPad(int i, {int pad = 0, String char = "0"}) =>
-      i.toString().padLeft(pad, char);
+  static String intLPad(int i, {int pad = 0, String char = "0"}) => i.toString().padLeft(pad, char);
 
-  static String intRPad(int i, {int pad = 0, String char = "0"}) =>
-      i.toString().padRight(pad, char);
+  static String intRPad(int i, {int pad = 0, String char = "0"}) => i.toString().padRight(pad, char);
 
   static bool isIndexKey(dynamic data) {
     if (data.runtimeType.toString().contains("Map<")) {
@@ -146,15 +141,13 @@ class Util {
     return true;
   }
 
-  static Future<dynamic> asyncInvokeIsolate(
-      Function(dynamic arg) fn, dynamic arg) async {
+  static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) async {
     if (arg != null) {
       return await compute(fn, arg);
     }
   }
 
-  static Future<void> asyncInvoke(
-      Function(dynamic args) fn, dynamic args) async {
+  static Future<void> asyncInvoke(Function(dynamic args) fn, dynamic args) async {
     Future<void>.delayed(Duration.zero).then((_) {
       fn(args);
     });
@@ -162,5 +155,9 @@ class Util {
 
   static Map<String, dynamic> getMutableMap(Map? map) {
     return map == null ? {} : json.decode(json.encode(map));
+  }
+
+  static T? enumFromString<T>(Iterable<T> values, String value) {
+    return values.firstWhere((type) => type.toString().split(".").last == value);
   }
 }

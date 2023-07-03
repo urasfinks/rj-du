@@ -28,6 +28,7 @@ import 'handler/navigator_pop_handler.dart';
 import 'handler/select_tab_handler.dart';
 import 'handler/set_storage_handler.dart';
 import 'handler/share_handler.dart';
+import 'handler/system_notify_handler.dart';
 import 'handler/template_handler.dart';
 import 'handler/test_handler.dart';
 import 'handler/url_launcher_handler.dart';
@@ -70,6 +71,7 @@ class DynamicInvoke {
     'CustomLoaderClose': CustomLoaderCloseHandler().handle,
     'SetStorage': SetStorageHandler().handle,
     'GetStorage': GetStorageHandler().handle,
+    'SystemNotify': SystemNotifyHandler().handle,
   };
 
   init() {
@@ -198,6 +200,7 @@ class DynamicInvoke {
           includePageArgument
               ? json.encode(dynamicUIBuilderContext.dynamicPage.arguments)
               : '',
+          NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage
         );
         if (result != null) {
           if (kDebugMode) {
@@ -213,7 +216,7 @@ class DynamicInvoke {
   }
 
   String? _eval(String scriptUuid, String pageUuid, String js, String args,
-      String context, String container, String state, String pageArgs) {
+      String context, String container, String state, String pageArgs, bool pageActive) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
     }
@@ -236,6 +239,7 @@ class DynamicInvoke {
         bridge.unique = '${Storage().get('unique', '')}';
         bridge.scriptUuid = '$scriptUuid';
         bridge.orientation = '${GlobalSettings().orientation}';
+        bridge.pageActive = ${pageActive ? 'true': 'false'};
         $args
         $context
         $container
