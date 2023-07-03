@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:rjdu/dynamic_invoke/handler/navigator_pop_handler.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/theme_provider.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
@@ -131,8 +132,8 @@ class BottomTabState extends State<BottomTab>
                 onTap: (index) {
                   int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
                   if (nowTimeClick - lastTimeClick < 200) {
-                    DynamicInvoke().sysInvoke(
-                      "NavigatorPop",
+                    DynamicInvoke().sysInvokeType(
+                      NavigatorPopHandler,
                       {"tab": index, "toBegin": true},
                       widget.dynamicUIBuilderContext,
                     );

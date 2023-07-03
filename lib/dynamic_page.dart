@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rjdu/dynamic_invoke/handler/hide_handler.dart';
+import 'package:rjdu/dynamic_invoke/handler/show_handler.dart';
 import 'package:rjdu/util/template.dart';
 import 'package:rjdu/web_socket_service.dart';
 import 'data_type.dart';
@@ -171,12 +173,11 @@ class DynamicPage extends StatefulWidget {
       bool hide = true;
       if (container.containsKey("root") && container["root"]!.data.containsKey("template")) {
         if (container["root"]!.data["template"]!.containsKey("floatingActionButton")) {
-          DynamicInvoke().sysInvoke(
-            "DataSourceSet",
+          DynamicInvoke().sysInvokeType(
+            ShowHandler,
             {
-              "uuid": "FloatingActionButton.json",
-              "type": "virtual",
-              "value": container['root']!.data["template"]["floatingActionButton"]
+              "case": "actionButton",
+              "template": container['root']!.data["template"]["floatingActionButton"],
             },
             dynamicUIBuilderContext,
           );
@@ -189,15 +190,7 @@ class DynamicPage extends StatefulWidget {
         }
       }
       if (hide) {
-        DynamicInvoke().sysInvoke(
-          "DataSourceSet",
-          {
-            "uuid": "FloatingActionButton.json",
-            "type": "virtual",
-            "value": Util.getMutableMap({}),
-          },
-          dynamicUIBuilderContext,
-        );
+        DynamicInvoke().sysInvokeType(HideHandler, {"case": "actionButton"}, dynamicUIBuilderContext);
       }
     }
   }

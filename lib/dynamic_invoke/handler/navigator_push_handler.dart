@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import '../../dynamic_page.dart';
 
 class NavigatorPushHandler extends AbstractHandler {
+
   @override
-  dynamic handle(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> dataPage = args;
 
     String type = args.containsKey("type") ? args["type"] : "Window";
@@ -35,16 +35,13 @@ class NavigatorPushHandler extends AbstractHandler {
     }
   }
 
-  void dialog(
-      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+  void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
     if (!raw) {
       dataPage.addAll(
         {
           'name': dataPage.containsKey('name') ? dataPage['name'] : '',
           'flutterType': 'Notify',
-          'link': dataPage.containsKey('uuid')
-              ? {'template': dataPage['uuid']}
-              : dataPage['link'],
+          'link': dataPage.containsKey('uuid') ? {'template': dataPage['uuid']} : dataPage['link'],
           'linkContainer': 'root',
           'linkDefault': dataPage.containsKey('linkDefault')
               ? dataPage['linkDefault']
@@ -68,16 +65,13 @@ class NavigatorPushHandler extends AbstractHandler {
     );
   }
 
-  void bottomSheet(
-      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+  void bottomSheet(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
     if (!raw) {
       dataPage.addAll(
         {
           'name': dataPage.containsKey('name') ? dataPage['name'] : '',
           'flutterType': 'Notify',
-          'link': dataPage.containsKey('uuid')
-              ? {'template': dataPage['uuid']}
-              : dataPage['link'],
+          'link': dataPage.containsKey('uuid') ? {'template': dataPage['uuid']} : dataPage['link'],
           'linkContainer': 'root',
           'linkDefault': dataPage.containsKey('linkDefault')
               ? dataPage['linkDefault']
@@ -107,16 +101,13 @@ class NavigatorPushHandler extends AbstractHandler {
     );
   }
 
-  void window(
-      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+  void window(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
     if (!raw) {
       dataPage.addAll(
         {
           'name': dataPage.containsKey('name') ? dataPage['name'] : '',
           'flutterType': 'Notify',
-          'link': dataPage.containsKey('uuid')
-              ? {'template': dataPage['uuid']}
-              : dataPage['link'],
+          'link': dataPage.containsKey('uuid') ? {'template': dataPage['uuid']} : dataPage['link'],
           'linkContainer': 'root',
           'linkDefault': dataPage.containsKey('linkDefault')
               ? dataPage['linkDefault']
@@ -125,10 +116,7 @@ class NavigatorPushHandler extends AbstractHandler {
                     'flutterType': 'Scaffold',
                     'appBar': {
                       'flutterType': 'AppBar',
-                      'title': {
-                        'flutterType': 'Text',
-                        'label': dataPage['label']
-                      }
+                      'title': {'flutterType': 'Text', 'label': dataPage['label']}
                     }
                   }
                 }
