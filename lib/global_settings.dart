@@ -8,7 +8,7 @@ class GlobalSettings {
   String ws = "https://e-humidor.ru:8453";
   double appBarHeight = 56.0;
   double bottomNavigationBarHeight = 56.0;
-  String orientation = "";
+  String orientation = ""; //landscape/portrait
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 
