@@ -33,7 +33,14 @@ class NavigatorApp {
   }
 
   static void removePage(DynamicPage dynamicPage) {
-    allDynamicPage.remove(dynamicPage);
+    Future.delayed(const Duration(seconds: 5), () {
+      // Задержка сделана для того, что бы была возможность отработать destruct js для закрытой DynamicPage
+      // Если сразу удалить, то getPageByUuid вернёт null, что приведёт к невозможности запустить
+      // асинхронные вызовы SysInvoke
+      // Для кейса при закрытии страницы - отобразить bottomNavigationBar, так как он мог был быть скрыт
+      allDynamicPage.remove(dynamicPage);
+    });
+
     if (tabNavigator.containsKey(selectedTab)) {
       tabNavigator[selectedTab]!.remove(dynamicPage);
     }
@@ -42,27 +49,26 @@ class NavigatorApp {
 
   static DynamicPage? getLast([int? indexTab]) {
     indexTab ??= selectedTab;
-    return tabNavigator.containsKey(indexTab)
-        ? tabNavigator[indexTab]!.last
-        : null;
+    return tabNavigator.containsKey(indexTab) ? tabNavigator[indexTab]!.last : null;
   }
 
   static bool isLast([int? indexTab]) {
     indexTab ??= selectedTab;
-    return tabNavigator.containsKey(indexTab)
-        ? (tabNavigator[indexTab]!.length == 1)
-        : true;
+    return tabNavigator.containsKey(indexTab) ? (tabNavigator[indexTab]!.length == 1) : true;
   }
 
   static void updatePageNotifier(String uuid, Map<String, dynamic> data) {
     for (DynamicPage dynamicPage in allDynamicPage) {
-      dynamicPage.updateNotifier(uuid, data);
+      if (dynamicPage.isDispose == false) {
+        dynamicPage.updateNotifier(uuid, data);
+      }
     }
   }
 
   static void reloadPageByArguments(String key, String value) {
     for (DynamicPage dynamicPage in allDynamicPage) {
-      if (dynamicPage.arguments.containsKey(key) &&
+      if (dynamicPage.isDispose == false &&
+          dynamicPage.arguments.containsKey(key) &&
           dynamicPage.arguments[key] == value) {
         dynamicPage.reload();
       }

@@ -30,6 +30,7 @@ class DynamicPage extends StatefulWidget {
   bool isRunConstructor = false;
   List<String> shadowUuidList = [];
   _DynamicPage? dynamicPageSate;
+  bool isDispose = false;
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
@@ -59,6 +60,7 @@ class DynamicPage extends StatefulWidget {
   }
 
   void destructor() {
+    onEvent("destructor", {});
     WebSocketService().removeListener(this);
     SystemNotify().emit(SystemNotifyEnum.changeViewport, "onHistoryPop");
     DataSource().unsubscribe(onChangeUuid);

@@ -88,18 +88,25 @@ class DynamicInvoke {
     javascriptRuntime?.init();
     for (MapEntry<String, Function> item in handler.entries) {
       javascriptRuntime!.onMessage(item.key, (dynamic args) {
-        //print("DynamicInvoke.onMessage() args: $args");
-        String pageUuid = args["_rjduPageUuid"];
-        args.removeWhere((key, value) => key == "_rjduPageUuid");
-        DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
-        dynamic result;
-        if (pageByUuid != null) {
-          result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
+        try {
+          //print("DynamicInvoke.onMessage() args: $args");
+          String pageUuid = args["_rjduPageUuid"];
+          args.removeWhere((key, value) => key == "_rjduPageUuid");
+          DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
+          dynamic result;
+          if (pageByUuid != null) {
+            result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
+          }
+          if (result == null) {
+            return null;
+          }
+          return result is String ? result : json.encode(result);
+        } catch (e, stacktrace) {
+          if (kDebugMode) {
+            print(e);
+            print(stacktrace);
+          }
         }
-        if (result == null) {
-          return null;
-        }
-        return result is String ? result : json.encode(result);
       });
     }
     DataSource().subscribe("global.js", (uuid, data) {
