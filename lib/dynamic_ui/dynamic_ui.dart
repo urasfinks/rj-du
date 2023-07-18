@@ -43,6 +43,7 @@ import 'package:rjdu/dynamic_ui/widget/state_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
+import 'package:rjdu/dynamic_ui/widget_property/border_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/box_constraints_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/image_network_cached_provider_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/image_network_provider_property.dart';
@@ -154,6 +155,7 @@ class DynamicUI {
     'ImageNetworkProvider': ImageNetworkProviderProperty().get,
     'ImageNetworkCachedProvider': ImageNetworkCachedProviderProperty().get,
     'BoxConstraints': BoxConstraintsProperty().get,
+    'Border': BorderProperty().get,
   };
 
   static dynamic render(

@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 
 class BoxDecorationProperty extends AbstractWidget {
   @override
-  get(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return BoxDecoration(
       color: TypeParser.parseColor(
         getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
@@ -16,6 +15,7 @@ class BoxDecorationProperty extends AbstractWidget {
         getValue(parsedJson, 'borderRadius', null, dynamicUIBuilderContext),
       ),
       gradient: getValue(parsedJson, 'gradient', null, dynamicUIBuilderContext),
+      border: render(parsedJson, 'border', null, dynamicUIBuilderContext),
     );
   }
 }
