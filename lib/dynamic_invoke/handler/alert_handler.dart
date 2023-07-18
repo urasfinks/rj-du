@@ -26,7 +26,7 @@ class AlertHandler extends AbstractHandler {
     config["backgroundColor"] = Util.template(config["backgroundColor"], dynamicUIBuilderContext);
     config["color"] = Util.template(config["color"], dynamicUIBuilderContext);
 
-    if (config["confirm"] == true) {
+    if (config["confirmRemove"] == true) {
       config["action"] = true;
       if (!args.containsKey("label")) {
         config["label"] = "Подтвердить действие:";
@@ -35,7 +35,29 @@ class AlertHandler extends AbstractHandler {
         config["duration"] = 5000;
       }
       if (!args.containsKey("backgroundColor")) {
-        config["backgroundColor"] = "red.600";
+        config["backgroundColor"] = "schema:background";
+      }
+      if (!args.containsKey("actionBackgroundColor")) {
+        config["actionBackgroundColor"] = "red.600";
+      }
+    }
+
+    if (config["confirmAction"] == true) {
+      config["action"] = true;
+      if (!args.containsKey("label")) {
+        config["label"] = "Подтвердить действие:";
+      }
+      if (!args.containsKey("duration")) {
+        config["duration"] = 5000;
+      }
+      if (!args.containsKey("backgroundColor")) {
+        config["backgroundColor"] = "schema:background";
+      }
+      if (!args.containsKey("actionLabel")) {
+        config["actionLabel"] = "Да";
+      }
+      if (!args.containsKey("actionBackgroundColor")) {
+        config["actionBackgroundColor"] = "blue.600";
       }
     }
 
@@ -60,8 +82,9 @@ class AlertHandler extends AbstractHandler {
   static void alert(int milliseconds, String label, String color, String backgroundColor, SnackBarAction? action) {
     ScaffoldMessenger.of(NavigatorApp.getLast()!.context!).showSnackBar(
       SnackBar(
+        padding: TypeParser.parseEdgeInsets("17,10,10,10")!,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
         ),
         duration: Duration(milliseconds: milliseconds),
         content: Text(label, style: TextStyle(color: TypeParser.parseColor(color))),
