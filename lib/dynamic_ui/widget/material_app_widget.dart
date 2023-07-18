@@ -8,11 +8,16 @@ import '../../theme_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MaterialAppWidget extends AbstractWidget {
+  String lastOrientation = "";
+
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return OrientationBuilder(
       builder: (context, orientation) {
-        SystemNotify().emit(SystemNotifyEnum.changeOrientation, orientation.name);
+        if (lastOrientation != orientation.name) {
+          lastOrientation = orientation.name;
+          SystemNotify().emit(SystemNotifyEnum.changeOrientation, orientation.name);
+        }
         return MaterialApp(
           debugShowCheckedModeBanner: GlobalSettings().debug,
           theme: ThemeProvider.lightThemeData(),
