@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rjdu/data_sync.dart';
+import 'package:rjdu/db/socket_cache.dart';
 import 'package:rjdu/dynamic_invoke/handler/alert_handler.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data_type.dart';
@@ -27,8 +28,7 @@ class DataSource {
   List<dynamic> list = [];
   List<DataType> notJsonList = [DataType.js, DataType.any];
   late Database db;
-  Map<String, List<Function(String uuid, Map<String, dynamic>? data)>>
-      listener = {};
+  Map<String, List<Function(String uuid, Map<String, dynamic>? data)>> listener = {};
   DataMigration dataMigration = DataMigration();
 
   init() async {
@@ -36,8 +36,7 @@ class DataSource {
       print("DataSource.init()");
     }
     final directory = await getApplicationDocumentsDirectory();
-    db = await openDatabase("${directory.path}/mister-craft-1.sqlite3",
-        version: 1);
+    db = await openDatabase("${directory.path}/mister-craft-1.sqlite3", version: 1);
     await dataMigration.init();
     isInit = true;
     flushQueue();
@@ -68,8 +67,7 @@ class DataSource {
     debugPrint('flushQueue complete: $count');
   }
 
-  void set(String uuid, dynamic value, DataType type,
-      [String? key, String? parent, bool updateIfExist = true]) {
+  void set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.updateIfExist = updateIfExist;
@@ -102,13 +100,10 @@ class DataSource {
     }
   }
 
-  void setDataStandard(
-      Data data, List<String> transaction, bool notifyDynamicPage) {
+  void setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) {
     transaction.add("5 saveToDB");
-    String dataString =
-        data.value.runtimeType != String ? json.encode(data.value) : data.value;
-    db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then(
-        (resultSet) {
+    String dataString = data.value.runtimeType != String ? json.encode(data.value) : data.value;
+    db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then((resultSet) {
       bool notify = false;
       if (resultSet.isEmpty) {
         transaction.add("6 result is empty > insert");
@@ -140,8 +135,7 @@ class DataSource {
     });
   }
 
-  void notifyBlockAsync(
-      Data data, List<String> transaction, bool notifyDynamicPage) {
+  void notifyBlockAsync(Data data, List<String> transaction, bool notifyDynamicPage) {
     if (notifyDynamicPage) {
       transaction.add("3 notifyBlock()");
       //Что бы не было коллизии setState или marketRebuild во время build
@@ -160,39 +154,83 @@ class DataSource {
     printTransaction(data, transaction);
   }
 
-  void setDataVirtual(
-      Data data, List<String> transaction, bool notifyDynamicPage) {
+  void setDataVirtual(Data data, List<String> transaction, bool notifyDynamicPage) {
     transaction.add("2 is virtual");
     notifyBlockAsync(data, transaction, notifyDynamicPage);
   }
 
-  void setDataSocket(
-      Data data, List<String> transaction, bool notifyDynamicPage) {
+  static Map<String, SocketCache> socketCache = {};
+
+  void setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) {
+    print("setDataSocket(${diffData.uuid}) notify: $notifyDynamicPage");
     // Обновление сокетных данных не должно обновлять локальную БД
     transaction.add("4 update socket data");
-    sendDataSocket(data);
-    // Так как сокетные данные обновляются diff
-    // надо либо его наложить на все данные и оповестить
-    // либо не оповещать вообще
-    //TODO: сделать мерж и оповестить
-    //notifyBlockAsync(data, transaction, notifyDynamicPage);
-    printTransaction(data, transaction);
+    if (notifyDynamicPage) {
+      print("DIFF: ${diffData.value}");
+      // Получать из бд так себе история, потому что в БД данные появляются после синхронизации
+      // Надо в памяти держать
+      if (!socketCache.containsKey(diffData.uuid)) {
+        print("Add new SocketCache for ${diffData.uuid}");
+        socketCache[diffData.uuid] = SocketCache();
+      }
+      SocketCache socketCacheData = socketCache[diffData.uuid]!;
+      socketCacheData.countUpdate++; //Это грубый счётчик установок новых значений
+      //print("SocketCache.countUpdate = ${socketCacheData.countUpdate}; data = ${socketCacheData.data}");
+      // Счётчки нужен для того, что бы пропускать пришедшии ревизии с сервера для отрисовки UI
+      // Так как на UI уже отрисованы моментальные данные
+      // Если при синхронизации возникнет ошибка, мы должны стереть моментальные данные и перерисовать UI данными локальной БД
+
+      //Остановился на том, что синхронизация данных с сервера всего 1, когда запросов на обновление сокетных данных 2
+      //Мысли такие, пока летят запросы на обновление сокетных данных на сервер в этот момент не надо данные пришедшии
+      // на сихронизации обновлять UI
+
+      if (socketCacheData.data != null) {
+        socketDataUpdateMomentum(socketCacheData.data, diffData, transaction);
+      } else {
+        db.rawQuery('SELECT * FROM data where uuid_data = ?', [diffData.uuid]).then((resultSet) {
+          if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
+            DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
+            if (isJsonDataType(dataTypeResult)) {
+              Map<String, dynamic>? decodeFull = json.decode(resultSet.first['value_data'] as String);
+              socketDataUpdateMomentum(decodeFull, diffData, transaction);
+            }
+          }
+        });
+      }
+    }
+    sendDataSocket(diffData, notifyDynamicPage);
+    printTransaction(diffData, transaction);
   }
 
-  void sendDataSocket(Data data) async {
-    Map<String, dynamic> postData = {
-      "uuid_data": data.uuid,
-      "data": data.value
-    };
+  void socketDataUpdateMomentum(Map<String, dynamic>? fullData, Data diffData, List<String> transaction) {
+    if (fullData != null) {
+      for (MapEntry<String, dynamic> item in diffData.value.entries) {
+        if (item.value == null) {
+          fullData.remove(item.key);
+        } else {
+          fullData[item.key] = item.value;
+        }
+      }
+      var momentumData = Data(diffData.uuid, fullData, diffData.type, diffData.parentUuid);
+      if (socketCache.containsKey(diffData.uuid)) {
+        socketCache[diffData.uuid]!.data = fullData;
+      }
+      notifyBlockAsync(
+          momentumData, transaction, true); //true потому что сюда вход должен быть только в случаи нотификации
+    }
+  }
+
+  void sendDataSocket(Data data, bool notifyDynamicPage) async {
+    Map<String, dynamic> postData = {"uuid_data": data.uuid, "data": data.value};
     Response response = await Util.asyncInvokeIsolate((args) {
-      return HttpClient.post(
-          "${args["host"]}/SocketUpdate", args["body"], args["headers"]);
+      return HttpClient.post("${args["host"]}/SocketUpdate", args["body"], args["headers"]);
     }, {
       "headers": HttpClient.upgradeHeadersAuthorization({}),
       "body": postData,
       "host": GlobalSettings().host,
     });
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+    } else {
       AlertHandler.alertSimple('Данные не зафиксированы на сервере');
     }
     if (kDebugMode) {
@@ -217,8 +255,7 @@ class DataSource {
   }
 
   void update(Data curData, String dataString) {
-    if (curData.onUpdateResetRevision &&
-        curData.type.runtimeType.toString().endsWith("RSync")) {
+    if (curData.onUpdateResetRevision && curData.type.runtimeType.toString().endsWith("RSync")) {
       curData.revision = 0;
     }
     db.rawUpdate(
@@ -235,6 +272,17 @@ class DataSource {
         curData.uuid,
       ],
     ).then((value) {
+      // Кеш сокетных данных нужен как буфер всех последовательных изменений
+      // Допустим в 5 ячеек кладут цифры от 1 до 5 с интервалом 1мс (короче быстро прощёлкивают пальцем)
+      // Так как прекеш сразу отрисовывается на UI - после первой оперции, если мы удалим прекеш
+      // Из кеша очишаем через N секунд, потомучно N подрят изменений будут сбрасывать
+      // не синхронизованные данные
+      // if (socketCache.containsKey(curData.uuid)) {
+      //   socketCache[curData.uuid]!.countUpdate--;
+      //   print("countUpdate: ${socketCache[curData.uuid]!.countUpdate}");
+      // } else {
+      //   print("countUpdate: -1");
+      // }
       if (curData.onPersist != null) {
         Function.apply(curData.onPersist!, null);
       }
@@ -267,9 +315,7 @@ class DataSource {
     if (curData.value.runtimeType == String && isJsonDataType(curData.type)) {
       runtimeData = json.decode(curData.value);
     } else if (curData.value.runtimeType != String) {
-      if (curData.value.runtimeType
-          .toString()
-          .contains("Map<dynamic, dynamic>")) {
+      if (curData.value.runtimeType.toString().contains("Map<dynamic, dynamic>")) {
         runtimeData = Util.getMutableMap(curData.value);
       } else {
         runtimeData = curData.value;
@@ -283,28 +329,22 @@ class DataSource {
     }
     //Оповещение программных компонентов, кто подписался на onChange
     if (listener.containsKey(curData.uuid)) {
-      for (Function(String uuid, Map<String, dynamic>? data) callback
-          in listener[curData.uuid]!) {
+      for (Function(String uuid, Map<String, dynamic>? data) callback in listener[curData.uuid]!) {
         callback(curData.uuid, runtimeData);
       }
     }
   }
 
-  void get(
-      String uuid, Function(String uuid, Map<String, dynamic>? data) handler) {
+  void get(String uuid, Function(String uuid, Map<String, dynamic>? data) handler) {
     if (isInit) {
-      db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then(
-          (resultSet) {
+      db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then((resultSet) {
         if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
-          DataType dataTypeResult =
-              Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
+          DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
           if (isJsonDataType(dataTypeResult)) {
             //handler(await Util.asyncInvokeIsolate((arg) => json.decode(arg), resultSet.first['value_data']));
-            handler(resultSet.first['uuid_data'] as String,
-                json.decode(resultSet.first['value_data'] as String));
+            handler(resultSet.first['uuid_data'] as String, json.decode(resultSet.first['value_data'] as String));
           } else {
-            handler(resultSet.first['uuid_data'] as String,
-                {dataTypeResult.name: resultSet.first['value_data']});
+            handler(resultSet.first['uuid_data'] as String, {dataTypeResult.name: resultSet.first['value_data']});
           }
         } else {
           handler(uuid, null);
@@ -315,8 +355,7 @@ class DataSource {
     }
   }
 
-  void subscribe(
-      String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
+  void subscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
     //print("subscribe: ${uuid}");
     get(uuid, callback);
     if (!listener.containsKey(uuid)) {
@@ -329,9 +368,7 @@ class DataSource {
 
   void unsubscribe(Function(String uuid, Map<String, dynamic>? data) callback) {
     List<String> clear = [];
-    for (MapEntry<String,
-            List<Function(String uuid, Map<String, dynamic>? data)>> item
-        in listener.entries) {
+    for (MapEntry<String, List<Function(String uuid, Map<String, dynamic>? data)>> item in listener.entries) {
       if (item.value.contains(callback)) {
         //print("unsubscribe: ${item.key}");
         item.value.remove(callback);

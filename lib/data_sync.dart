@@ -61,8 +61,7 @@ class DataSync {
       int allInsertion = 0;
       try {
         int counter = 0;
-        Map<String, int> maxRevisionByType =
-            await DataGetter.getMaxRevisionByType();
+        Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
         while (true) {
           if (counter > 20) {
             //Default = 20
@@ -83,29 +82,26 @@ class DataSync {
           };
 
           if (kDebugMode) {
-            print(
-                "DataSync.sync(${GlobalSettings().host}/Sync) ${Util.jsonPretty(postDataRequest)}");
+            // print(
+            //     "DataSync.sync(${GlobalSettings().host}/Sync) ${Util.jsonPretty(postDataRequest)}");
           }
 
           Response response = await Util.asyncInvokeIsolate((args) {
-            return HttpClient.post(
-                "${args["host"]}/Sync", args["body"], args["headers"]);
+            return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
           }, {
             "headers": HttpClient.upgradeHeadersAuthorization({}),
             "body": postDataRequest,
             "host": GlobalSettings().host,
           });
           if (kDebugMode) {
-            print(
-                "DataSync.sync() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+            // print(
+            //     "DataSync.sync() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
           }
           if (response.statusCode == 200) {
             int insertion = 0;
-            Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate(
-                (arg) => json.decode(arg), response.body);
+            Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
             if (parseJson["status"] == true) {
-              for (MapEntry<String, dynamic> item
-                  in parseJson["data"]["response"].entries) {
+              for (MapEntry<String, dynamic> item in parseJson["data"]["response"].entries) {
                 DataType dataType = Util.dataTypeValueOf(item.key);
                 for (Map<String, dynamic> curData in item.value) {
                   if (upgradeData(curData, dataType, maxRevisionByType)) {
@@ -115,7 +111,8 @@ class DataSync {
                 }
               }
             }
-            if (insertion == 0 || insertion < 10) { //Подумал, что слишком много запросов на синхронизацию
+            if (insertion == 0 || insertion < 10) {
+              //Подумал, что слишком много запросов на синхронизацию
               //Если не было инсертов, нет смысла более опрашивать сервер на предмет новых ревизий
               break;
             }
@@ -131,18 +128,15 @@ class DataSync {
         }
       }
       if (kDebugMode) {
-        print(
-            "sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion");
+        print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion");
       }
       isRun = false;
     }
   }
 
-  bool upgradeData(Map<String, dynamic> curData, DataType dataType,
-      Map<String, int> maxRevisionByType) {
+  bool upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {
     if (curData['uuid'] != null && curData['uuid'] != "") {
-      Data dataObject = Data(
-          curData['uuid'], curData['value'], dataType, curData['parent_uuid']);
+      Data dataObject = Data(curData['uuid'], curData['value'], dataType, curData['parent_uuid']);
       dataObject.dateAdd = curData['date_add'];
       dataObject.dateUpdate = curData['date_update'];
       dataObject.key = curData['key'];
@@ -160,8 +154,7 @@ class DataSync {
       //Если ревизия на сервере оказалась меньше чем на устройстве
       //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
       // Что бы мы ему повторно выслали данные с устройства этот лаг недастающих ревизий
-      print(
-          "!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
+      print("!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
       // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
       // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
       DataGetter.resetRevision(
@@ -191,8 +184,7 @@ class DataSync {
         sync();
       }
       if (kDebugMode) {
-        print(
-            "DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
+        print("DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
       }
     });
   }

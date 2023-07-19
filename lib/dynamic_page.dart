@@ -69,7 +69,7 @@ class DynamicPage extends StatefulWidget {
 
   void onEvent(String key, Map<String, dynamic> args) {
     if (kDebugMode) {
-      print("DynamicPage.onEvent($key); args: $args");
+      //print("DynamicPage.onEvent($key); args: $args");
     }
     if (arguments.containsKey(key)) {
       var event = arguments[key] as Map<String, dynamic>;
