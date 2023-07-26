@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import '../data_type.dart';
+import '../util.dart';
 import 'data_source.dart';
 
 class DataGetter {
@@ -37,5 +40,16 @@ class DataGetter {
       }
     }
     return result;
+  }
+
+  static void getData(String uuid, Function(Map<String, dynamic>? data) callback) {
+    DataSource().db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then((resultSet) {
+      if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
+        DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
+        if (DataSource().isJsonDataType(dataTypeResult)) {
+          callback(json.decode(resultSet.first['value_data'] as String));
+        }
+      }
+    });
   }
 }

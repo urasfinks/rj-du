@@ -79,12 +79,13 @@ class DataSource {
     if (isInit) {
       transaction.add("1 is init");
       if (data.type == DataType.virtual) {
-        //Состояние страницы
+        //Состояние страницы (для виртуалок beforeSync не актуален)
         setDataVirtual(data, transaction, notifyDynamicPage);
       } else if (data.type == DataType.socket && data.beforeSync == false) {
         //В runtime изменили данные
         setDataSocket(data, transaction, notifyDynamicPage);
       } else {
+        //Если beforeSync = true, попадём сюда!
         setDataStandard(data, transaction, notifyDynamicPage);
       }
     } else {
@@ -127,7 +128,9 @@ class DataSource {
       } else {
         transaction.add("8 NOTHING!");
       }
-      if (notify) {
+      if (data.type == DataType.socket && data.beforeSync == true) {
+        SocketCache().setFull(data);
+      } else if (notify) {
         notifyBlockAsync(data, transaction, notifyDynamicPage);
       } else {
         printTransaction(data, transaction);
@@ -159,84 +162,50 @@ class DataSource {
     notifyBlockAsync(data, transaction, notifyDynamicPage);
   }
 
-  static Map<String, SocketCache> socketCache = {};
-
   void setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) {
     print("setDataSocket(${diffData.uuid}) notify: $notifyDynamicPage");
     // Обновление сокетных данных не должно обновлять локальную БД
     transaction.add("4 update socket data");
     if (notifyDynamicPage) {
-      print("DIFF: ${diffData.value}");
-      // Получать из бд так себе история, потому что в БД данные появляются после синхронизации
-      // Надо в памяти держать
-      if (!socketCache.containsKey(diffData.uuid)) {
-        print("Add new SocketCache for ${diffData.uuid}");
-        socketCache[diffData.uuid] = SocketCache();
-      }
-      SocketCache socketCacheData = socketCache[diffData.uuid]!;
-      socketCacheData.countUpdate++; //Это грубый счётчик установок новых значений
-      //print("SocketCache.countUpdate = ${socketCacheData.countUpdate}; data = ${socketCacheData.data}");
-      // Счётчки нужен для того, что бы пропускать пришедшии ревизии с сервера для отрисовки UI
-      // Так как на UI уже отрисованы моментальные данные
-      // Если при синхронизации возникнет ошибка, мы должны стереть моментальные данные и перерисовать UI данными локальной БД
-
-      //Остановился на том, что синхронизация данных с сервера всего 1, когда запросов на обновление сокетных данных 2
-      //Мысли такие, пока летят запросы на обновление сокетных данных на сервер в этот момент не надо данные пришедшии
-      // на сихронизации обновлять UI
-
-      if (socketCacheData.data != null) {
-        socketDataUpdateMomentum(socketCacheData.data, diffData, transaction);
-      } else {
-        db.rawQuery('SELECT * FROM data where uuid_data = ?', [diffData.uuid]).then((resultSet) {
-          if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
-            DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
-            if (isJsonDataType(dataTypeResult)) {
-              Map<String, dynamic>? decodeFull = json.decode(resultSet.first['value_data'] as String);
-              socketDataUpdateMomentum(decodeFull, diffData, transaction);
-            }
-          }
-        });
-      }
+      SocketCache().setDiff(diffData);
     }
     sendDataSocket(diffData, notifyDynamicPage);
     printTransaction(diffData, transaction);
   }
 
-  void socketDataUpdateMomentum(Map<String, dynamic>? fullData, Data diffData, List<String> transaction) {
-    if (fullData != null) {
-      for (MapEntry<String, dynamic> item in diffData.value.entries) {
-        if (item.value == null) {
-          fullData.remove(item.key);
-        } else {
-          fullData[item.key] = item.value;
-        }
-      }
-      var momentumData = Data(diffData.uuid, fullData, diffData.type, diffData.parentUuid);
-      if (socketCache.containsKey(diffData.uuid)) {
-        socketCache[diffData.uuid]!.data = fullData;
-      }
-      notifyBlockAsync(
-          momentumData, transaction, true); //true потому что сюда вход должен быть только в случаи нотификации
-    }
-  }
-
   void sendDataSocket(Data data, bool notifyDynamicPage) async {
     Map<String, dynamic> postData = {"uuid_data": data.uuid, "data": data.value};
-    Response response = await Util.asyncInvokeIsolate((args) {
-      return HttpClient.post("${args["host"]}/SocketUpdate", args["body"], args["headers"]);
-    }, {
-      "headers": HttpClient.upgradeHeadersAuthorization({}),
-      "body": postData,
-      "host": GlobalSettings().host,
-    });
-    if (response.statusCode == 200) {
-    } else {
+    try {
+      Response response = await Util.asyncInvokeIsolate((args) {
+        return HttpClient.post("${args["host"]}/SocketUpdate", args["body"], args["headers"]);
+      }, {
+        "headers": HttpClient.upgradeHeadersAuthorization({}),
+        "body": postData,
+        "host": GlobalSettings().host,
+      });
+      if (response.statusCode == 200) {
+      } else {
+        AlertHandler.alertSimple('Данные не зафиксированы на сервере');
+        Future.delayed(const Duration(seconds: 1), () {
+          SocketCache().renderDBData(data);
+        });
+      }
+      if (kDebugMode) {
+        print(
+            "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+      }
+    } catch (e, stacktrace) {
       AlertHandler.alertSimple('Данные не зафиксированы на сервере');
+      Future.delayed(const Duration(seconds: 1), () {
+        SocketCache().renderDBData(data);
+      });
+
+      if (kDebugMode) {
+        print(e);
+        print(stacktrace);
+      }
     }
-    if (kDebugMode) {
-      print(
-          "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
-    }
+
     // тут не будем вызывать синхронизацию данных,
     // так как событие на синхронизацию должно прийти по сокету
     // После http запроса
@@ -272,17 +241,6 @@ class DataSource {
         curData.uuid,
       ],
     ).then((value) {
-      // Кеш сокетных данных нужен как буфер всех последовательных изменений
-      // Допустим в 5 ячеек кладут цифры от 1 до 5 с интервалом 1мс (короче быстро прощёлкивают пальцем)
-      // Так как прекеш сразу отрисовывается на UI - после первой оперции, если мы удалим прекеш
-      // Из кеша очишаем через N секунд, потомучно N подрят изменений будут сбрасывать
-      // не синхронизованные данные
-      // if (socketCache.containsKey(curData.uuid)) {
-      //   socketCache[curData.uuid]!.countUpdate--;
-      //   print("countUpdate: ${socketCache[curData.uuid]!.countUpdate}");
-      // } else {
-      //   print("countUpdate: -1");
-      // }
       if (curData.onPersist != null) {
         Function.apply(curData.onPersist!, null);
       }
