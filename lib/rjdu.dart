@@ -15,6 +15,7 @@ import 'package:uuid/uuid.dart';
 import 'bottom_tab_item.dart';
 import 'data_sync.dart';
 import 'db/data_source.dart';
+import 'deep_link.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'navigator_app.dart';
 import 'storage.dart';
@@ -38,6 +39,7 @@ class RjDu {
     Translate().init();
     DataSync().init();
     WebSocketService().init();
+    DeepLink.init();
 
     SystemNotify().subscribe(SystemNotifyEnum.changeViewport, (state) {
       NavigatorApp.getLast()?.onActive();
