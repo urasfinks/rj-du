@@ -7,10 +7,8 @@ import '../../dynamic_ui/type_parser.dart';
 import '../../util.dart';
 
 class TemplateDirective {
-  static Map<
-      String,
-      dynamic Function(dynamic data, List<String> arguments,
-          DynamicUIBuilderContext dynamicUIBuilderContext)> map = {
+  static Map<String,
+      dynamic Function(dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> map = {
     "escape": (data, arguments, ctx) {
       return data != null ? Util.jsonStringEscape(data) : '';
     },
@@ -33,12 +31,11 @@ class TemplateDirective {
         /*if (data.length == 10) {
           x *= 1000;
         }*/
-        return DateFormat(arguments[0])
-            .format(DateTime.fromMillisecondsSinceEpoch(x));
+        return DateFormat(arguments[0]).format(DateTime.fromMillisecondsSinceEpoch(x));
       }
       return "timestampToDate exception; Data: $data; Args: $arguments";
     },
-    "partHideEmail": (data, arguments, ctx){
+    "partHideEmail": (data, arguments, ctx) {
       String email = data.toString();
       int indexOf = email.indexOf("@");
       String result = "";
@@ -64,6 +61,14 @@ class TemplateDirective {
         result = "*";
       }
       return result;
+    },
+    "map": (data, arguments, ctx) {
+      for (int i = 0; i < arguments.length; i += 2) {
+        if (arguments[i] == data) {
+          return arguments[i + 1];
+        }
+      }
+      return data;
     }
   };
 }
