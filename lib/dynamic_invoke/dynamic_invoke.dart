@@ -35,6 +35,7 @@ import 'handler/template_handler.dart';
 import 'handler/test_handler.dart';
 import 'handler/url_launcher_handler.dart';
 import 'handler/uuid_handler.dart';
+import 'handler/wake_lock.dart';
 import 'handler_custom/custom_loader_close_handler.dart';
 import 'handler_custom/custom_loader_open_handler.dart';
 
@@ -83,6 +84,7 @@ class DynamicInvoke {
     ShowHandler();
     HideHandler();
     SystemNotifyHandler();
+    WakeLock();
 
     javascriptRuntime = getJavascriptRuntime();
     javascriptRuntime?.init();
