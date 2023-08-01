@@ -1,3 +1,4 @@
+import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/storage.dart';
 import 'package:rjdu/util/template.dart';
 
@@ -8,14 +9,13 @@ import '../../util.dart';
 class TemplateFunction {
   static Map<
       String,
-      dynamic Function(Map<String, dynamic> data, List<String> arguments,
-          DynamicUIBuilderContext dynamicUIBuilderContext)> map = {
+      dynamic Function(
+          Map<String, dynamic> data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> map = {
     "context": (data, arguments, ctx) {
       return Template.mapSelector(data, arguments);
     },
     "state": (data, arguments, ctx) {
-      return Template.mapSelector(
-          Util.getMutableMap(ctx.dynamicPage.stateData.value), arguments);
+      return Template.mapSelector(Util.getMutableMap(ctx.dynamicPage.stateData.value), arguments);
     },
     "pageArgument": (data, arguments, ctx) {
       return Template.mapSelector(ctx.dynamicPage.arguments, arguments);
@@ -40,6 +40,9 @@ class TemplateFunction {
     },
     "timestamp": (data, arguments, ctx) {
       return DateTime.now().millisecondsSinceEpoch.toString();
+    },
+    "globalSettings": (data, arguments, ctx) {
+      return GlobalSettings().template(arguments[0], arguments[1]);
     }
   };
 }

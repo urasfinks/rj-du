@@ -31,6 +31,23 @@ class GlobalSettings {
     this.host = host;
   }
 
+  String template(String key, String defaultValue) {
+    switch (key) {
+      case "host":
+        return host;
+      case "ws":
+        return ws;
+      case "appBarHeight":
+        return appBarHeight.toString();
+      case "bottomNavigationBarHeight":
+        return bottomNavigationBarHeight.toString();
+      case "orientation":
+        return orientation;
+      default:
+        return "";
+    }
+  }
+
   void setWs(String ws) {
     this.ws = ws;
   }
