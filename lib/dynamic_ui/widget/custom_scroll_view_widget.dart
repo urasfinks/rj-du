@@ -135,6 +135,7 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     return CustomScrollView(
+      physics: Util.getPhysics(),
       key: Util.getKey(),
       primary: TypeParser.parseBool(
         getValue(parsedJson, 'primary', true, dynamicUIBuilderContext),
