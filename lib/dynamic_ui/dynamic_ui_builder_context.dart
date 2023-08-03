@@ -5,6 +5,7 @@ class DynamicUIBuilderContext {
   int? index;
   String? key;
   Map<String, dynamic> data = {};
+  Map<String, dynamic> parentTemplate = {}; //Времянка, только для шаблонизации (это очень не стабильная штука)
   bool isRoot = false; //Корневой контекст данных
 
   void updateDataComplete() {

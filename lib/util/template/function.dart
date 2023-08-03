@@ -14,6 +14,9 @@ class TemplateFunction {
     "context": (data, arguments, ctx) {
       return Template.mapSelector(data, arguments);
     },
+    "parentTemplate": (data, arguments, ctx) {
+      return Template.mapSelector(ctx.parentTemplate, arguments);
+    },
     "state": (data, arguments, ctx) {
       return Template.mapSelector(Util.getMutableMap(ctx.dynamicPage.stateData.value), arguments);
     },
