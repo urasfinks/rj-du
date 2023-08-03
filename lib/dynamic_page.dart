@@ -34,7 +34,8 @@ class DynamicPage extends StatefulWidget {
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
-    stateData = Data(uuid, {}, DataType.virtual, null);
+    Map<String, dynamic> stateDataValue = {};
+    stateData = Data(uuid, stateDataValue, DataType.virtual, null);
     dynamicUIBuilderContext = DynamicUIBuilderContext(this);
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
   }
@@ -130,12 +131,17 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  dynamic getStateData(String key, dynamic defaultValue) {
+  dynamic getStateData(String key, dynamic defaultValue, [insertIfNotExist = false]) {
     Map<String, dynamic> map = stateData.value;
     if (map.containsKey(key)) {
       return map[key];
     } else {
-      return defaultValue;
+      if (insertIfNotExist && !map.containsKey(key)) {
+        map[key] = defaultValue;
+        return map[key];
+      } else {
+        return defaultValue;
+      }
     }
   }
 
