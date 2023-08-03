@@ -8,6 +8,7 @@ import 'package:rjdu/dynamic_ui/widget/bottom_navigation_bar_item_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/checkbox_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/custom_scroll_view_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/flip_card_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/gesture_detector_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/grid_view_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/image_network_cached_widget.dart';
@@ -40,6 +41,7 @@ import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.da
 import 'package:rjdu/dynamic_ui/widget/sliver_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sliver_fill_remaining_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/state_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/swipable_stack_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
@@ -140,6 +142,8 @@ class DynamicUI {
     'MaterialButton': MaterialButtonWidget().get,
     'Template': TemplateWidget().get,
     'State': StateWidget().get,
+    'SwipableStack': SwipableStackWidget().get,
+    'FlipCard': FlipCardWidget().get,
 
     //Property
     'TextStyle': TextStyleProperty().get,
