@@ -10,7 +10,15 @@ class FlipCardWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String key = parsedJson["key"];
-    Map<String, dynamic> defControl = {"value": 0, "isBack": false, "flip": false};
+    Map<String, dynamic> defControl = {
+      "value": 0,
+      "isBack": TypeParser.parseBool(
+        getValue(parsedJson, 'isBack', false, dynamicUIBuilderContext),
+      )!,
+      "flip": TypeParser.parseBool(
+        getValue(parsedJson, 'flip', false, dynamicUIBuilderContext),
+      )!
+    };
     Map<String, dynamic> stateControl = dynamicUIBuilderContext.dynamicPage.getStateData(key, defControl, true);
     bool isBack = stateControl["isBack"];
     return GestureDetector(
