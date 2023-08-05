@@ -8,10 +8,11 @@ class DynamicUIBuilderContext {
   Map<String, dynamic> parentTemplate = {}; //Времянка, только для шаблонизации (это очень не стабильная штука)
   bool isRoot = false; //Корневой контекст данных
 
-  void updateDataComplete() {
-    if(isRoot){
+  void contextUpdate(List<String> upd) {
+    if (isRoot) {
       dynamicPage.renderFloatingActionButton();
     }
+    dynamicPage.onEvent("contextUpdate", {"data": data, "upd": upd});
   }
 
   DynamicUIBuilderContext(this.dynamicPage);

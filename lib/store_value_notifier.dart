@@ -35,10 +35,12 @@ class StoreValueNotifier {
       valueListenable: getValueNotifier(link),
       builder: (BuildContext context, SubscriberObject value, Widget? child) {
         if (value.data.isNotEmpty) {
+          List<String> upd = [];
           for (MapEntry<String, dynamic> item in value.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
+            upd.add(item.key);
           }
-          dynamicUIBuilderContext.updateDataComplete();
+          dynamicUIBuilderContext.contextUpdate(upd);
         }
         dynamic resultWidget = builder(context, child);
         if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {
