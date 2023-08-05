@@ -6,31 +6,36 @@ import '../widget/abstract_widget.dart';
 class NotifyWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> def = parsedJson['linkDefault'] == null ? {} : parsedJson['linkDefault'] as Map<String, dynamic>;
+    Map<String, dynamic> def =
+        parsedJson['linkDefault'] == null ? {} : parsedJson['linkDefault'] as Map<String, dynamic>;
     DynamicUIBuilderContext newContext = dynamicUIBuilderContext.cloneWithNewData(def);
 
     if (parsedJson.containsKey('linkContainer')) {
       dynamicUIBuilderContext.dynamicPage.setContainer(parsedJson['linkContainer'], newContext);
     }
-    return newContext.dynamicPage.dynamicPageNotifier.notifyWidget(
+
+    return newContext.dynamicPage.storeValueNotifier.getWidget(
       parsedJson['link'],
       newContext,
       (context, child) {
-        if (!newContext.data.containsKey('template')) {
-          if (kDebugMode) {
-            print("NotifyWidget.build() key template not exist; data: ${newContext.data}");
-          }
-          return Text("NotifyWidget.getWidget() key template not exist; data: ${newContext.data}");
+        if (parsedJson.containsKey('template')) {
+          return checkNullWidget(
+            "NotifyWidget",
+            parsedJson,
+            render(parsedJson['template'], null, const SizedBox(), newContext),
+          );
         }
-        dynamic resultWidget = render(newContext.data['template'], null, const SizedBox(), newContext);
-        if (resultWidget != null && resultWidget.runtimeType.toString().contains('Map<String,')) {
-          if (kDebugMode) {
-            print(
-                "NotifyWidget.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
-          }
-          return Text("NotifyWidget.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+        if (newContext.data.containsKey('template')) {
+          return checkNullWidget(
+            "NotifyWidget",
+            parsedJson,
+            render(newContext.data['template'], null, const SizedBox(), newContext),
+          );
         }
-        return resultWidget;
+        if (kDebugMode) {
+          print("NotifyWidget.build() key template not exist; data: ${newContext.data}");
+        }
+        return Text("NotifyWidget.getWidget() key template not exist; data: ${newContext.data}");
       },
     );
   }

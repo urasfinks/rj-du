@@ -4,7 +4,6 @@ import 'package:rjdu/util/template.dart';
 
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../../translate.dart';
-import '../../util.dart';
 
 class TemplateFunction {
   static Map<
@@ -18,7 +17,9 @@ class TemplateFunction {
       return Template.mapSelector(ctx.parentTemplate, arguments);
     },
     "state": (data, arguments, ctx) {
-      return Template.mapSelector(Util.getMutableMap(ctx.dynamicPage.stateData.value), arguments);
+      // Ранее stateData.value оборачивалось через MutableMap
+      // Я убрал, так как ломалось зацикливание для FlipCard
+      return Template.mapSelector(ctx.dynamicPage.stateData.value, arguments);
     },
     "pageArgument": (data, arguments, ctx) {
       return Template.mapSelector(ctx.dynamicPage.arguments, arguments);

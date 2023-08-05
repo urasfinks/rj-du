@@ -171,7 +171,7 @@ class DynamicUI {
     if (parsedJson.isEmpty) {
       return defaultValue;
     }
-    dynamic selector = key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue);
+    dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
     if (selector.runtimeType.toString().contains('Map<String,') && selector.containsKey('flutterType')) {
       if (selector.containsKey('onStateDataUpdate')) {
         if (selector.containsKey('link')) {

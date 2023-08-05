@@ -10,7 +10,7 @@ class OpacityWidget extends AbstractWidget {
     return Opacity(
       key: Util.getKey(),
       opacity: TypeParser.parseDouble(
-        getValue(parsedJson, 'opacity', 1.0, dynamicUIBuilderContext),
+        getValue(parsedJson, 'opacity', 1.0, dynamicUIBuilderContext) ?? 1.0,
       )!,
       alwaysIncludeSemantics: TypeParser.parseBool(
         getValue(parsedJson, 'alwaysIncludeSemantics', false, dynamicUIBuilderContext),

@@ -9,9 +9,15 @@ import '../../dynamic_invoke/dynamic_invoke.dart';
 import '../../util.dart';
 import 'abstract_widget_extension/iterator.dart';
 import 'abstract_widget_extension/state_data_switch.dart';
+import 'package:flutter/material.dart';
 
 abstract class AbstractWidget {
   dynamic get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext);
+
+  Map<String, dynamic> getStateControl(
+      String key, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
+    return dynamicUIBuilderContext.dynamicPage.getStateData(key, defaultState, true);
+  }
 
   static dynamic getValueStatic(
     Map<String, dynamic> parsedJson,
@@ -27,6 +33,20 @@ abstract class AbstractWidget {
     return selector;
   }
 
+  dynamic checkNullWidget(String className, Map<String, dynamic> parsedJson, dynamic resultWidget) {
+    if (resultWidget == null) {
+      return Text("$className.build() Return: $resultWidget; Must be Widget");
+    }
+    if (resultWidget != null && resultWidget.runtimeType.toString().contains('Map<String,')) {
+      if (kDebugMode) {
+        print(
+            "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
+      }
+      return Text("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+    }
+    return resultWidget;
+  }
+
   dynamic getValue(
     Map<String, dynamic> parsedJson,
     String? key,
@@ -34,7 +54,11 @@ abstract class AbstractWidget {
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
     try {
-      return getValueStatic(parsedJson, key, defaultValue, dynamicUIBuilderContext);
+      if (parsedJson.containsKey(key)) {
+        return getValueStatic(parsedJson, key, defaultValue, dynamicUIBuilderContext);
+      } else {
+        return defaultValue;
+      }
     } catch (e, stacktrace) {
       if (kDebugMode) {
         print(e);
@@ -120,30 +144,32 @@ abstract class AbstractWidget {
 
   static void clickStatic(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,
       [String key = "onPressed"]) {
-    Future(() {
-      Map<String, dynamic>? settings;
-      dynamic tmp = getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
-      if (tmp == null) {
-        return null;
-      }
-      if (tmp.runtimeType.toString().contains("Map")) {
-        settings = tmp as Map<String, dynamic>?;
-      } else {
-        try {
-          settings = json.decode(tmp) as Map<String, dynamic>?;
-        } catch (e) {
-          print("clickStatic exception: $e");
+    if (parsedJson.containsKey(key)) {
+      Future(() {
+        Map<String, dynamic>? settings;
+        dynamic tmp = getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
+        if (tmp == null) {
+          return null;
         }
-      }
-      if (settings != null) {
-        invoke(settings, dynamicUIBuilderContext);
-      }
-      return null;
-    }).then((result) {}).catchError((error, stacktrace) {
-      if (kDebugMode) {
-        print("clickStatic exception: $error $stacktrace");
-      }
-    });
+        if (tmp.runtimeType.toString().contains("Map")) {
+          settings = tmp as Map<String, dynamic>?;
+        } else {
+          try {
+            settings = json.decode(tmp) as Map<String, dynamic>?;
+          } catch (e) {
+            print("clickStatic exception: $e");
+          }
+        }
+        if (settings != null) {
+          invoke(settings, dynamicUIBuilderContext);
+        }
+        return null;
+      }).then((result) {}).catchError((error, stacktrace) {
+        if (kDebugMode) {
+          print("clickStatic exception: $error $stacktrace");
+        }
+      });
+    }
   }
 
   void click(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,

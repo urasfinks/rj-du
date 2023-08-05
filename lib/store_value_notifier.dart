@@ -10,13 +10,13 @@ import 'notify_object.dart';
   * 2) Надо, что бы общие обновления данных вызывал update на всех DynamicPage
   * */
 
-class DynamicPageNotifier {
-  Map<String, ValueNotifier<NotifierObject>> mapNotifier = {};
+class StoreValueNotifier {
+  Map<String, ValueNotifier<SubscriberObject>> mapValueNotifier = {};
 
-  bool updateNotifier(String uuid, Map<String, dynamic> data) {
+  bool updateValueNotifier(String uuid, Map<String, dynamic> data) {
     bool isNotify = false;
-    for (MapEntry<String, ValueNotifier<NotifierObject>> item in mapNotifier.entries) {
-      NotifierObject notifierObject = item.value.value;
+    for (MapEntry<String, ValueNotifier<SubscriberObject>> item in mapValueNotifier.entries) {
+      SubscriberObject notifierObject = item.value.value;
       if (notifierObject.link.values.toList().contains(uuid)) {
         notifierObject.set(uuid, data);
         item.value.notifyListeners();
@@ -26,14 +26,14 @@ class DynamicPageNotifier {
     return isNotify;
   }
 
-  ValueListenableBuilder notifyWidget(
+  ValueListenableBuilder getWidget(
     Map<String, dynamic> link,
     DynamicUIBuilderContext dynamicUIBuilderContext,
     Widget Function(BuildContext context, Widget? child) builder,
   ) {
-    return ValueListenableBuilder<NotifierObject>(
-      valueListenable: getNotifier(link),
-      builder: (BuildContext context, NotifierObject value, Widget? child) {
+    return ValueListenableBuilder<SubscriberObject>(
+      valueListenable: getValueNotifier(link),
+      builder: (BuildContext context, SubscriberObject value, Widget? child) {
         if (value.data.isNotEmpty) {
           for (MapEntry<String, dynamic> item in value.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
@@ -49,26 +49,26 @@ class DynamicPageNotifier {
     );
   }
 
-  ValueNotifier<NotifierObject> getNotifier(Map<String, dynamic> link) {
+  ValueNotifier<SubscriberObject> getValueNotifier(Map<String, dynamic> link) {
     List<String> uuids = [];
     for (MapEntry<String, dynamic> item in link.entries) {
       uuids.add(item.value);
     }
     uuids.sort();
     String complexKey = uuids.join(",");
-    if (!mapNotifier.containsKey(complexKey)) {
-      NotifierObject notifierObject = NotifierObject(link);
-      ValueNotifier<NotifierObject> valueNotifier = ValueNotifier<NotifierObject>(notifierObject);
+    if (!mapValueNotifier.containsKey(complexKey)) {
+      SubscriberObject subscriberObject = SubscriberObject(link);
+      ValueNotifier<SubscriberObject> valueNotifier = ValueNotifier<SubscriberObject>(subscriberObject);
       for (MapEntry<String, dynamic> item in link.entries) {
         DataSource().get(item.value, (uuid, data) {
           if (data != null && data.isNotEmpty) {
-            notifierObject.set(item.value, data);
+            subscriberObject.set(item.value, data);
             valueNotifier.notifyListeners();
           }
         });
       }
-      mapNotifier[complexKey] = valueNotifier;
+      mapValueNotifier[complexKey] = valueNotifier;
     }
-    return mapNotifier[complexKey]!;
+    return mapValueNotifier[complexKey]!;
   }
 }

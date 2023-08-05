@@ -7,7 +7,7 @@ import 'package:rjdu/web_socket_service.dart';
 import 'data_type.dart';
 import 'db/data.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
-import 'dynamic_page_notifier.dart';
+import 'store_value_notifier.dart';
 import 'dynamic_ui/dynamic_ui.dart';
 import 'navigator_app.dart';
 import 'system_notify.dart';
@@ -21,7 +21,7 @@ import 'dynamic_ui/widget/abstract_widget.dart';
 class DynamicPage extends StatefulWidget {
   late final Map<String, dynamic> arguments;
   final Map<String, dynamic> properties = {};
-  final DynamicPageNotifier dynamicPageNotifier = DynamicPageNotifier();
+  final StoreValueNotifier storeValueNotifier = StoreValueNotifier();
   late final DynamicUIBuilderContext dynamicUIBuilderContext;
   final Map<String, DynamicUIBuilderContext> container = {};
   BuildContext? context;
@@ -207,7 +207,7 @@ class DynamicPage extends StatefulWidget {
   State<DynamicPage> createState() => _DynamicPage();
 
   void updateNotifier(String uuid, Map<String, dynamic> data) {
-    dynamicPageNotifier.updateNotifier(uuid, data);
+    storeValueNotifier.updateValueNotifier(uuid, data);
     // shadowUuidList содержит uuid отображённых данных без NotifyWidget
     // Например в ChildrenExtension
     if (shadowUuidList.contains(uuid)) {

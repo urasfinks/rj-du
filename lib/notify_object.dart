@@ -1,8 +1,8 @@
-class NotifierObject {
+class SubscriberObject {
   final Map<String, dynamic> link;
   Map<String, dynamic> data = {};
 
-  NotifierObject(this.link);
+  SubscriberObject(this.link);
 
   set(String uuid, Map<String, dynamic> newData) {
     for (MapEntry<String, dynamic> item in link.entries) {
