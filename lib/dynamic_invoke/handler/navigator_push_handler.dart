@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import '../../dynamic_page.dart';
 
 class NavigatorPushHandler extends AbstractHandler {
-
   @override
   dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> dataPage = args;
@@ -17,9 +16,9 @@ class NavigatorPushHandler extends AbstractHandler {
       type = "Window";
     }
 
-    bool raw = args.containsKey('raw') && args['raw'] == true;
-    BuildContext buildContext = args.containsKey('tab')
-        ? NavigatorApp.tab[args['tab']].context
+    bool raw = args.containsKey("raw") && args["raw"] == true;
+    BuildContext buildContext = args.containsKey("tab")
+        ? NavigatorApp.tab[args["tab"]].context
         : NavigatorApp.tab[NavigatorApp.selectedTab].context;
 
     switch (type) {
@@ -39,14 +38,14 @@ class NavigatorPushHandler extends AbstractHandler {
     if (!raw) {
       dataPage.addAll(
         {
-          'name': dataPage.containsKey('name') ? dataPage['name'] : '',
-          'flutterType': 'Notify',
-          'link': dataPage.containsKey('uuid') ? {'template': dataPage['uuid']} : dataPage['link'],
-          'linkContainer': 'root',
-          'linkDefault': dataPage.containsKey('linkDefault')
-              ? dataPage['linkDefault']
+          "name": dataPage.containsKey("name") ? dataPage["name"] : '',
+          "flutterType": "Notify",
+          "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
+          "linkContainer": "root",
+          "linkDefault": dataPage.containsKey("linkDefault")
+              ? dataPage["linkDefault"]
               : {
-                  'template': {'flutterType': 'Text', 'label': ''}
+                  "template": {"flutterType": "Text", "label": ""}
                 }
         },
       );
@@ -69,12 +68,12 @@ class NavigatorPushHandler extends AbstractHandler {
     if (!raw) {
       dataPage.addAll(
         {
-          'name': dataPage.containsKey('name') ? dataPage['name'] : '',
+          'name': dataPage.containsKey("name") ? dataPage["name"] : '',
           'flutterType': 'Notify',
-          'link': dataPage.containsKey('uuid') ? {'template': dataPage['uuid']} : dataPage['link'],
+          'link': dataPage.containsKey("uuid") ? {'template': dataPage["uuid"]} : dataPage["link"],
           'linkContainer': 'root',
-          'linkDefault': dataPage.containsKey('linkDefault')
-              ? dataPage['linkDefault']
+          'linkDefault': dataPage.containsKey("linkDefault")
+              ? dataPage["linkDefault"]
               : {
                   'template': {'flutterType': 'Text', 'label': ''}
                 }
@@ -105,18 +104,18 @@ class NavigatorPushHandler extends AbstractHandler {
     if (!raw) {
       dataPage.addAll(
         {
-          'name': dataPage.containsKey('name') ? dataPage['name'] : '',
+          'name': dataPage.containsKey("name") ? dataPage["name"] : '',
           'flutterType': 'Notify',
-          'link': dataPage.containsKey('uuid') ? {'template': dataPage['uuid']} : dataPage['link'],
+          'link': dataPage.containsKey("uuid") ? {'template': dataPage["uuid"]} : dataPage["link"],
           'linkContainer': 'root',
-          'linkDefault': dataPage.containsKey('linkDefault')
-              ? dataPage['linkDefault']
+          'linkDefault': dataPage.containsKey("linkDefault")
+              ? dataPage["linkDefault"]
               : {
                   'template': {
                     'flutterType': 'Scaffold',
                     'appBar': {
                       'flutterType': 'AppBar',
-                      'title': {'flutterType': 'Text', 'label': dataPage['label']}
+                      'title': {'flutterType': 'Text', 'label': dataPage["label"]}
                     }
                   }
                 }
@@ -127,7 +126,7 @@ class NavigatorPushHandler extends AbstractHandler {
     Navigator.push(
       buildContext,
       MaterialPageRoute(
-        fullscreenDialog: dataPage['fullscreenDialog'] ?? false,
+        fullscreenDialog: dataPage["fullscreenDialog"] ?? false,
         builder: (context) {
           DynamicPage dynamicPage = DynamicPage(dataPage);
           NavigatorApp.addNavigatorPage(dynamicPage);

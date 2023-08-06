@@ -10,12 +10,12 @@ class DataSourceSetHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['uuid', 'value'])) {
+    if (Util.containsKeys(args, ["uuid", "value"])) {
       Data data = Data(
-        args['uuid'],
-        args['value'],
-        Util.dataTypeValueOf(args['type']),
-        args['parent'],
+        args["uuid"],
+        args["value"],
+        Util.dataTypeValueOf(args["type"]),
+        args["parent"],
       );
       if (args.containsKey("debugTransaction")) {
         data.debugTransaction = args["debugTransaction"];
@@ -26,7 +26,7 @@ class DataSourceSetHandler extends AbstractHandler {
       if (args.containsKey("updateIfExist")) {
         data.updateIfExist = args["updateIfExist"];
       }
-      data.key = args['key'];
+      data.key = args["key"];
       if (args["onPersist"] != null) {
         data.onPersist = () {
           AbstractWidget.clickStatic(

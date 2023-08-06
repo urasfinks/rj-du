@@ -43,7 +43,7 @@ class StoreValueNotifier {
           dynamicUIBuilderContext.contextUpdate(updKeys);
         }
         dynamic resultWidget = builder(context, child);
-        if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {
+        if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
           return Text("DynamicPageNotifier.builder() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
         }
         return resultWidget;

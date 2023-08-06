@@ -37,7 +37,7 @@ abstract class AbstractWidget {
     if (resultWidget == null) {
       return Text("$className.build() Return: $resultWidget; Must be Widget");
     }
-    if (resultWidget != null && resultWidget.runtimeType.toString().contains('Map<String,')) {
+    if (resultWidget != null && resultWidget.runtimeType.toString().contains("Map<String,")) {
       if (kDebugMode) {
         print(
             "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
@@ -129,11 +129,11 @@ abstract class AbstractWidget {
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
     if (settings != null) {
-      if (settings.containsKey('jsInvoke')) {
-        DynamicInvoke().jsInvoke(settings['jsInvoke'], settings['args'], dynamicUIBuilderContext);
-      } else if (settings.containsKey('sysInvoke')) {
-        DynamicInvoke().sysInvoke(settings['sysInvoke'], settings['args'] ?? {}, dynamicUIBuilderContext);
-      } else if (settings.containsKey('list')) {
+      if (settings.containsKey("jsInvoke")) {
+        DynamicInvoke().jsInvoke(settings["jsInvoke"], settings["args"], dynamicUIBuilderContext);
+      } else if (settings.containsKey("sysInvoke")) {
+        DynamicInvoke().sysInvoke(settings["sysInvoke"], settings["args"] ?? {}, dynamicUIBuilderContext);
+      } else if (settings.containsKey("list")) {
         List<dynamic> list = settings["list"];
         for (dynamic data in list) {
           invoke(data, dynamicUIBuilderContext);

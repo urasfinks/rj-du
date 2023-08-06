@@ -66,7 +66,7 @@ class DataSync {
           if (counter > 20) {
             //Default = 20
             if (kDebugMode) {
-              print('DataSync.handler() break infinity while');
+              print("DataSync.handler() break infinity while");
             }
             break;
           }
@@ -135,31 +135,31 @@ class DataSync {
   }
 
   bool upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {
-    if (curData['uuid'] != null && curData['uuid'] != "") {
-      Data dataObject = Data(curData['uuid'], curData['value'], dataType, curData['parent_uuid']);
-      dataObject.dateAdd = curData['date_add'];
-      dataObject.dateUpdate = curData['date_update'];
-      dataObject.key = curData['key'];
-      dataObject.revision = curData['revision'];
+    if (curData["uuid"] != null && curData["uuid"] != "") {
+      Data dataObject = Data(curData["uuid"], curData["value"], dataType, curData["parent_uuid"]);
+      dataObject.dateAdd = curData["date_add"];
+      dataObject.dateUpdate = curData["date_update"];
+      dataObject.key = curData["key"];
+      dataObject.revision = curData["revision"];
       dataObject.onUpdateResetRevision = false;
       dataObject.beforeSync = true;
       dataObject.onUpdateOverlayNullField = true;
-      dataObject.isRemove = curData['is_remove'];
+      dataObject.isRemove = curData["is_remove"];
       //print("! $dataObject");
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
       return true;
-    } else if (curData['needUpgrade'] != null) {
+    } else if (curData["needUpgrade"] != null) {
       //Если ревизия на сервере оказалась меньше чем на устройстве
       //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
       // Что бы мы ему повторно выслали данные с устройства этот лаг недастающих ревизий
-      print("!!!NEED UPGRADE from ${curData['needUpgrade']} .. ${maxRevisionByType[dataType.name]}");
+      print("!!!NEED UPGRADE from ${curData["needUpgrade"]} .. ${maxRevisionByType[dataType.name]}");
       // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
       // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
       DataGetter.resetRevision(
         dataType,
-        curData['needUpgrade'],
+        curData["needUpgrade"],
         maxRevisionByType[dataType.name]!,
       );
     }

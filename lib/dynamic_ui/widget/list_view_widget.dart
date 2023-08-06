@@ -16,7 +16,7 @@ class ListViewWidget extends AbstractWidget {
     if (separated) {
       return ListView.separated(
         key: Util.getKey(),
-        controller: dynamicUIBuilderContext.dynamicPage.properties['ScrollBarController'],
+        controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
         addAutomaticKeepAlives: true,
         scrollDirection: TypeParser.parseAxis(
           getValue(parsedJson, 'scrollDirection', 'vertical', dynamicUIBuilderContext)!,
@@ -49,7 +49,7 @@ class ListViewWidget extends AbstractWidget {
     } else {
       return ListView.builder(
         key: Util.getKey(),
-        controller: dynamicUIBuilderContext.dynamicPage.properties['ScrollBarController'],
+        controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
         addAutomaticKeepAlives: true,
         scrollDirection: TypeParser.parseAxis(
           getValue(parsedJson, 'scrollDirection', 'vertical', dynamicUIBuilderContext)!,

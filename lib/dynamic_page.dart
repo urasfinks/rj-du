@@ -185,13 +185,13 @@ class DynamicPage extends StatefulWidget {
             ShowHandler,
             {
               "case": "actionButton",
-              "template": container['root']!.data["template"]["floatingActionButton"],
+              "template": container["root"]!.data["template"]["floatingActionButton"],
             },
             dynamicUIBuilderContext,
           );
         } else if (container["root"]!.data["template"]!.containsKey("onRenderFloatingActionButton")) {
           AbstractWidget.clickStatic(
-            container['root']!.data["template"],
+            container["root"]!.data["template"],
             dynamicUIBuilderContext,
             "onRenderFloatingActionButton",
           );
@@ -259,7 +259,7 @@ class _DynamicPage extends State<DynamicPage> {
     widget.context = context;
     widget.constructor();
     dynamic resultWidget = DynamicUI.render(widget.arguments, null, const SizedBox(), widget.dynamicUIBuilderContext);
-    if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {
+    if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
       return Text("DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;

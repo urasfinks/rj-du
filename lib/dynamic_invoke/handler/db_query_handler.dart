@@ -9,8 +9,8 @@ import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 class DbQueryHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['sql', 'args'])) {
-      DataSource().db.rawQuery(args['sql'], args['args']).then((value) {
+    if (Util.containsKeys(args, ["sql", "args"])) {
+      DataSource().db.rawQuery(args["sql"], args["args"]).then((value) {
         List<Map<String, Object?>> newList = [];
         for (Map<String, Object?> item in value) {
           Map<String, dynamic> newItem = Util.getMutableMap(item);
@@ -21,8 +21,8 @@ class DbQueryHandler extends AbstractHandler {
           }
           newList.add(newItem);
         }
-        if (args.containsKey('stateKey')) {
-          dynamicUIBuilderContext.dynamicPage.setStateData(args['stateKey'], newList);
+        if (args.containsKey("stateKey")) {
+          dynamicUIBuilderContext.dynamicPage.setStateData(args["stateKey"], newList);
         }
         if (args.containsKey("onFetch")) {
           var onFetch = args["onFetch"] as Map;

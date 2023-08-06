@@ -14,7 +14,7 @@ class DataMigration {
 
   migration() async {
     bool updateApplication =
-        Storage().get('version', 'v0') != GlobalSettings().version;
+        Storage().get("version", "v0") != GlobalSettings().version;
     if (kDebugMode) {
       print("migration() current versionL ${GlobalSettings().version}; updateApplication = $updateApplication");
     }
@@ -22,14 +22,14 @@ class DataMigration {
       if (kDebugMode) {
         print("migration() set new version = ${GlobalSettings().version}");
       }
-      Storage().set('version', GlobalSettings().version);
+      Storage().set("version", GlobalSettings().version);
     }
     await _sqlExecute([
-      updateApplication ? 'db/drop/2023-01-31.sql' : '',
-      'db/migration/2023-01-29.sql',
+      updateApplication ? "db/drop/2023-01-31.sql" : "",
+      "db/migration/2023-01-29.sql",
     ]);
     await loadAssetsData();
-    debugPrint('Migration complete');
+    debugPrint("Migration complete");
   }
 
   Future<void> _sqlExecute(List<String> files) async {
@@ -41,7 +41,7 @@ class DataMigration {
         print("Migration: $file");
       }
       String migration =
-          await rootBundle.loadString('packages/rjdu/lib/assets/$file');
+          await rootBundle.loadString("packages/rjdu/lib/assets/$file");
       List<String> split = migration.split(
           ";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
       for (String query in split) {
@@ -55,7 +55,7 @@ class DataMigration {
 
   static Future<List<String>> loadTabData() async {
     List<String> result = [];
-    Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
+    Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       final regTab = RegExp(r'/tab[0-9]+\.json$');
       if (path.startsWith("assets/db/data/systemData/") &&
@@ -74,7 +74,7 @@ class DataMigration {
 
   static Future<Map<String, String>> loadAssetByMask(String folder, String mask) async {
     Map<String, String> result = {};
-    Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
+    Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       final regTab = RegExp("$mask[a-zA-Z0-9]+\.json\$");
       if (path.startsWith("assets/db/data/$folder/") &&
@@ -91,7 +91,7 @@ class DataMigration {
   }
 
   Future<void> loadAssetsData() async {
-    Map assets = json.decode(await rootBundle.loadString('AssetManifest.json'));
+    Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       if (path.startsWith("assets/db/data/")) {
         String fileData = await rootBundle.loadString(path);

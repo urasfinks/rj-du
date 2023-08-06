@@ -8,7 +8,7 @@ import '../../util.dart';
 class ResetTextControllerHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['key'])) {
+    if (Util.containsKeys(args, ["key"])) {
       String key = args["key"];
       TextEditingController tec =
           dynamicUIBuilderContext.dynamicPage.getProperty("${key}_TextEditingController", TextEditingController());

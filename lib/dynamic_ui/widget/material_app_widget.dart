@@ -44,8 +44,8 @@ class MaterialAppWidget extends AbstractWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [
-            Locale('en'), // English
-            Locale('ru'), // Spanish
+            Locale("en"), // English
+            Locale("ru"), // Spanish
           ],
         );
       },

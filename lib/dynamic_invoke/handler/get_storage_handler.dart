@@ -9,8 +9,8 @@ class GetStorageHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['key', 'default'])) {
-      return {args['key']: Storage().get(args['key'], args['default'])};
+    if (Util.containsKeys(args, ["key", "default"])) {
+      return {args["key"]: Storage().get(args["key"], args["default"])};
     } else {
       if (kDebugMode) {
         print("GetStorageHandler not contains Keys: [key, default] in args: $args");

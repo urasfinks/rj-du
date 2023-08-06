@@ -16,7 +16,7 @@ class CustomScrollViewWidget extends AbstractWidget {
     List<Widget> sliverList = [];
 
     List children = [];
-    if (parsedJson.containsKey('children')) {
+    if (parsedJson.containsKey("children")) {
       children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
     }
 

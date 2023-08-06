@@ -95,7 +95,7 @@ class SwipableStackWidget extends AbstractWidget {
         stateControl["swipedIndex"] = index;
         stateControl["swipedDirection"] = direction.name.toString();
         // if (kDebugMode) {
-        //   print('onSwipeCompleted $index, $direction');
+        //   print("onSwipeCompleted $index, $direction");
         // }
         click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
         if (controller.currentIndex == children.length - 1) {
@@ -117,7 +117,7 @@ class SwipableStackWidget extends AbstractWidget {
         stateControl["swipedIndex"] = index;
         stateControl["swipedDirection"] = direction.name.toString();
         // if (kDebugMode) {
-        //   print('onWillMoveNext $index, $direction');
+        //   print("onWillMoveNext $index, $direction");
         // }
         click(parsedJson, dynamicUIBuilderContext, "onWillMoveNext");
         return true;

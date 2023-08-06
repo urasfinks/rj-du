@@ -13,9 +13,9 @@ class BottomTabItem {
 
   BottomTabItem(this.parsedJson) {
     //Если убрать Navigator, то при открытие новой страницы, BottomTabBar уедет с первой страницей
-    name = parsedJson['name'];
-    dynamicPage = DynamicPage(parsedJson['content']);
-    bottomNavigationBarItem = DynamicUI.render(parsedJson, 'tab', null, dynamicPage.dynamicUIBuilderContext);
+    name = parsedJson["name"];
+    dynamicPage = DynamicPage(parsedJson["content"]);
+    bottomNavigationBarItem = DynamicUI.render(parsedJson, "tab", null, dynamicPage.dynamicUIBuilderContext);
     NavigatorApp.addNavigatorPage(dynamicPage, NavigatorApp.tab.length);
     widget = Navigator(
       onGenerateRoute: (RouteSettings settings) {

@@ -64,7 +64,7 @@ class DataSource {
         count++;
       }
     }
-    debugPrint('flushQueue complete: $count');
+    debugPrint("flushQueue complete: $count");
   }
 
   void set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) {
@@ -104,7 +104,7 @@ class DataSource {
   void setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) {
     transaction.add("5 saveToDB");
     String dataString = data.value.runtimeType != String ? json.encode(data.value) : data.value;
-    db.rawQuery('SELECT * FROM data where uuid_data = ?', [data.uuid]).then((resultSet) {
+    db.rawQuery("SELECT * FROM data where uuid_data = ?", [data.uuid]).then((resultSet) {
       bool notify = false;
       if (resultSet.isEmpty) {
         transaction.add("6 result is empty > insert");
@@ -119,7 +119,7 @@ class DataSource {
         }
       } else if (data.updateIfExist == true) {
         transaction.add("7 result not empty > update");
-        //resultSet.first['value_data'] != dataString
+        //resultSet.first["value_data"] != dataString
         // данные надо иногда обновлять не только потому что изменились
         // сами данные, бывает что надо бновить флаг удаления или ревизию
         updateNullable(data, resultSet.first);
@@ -185,7 +185,7 @@ class DataSource {
       });
       if (response.statusCode == 200) {
       } else {
-        AlertHandler.alertSimple('Данные не зафиксированы на сервере');
+        AlertHandler.alertSimple("Данные не зафиксированы на сервере");
         Future.delayed(const Duration(seconds: 1), () {
           SocketCache().renderDBData(data);
         });
@@ -195,7 +195,7 @@ class DataSource {
             "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
       }
     } catch (e, stacktrace) {
-      AlertHandler.alertSimple('Данные не зафиксированы на сервере');
+      AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {
         SocketCache().renderDBData(data);
       });
@@ -213,13 +213,13 @@ class DataSource {
 
   void updateNullable(Data curData, dynamic dbResult) {
     if (curData.onUpdateOverlayNullField) {
-      curData.value ??= dbResult['value_data'];
-      curData.parentUuid ??= dbResult['parent_uuid_data'];
-      curData.key ??= dbResult['key_data'];
-      curData.dateAdd ??= dbResult['date_add_data'];
-      curData.dateUpdate ??= dbResult['date_update_data'];
-      curData.revision ??= dbResult['revision_data'];
-      curData.isRemove ??= dbResult['is_remove_data'];
+      curData.value ??= dbResult["value_data"];
+      curData.parentUuid ??= dbResult["parent_uuid_data"];
+      curData.key ??= dbResult["key_data"];
+      curData.dateAdd ??= dbResult["date_add_data"];
+      curData.dateUpdate ??= dbResult["date_update_data"];
+      curData.revision ??= dbResult["revision_data"];
+      curData.isRemove ??= dbResult["is_remove_data"];
     }
   }
 
@@ -295,14 +295,14 @@ class DataSource {
 
   void get(String uuid, Function(String uuid, Map<String, dynamic>? data) handler) {
     if (isInit) {
-      db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then((resultSet) {
-        if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
-          DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
+      db.rawQuery("SELECT * FROM data where uuid_data = ?", [uuid]).then((resultSet) {
+        if (resultSet.isNotEmpty && resultSet.first["value_data"] != null) {
+          DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first["type_data"] as String?);
           if (isJsonDataType(dataTypeResult)) {
-            //handler(await Util.asyncInvokeIsolate((arg) => json.decode(arg), resultSet.first['value_data']));
-            handler(resultSet.first['uuid_data'] as String, json.decode(resultSet.first['value_data'] as String));
+            //handler(await Util.asyncInvokeIsolate((arg) => json.decode(arg), resultSet.first["value_data"]));
+            handler(resultSet.first["uuid_data"] as String, json.decode(resultSet.first["value_data"] as String));
           } else {
-            handler(resultSet.first['uuid_data'] as String, {dataTypeResult.name: resultSet.first['value_data']});
+            handler(resultSet.first["uuid_data"] as String, {dataTypeResult.name: resultSet.first["value_data"]});
           }
         } else {
           handler(uuid, null);

@@ -13,7 +13,7 @@ class HttpClient {
     if (kDebugMode) {
       print("HttpClient.init()");
     }
-    Storage().onChange('uuid', '', onUpdateDeviceUuid);
+    Storage().onChange("uuid", "", onUpdateDeviceUuid);
   }
 
   static Future<Response> get(String url, Map<String, String>? headers) {
@@ -35,8 +35,8 @@ class HttpClient {
       Duration(seconds: timeout),
       onTimeout: () {
         return http.Response(json.encode({
-          'status': false,
-          'exception': ['Request timeout']
+          "status": false,
+          "exception": ["Request timeout"]
         }), 408);
       },
     );
@@ -44,7 +44,7 @@ class HttpClient {
 
   static Map<String, String> upgradeHeadersAuthorization(Map<String, String>? headers) {
     headers ??= {};
-    headers['Authorization'] = cacheAuthorizationBase64!;
+    headers["Authorization"] = cacheAuthorizationBase64!;
     return headers;
   }
 

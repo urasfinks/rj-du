@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 class HideHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['case'])) {
+    if (Util.containsKeys(args, ["case"])) {
       switch (args["case"]) {
         case "snackBar":
           try {

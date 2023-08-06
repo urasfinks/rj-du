@@ -48,22 +48,22 @@ class WebSocketService {
     if (_channel == null) {
       try {
         if (kDebugMode) {
-          print('WebSocketService._connect() start connect');
+          print("WebSocketService._connect() start connect");
         }
         WebSocket.connect(
-                "${GlobalSettings().ws}/${Storage().get('uuid', 'undefined')}")
+                "${GlobalSettings().ws}/${Storage().get("uuid", "undefined")}")
             .timeout(const Duration(seconds: 4))
             .then((ws) {
           try {
             _disconnect(); //Если кто-то уже создал коннект
             _channel = IOWebSocketChannel(ws);
             if (kDebugMode) {
-              print('WebSocketService._connect() connect chanel');
+              print("WebSocketService._connect() connect chanel");
             }
             if (_channel != null) {
               _listen(_channel!);
               if (kDebugMode) {
-                print('WebSocketService._connect() channel.stream.listen');
+                print("WebSocketService._connect() channel.stream.listen");
               }
             }
           } catch (e, stacktrace) {

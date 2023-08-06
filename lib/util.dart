@@ -42,7 +42,7 @@ class Util {
   }
 
   static String jsonPretty(dynamic object) {
-    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    const JsonEncoder encoder = JsonEncoder.withIndent("  ");
     return encoder.convert(object);
   }
 

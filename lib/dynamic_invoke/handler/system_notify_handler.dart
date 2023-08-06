@@ -8,7 +8,7 @@ import 'abstract_handler.dart';
 class SystemNotifyHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['SystemNotifyEnum', 'state'])) {
+    if (Util.containsKeys(args, ["SystemNotifyEnum", "state"])) {
       SystemNotifyEnum? enumFromString = Util.enumFromString(SystemNotifyEnum.values, args["SystemNotifyEnum"]);
       if (enumFromString != null) {
         SystemNotify().emit(enumFromString, args["state"]);

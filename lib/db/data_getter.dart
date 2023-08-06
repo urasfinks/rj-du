@@ -29,7 +29,7 @@ class DataGetter {
         'SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 GROUP BY type_data',
         []);
     for (Map<String, dynamic> item in resultSet) {
-      result[item['type_data']] = item['max'];
+      result[item["type_data"]] = item["max"];
     }
     for (DataType dataType in DataType.values) {
       //Добиваем нулями несуществующие типы из БД
@@ -43,11 +43,11 @@ class DataGetter {
   }
 
   static void getData(String uuid, Function(Map<String, dynamic>? data) callback) {
-    DataSource().db.rawQuery('SELECT * FROM data where uuid_data = ?', [uuid]).then((resultSet) {
-      if (resultSet.isNotEmpty && resultSet.first['value_data'] != null) {
-        DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first['type_data'] as String?);
+    DataSource().db.rawQuery("SELECT * FROM data where uuid_data = ?", [uuid]).then((resultSet) {
+      if (resultSet.isNotEmpty && resultSet.first["value_data"] != null) {
+        DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first["type_data"] as String?);
         if (DataSource().isJsonDataType(dataTypeResult)) {
-          callback(json.decode(resultSet.first['value_data'] as String));
+          callback(json.decode(resultSet.first["value_data"] as String));
         }
       }
     });

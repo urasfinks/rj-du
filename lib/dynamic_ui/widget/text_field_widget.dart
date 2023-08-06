@@ -114,7 +114,7 @@ class TextFieldWidget extends AbstractWidget {
       onTap: () async {
         if (type == "datetime") {
           DateTime? pickedDate = await showDatePicker(
-            locale: const Locale('ru', 'ru_Ru'),
+            locale: const Locale("ru", "ru_Ru"),
             context: dynamicUIBuilderContext.dynamicPage.context!,
             initialDate:
                 textController.text.isNotEmpty ? DateFormat("dd.MM.yyyy").parse(textController.text) : DateTime.now(),
@@ -122,7 +122,7 @@ class TextFieldWidget extends AbstractWidget {
             lastDate: DateTime(2101),
           );
           if (pickedDate != null) {
-            defaultData = DateFormat('dd.MM.yyyy').format(pickedDate);
+            defaultData = DateFormat("dd.MM.yyyy").format(pickedDate);
             dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedNotify);
             textController.text = defaultData;
           } else {
@@ -139,7 +139,7 @@ class TextFieldWidget extends AbstractWidget {
             builder: (context, child) {
               return Localizations.override(
                 context: context,
-                locale: const Locale('ru', 'ru_Ru'),
+                locale: const Locale("ru", "ru_Ru"),
                 child: child,
               );
             },

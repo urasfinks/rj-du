@@ -6,11 +6,11 @@ import '../../util.dart';
 class ScrollbarWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (!dynamicUIBuilderContext.dynamicPage.properties.containsKey('ScrollBarController')) {
-      dynamicUIBuilderContext.dynamicPage.properties['ScrollBarController'] = ScrollController();
+    if (!dynamicUIBuilderContext.dynamicPage.properties.containsKey("ScrollBarController")) {
+      dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"] = ScrollController();
     }
     return Scrollbar(
-      controller: dynamicUIBuilderContext.dynamicPage.properties['ScrollBarController'],
+      controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
       child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
       key: Util.getKey(),
     );

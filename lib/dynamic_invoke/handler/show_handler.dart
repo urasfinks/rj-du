@@ -12,7 +12,7 @@ import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 class ShowHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['case'])) {
+    if (Util.containsKeys(args, ["case"])) {
       switch (args["case"]) {
         case "bottomNavigationBar":
           DynamicInvoke().sysInvokeType(

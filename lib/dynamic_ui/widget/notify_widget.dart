@@ -7,29 +7,29 @@ class NotifyWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> def =
-        parsedJson['linkDefault'] == null ? {} : parsedJson['linkDefault'] as Map<String, dynamic>;
+        parsedJson["linkDefault"] == null ? {} : parsedJson["linkDefault"] as Map<String, dynamic>;
     DynamicUIBuilderContext newContext = dynamicUIBuilderContext.cloneWithNewData(def);
 
-    if (parsedJson.containsKey('linkContainer')) {
-      dynamicUIBuilderContext.dynamicPage.setContainer(parsedJson['linkContainer'], newContext);
+    if (parsedJson.containsKey("linkContainer")) {
+      dynamicUIBuilderContext.dynamicPage.setContainer(parsedJson["linkContainer"], newContext);
     }
 
     return newContext.dynamicPage.storeValueNotifier.getWidget(
-      parsedJson['link'],
+      parsedJson["link"],
       newContext,
       (context, child) {
-        if (parsedJson.containsKey('template')) {
+        if (parsedJson.containsKey("template")) {
           return checkNullWidget(
             "NotifyWidget",
             parsedJson,
-            render(parsedJson['template'], null, const SizedBox(), newContext),
+            render(parsedJson["template"], null, const SizedBox(), newContext),
           );
         }
-        if (newContext.data.containsKey('template')) {
+        if (newContext.data.containsKey("template")) {
           return checkNullWidget(
             "NotifyWidget",
             parsedJson,
-            render(newContext.data['template'], null, const SizedBox(), newContext),
+            render(newContext.data["template"], null, const SizedBox(), newContext),
           );
         }
         if (kDebugMode) {

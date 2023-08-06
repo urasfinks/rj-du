@@ -17,10 +17,10 @@ class Template {
 
   static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
-    if (!template.contains('\${')) {
+    if (!template.contains("\${")) {
       return template;
     }
-    List<String> exp = template.split('\${');
+    List<String> exp = template.split("\${");
 
     for (String expItem in exp) {
       if (!expItem.contains("}")) {
@@ -74,7 +74,7 @@ class Template {
 
   static List<String> parseArguments(String args) {
     List<String> result = [];
-    for (String arg in args.split(',')) {
+    for (String arg in args.split(",")) {
       result.add(arg.trim());
     }
     return result;

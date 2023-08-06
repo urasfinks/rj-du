@@ -10,9 +10,9 @@ class NavigatorPopHandler extends AbstractHandler {
   dynamic handle(Map<String, dynamic> args,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     int indexTab =
-        args.containsKey('tab') ? args['tab'] : NavigatorApp.selectedTab;
-    int count = args.containsKey('count') ? args['count'] : 1;
-    if (args.containsKey('toBegin')) {
+        args.containsKey("tab") ? args["tab"] : NavigatorApp.selectedTab;
+    int count = args.containsKey("count") ? args["count"] : 1;
+    if (args.containsKey("toBegin")) {
       count = 9999; //break остановит
     }
     int delay = args.containsKey("delay") ? args["delay"] : 0;

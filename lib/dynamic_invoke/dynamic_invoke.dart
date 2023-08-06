@@ -238,10 +238,10 @@ class DynamicInvoke {
       try {
         bridge.clearAll();
         bridge.pageUuid = '$pageUuid';
-        bridge.unique = '${Storage().get('unique', '')}';
+        bridge.unique = '${Storage().get("unique", "")}';
         bridge.scriptUuid = '$scriptUuid';
         bridge.orientation = '${GlobalSettings().orientation}';
-        bridge.pageActive = ${pageActive ? 'true' : 'false'};
+        bridge.pageActive = ${pageActive ? "true" : "false"};
         $args
         $context
         $container

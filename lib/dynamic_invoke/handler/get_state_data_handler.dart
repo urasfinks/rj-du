@@ -8,10 +8,10 @@ class GetStateDataHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ['key', 'default'])) {
+    if (Util.containsKeys(args, ["key", "default"])) {
       dynamic value = dynamicUIBuilderContext.dynamicPage
-          .getStateData(args['key'], args['default']);
-      return {args['key']: value};
+          .getStateData(args["key"], args["default"]);
+      return {args["key"]: value};
     } else {
       if (kDebugMode) {
         print(
