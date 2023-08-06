@@ -10,11 +10,11 @@ class TemplateDirective {
   static Map<String,
       dynamic Function(dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> map = {
     "escape": (data, arguments, ctx) {
-      return data != null ? Util.jsonStringEscape(data) : '';
+      return data != null ? Util.jsonStringEscape(data) : "";
     },
     "jsonEncode": (data, arguments, ctx) {
       //print("TemplateDirective.jsonEncode ${data.runtimeType} > ${json.encode(data)}");
-      return data != null ? json.encode(data) : '';
+      return data != null ? json.encode(data) : "";
     },
     "formatNumber": (data, arguments, ctx) {
       if (data == null || data.toString() == "") {

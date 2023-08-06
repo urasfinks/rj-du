@@ -10,12 +10,12 @@ class RowWidget extends AbstractWidget {
     return Row(
       key: Util.getKey(),
       crossAxisAlignment: TypeParser.parseCrossAxisAlignment(
-        getValue(parsedJson, 'crossAxisAlignment', 'center', dynamicUIBuilderContext),
+        getValue(parsedJson, "crossAxisAlignment", "center", dynamicUIBuilderContext),
       )!,
       mainAxisAlignment: TypeParser.parseMainAxisAlignment(
-        getValue(parsedJson, 'mainAxisAlignment', 'start', dynamicUIBuilderContext),
+        getValue(parsedJson, "mainAxisAlignment", "start", dynamicUIBuilderContext),
       )!,
-      children: renderList(parsedJson, 'children', dynamicUIBuilderContext),
+      children: renderList(parsedJson, "children", dynamicUIBuilderContext),
     );
   }
 }

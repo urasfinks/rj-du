@@ -10,9 +10,9 @@ class RotatedBoxWidget extends AbstractWidget {
     return RotatedBox(
       key: Util.getKey(),
       quarterTurns: TypeParser.parseInt(
-        getValue(parsedJson, 'quarterTurns', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "quarterTurns", 0, dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

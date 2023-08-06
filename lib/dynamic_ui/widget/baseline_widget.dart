@@ -10,12 +10,12 @@ class BaselineWidget extends AbstractWidget {
     return Baseline(
       key: Util.getKey(),
       baseline: TypeParser.parseDouble(
-        getValue(parsedJson, 'baseline', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "baseline", null, dynamicUIBuilderContext),
       )!,
       baselineType: TypeParser.parseTextBaseline(
-        getValue(parsedJson, 'baselineType', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "baselineType", null, dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

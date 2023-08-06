@@ -10,12 +10,12 @@ class LimitedBoxWidget extends AbstractWidget {
     return LimitedBox(
       key: Util.getKey(),
       maxWidth: TypeParser.parseDouble(
-        getValue(parsedJson, 'maxWidth', 'infinity', dynamicUIBuilderContext),
+        getValue(parsedJson, "maxWidth", "infinity", dynamicUIBuilderContext),
       )!,
       maxHeight: TypeParser.parseDouble(
-        getValue(parsedJson, 'maxWidth', 'infinity', dynamicUIBuilderContext),
+        getValue(parsedJson, "maxWidth", "infinity", dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

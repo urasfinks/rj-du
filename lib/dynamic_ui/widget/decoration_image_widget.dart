@@ -9,9 +9,9 @@ class DecorationImageWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     return DecorationImage(
-      image: render(parsedJson, 'image', null, dynamicUIBuilderContext),
+      image: render(parsedJson, "image", null, dynamicUIBuilderContext),
       fit: TypeParser.parseBoxFit(
-        getValue(parsedJson, 'fit', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "fit", null, dynamicUIBuilderContext),
       ),
     );
   }

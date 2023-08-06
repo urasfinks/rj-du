@@ -9,17 +9,17 @@ class SizedBoxAppBarWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     double extraTopOffset = TypeParser.parseDouble(
-      getValue(parsedJson, 'extraTopOffset', 0, dynamicUIBuilderContext),
+      getValue(parsedJson, "extraTopOffset", 0, dynamicUIBuilderContext),
     )!;
     return SizedBox(
       key: Util.getKey(),
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
       height: TypeParser.parseDouble(
         GlobalSettings().appBarHeight + extraTopOffset,
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

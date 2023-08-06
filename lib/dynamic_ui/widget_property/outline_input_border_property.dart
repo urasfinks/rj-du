@@ -7,9 +7,9 @@ class OutlineInputBorderProperty extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return OutlineInputBorder(
-      borderSide: render(parsedJson, 'borderSide', const BorderSide(), dynamicUIBuilderContext),
+      borderSide: render(parsedJson, "borderSide", const BorderSide(), dynamicUIBuilderContext),
       borderRadius: TypeParser.parseBorderRadius(
-        getValue(parsedJson, 'borderRadius', 4.0, dynamicUIBuilderContext),
+        getValue(parsedJson, "borderRadius", 4.0, dynamicUIBuilderContext),
       )!,
     );
   }

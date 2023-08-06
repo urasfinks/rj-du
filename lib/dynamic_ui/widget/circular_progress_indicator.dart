@@ -10,10 +10,10 @@ class CircularProgressIndicatorWidget extends AbstractWidget {
     return CircularProgressIndicator(
       key: Util.getKey(),
       backgroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'backgroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
       ),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
     );
   }

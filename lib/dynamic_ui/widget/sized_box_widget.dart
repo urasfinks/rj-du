@@ -10,12 +10,12 @@ class SizedBoxWidget extends AbstractWidget {
     return SizedBox(
       key: Util.getKey(),
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

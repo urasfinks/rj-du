@@ -10,13 +10,13 @@ class CustomLoaderOpenHandler extends AbstractHandler {
     DynamicInvoke().sysInvokeType(
         NavigatorPushHandler,
         {
-          'name': 'CustomLoader',
-          'type': 'Dialog',
-          'link': {
-            'template': '_Loader.json',
+          "name": "CustomLoader",
+          "type": "Dialog",
+          "link": {
+            "template": "_Loader.json",
           },
-          'linkDefault': {
-            'template': {
+          "linkDefault": {
+            "template": {
               "flutterType": "Material",
               "type": "transparency",
               "child": {

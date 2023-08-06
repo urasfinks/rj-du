@@ -11,11 +11,11 @@ class PaddingWidget extends AbstractWidget {
     return Padding(
       key: Util.getKey(),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
       )!,
       child: render(
         parsedJson,
-        'child',
+        "child",
         DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),

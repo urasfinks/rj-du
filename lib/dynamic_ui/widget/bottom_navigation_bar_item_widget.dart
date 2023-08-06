@@ -6,8 +6,8 @@ class BottomNavigationBarItemWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return BottomNavigationBarItem(
-      icon: render(parsedJson, 'icon', null, dynamicUIBuilderContext),
-      label: getValue(parsedJson, 'label', '', dynamicUIBuilderContext),
+      icon: render(parsedJson, "icon", null, dynamicUIBuilderContext),
+      label: getValue(parsedJson, "label", "", dynamicUIBuilderContext),
     );
   }
 }

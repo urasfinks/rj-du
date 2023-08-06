@@ -10,9 +10,9 @@ class AspectRatioWidget extends AbstractWidget {
     return AspectRatio(
       key: Util.getKey(),
       aspectRatio: TypeParser.parseDouble(
-        getValue(parsedJson, 'aspectRatio', 1.0, dynamicUIBuilderContext),
+        getValue(parsedJson, "aspectRatio", 1.0, dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

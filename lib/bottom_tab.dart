@@ -31,7 +31,7 @@ class BottomTabState extends State<BottomTab>
   @override
   void didChangePlatformBrightness() {
     Storage().set(
-        'theme', View.of(context).platformDispatcher.platformBrightness.name);
+        "theme", View.of(context).platformDispatcher.platformBrightness.name);
   }
 
   @override
@@ -95,11 +95,11 @@ class BottomTabState extends State<BottomTab>
       extendBody: true,
       floatingActionButton: DynamicUI.render(
         Util.getMutableMap({
-          'flutterType': 'Notify',
-          'link': {
-            'template': 'FloatingActionButton.json',
+          "flutterType": "Notify",
+          "link": {
+            "template": "FloatingActionButton.json",
           },
-          'linkDefault': {'template': {}}
+          "linkDefault": {"template": {}}
         }),
         null,
         null,

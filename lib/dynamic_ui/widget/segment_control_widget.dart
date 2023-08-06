@@ -8,51 +8,51 @@ import '../../util.dart';
 class SegmentControlWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String keyState = getValue(parsedJson, 'name', '-', dynamicUIBuilderContext);
+    String keyState = getValue(parsedJson, "name", "-", dynamicUIBuilderContext);
 
-    String data = getValue(parsedJson, 'data', '-', dynamicUIBuilderContext);
+    String data = getValue(parsedJson, "data", "-", dynamicUIBuilderContext);
     if (parsedJson["setState"] ?? false == true) {
       dynamicUIBuilderContext.dynamicPage.setStateData(keyState, data);
     }
 
-    List<Widget> children = renderList(parsedJson, 'children', dynamicUIBuilderContext);
+    List<Widget> children = renderList(parsedJson, "children", dynamicUIBuilderContext);
     Map<int, Widget> ch = {};
     int count = 0;
     for (Widget w in children) {
       ch[count++] = w;
     }
     bool onChangedNotify = TypeParser.parseBool(
-      getValue(parsedJson, 'onChangedNotify', true, dynamicUIBuilderContext),
+      getValue(parsedJson, "onChangedNotify", true, dynamicUIBuilderContext),
     )!;
 
     return SizedBox(
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', 40, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", 40, dynamicUIBuilderContext),
       ),
       child: CustomSlidingSegmentedControl(
         key: Util.getKey(),
         children: ch,
-        decoration: render(parsedJson, 'decoration', null, dynamicUIBuilderContext),
-        thumbDecoration: render(parsedJson, 'thumbDecoration', null, dynamicUIBuilderContext),
+        decoration: render(parsedJson, "decoration", null, dynamicUIBuilderContext),
+        thumbDecoration: render(parsedJson, "thumbDecoration", null, dynamicUIBuilderContext),
         duration: Duration(
           milliseconds: TypeParser.parseInt(
-            getValue(parsedJson, 'duration', 300, dynamicUIBuilderContext),
+            getValue(parsedJson, "duration", 300, dynamicUIBuilderContext),
           )!,
         ),
         fixedWidth: TypeParser.parseDouble(
-          getValue(parsedJson, 'fixedWidth', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "fixedWidth", null, dynamicUIBuilderContext),
         ),
         height: TypeParser.parseDouble(
-          getValue(parsedJson, 'height', 40, dynamicUIBuilderContext),
+          getValue(parsedJson, "height", 40, dynamicUIBuilderContext),
         ),
         padding: TypeParser.parseDouble(
-          getValue(parsedJson, 'padding', 12, dynamicUIBuilderContext),
+          getValue(parsedJson, "padding", 12, dynamicUIBuilderContext),
         )!,
         fromMax: TypeParser.parseBool(
-          getValue(parsedJson, 'fromMax', false, dynamicUIBuilderContext),
+          getValue(parsedJson, "fromMax", false, dynamicUIBuilderContext),
         )!,
         isStretch: TypeParser.parseBool(
-          getValue(parsedJson, 'isStretch', true, dynamicUIBuilderContext),
+          getValue(parsedJson, "isStretch", true, dynamicUIBuilderContext),
         )!,
         onValueChanged: (int index) {
           dynamicUIBuilderContext.dynamicPage
@@ -61,7 +61,7 @@ class SegmentControlWidget extends AbstractWidget {
         },
         initialValue: getIndex(parsedJson, data),
         innerPadding: TypeParser.parseEdgeInsets(
-          getValue(parsedJson, 'padding', 2.0, dynamicUIBuilderContext),
+          getValue(parsedJson, "padding", 2.0, dynamicUIBuilderContext),
         )!,
       ),
     );

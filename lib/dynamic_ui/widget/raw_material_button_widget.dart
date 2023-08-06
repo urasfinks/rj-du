@@ -10,42 +10,42 @@ class RawMaterialButtonWidget extends AbstractWidget {
     return RawMaterialButton(
       key: Util.getKey(),
       fillColor: TypeParser.parseColor(
-        getValue(parsedJson, 'fillColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "fillColor", null, dynamicUIBuilderContext),
       ),
       focusColor: TypeParser.parseColor(
-        getValue(parsedJson, 'focusColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "focusColor", null, dynamicUIBuilderContext),
       ),
       hoverColor: TypeParser.parseColor(
-        getValue(parsedJson, 'hoverColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "hoverColor", null, dynamicUIBuilderContext),
       ),
       splashColor: TypeParser.parseColor(
-        getValue(parsedJson, 'splashColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "splashColor", null, dynamicUIBuilderContext),
       ),
       highlightColor: TypeParser.parseColor(
-        getValue(parsedJson, 'highlightColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "highlightColor", null, dynamicUIBuilderContext),
       ),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", 0, dynamicUIBuilderContext),
       )!,
       elevation: 0,
       constraints: BoxConstraints(
         minWidth: TypeParser.parseDouble(
-          getValue(parsedJson, 'minWidth', 0.0, dynamicUIBuilderContext),
+          getValue(parsedJson, "minWidth", 0.0, dynamicUIBuilderContext),
         )!,
         maxWidth: TypeParser.parseDouble(
-          getValue(parsedJson, 'maxWidth', "infinity", dynamicUIBuilderContext),
+          getValue(parsedJson, "maxWidth", "infinity", dynamicUIBuilderContext),
         )!,
         minHeight: TypeParser.parseDouble(
-          getValue(parsedJson, 'minHeight', 0.0, dynamicUIBuilderContext),
+          getValue(parsedJson, "minHeight", 0.0, dynamicUIBuilderContext),
         )!,
         maxHeight: TypeParser.parseDouble(
-          getValue(parsedJson, 'maxHeight', "infinity", dynamicUIBuilderContext),
+          getValue(parsedJson, "maxHeight", "infinity", dynamicUIBuilderContext),
         )!,
       ),
       onPressed: () {
         click(parsedJson, dynamicUIBuilderContext);
       },
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
       shape: const CircleBorder(),
     );
   }

@@ -9,10 +9,10 @@ import '../../util.dart';
 class TextFieldWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String key = getValue(parsedJson, 'name', '-', dynamicUIBuilderContext);
-    String defaultData = getValue(parsedJson, 'data', '', dynamicUIBuilderContext);
+    String key = getValue(parsedJson, "name", "-", dynamicUIBuilderContext);
+    String defaultData = getValue(parsedJson, "data", "", dynamicUIBuilderContext);
 
-    String type = getValue(parsedJson, 'keyboardType', 'text', dynamicUIBuilderContext);
+    String type = getValue(parsedJson, "keyboardType", "text", dynamicUIBuilderContext);
 
     String propKey = "${key}_TextEditingController";
     //При первичной инициализации устанавливает значение в состояние
@@ -32,13 +32,13 @@ class TextFieldWidget extends AbstractWidget {
     }
 
     List<TextInputFormatter> listInputFormatters = [];
-    String regExp = getValue(parsedJson, 'regexp', '', dynamicUIBuilderContext);
+    String regExp = getValue(parsedJson, "regexp", "", dynamicUIBuilderContext);
     if (regExp.isNotEmpty) {
-      listInputFormatters.add(FilteringTextInputFormatter.allow(RegExp('^[a-z0-9_-]{3,16}\$')));
+      listInputFormatters.add(FilteringTextInputFormatter.allow(RegExp("^[a-z0-9_-]{3,16}\$")));
     }
 
     bool onChangedNotify = TypeParser.parseBool(
-      getValue(parsedJson, 'onChangedNotify', true, dynamicUIBuilderContext),
+      getValue(parsedJson, "onChangedNotify", true, dynamicUIBuilderContext),
     )!;
 
     return TextField(
@@ -58,55 +58,55 @@ class TextFieldWidget extends AbstractWidget {
       },
       inputFormatters: listInputFormatters,
       textCapitalization: TypeParser.parseTextCapitalization(
-        getValue(parsedJson, 'textCapitalization', 'sentences', dynamicUIBuilderContext),
+        getValue(parsedJson, "textCapitalization", "sentences", dynamicUIBuilderContext),
       )!,
       minLines: TypeParser.parseInt(
-        getValue(parsedJson, 'minLines', 1, dynamicUIBuilderContext),
+        getValue(parsedJson, "minLines", 1, dynamicUIBuilderContext),
       ),
       maxLines: TypeParser.parseInt(
-        getValue(parsedJson, 'maxLines', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "maxLines", null, dynamicUIBuilderContext),
       ),
       maxLength: TypeParser.parseInt(
-        getValue(parsedJson, 'maxLength', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "maxLength", null, dynamicUIBuilderContext),
       ),
       textAlign: TypeParser.parseTextAlign(
-        getValue(parsedJson, 'textAlign', 'start', dynamicUIBuilderContext),
+        getValue(parsedJson, "textAlign", "start", dynamicUIBuilderContext),
       )!,
       textAlignVertical: TypeParser.parseTextAlignVertical(
-        getValue(parsedJson, 'textAlignVertical', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "textAlignVertical", null, dynamicUIBuilderContext),
       ),
       clipBehavior: TypeParser.parseClip(
-        getValue(parsedJson, 'clipBehavior', 'hardEdge', dynamicUIBuilderContext),
+        getValue(parsedJson, "clipBehavior", "hardEdge", dynamicUIBuilderContext),
       )!,
       showCursor: TypeParser.parseBool(
-        getValue(parsedJson, 'showCursor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "showCursor", null, dynamicUIBuilderContext),
       ),
       autocorrect: TypeParser.parseBool(
-        getValue(parsedJson, 'autocorrect', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "autocorrect", true, dynamicUIBuilderContext),
       )!,
       autofocus: TypeParser.parseBool(
-        getValue(parsedJson, 'autofocus', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "autofocus", false, dynamicUIBuilderContext),
       )!,
       expands: TypeParser.parseBool(
-        getValue(parsedJson, 'expands', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "expands", false, dynamicUIBuilderContext),
       )!,
       enabled: TypeParser.parseBool(
-        getValue(parsedJson, 'enabled', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "enabled", null, dynamicUIBuilderContext),
       ),
       cursorColor: TypeParser.parseColor(
-        getValue(parsedJson, 'cursorColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "cursorColor", null, dynamicUIBuilderContext),
       ),
       readOnly: TypeParser.parseBool(
-        getValue(parsedJson, 'readOnly', (type == "datetime" || type == "time"), dynamicUIBuilderContext),
+        getValue(parsedJson, "readOnly", (type == "datetime" || type == "time"), dynamicUIBuilderContext),
       )!,
       controller: textController,
       obscureText: TypeParser.parseBool(
-        getValue(parsedJson, 'obscureText', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "obscureText", false, dynamicUIBuilderContext),
       )!,
-      obscuringCharacter: getValue(parsedJson, 'obscureText', '*', dynamicUIBuilderContext),
+      obscuringCharacter: getValue(parsedJson, "obscureText", "*", dynamicUIBuilderContext),
       keyboardType: TypeParser.parseTextInputType(type)!,
-      decoration: render(parsedJson, 'decoration', null, dynamicUIBuilderContext),
-      style: render(parsedJson, 'style', null, dynamicUIBuilderContext),
+      decoration: render(parsedJson, "decoration", null, dynamicUIBuilderContext),
+      style: render(parsedJson, "style", null, dynamicUIBuilderContext),
       onChanged: (value) {
         dynamicUIBuilderContext.dynamicPage.setStateData(key, value, onChangedNotify);
         click(parsedJson, dynamicUIBuilderContext, "onChanged");

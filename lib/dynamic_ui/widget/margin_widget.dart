@@ -11,11 +11,11 @@ class MarginWidget extends AbstractWidget {
     return Margin(
       key: Util.getKey(),
       margin: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'margin', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "margin", null, dynamicUIBuilderContext),
       )!,
       child: render(
         parsedJson,
-        'child',
+        "child",
         DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),

@@ -8,13 +8,13 @@ class BorderSideProperty extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return BorderSide(
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', '#f5f5f5', dynamicUIBuilderContext),
+        getValue(parsedJson, "color", "#f5f5f5", dynamicUIBuilderContext),
       )!,
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', 1, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", 1, dynamicUIBuilderContext),
       )!,
       style: TypeParser.parseBorderStyle(
-        getValue(parsedJson, 'style', 'solid', dynamicUIBuilderContext),
+        getValue(parsedJson, "style", "solid", dynamicUIBuilderContext),
       )!,
     );
   }

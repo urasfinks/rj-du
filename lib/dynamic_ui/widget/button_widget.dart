@@ -13,7 +13,7 @@ class ButtonWidget extends AbstractWidget {
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     AbstractButtonStyle? styleResource;
     String? buttonStyle = getValue(
-        parsedJson, 'buttonStyle', 'Elevated', dynamicUIBuilderContext);
+        parsedJson, "buttonStyle", "Elevated", dynamicUIBuilderContext);
     switch (buttonStyle) {
       case "Elevated":
         styleResource =
@@ -28,8 +28,8 @@ class ButtonWidget extends AbstractWidget {
             TextButtonStyle(dynamicUIBuilderContext, this, parsedJson);
         break;
     }
-    String? borderStyle = getValue(parsedJson, 'borderStyle',
-        'RoundedRectangleBorder', dynamicUIBuilderContext);
+    String? borderStyle = getValue(parsedJson, "borderStyle",
+        "RoundedRectangleBorder", dynamicUIBuilderContext);
     ButtonStyle? resultButtonStyle;
     if (borderStyle != null && styleResource != null) {
       switch (borderStyle) {

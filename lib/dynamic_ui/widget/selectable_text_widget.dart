@@ -8,36 +8,36 @@ class SelectableTextWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return SelectableText(
-      getValue(parsedJson, 'label', '', dynamicUIBuilderContext),
+      getValue(parsedJson, "label", "", dynamicUIBuilderContext),
       key: Util.getKey(),
-      style: render(parsedJson, 'style', null, dynamicUIBuilderContext),
+      style: render(parsedJson, "style", null, dynamicUIBuilderContext),
       textAlign: TypeParser.parseTextAlign(
-        getValue(parsedJson, 'textAlign', 'start', dynamicUIBuilderContext),
+        getValue(parsedJson, "textAlign", "start", dynamicUIBuilderContext),
       )!,
       textDirection: TypeParser.parseTextDirection(
-        getValue(parsedJson, 'textDirection', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "textDirection", null, dynamicUIBuilderContext),
       ),
       textScaleFactor: TypeParser.parseDouble(
-        getValue(parsedJson, 'textScaleFactor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "textScaleFactor", null, dynamicUIBuilderContext),
       ),
-      showCursor: getValue(parsedJson, 'showCursor', false, dynamicUIBuilderContext),
+      showCursor: getValue(parsedJson, "showCursor", false, dynamicUIBuilderContext),
       autofocus: TypeParser.parseBool(
-        getValue(parsedJson, 'autofocus', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "autofocus", false, dynamicUIBuilderContext),
       )!,
       minLines: TypeParser.parseInt(
-        getValue(parsedJson, 'minLines', 1, dynamicUIBuilderContext),
+        getValue(parsedJson, "minLines", 1, dynamicUIBuilderContext),
       ),
       maxLines: TypeParser.parseInt(
-        getValue(parsedJson, 'maxLines', 1, dynamicUIBuilderContext),
+        getValue(parsedJson, "maxLines", 1, dynamicUIBuilderContext),
       ),
       cursorColor: TypeParser.parseColor(
-        getValue(parsedJson, 'cursorColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "cursorColor", null, dynamicUIBuilderContext),
       ),
       enableInteractiveSelection: TypeParser.parseBool(
-        getValue(parsedJson, 'enableInteractiveSelection', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "enableInteractiveSelection", true, dynamicUIBuilderContext),
       )!,
       textWidthBasis: TypeParser.parseTextWidthBasis(
-        getValue(parsedJson, 'textWidthBasis', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "textWidthBasis", null, dynamicUIBuilderContext),
       ),
       scrollPhysics: Util.getPhysics(),
     );

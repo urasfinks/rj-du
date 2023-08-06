@@ -10,12 +10,12 @@ class ClipRRectWidget extends AbstractWidget {
     return ClipRRect(
       key: Util.getKey(),
       borderRadius: TypeParser.parseBorderRadius(
-        getValue(parsedJson, 'borderRadius', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "borderRadius", null, dynamicUIBuilderContext),
       ),
       clipBehavior: TypeParser.parseClip(
-        getValue(parsedJson, 'clipBehavior', 'antiAlias', dynamicUIBuilderContext),
+        getValue(parsedJson, "clipBehavior", "antiAlias", dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

@@ -10,27 +10,27 @@ class InkWellWidget extends AbstractWidget {
     return InkWell(
       key: Util.getKey(),
       radius: TypeParser.parseDouble(
-        getValue(parsedJson, 'radius', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "radius", null, dynamicUIBuilderContext),
       ),
       customBorder: render(
         parsedJson,
-        'customBorder',
+        "customBorder",
         null,
         dynamicUIBuilderContext,
       ),
       splashColor: TypeParser.parseColor(
-        getValue(parsedJson, 'splashColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "splashColor", null, dynamicUIBuilderContext),
       ),
       highlightColor: TypeParser.parseColor(
-        getValue(parsedJson, 'highlightColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "highlightColor", null, dynamicUIBuilderContext),
       ),
       focusColor: TypeParser.parseColor(
-        getValue(parsedJson, 'focusColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "focusColor", null, dynamicUIBuilderContext),
       ),
       hoverColor: TypeParser.parseColor(
-        getValue(parsedJson, 'hoverColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "hoverColor", null, dynamicUIBuilderContext),
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
       onTap: () {
         click(parsedJson, dynamicUIBuilderContext, "onTap");
       },

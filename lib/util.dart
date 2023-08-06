@@ -123,7 +123,7 @@ class Util {
       return DataType.any;
     }
     List<DataType> values = DataType.values;
-    String find = 'DataType.$val';
+    String find = "DataType.$val";
     for (DataType dataType in values) {
       if (dataType.toString() == find) {
         return dataType;

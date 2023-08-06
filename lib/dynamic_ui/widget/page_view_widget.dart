@@ -10,25 +10,25 @@ class PageViewWidget extends AbstractWidget {
     return PageView(
       key: Util.getKey(),
       scrollDirection: TypeParser.parseAxis(
-        getValue(parsedJson, 'scrollDirection', 'vertical', dynamicUIBuilderContext)!,
+        getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
       )!,
       reverse: TypeParser.parseBool(
-        getValue(parsedJson, 'reverse', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
       )!,
       physics: Util.getPhysics(),
       pageSnapping: TypeParser.parseBool(
-        getValue(parsedJson, 'pageSnapping', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "pageSnapping", true, dynamicUIBuilderContext),
       )!,
       padEnds: TypeParser.parseBool(
-        getValue(parsedJson, 'padEnds', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "padEnds", true, dynamicUIBuilderContext),
       )!,
       allowImplicitScrolling: TypeParser.parseBool(
-        getValue(parsedJson, 'allowImplicitScrolling', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "allowImplicitScrolling", false, dynamicUIBuilderContext),
       )!,
       clipBehavior: TypeParser.parseClip(
-        getValue(parsedJson, 'clipBehavior', 'none', dynamicUIBuilderContext),
+        getValue(parsedJson, "clipBehavior", "none", dynamicUIBuilderContext),
       )!,
-      children: renderList(parsedJson, 'children', dynamicUIBuilderContext),
+      children: renderList(parsedJson, "children", dynamicUIBuilderContext),
     );
   }
 }

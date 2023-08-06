@@ -11,7 +11,7 @@ class ScrollbarWidget extends AbstractWidget {
     }
     return Scrollbar(
       controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
       key: Util.getKey(),
     );
   }

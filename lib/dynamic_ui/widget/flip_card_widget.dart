@@ -17,10 +17,10 @@ class FlipCardWidget extends AbstractWidget {
       {
         "angle": 0,
         "isBack": TypeParser.parseBool(
-          getValue(parsedJson, 'isBack', false, dynamicUIBuilderContext),
+          getValue(parsedJson, "isBack", false, dynamicUIBuilderContext),
         )!,
         "flip": TypeParser.parseBool(
-          getValue(parsedJson, 'flip', false, dynamicUIBuilderContext),
+          getValue(parsedJson, "flip", false, dynamicUIBuilderContext),
         )!
       },
     );
@@ -43,14 +43,14 @@ class FlipCardWidget extends AbstractWidget {
                   tween: Tween<double>(begin: isBack ? 0 : 180, end: isBack ? 180 : 0),
                   duration: Duration(
                     milliseconds: TypeParser.parseInt(
-                      getValue(parsedJson, 'duration', 350, newContext),
+                      getValue(parsedJson, "duration", 350, newContext),
                     )!,
                   ),
                   builder: (context, val, __) {
                     bool isSideBack = val >= (180 / 2);
                     if (isSideBack == isBack && stateControl["flip"] == true) {
                       stateControl["flip"] = false;
-                      click(parsedJson, newContext, isBack ? 'onFlipBack' : 'onFlipFront');
+                      click(parsedJson, newContext, isBack ? "onFlipBack" : "onFlipFront");
                     }
                     stateControl["angle"] = val;
                     Widget widget = render(

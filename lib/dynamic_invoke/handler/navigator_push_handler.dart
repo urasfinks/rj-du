@@ -38,7 +38,7 @@ class NavigatorPushHandler extends AbstractHandler {
     if (!raw) {
       dataPage.addAll(
         {
-          "name": dataPage.containsKey("name") ? dataPage["name"] : '',
+          "name": dataPage.containsKey("name") ? dataPage["name"] : "",
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
           "linkContainer": "root",
@@ -68,14 +68,14 @@ class NavigatorPushHandler extends AbstractHandler {
     if (!raw) {
       dataPage.addAll(
         {
-          'name': dataPage.containsKey("name") ? dataPage["name"] : '',
-          'flutterType': 'Notify',
-          'link': dataPage.containsKey("uuid") ? {'template': dataPage["uuid"]} : dataPage["link"],
-          'linkContainer': 'root',
-          'linkDefault': dataPage.containsKey("linkDefault")
+          "name": dataPage.containsKey("name") ? dataPage["name"] : "",
+          "flutterType": "Notify",
+          "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
+          "linkContainer": "root",
+          "linkDefault": dataPage.containsKey("linkDefault")
               ? dataPage["linkDefault"]
               : {
-                  'template': {'flutterType': 'Text', 'label': ''}
+                  "template": {"flutterType": "Text", "label": ""}
                 }
         },
       );
@@ -104,18 +104,18 @@ class NavigatorPushHandler extends AbstractHandler {
     if (!raw) {
       dataPage.addAll(
         {
-          'name': dataPage.containsKey("name") ? dataPage["name"] : '',
-          'flutterType': 'Notify',
-          'link': dataPage.containsKey("uuid") ? {'template': dataPage["uuid"]} : dataPage["link"],
-          'linkContainer': 'root',
-          'linkDefault': dataPage.containsKey("linkDefault")
+          "name": dataPage.containsKey("name") ? dataPage["name"] : "",
+          "flutterType": "Notify",
+          "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
+          "linkContainer": "root",
+          "linkDefault": dataPage.containsKey("linkDefault")
               ? dataPage["linkDefault"]
               : {
-                  'template': {
-                    'flutterType': 'Scaffold',
-                    'appBar': {
-                      'flutterType': 'AppBar',
-                      'title': {'flutterType': 'Text', 'label': dataPage["label"]}
+                  "template": {
+                    "flutterType": "Scaffold",
+                    "appBar": {
+                      "flutterType": "AppBar",
+                      "title": {"flutterType": "Text", "label": dataPage["label"]}
                     }
                   }
                 }

@@ -9,26 +9,26 @@ class VisibilityWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Visibility(
       key: Util.getKey(),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
       visible: TypeParser.parseBool(
-        getValue(parsedJson, 'visible', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "visible", true, dynamicUIBuilderContext),
       ) ?? true,
       maintainAnimation: TypeParser.parseBool(
-        getValue(parsedJson, 'maintainAnimation', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "maintainAnimation", false, dynamicUIBuilderContext),
       )!,
       maintainInteractivity: TypeParser.parseBool(
-        getValue(parsedJson, 'maintainInteractivity', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "maintainInteractivity", false, dynamicUIBuilderContext),
       ) ?? false,
       maintainSemantics: TypeParser.parseBool(
-        getValue(parsedJson, 'maintainSemantics', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "maintainSemantics", false, dynamicUIBuilderContext),
       ) ?? false,
       maintainSize: TypeParser.parseBool(
-        getValue(parsedJson, 'maintainSize', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "maintainSize", false, dynamicUIBuilderContext),
       ) ?? false,
       maintainState: TypeParser.parseBool(
-        getValue(parsedJson, 'maintainState', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "maintainState", false, dynamicUIBuilderContext),
       ) ?? false,
-      replacement: render(parsedJson, 'replacement', const SizedBox.shrink(), dynamicUIBuilderContext),
+      replacement: render(parsedJson, "replacement", const SizedBox.shrink(), dynamicUIBuilderContext),
     );
   }
 }

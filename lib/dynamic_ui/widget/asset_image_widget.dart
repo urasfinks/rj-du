@@ -6,7 +6,7 @@ class AssetImageWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return AssetImage(
-      getValue(parsedJson, 'src', '', dynamicUIBuilderContext),
+      getValue(parsedJson, "src", "", dynamicUIBuilderContext),
     );
   }
 }

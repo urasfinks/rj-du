@@ -13,19 +13,19 @@ class SliverAppBarWidget extends AbstractWidget {
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     return SliverAppBar(
       pinned: TypeParser.parseBool(
-        getValue(parsedJson, 'pinned', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "pinned", true, dynamicUIBuilderContext),
       )!,
       floating: TypeParser.parseBool(
-        getValue(parsedJson, 'floating', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "floating", false, dynamicUIBuilderContext),
       )!,
       expandedHeight: TypeParser.parseDouble(
-        getValue(parsedJson, 'expandedHeight', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "expandedHeight", null, dynamicUIBuilderContext),
       ),
       elevation: TypeParser.parseDouble(
-        getValue(parsedJson, 'elevation', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       ),
-      title: render(parsedJson, 'title', '', dynamicUIBuilderContext),
-      actions: renderList(parsedJson, 'actions', dynamicUIBuilderContext),
+      title: render(parsedJson, "title", "", dynamicUIBuilderContext),
+      actions: renderList(parsedJson, "actions", dynamicUIBuilderContext),
       flexibleSpace: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(

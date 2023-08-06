@@ -8,7 +8,7 @@ class RoundedRectangleBorderProperty extends AbstractWidget{
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return RoundedRectangleBorder(
       borderRadius: TypeParser.parseBorderRadius(
-        getValue(parsedJson, 'borderRadius', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "borderRadius", 0, dynamicUIBuilderContext),
       )!,
     );
   }

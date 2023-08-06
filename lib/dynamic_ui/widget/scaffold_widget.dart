@@ -9,13 +9,13 @@ class ScaffoldWidget extends AbstractWidget {
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Scaffold(
       extendBodyBehindAppBar: TypeParser.parseBool(
-        getValue(parsedJson, 'extendBodyBehindAppBar', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "extendBodyBehindAppBar", true, dynamicUIBuilderContext),
       )!,
       extendBody: TypeParser.parseBool(
-        getValue(parsedJson, 'extendBody', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "extendBody", false, dynamicUIBuilderContext),
       )!,
-      appBar: render(parsedJson, 'appBar', null, dynamicUIBuilderContext),
-      body: render(parsedJson, 'body', const SizedBox(), dynamicUIBuilderContext),
+      appBar: render(parsedJson, "appBar", null, dynamicUIBuilderContext),
+      body: render(parsedJson, "body", const SizedBox(), dynamicUIBuilderContext),
       key: Util.getKey(),
     );
   }

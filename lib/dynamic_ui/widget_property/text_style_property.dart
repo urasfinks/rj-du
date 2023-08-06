@@ -6,20 +6,20 @@ import '../widget/abstract_widget.dart';
 class TextStyleProperty extends AbstractWidget {
   @override
   dynamic get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String textTheme = getValue(parsedJson, 'textTheme', 'default', dynamicUIBuilderContext);
+    String textTheme = getValue(parsedJson, "textTheme", "default", dynamicUIBuilderContext);
     if (textTheme == "default") {
       return TextStyle(
         color: TypeParser.parseColor(
-          getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "color", null, dynamicUIBuilderContext),
         ),
         fontSize: TypeParser.parseDouble(
-          getValue(parsedJson, 'fontSize', 15, dynamicUIBuilderContext),
+          getValue(parsedJson, "fontSize", 15, dynamicUIBuilderContext),
         ),
         fontStyle: TypeParser.parseFontStyle(
-          getValue(parsedJson, 'fontStyle', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "fontStyle", null, dynamicUIBuilderContext),
         ),
         fontWeight: TypeParser.parseFontWeight(
-          getValue(parsedJson, 'fontWeight', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "fontWeight", null, dynamicUIBuilderContext),
         ),
       );
     } else if (textTheme == "Large") {

@@ -10,24 +10,24 @@ class PositionedWidget extends AbstractWidget {
     return Positioned(
       key: Util.getKey(),
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
       left: TypeParser.parseDouble(
-        getValue(parsedJson, 'left', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "left", null, dynamicUIBuilderContext),
       ),
       right: TypeParser.parseDouble(
-        getValue(parsedJson, 'right', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "right", null, dynamicUIBuilderContext),
       ),
       top: TypeParser.parseDouble(
-        getValue(parsedJson, 'top', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "top", null, dynamicUIBuilderContext),
       ),
       bottom: TypeParser.parseDouble(
-        getValue(parsedJson, 'bottom', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "bottom", null, dynamicUIBuilderContext),
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

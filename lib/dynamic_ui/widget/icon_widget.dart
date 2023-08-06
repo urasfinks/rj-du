@@ -9,13 +9,13 @@ class IconWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Icon(
-      iconsMap[getValue(parsedJson, 'src', null, dynamicUIBuilderContext)],
+      iconsMap[getValue(parsedJson, "src", null, dynamicUIBuilderContext)],
       key: Util.getKey(),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
       size: TypeParser.parseDouble(
-        getValue(parsedJson, 'size', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "size", null, dynamicUIBuilderContext),
       ),
     );
   }

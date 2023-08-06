@@ -9,18 +9,18 @@ class ButtonStyleProperty extends AbstractWidget {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.all(
         TypeParser.parseColor(
-          getValue(parsedJson, 'backgroundColor', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
         ),
       ),
       shadowColor: MaterialStateProperty.all(
         TypeParser.parseColor(
-          getValue(parsedJson, 'shadowColor', 'transparent', dynamicUIBuilderContext),
+          getValue(parsedJson, "shadowColor", "transparent", dynamicUIBuilderContext),
         ),
       ),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: TypeParser.parseBorderRadius(
-            getValue(parsedJson, 'borderRadius', null, dynamicUIBuilderContext),
+            getValue(parsedJson, "borderRadius", null, dynamicUIBuilderContext),
           )!,
         ),
       ),

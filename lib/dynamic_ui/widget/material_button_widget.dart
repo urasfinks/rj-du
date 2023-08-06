@@ -9,28 +9,28 @@ class MaterialButtonWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     return MaterialButton(
-      shape: render(parsedJson, 'shape', null, dynamicUIBuilderContext),
+      shape: render(parsedJson, "shape", null, dynamicUIBuilderContext),
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
       minWidth: TypeParser.parseDouble(
-        getValue(parsedJson, 'minWidth', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "minWidth", null, dynamicUIBuilderContext),
       ),
       elevation: TypeParser.parseDouble(
-        getValue(parsedJson, 'elevation', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       )!,
       textColor: TypeParser.parseColor(
-        getValue(parsedJson, 'textColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "textColor", null, dynamicUIBuilderContext),
       ),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
       onPressed: () {
         click(parsedJson, dynamicUIBuilderContext);
       },
       splashColor: TypeParser.parseColor(
-        getValue(parsedJson, 'splashColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "splashColor", null, dynamicUIBuilderContext),
       ),
     );
   }

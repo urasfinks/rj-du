@@ -11,21 +11,21 @@ class InkWidget extends AbstractWidget{
     return Ink(
       key: Util.getKey(),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
       ),
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
-      decoration: render(parsedJson, 'decoration', null, dynamicUIBuilderContext),
+      decoration: render(parsedJson, "decoration", null, dynamicUIBuilderContext),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
       child: render(
         parsedJson,
-        'child',
+        "child",
         DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),

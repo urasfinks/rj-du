@@ -60,11 +60,11 @@ class RjDu {
         await DataMigration.loadAssetByMask("template", "TemplateWidget"));
 
     return DynamicPage(const {
-      'flutterType': 'Notify',
-      'link': {'template': 'main.json'},
-      'linkContainer': 'root',
-      'linkDefault': {
-        'template': {'flutterType': 'MaterialApp'}
+      "flutterType": "Notify",
+      "link": {"template": "main.json"},
+      "linkContainer": "root",
+      "linkDefault": {
+        "template": {"flutterType": "MaterialApp"}
       }
     });
   }

@@ -11,12 +11,12 @@ class SlidableWidget extends AbstractWidget {
       key: Util.getKey(),
       endActionPane: ActionPane(
         extentRatio: TypeParser.parseDouble(
-          getValue(parsedJson, 'extentRatio', 0.3, dynamicUIBuilderContext),
+          getValue(parsedJson, "extentRatio", 0.3, dynamicUIBuilderContext),
         )!,
         motion: const ScrollMotion(),
-        children: renderList(parsedJson, 'children', dynamicUIBuilderContext),
+        children: renderList(parsedJson, "children", dynamicUIBuilderContext),
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

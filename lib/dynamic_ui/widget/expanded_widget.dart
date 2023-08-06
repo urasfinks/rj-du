@@ -11,11 +11,11 @@ class ExpandedWidget extends AbstractWidget {
     return Expanded(
       key: Util.getKey(),
       flex: TypeParser.parseInt(
-        getValue(parsedJson, 'flex', 1, dynamicUIBuilderContext),
+        getValue(parsedJson, "flex", 1, dynamicUIBuilderContext),
       )!,
       child: render(
         parsedJson,
-        'child',
+        "child",
         DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),

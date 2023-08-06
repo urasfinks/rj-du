@@ -11,27 +11,27 @@ class ContainerWidget extends AbstractWidget {
     return Container(
       key: Util.getKey(),
       margin: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'margin', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "margin", null, dynamicUIBuilderContext),
       ),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
       ),
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
-      decoration: render(parsedJson, 'decoration', null, dynamicUIBuilderContext),
+      decoration: render(parsedJson, "decoration", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignment(
-        getValue(parsedJson, 'alignment', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
       child: render(
         parsedJson,
-        'child',
+        "child",
         DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),

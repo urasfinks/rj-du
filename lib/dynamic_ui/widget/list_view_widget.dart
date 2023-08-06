@@ -8,7 +8,7 @@ class ListViewWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     bool separated = TypeParser.parseBool(
-      getValue(parsedJson, 'separated', false, dynamicUIBuilderContext),
+      getValue(parsedJson, "separated", false, dynamicUIBuilderContext),
     )!;
 
     List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
@@ -19,20 +19,20 @@ class ListViewWidget extends AbstractWidget {
         controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
         addAutomaticKeepAlives: true,
         scrollDirection: TypeParser.parseAxis(
-          getValue(parsedJson, 'scrollDirection', 'vertical', dynamicUIBuilderContext)!,
+          getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
         )!,
         padding: TypeParser.parseEdgeInsets(
-          getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
         ),
         shrinkWrap: TypeParser.parseBool(
-          getValue(parsedJson, 'shrinkWrap', true, dynamicUIBuilderContext),
+          getValue(parsedJson, "shrinkWrap", true, dynamicUIBuilderContext),
         )!,
         reverse: TypeParser.parseBool(
-          getValue(parsedJson, 'reverse', false, dynamicUIBuilderContext),
+          getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
         )!,
         physics: Util.getPhysics(),
         itemCount: TypeParser.parseInt(
-          getValue(parsedJson, 'itemCount', children.length, dynamicUIBuilderContext),
+          getValue(parsedJson, "itemCount", children.length, dynamicUIBuilderContext),
         )!,
         itemBuilder: (BuildContext context, int index) {
           DynamicUIBuilderContext newContext = children[index]["context"] != null
@@ -52,20 +52,20 @@ class ListViewWidget extends AbstractWidget {
         controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
         addAutomaticKeepAlives: true,
         scrollDirection: TypeParser.parseAxis(
-          getValue(parsedJson, 'scrollDirection', 'vertical', dynamicUIBuilderContext)!,
+          getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
         )!,
         padding: TypeParser.parseEdgeInsets(
-          getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+          getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
         ),
         shrinkWrap: TypeParser.parseBool(
-          getValue(parsedJson, 'shrinkWrap', true, dynamicUIBuilderContext),
+          getValue(parsedJson, "shrinkWrap", true, dynamicUIBuilderContext),
         )!,
         reverse: TypeParser.parseBool(
-          getValue(parsedJson, 'reverse', false, dynamicUIBuilderContext),
+          getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
         )!,
         physics: Util.getPhysics(),
         itemCount: TypeParser.parseInt(
-          getValue(parsedJson, 'itemCount', children.length, dynamicUIBuilderContext),
+          getValue(parsedJson, "itemCount", children.length, dynamicUIBuilderContext),
         )!,
         itemBuilder: (BuildContext context, int index) {
           DynamicUIBuilderContext newContext = children[index]["context"] != null

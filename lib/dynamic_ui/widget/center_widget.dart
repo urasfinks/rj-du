@@ -12,7 +12,7 @@ class CenterWidget extends AbstractWidget {
       key: Util.getKey(),
       child: render(
         parsedJson,
-        'child',
+        "child",
         DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
         dynamicUIBuilderContext,
       ),

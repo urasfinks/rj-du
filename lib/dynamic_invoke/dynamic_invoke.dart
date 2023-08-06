@@ -199,10 +199,10 @@ class DynamicInvoke {
             dynamicUIBuilderContext.dynamicPage.uuid,
             data[DataType.js.name],
             json.encode(args),
-            includeContext ? json.encode(dynamicUIBuilderContext.data) : '',
-            includeContainer ? json.encode(dynamicUIBuilderContext.dynamicPage.getContainerData()) : '',
-            includeStateData ? json.encode(dynamicUIBuilderContext.dynamicPage.stateData.value) : '',
-            includePageArgument ? json.encode(dynamicUIBuilderContext.dynamicPage.arguments) : '',
+            includeContext ? json.encode(dynamicUIBuilderContext.data) : "",
+            includeContainer ? json.encode(dynamicUIBuilderContext.dynamicPage.getContainerData()) : "",
+            includeStateData ? json.encode(dynamicUIBuilderContext.dynamicPage.stateData.value) : "",
+            includePageArgument ? json.encode(dynamicUIBuilderContext.dynamicPage.arguments) : "",
             NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage);
         if (result != null) {
           if (kDebugMode) {

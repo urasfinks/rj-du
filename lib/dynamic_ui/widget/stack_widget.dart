@@ -10,18 +10,18 @@ class StackWidget extends AbstractWidget {
     return Stack(
       key: Util.getKey(),
       alignment: TypeParser.parseAlignmentDirectional(
-        getValue(parsedJson, 'alignment', 'topStart', dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", "topStart", dynamicUIBuilderContext),
       )!,
       textDirection: TypeParser.parseTextDirection(
-        getValue(parsedJson, 'textDirection', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "textDirection", null, dynamicUIBuilderContext),
       ),
       fit: TypeParser.parseStackFit(
-        getValue(parsedJson, 'fit', 'loose', dynamicUIBuilderContext),
+        getValue(parsedJson, "fit", "loose", dynamicUIBuilderContext),
       )!,
       clipBehavior: TypeParser.parseClip(
-        getValue(parsedJson, 'clipBehavior', 'hardEdge', dynamicUIBuilderContext),
+        getValue(parsedJson, "clipBehavior", "hardEdge", dynamicUIBuilderContext),
       )!,
-      children: renderList(parsedJson, 'children', dynamicUIBuilderContext),
+      children: renderList(parsedJson, "children", dynamicUIBuilderContext),
     );
   }
 }

@@ -24,7 +24,7 @@ class GestureDetectorWidget extends AbstractWidget {
       onVerticalDragUpdate: (details){
         click(parsedJson, dynamicUIBuilderContext, "onVerticalDragUpdate");
       },
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

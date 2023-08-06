@@ -10,21 +10,21 @@ class OverflowBoxWidget extends AbstractWidget {
     return OverflowBox(
       key: Util.getKey(),
       alignment: TypeParser.parseAlignment(
-        getValue(parsedJson, 'alignment', 'center', dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", "center", dynamicUIBuilderContext),
       )!,
       minWidth: TypeParser.parseDouble(
-        getValue(parsedJson, 'minWidth', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "minWidth", null, dynamicUIBuilderContext),
       ),
       maxWidth: TypeParser.parseDouble(
-        getValue(parsedJson, 'maxWidth', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "maxWidth", null, dynamicUIBuilderContext),
       ),
       minHeight: TypeParser.parseDouble(
-        getValue(parsedJson, 'minHeight', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "minHeight", null, dynamicUIBuilderContext),
       ),
       maxHeight: TypeParser.parseDouble(
-        getValue(parsedJson, 'maxHeight', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "maxHeight", null, dynamicUIBuilderContext),
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

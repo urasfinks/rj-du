@@ -3,18 +3,18 @@ import '../navigator_app.dart';
 
 class TypeParser {
   static dynamic parseFontStyle(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, FontStyle> map = {
-      'normal': FontStyle.normal,
-      'italic': FontStyle.italic,
+      "normal": FontStyle.normal,
+      "italic": FontStyle.italic,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static bool? parseBool(dynamic value) {
-    if (value == null || value.toString().trim() == '') {
+    if (value == null || value.toString().trim() == "") {
       return null;
     }
     String c = value.toString().toLowerCase();
@@ -28,7 +28,7 @@ class TypeParser {
   }
 
   static double? parseDouble(dynamic value) {
-    if (value == null || value.toString().trim() == '') {
+    if (value == null || value.toString().trim() == "") {
       return null;
     }
     if (value.toString() == "infinity") {
@@ -41,7 +41,7 @@ class TypeParser {
   }
 
   static int? parseInt(dynamic value) {
-    if (value == null || value.toString().trim() == '') {
+    if (value == null || value.toString().trim() == "") {
       return null;
     }
     try {
@@ -71,7 +71,7 @@ class TypeParser {
   };
 
   static Color? parseColor(String? value, [BuildContext? buildContext]) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
 
@@ -119,7 +119,7 @@ class TypeParser {
   }
 
   static Color? _parseHexColor(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     value = value.toUpperCase().replaceAll("#", "");
@@ -131,7 +131,7 @@ class TypeParser {
   }
 
   static FontWeight? parseFontWeight(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, FontWeight> map = {
@@ -152,7 +152,7 @@ class TypeParser {
 
   static EdgeInsets? parseEdgeInsets(dynamic value) {
     //left,top,right,bottom
-    if (value == null || value.toString().trim() == '') {
+    if (value == null || value.toString().trim() == "") {
       return null;
     }
     var values = value.toString().split(",");
@@ -169,7 +169,7 @@ class TypeParser {
   }
 
   static BoxFit? parseBoxFit(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, BoxFit> map = {
@@ -185,7 +185,7 @@ class TypeParser {
   }
 
   static ImageRepeat? parseImageRepeat(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, ImageRepeat> map = {
@@ -198,7 +198,7 @@ class TypeParser {
   }
 
   static Alignment? parseAlignment(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, Alignment> map = {
@@ -262,41 +262,41 @@ class TypeParser {
   }
 
   static MainAxisAlignment? parseMainAxisAlignment(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, MainAxisAlignment> map = {
-      'start': MainAxisAlignment.start,
-      'center': MainAxisAlignment.center,
-      'end': MainAxisAlignment.end,
-      'spaceEvenly': MainAxisAlignment.spaceEvenly,
-      'spaceBetween': MainAxisAlignment.spaceBetween,
-      'spaceAround': MainAxisAlignment.spaceAround,
+      "start": MainAxisAlignment.start,
+      "center": MainAxisAlignment.center,
+      "end": MainAxisAlignment.end,
+      "spaceEvenly": MainAxisAlignment.spaceEvenly,
+      "spaceBetween": MainAxisAlignment.spaceBetween,
+      "spaceAround": MainAxisAlignment.spaceAround,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static MainAxisSize? parseMainAxisSize(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, MainAxisSize> map = {
-      'min': MainAxisSize.min,
-      'max': MainAxisSize.max,
+      "min": MainAxisSize.min,
+      "max": MainAxisSize.max,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static CrossAxisAlignment? parseCrossAxisAlignment(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, CrossAxisAlignment> map = {
-      'start': CrossAxisAlignment.start,
-      'center': CrossAxisAlignment.center,
-      'end': CrossAxisAlignment.end,
-      'baseline': CrossAxisAlignment.baseline,
-      'stretch': CrossAxisAlignment.stretch,
+      "start": CrossAxisAlignment.start,
+      "center": CrossAxisAlignment.center,
+      "end": CrossAxisAlignment.end,
+      "baseline": CrossAxisAlignment.baseline,
+      "stretch": CrossAxisAlignment.stretch,
     };
     return map.containsKey(value) ? map[value] : null;
   }
@@ -318,7 +318,7 @@ class TypeParser {
   }
 
   static BorderRadius? parseBorderRadius(dynamic value) {
-    if (value == null || value.toString().trim() == '') {
+    if (value == null || value.toString().trim() == "") {
       return null;
     }
     if (value.toString().contains(",")) {
@@ -335,230 +335,230 @@ class TypeParser {
   }
 
   static TextInputType? parseTextInputType(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextInputType> map = {
-      'none': TextInputType.none,
-      'url': TextInputType.url,
-      'name': TextInputType.name,
-      'datetime': TextInputType.datetime,
-      'time': TextInputType.text,
-      'emailAddress': TextInputType.emailAddress,
-      'multiline': TextInputType.multiline,
-      'number': TextInputType.number,
-      'numberS':
+      "none": TextInputType.none,
+      "url": TextInputType.url,
+      "name": TextInputType.name,
+      "datetime": TextInputType.datetime,
+      "time": TextInputType.text,
+      "emailAddress": TextInputType.emailAddress,
+      "multiline": TextInputType.multiline,
+      "number": TextInputType.number,
+      "numberS":
           const TextInputType.numberWithOptions(signed: true, decimal: false),
-      'numberD':
+      "numberD":
           const TextInputType.numberWithOptions(signed: false, decimal: true),
-      'numberSD':
+      "numberSD":
           const TextInputType.numberWithOptions(signed: true, decimal: true),
-      'phone': TextInputType.phone,
-      'streetAddress': TextInputType.streetAddress,
-      'text': TextInputType.text,
-      'visiblePassword': TextInputType.visiblePassword
+      "phone": TextInputType.phone,
+      "streetAddress": TextInputType.streetAddress,
+      "text": TextInputType.text,
+      "visiblePassword": TextInputType.visiblePassword
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static BorderStyle? parseBorderStyle(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, BorderStyle> map = {
-      'solid': BorderStyle.solid,
-      'none': BorderStyle.none,
+      "solid": BorderStyle.solid,
+      "none": BorderStyle.none,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static Axis? parseAxis(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, Axis> map = {
-      'vertical': Axis.vertical,
-      'horizontal': Axis.horizontal,
+      "vertical": Axis.vertical,
+      "horizontal": Axis.horizontal,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static Clip? parseClip(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, Clip> map = {
-      'antiAlias': Clip.antiAlias,
-      'antiAliasWithSaveLayer': Clip.antiAliasWithSaveLayer,
-      'hardEdge': Clip.hardEdge,
-      'none': Clip.none,
+      "antiAlias": Clip.antiAlias,
+      "antiAliasWithSaveLayer": Clip.antiAliasWithSaveLayer,
+      "hardEdge": Clip.hardEdge,
+      "none": Clip.none,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextBaseline? parseTextBaseline(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextBaseline> map = {
-      'alphabetic': TextBaseline.alphabetic,
-      'ideographic': TextBaseline.ideographic,
+      "alphabetic": TextBaseline.alphabetic,
+      "ideographic": TextBaseline.ideographic,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static AlignmentDirectional? parseAlignmentDirectional(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, AlignmentDirectional> map = {
-      'bottomCenter': AlignmentDirectional.bottomCenter,
-      'bottomEnd': AlignmentDirectional.bottomEnd,
-      'bottomStart': AlignmentDirectional.bottomStart,
-      'center': AlignmentDirectional.center,
-      'centerEnd': AlignmentDirectional.centerEnd,
-      'centerStart': AlignmentDirectional.centerStart,
-      'topCenter': AlignmentDirectional.topCenter,
-      'topEnd': AlignmentDirectional.topEnd,
-      'topStart': AlignmentDirectional.topStart,
+      "bottomCenter": AlignmentDirectional.bottomCenter,
+      "bottomEnd": AlignmentDirectional.bottomEnd,
+      "bottomStart": AlignmentDirectional.bottomStart,
+      "center": AlignmentDirectional.center,
+      "centerEnd": AlignmentDirectional.centerEnd,
+      "centerStart": AlignmentDirectional.centerStart,
+      "topCenter": AlignmentDirectional.topCenter,
+      "topEnd": AlignmentDirectional.topEnd,
+      "topStart": AlignmentDirectional.topStart,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextDecoration? parseTextDecoration(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextDecoration> map = {
-      'none': TextDecoration.none,
-      'underline': TextDecoration.underline,
-      'overline': TextDecoration.overline,
-      'lineThrough': TextDecoration.lineThrough,
+      "none": TextDecoration.none,
+      "underline": TextDecoration.underline,
+      "overline": TextDecoration.overline,
+      "lineThrough": TextDecoration.lineThrough,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextDirection? parseTextDirection(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextDirection> map = {
-      'ltr': TextDirection.ltr,
-      'rtl': TextDirection.rtl,
+      "ltr": TextDirection.ltr,
+      "rtl": TextDirection.rtl,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static StackFit? parseStackFit(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, StackFit> map = {
-      'expand': StackFit.expand,
-      'loose': StackFit.loose,
-      'passthrough': StackFit.passthrough,
+      "expand": StackFit.expand,
+      "loose": StackFit.loose,
+      "passthrough": StackFit.passthrough,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextAlign? parseTextAlign(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextAlign> map = {
-      'left': TextAlign.left,
-      'start': TextAlign.start,
-      'center': TextAlign.center,
-      'end': TextAlign.end,
-      'justify': TextAlign.justify,
-      'right': TextAlign.right,
+      "left": TextAlign.left,
+      "start": TextAlign.start,
+      "center": TextAlign.center,
+      "end": TextAlign.end,
+      "justify": TextAlign.justify,
+      "right": TextAlign.right,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextAlignVertical? parseTextAlignVertical(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextAlignVertical> map = {
-      'center': TextAlignVertical.center,
-      'bottom': TextAlignVertical.bottom,
-      'top': TextAlignVertical.top,
+      "center": TextAlignVertical.center,
+      "bottom": TextAlignVertical.bottom,
+      "top": TextAlignVertical.top,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextOverflow? parseTextOverflow(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextOverflow> map = {
-      'clip': TextOverflow.clip,
-      'ellipsis': TextOverflow.ellipsis,
-      'fade': TextOverflow.fade,
-      'visible': TextOverflow.visible,
+      "clip": TextOverflow.clip,
+      "ellipsis": TextOverflow.ellipsis,
+      "fade": TextOverflow.fade,
+      "visible": TextOverflow.visible,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextWidthBasis? parseTextWidthBasis(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextWidthBasis> map = {
-      'longestLine': TextWidthBasis.longestLine,
-      'parent': TextWidthBasis.parent,
+      "longestLine": TextWidthBasis.longestLine,
+      "parent": TextWidthBasis.parent,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static WrapAlignment? parseWrapAlignment(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, WrapAlignment> map = {
-      'end': WrapAlignment.end,
-      'center': WrapAlignment.center,
-      'start': WrapAlignment.start,
-      'spaceAround': WrapAlignment.spaceAround,
-      'spaceBetween': WrapAlignment.spaceBetween,
-      'spaceEvenly': WrapAlignment.spaceEvenly,
+      "end": WrapAlignment.end,
+      "center": WrapAlignment.center,
+      "start": WrapAlignment.start,
+      "spaceAround": WrapAlignment.spaceAround,
+      "spaceBetween": WrapAlignment.spaceBetween,
+      "spaceEvenly": WrapAlignment.spaceEvenly,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static WrapCrossAlignment? parseWrapCrossAlignment(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, WrapCrossAlignment> map = {
-      'end': WrapCrossAlignment.end,
-      'center': WrapCrossAlignment.center,
-      'start': WrapCrossAlignment.start,
+      "end": WrapCrossAlignment.end,
+      "center": WrapCrossAlignment.center,
+      "start": WrapCrossAlignment.start,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static VerticalDirection? parseVerticalDirection(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, VerticalDirection> map = {
-      'down': VerticalDirection.down,
-      'up': VerticalDirection.up,
+      "down": VerticalDirection.down,
+      "up": VerticalDirection.up,
     };
     return map.containsKey(value) ? map[value] : null;
   }
 
   static TextCapitalization? parseTextCapitalization(String? value) {
-    if (value == null || value.trim() == '') {
+    if (value == null || value.trim() == "") {
       return null;
     }
     Map<String, TextCapitalization> map = {
-      'none': TextCapitalization.none,
-      'characters': TextCapitalization.characters,
-      'sentences': TextCapitalization.sentences,
-      'words': TextCapitalization.words,
+      "none": TextCapitalization.none,
+      "characters": TextCapitalization.characters,
+      "sentences": TextCapitalization.sentences,
+      "words": TextCapitalization.words,
     };
     return map.containsKey(value) ? map[value] : null;
   }

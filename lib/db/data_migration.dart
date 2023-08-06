@@ -34,7 +34,7 @@ class DataMigration {
 
   Future<void> _sqlExecute(List<String> files) async {
     for (String file in files) {
-      if (file.trim() == '') {
+      if (file.trim() == "") {
         continue;
       }
       if (kDebugMode) {

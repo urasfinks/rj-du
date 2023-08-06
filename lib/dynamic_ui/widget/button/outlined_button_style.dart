@@ -13,36 +13,36 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
     //------------------------
     return OutlinedButton.styleFrom(
       minimumSize: TypeParser.parseSize(
-          getValue(parsedJson, 'minimumSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
       maximumSize: TypeParser.parseSize(
-          getValue(parsedJson, 'maximumSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
       fixedSize: TypeParser.parseSize(
-          getValue(parsedJson, 'fixedSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
       textStyle: abstractWidget.render(
-          parsedJson, 'textStyle', null, dynamicUIBuilderContext),
+          parsedJson, "textStyle", null, dynamicUIBuilderContext),
       side: abstractWidget.render(
-          parsedJson, 'side', null, dynamicUIBuilderContext),
+          parsedJson, "side", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignmentDirectional(
-        getValue(parsedJson, 'alignment', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
       surfaceTintColor: TypeParser.parseColor(
-        getValue(parsedJson, 'surfaceTintColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "surfaceTintColor", null, dynamicUIBuilderContext),
       ),
       shadowColor: TypeParser.parseColor(
-        getValue(parsedJson, 'shadowColor', 'transparent', dynamicUIBuilderContext),
+        getValue(parsedJson, "shadowColor", "transparent", dynamicUIBuilderContext),
       ),
       foregroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'foregroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "foregroundColor", null, dynamicUIBuilderContext),
       ),
       elevation: TypeParser.parseDouble(
-        getValue(parsedJson, 'elevation', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       )!,
       backgroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'backgroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
       ),
       shape: const StadiumBorder(),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
       ),
     );
   }
@@ -52,40 +52,40 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
     //------------------
     return OutlinedButton.styleFrom(
       minimumSize: TypeParser.parseSize(
-          getValue(parsedJson, 'minimumSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
       maximumSize: TypeParser.parseSize(
-          getValue(parsedJson, 'maximumSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
       fixedSize: TypeParser.parseSize(
-          getValue(parsedJson, 'fixedSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
       textStyle: abstractWidget.render(
-          parsedJson, 'textStyle', null, dynamicUIBuilderContext),
+          parsedJson, "textStyle", null, dynamicUIBuilderContext),
       side: abstractWidget.render(
-          parsedJson, 'side', null, dynamicUIBuilderContext),
+          parsedJson, "side", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignmentDirectional(
-        getValue(parsedJson, 'alignment', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
       surfaceTintColor: TypeParser.parseColor(
-        getValue(parsedJson, 'surfaceTintColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "surfaceTintColor", null, dynamicUIBuilderContext),
       ),
       shadowColor: TypeParser.parseColor(
-        getValue(parsedJson, 'shadowColor', 'transparent', dynamicUIBuilderContext),
+        getValue(parsedJson, "shadowColor", "transparent", dynamicUIBuilderContext),
       ),
       foregroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'foregroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "foregroundColor", null, dynamicUIBuilderContext),
       ),
       elevation: TypeParser.parseDouble(
-        getValue(parsedJson, 'elevation', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       )!,
       backgroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'backgroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: TypeParser.parseBorderRadius(
-          getValue(parsedJson, 'borderRadius', 4, dynamicUIBuilderContext),
+          getValue(parsedJson, "borderRadius", 4, dynamicUIBuilderContext),
         )!,
       ),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
       ),
     );
   }
@@ -95,36 +95,36 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
     //------------------------
     return OutlinedButton.styleFrom(
       minimumSize: TypeParser.parseSize(
-          getValue(parsedJson, 'minimumSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
       maximumSize: TypeParser.parseSize(
-          getValue(parsedJson, 'maximumSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
       fixedSize: TypeParser.parseSize(
-          getValue(parsedJson, 'fixedSize', null, dynamicUIBuilderContext)),
+          getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
       textStyle: abstractWidget.render(
-          parsedJson, 'textStyle', null, dynamicUIBuilderContext),
+          parsedJson, "textStyle", null, dynamicUIBuilderContext),
       side: abstractWidget.render(
-          parsedJson, 'side', null, dynamicUIBuilderContext),
+          parsedJson, "side", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignmentDirectional(
-        getValue(parsedJson, 'alignment', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
       surfaceTintColor: TypeParser.parseColor(
-        getValue(parsedJson, 'surfaceTintColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "surfaceTintColor", null, dynamicUIBuilderContext),
       ),
       shadowColor: TypeParser.parseColor(
-        getValue(parsedJson, 'shadowColor', 'transparent', dynamicUIBuilderContext),
+        getValue(parsedJson, "shadowColor", "transparent", dynamicUIBuilderContext),
       ),
       foregroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'foregroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "foregroundColor", null, dynamicUIBuilderContext),
       ),
       elevation: TypeParser.parseDouble(
-        getValue(parsedJson, 'elevation', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       )!,
       backgroundColor: TypeParser.parseColor(
-        getValue(parsedJson, 'backgroundColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
       ),
       shape: const CircleBorder(),
       padding: TypeParser.parseEdgeInsets(
-        getValue(parsedJson, 'padding', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "padding", null, dynamicUIBuilderContext),
       ),
     );
   }
@@ -137,7 +137,7 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
         abstractWidget.click(parsedJson, dynamicUIBuilderContext);
       },
       child: abstractWidget.render(
-          parsedJson, 'child', null, dynamicUIBuilderContext),
+          parsedJson, "child", null, dynamicUIBuilderContext),
       style: resultButtonStyle,
     );
   }

@@ -8,14 +8,14 @@ class BoxDecorationProperty extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return BoxDecoration(
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
-      image: render(parsedJson, 'image', null, dynamicUIBuilderContext),
+      image: render(parsedJson, "image", null, dynamicUIBuilderContext),
       borderRadius: TypeParser.parseBorderRadius(
-        getValue(parsedJson, 'borderRadius', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "borderRadius", null, dynamicUIBuilderContext),
       ),
-      gradient: getValue(parsedJson, 'gradient', null, dynamicUIBuilderContext),
-      border: render(parsedJson, 'border', null, dynamicUIBuilderContext),
+      gradient: getValue(parsedJson, "gradient", null, dynamicUIBuilderContext),
+      border: render(parsedJson, "border", null, dynamicUIBuilderContext),
     );
   }
 }

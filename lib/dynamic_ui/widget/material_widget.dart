@@ -9,27 +9,27 @@ class MaterialWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Material(
       type: TypeParser.parseMaterialType(
-          getValue(parsedJson, 'type', 'canvas', dynamicUIBuilderContext)
+          getValue(parsedJson, "type", "canvas", dynamicUIBuilderContext)
       )!,
-      shape: render(parsedJson, 'shape', null, dynamicUIBuilderContext),
+      shape: render(parsedJson, "shape", null, dynamicUIBuilderContext),
       key: Util.getKey(),
       borderRadius: TypeParser.parseBorderRadius(
-        getValue(parsedJson, 'borderRadius', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "borderRadius", null, dynamicUIBuilderContext),
       ),
       clipBehavior: TypeParser.parseClip(
-        getValue(parsedJson, 'clipBehavior', 'none', dynamicUIBuilderContext),
+        getValue(parsedJson, "clipBehavior", "none", dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
       elevation: TypeParser.parseDouble(
-        getValue(parsedJson, 'elevation', 0, dynamicUIBuilderContext),
+        getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       )!,
       shadowColor: TypeParser.parseColor(
-        getValue(parsedJson, 'shadowColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "shadowColor", null, dynamicUIBuilderContext),
       ),
-      textStyle: render(parsedJson, 'textStyle', null, dynamicUIBuilderContext),
+      textStyle: render(parsedJson, "textStyle", null, dynamicUIBuilderContext),
     );
   }
 }

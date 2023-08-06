@@ -10,15 +10,15 @@ class FittedBoxWidget extends AbstractWidget {
     return FittedBox(
       key: Util.getKey(),
       fit: TypeParser.parseBoxFit(
-        getValue(parsedJson, 'fit', 'contain', dynamicUIBuilderContext),
+        getValue(parsedJson, "fit", "contain", dynamicUIBuilderContext),
       )!,
       alignment: TypeParser.parseAlignment(
-        getValue(parsedJson, 'alignment', 'center', dynamicUIBuilderContext),
+        getValue(parsedJson, "alignment", "center", dynamicUIBuilderContext),
       )!,
       clipBehavior: TypeParser.parseClip(
-        getValue(parsedJson, 'clipBehavior', 'none', dynamicUIBuilderContext),
+        getValue(parsedJson, "clipBehavior", "none", dynamicUIBuilderContext),
       )!,
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }

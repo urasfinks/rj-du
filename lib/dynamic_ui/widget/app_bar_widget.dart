@@ -13,8 +13,8 @@ class AppBarWidget extends AbstractWidget {
   Widget getOld(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return AppBar(
       key: Util.getKey(),
-      title: render(parsedJson, 'title', '', dynamicUIBuilderContext),
-      actions: renderList(parsedJson, 'actions', dynamicUIBuilderContext),
+      title: render(parsedJson, "title", "", dynamicUIBuilderContext),
+      actions: renderList(parsedJson, "actions", dynamicUIBuilderContext),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(4.0),
         child: Opacity(
@@ -39,8 +39,8 @@ class AppBarWidget extends AbstractWidget {
           child: Container(color: Colors.transparent,),
         ),
       ),
-      title: render(parsedJson, 'title', '', dynamicUIBuilderContext),
-      actions: renderList(parsedJson, 'actions', dynamicUIBuilderContext),
+      title: render(parsedJson, "title", "", dynamicUIBuilderContext),
+      actions: renderList(parsedJson, "actions", dynamicUIBuilderContext),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(4.0),
         child: Opacity(

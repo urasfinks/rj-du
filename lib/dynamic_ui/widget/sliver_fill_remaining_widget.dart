@@ -10,14 +10,14 @@ class SliverFillRemainingWidget extends AbstractWidget {
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     return SliverFillRemaining(
       hasScrollBody: TypeParser.parseBool(
-        getValue(parsedJson, 'hasScrollBody', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "hasScrollBody", false, dynamicUIBuilderContext),
       )!,
       fillOverscroll: TypeParser.parseBool(
-        getValue(parsedJson, 'fillOverscroll', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "fillOverscroll", true, dynamicUIBuilderContext),
       )!,
       child: render(
           parsedJson,
-          'child',
+          "child",
           DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
           dynamicUIBuilderContext),
     );

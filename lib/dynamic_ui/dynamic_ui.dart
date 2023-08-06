@@ -80,86 +80,86 @@ import 'widget/slidable_widget.dart';
 class DynamicUI {
   static Map<String, Function> ui = {
     //Button
-    'Button': ButtonWidget().get,
-    'ElevatedButtonIcon': ElevatedButtonIconWidget().get,
-    'InkWell': InkWellWidget().get,
-    'IconButton': IconButtonWidget().get, //Кнопка с иконкой
-    'FloatingActionButton': FloatingActionButtonWidget().get, //Кругляш на BottomNavigationBar
-    'RawMaterialButton': RawMaterialButtonWidget().get, //Кнопка без фона (можно обернуть в Material)
+    "Button": ButtonWidget().get,
+    "ElevatedButtonIcon": ElevatedButtonIconWidget().get,
+    "InkWell": InkWellWidget().get,
+    "IconButton": IconButtonWidget().get, //Кнопка с иконкой
+    "FloatingActionButton": FloatingActionButtonWidget().get, //Кругляш на BottomNavigationBar
+    "RawMaterialButton": RawMaterialButtonWidget().get, //Кнопка без фона (можно обернуть в Material)
 
     //Widget
     "MaterialApp": MaterialAppWidget().get,
     "Text": TextWidget().get,
     "Scaffold": ScaffoldWidget().get,
-    'AppBar': AppBarWidget().get,
-    'SliverAppBar': SliverAppBarWidget().get,
-    'SliverFillRemaining': SliverFillRemainingWidget().get,
-    'Scrollbar': ScrollbarWidget().get,
-    'CustomScrollView': CustomScrollViewWidget().get,
-    'ListView': ListViewWidget().get,
-    'Notify': NotifyWidget().get,
-    'Column': ColumnWidget().get,
-    'Row': RowWidget().get,
-    'SizedBox': SizedBoxWidget().get,
-    'SizedBoxAppBar': SizedBoxAppBarWidget().get,
-    'SizedBoxBottomNavigationBar': SizedBoxBottomNavigationBarWidget().get,
-    'Expanded': ExpandedWidget().get,
-    'Padding': PaddingWidget().get,
-    'Margin': MarginWidget().get,
-    'Container': ContainerWidget().get,
-    'Center': CenterWidget().get,
-    'CircleAvatar': CircleAvatarWidget().get,
-    'Icon': IconWidget().get,
-    'AssetImage': AssetImageWidget().get,
-    'Spacer': SpacerWidget().get,
-    'SelectableText': SelectableTextWidget().get,
-    'BottomNavigationBarItem': BottomNavigationBarItemWidget().get,
-    'CircularProgressIndicator': CircularProgressIndicatorWidget().get,
-    'PageView': PageViewWidget().get,
-    'Align': AlignWidget().get,
-    'FittedBox': FittedBoxWidget().get,
-    'Baseline': BaselineWidget().get,
-    'Stack': StackWidget().get,
-    'Positioned': PositionedWidget().get,
-    'Opacity': OpacityWidget().get,
-    'Wrap': WrapWidget().get,
-    'ClipRRect': ClipRRectWidget().get,
-    'LimitedBox': LimitedBoxWidget().get,
-    'OverflowBox': OverflowBoxWidget().get,
-    'Divider': DividerWidget().get,
-    'RotatedBox': RotatedBoxWidget().get,
-    'ImageNetwork': ImageNetworkWidget().get,
-    'ImageNetworkCached': ImageNetworkCachedWidget().get,
-    'Visibility': VisibilityWidget().get,
-    'Slidable': SlidableWidget().get,
-    'GridView': GridViewWidget().get,
-    'SegmentControl': SegmentControlWidget().get,
-    'Checkbox': CheckboxWidget().get,
-    'Ink': InkWidget().get,
-    'TextField': TextFieldWidget().get,
-    'GestureDetector': GestureDetectorWidget().get,
-    'Material': MaterialWidget().get,
-    'MaterialButton': MaterialButtonWidget().get,
-    'Template': TemplateWidget().get,
-    'State': StateWidget().get,
-    'SwipableStack': SwipableStackWidget().get,
-    'FlipCard': FlipCardWidget().get,
+    "AppBar": AppBarWidget().get,
+    "SliverAppBar": SliverAppBarWidget().get,
+    "SliverFillRemaining": SliverFillRemainingWidget().get,
+    "Scrollbar": ScrollbarWidget().get,
+    "CustomScrollView": CustomScrollViewWidget().get,
+    "ListView": ListViewWidget().get,
+    "Notify": NotifyWidget().get,
+    "Column": ColumnWidget().get,
+    "Row": RowWidget().get,
+    "SizedBox": SizedBoxWidget().get,
+    "SizedBoxAppBar": SizedBoxAppBarWidget().get,
+    "SizedBoxBottomNavigationBar": SizedBoxBottomNavigationBarWidget().get,
+    "Expanded": ExpandedWidget().get,
+    "Padding": PaddingWidget().get,
+    "Margin": MarginWidget().get,
+    "Container": ContainerWidget().get,
+    "Center": CenterWidget().get,
+    "CircleAvatar": CircleAvatarWidget().get,
+    "Icon": IconWidget().get,
+    "AssetImage": AssetImageWidget().get,
+    "Spacer": SpacerWidget().get,
+    "SelectableText": SelectableTextWidget().get,
+    "BottomNavigationBarItem": BottomNavigationBarItemWidget().get,
+    "CircularProgressIndicator": CircularProgressIndicatorWidget().get,
+    "PageView": PageViewWidget().get,
+    "Align": AlignWidget().get,
+    "FittedBox": FittedBoxWidget().get,
+    "Baseline": BaselineWidget().get,
+    "Stack": StackWidget().get,
+    "Positioned": PositionedWidget().get,
+    "Opacity": OpacityWidget().get,
+    "Wrap": WrapWidget().get,
+    "ClipRRect": ClipRRectWidget().get,
+    "LimitedBox": LimitedBoxWidget().get,
+    "OverflowBox": OverflowBoxWidget().get,
+    "Divider": DividerWidget().get,
+    "RotatedBox": RotatedBoxWidget().get,
+    "ImageNetwork": ImageNetworkWidget().get,
+    "ImageNetworkCached": ImageNetworkCachedWidget().get,
+    "Visibility": VisibilityWidget().get,
+    "Slidable": SlidableWidget().get,
+    "GridView": GridViewWidget().get,
+    "SegmentControl": SegmentControlWidget().get,
+    "Checkbox": CheckboxWidget().get,
+    "Ink": InkWidget().get,
+    "TextField": TextFieldWidget().get,
+    "GestureDetector": GestureDetectorWidget().get,
+    "Material": MaterialWidget().get,
+    "MaterialButton": MaterialButtonWidget().get,
+    "Template": TemplateWidget().get,
+    "State": StateWidget().get,
+    "SwipableStack": SwipableStackWidget().get,
+    "FlipCard": FlipCardWidget().get,
 
     //Property
-    'TextStyle': TextStyleProperty().get,
-    'DecorationImage': DecorationImageProperty().get,
-    'BoxDecoration': BoxDecorationProperty().get,
-    'LinearGradient': LinearGradientProperty().get,
-    'ButtonStyle': ButtonStyleProperty().get,
-    'RoundedRectangleBorder': RoundedRectangleBorderProperty().get,
-    'BorderSide': BorderSideProperty().get,
-    'OutlineInputBorder': OutlineInputBorderProperty().get,
-    'UnderlineInputBorder': UnderlineInputBorderProperty().get,
-    'InputDecoration': InputDecorationProperty().get,
-    'ImageNetworkProvider': ImageNetworkProviderProperty().get,
-    'ImageNetworkCachedProvider': ImageNetworkCachedProviderProperty().get,
-    'BoxConstraints': BoxConstraintsProperty().get,
-    'Border': BorderProperty().get,
+    "TextStyle": TextStyleProperty().get,
+    "DecorationImage": DecorationImageProperty().get,
+    "BoxDecoration": BoxDecorationProperty().get,
+    "LinearGradient": LinearGradientProperty().get,
+    "ButtonStyle": ButtonStyleProperty().get,
+    "RoundedRectangleBorder": RoundedRectangleBorderProperty().get,
+    "BorderSide": BorderSideProperty().get,
+    "OutlineInputBorder": OutlineInputBorderProperty().get,
+    "UnderlineInputBorder": UnderlineInputBorderProperty().get,
+    "InputDecoration": InputDecorationProperty().get,
+    "ImageNetworkProvider": ImageNetworkProviderProperty().get,
+    "ImageNetworkCachedProvider": ImageNetworkCachedProviderProperty().get,
+    "BoxConstraints": BoxConstraintsProperty().get,
+    "Border": BorderProperty().get,
   };
 
   static dynamic render(
@@ -178,24 +178,24 @@ class DynamicUI {
           Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
           mapLink["stateData"] = dynamicUIBuilderContext.dynamicPage.uuid;
         } else {
-          selector["link"] = {'stateData': dynamicUIBuilderContext.dynamicPage.uuid};
+          selector["link"] = {"stateData": dynamicUIBuilderContext.dynamicPage.uuid};
         }
         selector.remove("onStateDataUpdate");
       }
 
-      if (selector["flutterType"] != 'Notify' && selector.containsKey("link")) {
+      if (selector["flutterType"] != "Notify" && selector.containsKey("link")) {
         //Клонируем selector, что бы удалить блок link
         Map<String, dynamic> cloneTemplate = {};
         cloneTemplate.addAll(selector);
         cloneTemplate.remove("link");
         //То есть мы будем получать данные из DataSource по указанным uuid из link
         //Шаблон именно в этом случаи не будет получаться из DataSource, поэтому мы его поместим в значения по умолчанию в linkDefault
-        Map<String, dynamic> linkDefault = {'template': cloneTemplate};
+        Map<String, dynamic> linkDefault = {"template": cloneTemplate};
         if (selector.containsKey("linkDefault")) {
           linkDefault.addAll(selector["linkDefault"]);
         }
         return render(
-          {'flutterType': 'Notify', 'link': selector["link"], 'linkDefault': linkDefault},
+          {"flutterType": "Notify", "link": selector["link"], "linkDefault": linkDefault},
           null,
           defaultValue,
           dynamicUIBuilderContext,

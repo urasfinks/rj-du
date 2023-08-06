@@ -8,19 +8,19 @@ class BoxConstraintsProperty extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return BoxConstraints(
       maxHeight: TypeParser.parseDouble(
-            getValue(parsedJson, 'maxHeight', null, dynamicUIBuilderContext),
+            getValue(parsedJson, "maxHeight", null, dynamicUIBuilderContext),
           ) ??
           double.infinity,
       minHeight: TypeParser.parseDouble(
-            getValue(parsedJson, 'minHeight', null, dynamicUIBuilderContext),
+            getValue(parsedJson, "minHeight", null, dynamicUIBuilderContext),
           ) ??
           0,
       maxWidth: TypeParser.parseDouble(
-            getValue(parsedJson, 'maxWidth', null, dynamicUIBuilderContext),
+            getValue(parsedJson, "maxWidth", null, dynamicUIBuilderContext),
           ) ??
           double.infinity,
       minWidth: TypeParser.parseDouble(
-            getValue(parsedJson, 'minHeight', null, dynamicUIBuilderContext),
+            getValue(parsedJson, "minHeight", null, dynamicUIBuilderContext),
           ) ??
           0,
     );

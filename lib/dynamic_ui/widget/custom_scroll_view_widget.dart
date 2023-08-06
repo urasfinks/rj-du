@@ -23,10 +23,10 @@ class CustomScrollViewWidget extends AbstractWidget {
     List<Widget> list = [];
 
     bool includeTopOffset = TypeParser.parseBool(
-      getValue(parsedJson, 'includeTopOffset', true, dynamicUIBuilderContext),
+      getValue(parsedJson, "includeTopOffset", true, dynamicUIBuilderContext),
     )!;
     double extraTopOffset = TypeParser.parseDouble(
-      getValue(parsedJson, 'extraTopOffset', 0, dynamicUIBuilderContext),
+      getValue(parsedJson, "extraTopOffset", 0, dynamicUIBuilderContext),
     )!;
 
     if (includeTopOffset) {
@@ -37,7 +37,7 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     if (parsedJson.containsKey("appBar")) {
-      sliverList.add(render(parsedJson, 'appBar', null, dynamicUIBuilderContext));
+      sliverList.add(render(parsedJson, "appBar", null, dynamicUIBuilderContext));
     } else {
       //Выправляет пространство под extendBodyBehindAppBar: true
       sliverList.add(const SliverAppBar(
@@ -46,7 +46,7 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     bool pullToRefresh = TypeParser.parseBool(
-      getValue(parsedJson, 'pullToRefresh', true, dynamicUIBuilderContext),
+      getValue(parsedJson, "pullToRefresh", true, dynamicUIBuilderContext),
     )!;
     if (pullToRefresh) {
       sliverList.add(
@@ -109,10 +109,10 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     bool includeBottomOffset = TypeParser.parseBool(
-      getValue(parsedJson, 'includeBottomOffset', true, dynamicUIBuilderContext),
+      getValue(parsedJson, "includeBottomOffset", true, dynamicUIBuilderContext),
     )!;
     double extraBottomOffset = TypeParser.parseDouble(
-      getValue(parsedJson, 'extraBottomOffset', 0, dynamicUIBuilderContext),
+      getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
     )!;
     if (includeBottomOffset) {
       list.add(SizedBox(
@@ -122,7 +122,7 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     if (parsedJson.containsKey("startFill")) {
       // SliverFillRemaining
-      sliverList.add(render(parsedJson, 'startFill', null, dynamicUIBuilderContext));
+      sliverList.add(render(parsedJson, "startFill", null, dynamicUIBuilderContext));
     }
 
     if (list.isNotEmpty) {
@@ -131,28 +131,28 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     if (parsedJson.containsKey("endFill")) {
       //SliverFillRemaining
-      sliverList.add(render(parsedJson, 'endFill', null, dynamicUIBuilderContext));
+      sliverList.add(render(parsedJson, "endFill", null, dynamicUIBuilderContext));
     }
 
     return CustomScrollView(
       physics: Util.getPhysics(),
       key: Util.getKey(),
       primary: TypeParser.parseBool(
-        getValue(parsedJson, 'primary', true, dynamicUIBuilderContext),
+        getValue(parsedJson, "primary", true, dynamicUIBuilderContext),
       ),
       reverse: TypeParser.parseBool(
-        getValue(parsedJson, 'reverse', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
       )!,
       scrollDirection: TypeParser.parseAxis(
-        getValue(parsedJson, 'scrollDirection', 'vertical', dynamicUIBuilderContext)!,
+        getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
       )!,
       //False по умолчанию, потому что высота самого ScrollView будет в размер всех блоков
       //Когда блоков не так много при скроле вниз будет скрывать содержимое не доходя до bottomTab
       shrinkWrap: TypeParser.parseBool(
-        getValue(parsedJson, 'shrinkWrap', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "shrinkWrap", false, dynamicUIBuilderContext),
       )!,
       cacheExtent: TypeParser.parseDouble(
-        getValue(parsedJson, 'radius', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "radius", null, dynamicUIBuilderContext),
       ),
       slivers: sliverList,
     );
@@ -180,26 +180,26 @@ class CustomScrollViewWidget extends AbstractWidget {
 
   Widget getSliverGrid(
       List<Widget> defList, Map<String, dynamic> parsedJsonMutable, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String type = getValue(parsedJsonMutable, 'gridType', 'count', dynamicUIBuilderContext);
+    String type = getValue(parsedJsonMutable, "gridType", "count", dynamicUIBuilderContext);
     int crossAxisCount = TypeParser.parseInt(
-      getValue(parsedJsonMutable, 'crossAxisCount', 1, dynamicUIBuilderContext),
+      getValue(parsedJsonMutable, "crossAxisCount", 1, dynamicUIBuilderContext),
     )!;
     double mainAxisSpacing = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, 'mainAxisSpacing', 0.0, dynamicUIBuilderContext),
+      getValue(parsedJsonMutable, "mainAxisSpacing", 0.0, dynamicUIBuilderContext),
     )!;
     double crossAxisSpacing = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, 'crossAxisSpacing', 0.0, dynamicUIBuilderContext),
+      getValue(parsedJsonMutable, "crossAxisSpacing", 0.0, dynamicUIBuilderContext),
     )!;
     double childAspectRatio = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, 'childAspectRatio', 1.0, dynamicUIBuilderContext),
+      getValue(parsedJsonMutable, "childAspectRatio", 1.0, dynamicUIBuilderContext),
     )!;
 
     double maxCrossAxisExtent = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, 'maxCrossAxisExtent', 1.0, dynamicUIBuilderContext),
+      getValue(parsedJsonMutable, "maxCrossAxisExtent", 1.0, dynamicUIBuilderContext),
     )!;
 
     EdgeInsets? padding = TypeParser.parseEdgeInsets(
-      getValue(parsedJsonMutable, 'padding', null, dynamicUIBuilderContext),
+      getValue(parsedJsonMutable, "padding", null, dynamicUIBuilderContext),
     );
 
     final List<Widget> list = [];

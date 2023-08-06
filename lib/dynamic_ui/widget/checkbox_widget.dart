@@ -7,9 +7,9 @@ import '../../util.dart';
 class CheckboxWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String key = getValue(parsedJson, 'name', '-', dynamicUIBuilderContext);
+    String key = getValue(parsedJson, "name", "-", dynamicUIBuilderContext);
     bool value = TypeParser.parseBool(
-      getValue(parsedJson, 'value', false, dynamicUIBuilderContext),
+      getValue(parsedJson, "value", false, dynamicUIBuilderContext),
     )!;
     dynamicUIBuilderContext.dynamicPage.setStateData(key, value);
     return Checkbox(
@@ -18,31 +18,31 @@ class CheckboxWidget extends AbstractWidget {
         (states) => BorderSide(
           width: 2.0,
           color: TypeParser.parseColor(
-              value == false ? getValue(parsedJson, 'borderColor', 'grey', dynamicUIBuilderContext) : 'transparent')!,
+              value == false ? getValue(parsedJson, "borderColor", "grey", dynamicUIBuilderContext) : "transparent")!,
         ),
       ),
       value: TypeParser.parseBool(
-        getValue(parsedJson, 'value', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "value", false, dynamicUIBuilderContext),
       ),
       tristate: TypeParser.parseBool(
-        getValue(parsedJson, 'tristate', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "tristate", false, dynamicUIBuilderContext),
       )!,
       activeColor: TypeParser.parseColor(
-        getValue(parsedJson, 'activeColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "activeColor", null, dynamicUIBuilderContext),
       ),
       focusColor: TypeParser.parseColor(
-        getValue(parsedJson, 'focusColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "focusColor", null, dynamicUIBuilderContext),
       ),
       hoverColor: TypeParser.parseColor(
-        getValue(parsedJson, 'hoverColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "hoverColor", null, dynamicUIBuilderContext),
       ),
       checkColor: TypeParser.parseColor(
-        getValue(parsedJson, 'checkColor', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "checkColor", null, dynamicUIBuilderContext),
       ),
       autofocus: TypeParser.parseBool(
-        getValue(parsedJson, 'autofocus', false, dynamicUIBuilderContext),
+        getValue(parsedJson, "autofocus", false, dynamicUIBuilderContext),
       )!,
-      splashRadius: TypeParser.parseDouble(getValue(parsedJson, 'splashRadius', null, dynamicUIBuilderContext)),
+      splashRadius: TypeParser.parseDouble(getValue(parsedJson, "splashRadius", null, dynamicUIBuilderContext)),
       onChanged: (bool? value) {
         dynamicUIBuilderContext.dynamicPage.setStateData(key, value);
         click(parsedJson, dynamicUIBuilderContext, "onChanged");

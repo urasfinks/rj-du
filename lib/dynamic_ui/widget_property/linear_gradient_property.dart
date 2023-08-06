@@ -8,16 +8,16 @@ class LinearGradientProperty extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return LinearGradient(
       begin: TypeParser.parseAlignment(
-        getValue(parsedJson, 'begin', 'centerLeft', dynamicUIBuilderContext),
+        getValue(parsedJson, "begin", "centerLeft", dynamicUIBuilderContext),
       )!,
       end: TypeParser.parseAlignment(
-        getValue(parsedJson, 'end', 'centerRight', dynamicUIBuilderContext),
+        getValue(parsedJson, "end", "centerRight", dynamicUIBuilderContext),
       )!,
       stops: TypeParser.parseListDouble(
-        getValue(parsedJson, 'stops', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "stops", null, dynamicUIBuilderContext),
       ),
       colors: TypeParser.parseListColor(
-        getValue(parsedJson, 'colors', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "colors", null, dynamicUIBuilderContext),
       ),
     );
   }

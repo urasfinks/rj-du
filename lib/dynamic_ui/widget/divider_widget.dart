@@ -10,19 +10,19 @@ class DividerWidget extends AbstractWidget {
     return Divider(
       key: Util.getKey(),
       height: TypeParser.parseDouble(
-        getValue(parsedJson, 'height', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
       thickness: TypeParser.parseDouble(
-        getValue(parsedJson, 'thickness', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "thickness", null, dynamicUIBuilderContext),
       ),
       endIndent: TypeParser.parseDouble(
-        getValue(parsedJson, 'endIndent', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "endIndent", null, dynamicUIBuilderContext),
       ),
       indent: TypeParser.parseDouble(
-        getValue(parsedJson, 'indent', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "indent", null, dynamicUIBuilderContext),
       ),
       color: TypeParser.parseColor(
-        getValue(parsedJson, 'color', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
     );
   }

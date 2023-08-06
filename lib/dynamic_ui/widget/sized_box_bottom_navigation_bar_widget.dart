@@ -9,17 +9,17 @@ class SizedBoxBottomNavigationBarWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     double extraBottomOffset = TypeParser.parseDouble(
-      getValue(parsedJson, 'extraBottomOffset', 0, dynamicUIBuilderContext),
+      getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
     )!;
     return SizedBox(
       key: Util.getKey(),
       width: TypeParser.parseDouble(
-        getValue(parsedJson, 'width', null, dynamicUIBuilderContext),
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
       height: TypeParser.parseDouble(
         GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
       ),
-      child: render(parsedJson, 'child', null, dynamicUIBuilderContext),
+      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
     );
   }
 }
