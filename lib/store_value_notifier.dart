@@ -16,9 +16,9 @@ class StoreValueNotifier {
   bool updateValueNotifier(String uuid, Map<String, dynamic> data) {
     bool isNotify = false;
     for (MapEntry<String, ValueNotifier<SubscriberObject>> item in mapValueNotifier.entries) {
-      SubscriberObject notifierObject = item.value.value;
-      if (notifierObject.link.values.toList().contains(uuid)) {
-        notifierObject.set(uuid, data);
+      SubscriberObject subscriberObject = item.value.value;
+      if (subscriberObject.link.values.toList().contains(uuid)) {
+        subscriberObject.set(uuid, data);
         item.value.notifyListeners();
         isNotify = true;
       }
@@ -35,12 +35,12 @@ class StoreValueNotifier {
       valueListenable: getValueNotifier(link),
       builder: (BuildContext context, SubscriberObject value, Widget? child) {
         if (value.data.isNotEmpty) {
-          List<String> upd = [];
+          List<String> updKeys = [];
           for (MapEntry<String, dynamic> item in value.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
-            upd.add(item.key);
+            updKeys.add(item.key);
           }
-          dynamicUIBuilderContext.contextUpdate(upd);
+          dynamicUIBuilderContext.contextUpdate(updKeys);
         }
         dynamic resultWidget = builder(context, child);
         if (resultWidget == null || resultWidget.runtimeType.toString().contains('Map<String,')) {

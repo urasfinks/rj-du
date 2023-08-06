@@ -156,8 +156,8 @@ abstract class AbstractWidget {
         } else {
           try {
             settings = json.decode(tmp) as Map<String, dynamic>?;
-          } catch (e) {
-            print("clickStatic exception: $e");
+          } catch (e, stacktrace) {
+            print("clickStatic exception: $e $stacktrace");
           }
         }
         if (settings != null) {
