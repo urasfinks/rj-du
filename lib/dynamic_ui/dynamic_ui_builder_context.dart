@@ -1,3 +1,4 @@
+import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/util.dart';
 
 import '../dynamic_page.dart';
@@ -13,8 +14,10 @@ class DynamicUIBuilderContext {
   List<String> listener = [];
 
   void addListener(String uuid) {
-    if (!listener.contains(uuid)) {
-      listener.add(uuid);
+    if (GlobalSettings().debug) {
+      if (!listener.contains(uuid)) {
+        listener.add(uuid);
+      }
     }
   }
 
