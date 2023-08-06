@@ -194,16 +194,19 @@ class DynamicInvoke {
     dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
     DataSource().get(uuid, (uuid, data) {
       if (data != null && data.containsKey(DataType.js.name)) {
+        bool pretty = true;
         String? result = _eval(
-            uuid,
-            dynamicUIBuilderContext.dynamicPage.uuid,
-            data[DataType.js.name],
-            json.encode(args),
-            includeContext ? json.encode(dynamicUIBuilderContext.data) : "",
-            includeContainer ? json.encode(dynamicUIBuilderContext.dynamicPage.getContainerData()) : "",
-            includeStateData ? json.encode(dynamicUIBuilderContext.dynamicPage.stateData.value) : "",
-            includePageArgument ? json.encode(dynamicUIBuilderContext.dynamicPage.arguments) : "",
-            NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage);
+          uuid,
+          dynamicUIBuilderContext.dynamicPage.uuid,
+          data[DataType.js.name],
+          Util.jsonEncode(args, pretty),
+          includeContext ? Util.jsonEncode(dynamicUIBuilderContext.data, pretty) : "",
+          includeContainer ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.getContainerData(), pretty) : "",
+          includeStateData ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.stateData.value, pretty) : "",
+          includePageArgument ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.arguments, pretty) : "",
+          NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage,
+          dynamicUIBuilderContext,
+        );
         if (result != null) {
           if (kDebugMode) {
             //print("DynamicInvoke.eval() => $result");
@@ -218,7 +221,7 @@ class DynamicInvoke {
   }
 
   String? _eval(String scriptUuid, String pageUuid, String js, String args, String context, String container,
-      String state, String pageArgs, bool pageActive) {
+      String state, String pageArgs, bool pageActive, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
     }
@@ -234,25 +237,37 @@ class DynamicInvoke {
     if (pageArgs.isNotEmpty) {
       pageArgs = "bridge.pageArgs = $pageArgs;";
     }
-    String jsCode = """
-      try {
+    String jsInit = """
         bridge.clearAll();
         bridge.pageUuid = '$pageUuid';
         bridge.unique = '${Storage().get("unique", "")}';
         bridge.scriptUuid = '$scriptUuid';
         bridge.orientation = '${GlobalSettings().orientation}';
         bridge.pageActive = ${pageActive ? "true" : "false"};
-        $args
-        $context
-        $container
-        $state
-        $pageArgs
+//--------------------------------------------------------
+$args
+//--------------------------------------------------------
+$context
+//--------------------------------------------------------
+$container
+//--------------------------------------------------------
+$state
+//--------------------------------------------------------
+$pageArgs
+//--------------------------------------------------------
+
+    """;
+
+    String tryBlock = """
+      try {
+        $jsInit
         $js
       } catch(e) {
         bridge.log('Exception evaluate: ' + e);
       }
     """;
-    //print("\n\nJS CODE BLOCK======================\n$jsCode\n===================FINISH BLOCK\n\n");
-    return javascriptRuntime!.evaluate(jsCode).stringResult;
+/*${dynamicUIBuilderContext.toString()}*/
+    //print("\n\nJS CODE BLOCK======================\n$jsInit\n===================FINISH BLOCK\n\n");
+    return javascriptRuntime!.evaluate(tryBlock).stringResult;
   }
 }

@@ -41,6 +41,10 @@ class Util {
     developer.log(mes.toString());
   }
 
+  static String jsonEncode(dynamic object, [bool pretty = false]) {
+    return pretty ? jsonPretty(object) : json.encode(object);
+  }
+
   static String jsonPretty(dynamic object) {
     const JsonEncoder encoder = JsonEncoder.withIndent("  ");
     return encoder.convert(object);

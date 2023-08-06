@@ -36,7 +36,8 @@ class DynamicPage extends StatefulWidget {
     arguments = Util.getMutableMap(parseJson);
     Map<String, dynamic> stateDataValue = {};
     stateData = Data(uuid, stateDataValue, DataType.virtual, null);
-    dynamicUIBuilderContext = DynamicUIBuilderContext(this);
+    dynamicUIBuilderContext = DynamicUIBuilderContext(this, "root");
+    dynamicUIBuilderContext.isRoot = true;
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
   }
 
@@ -73,14 +74,15 @@ class DynamicPage extends StatefulWidget {
       //print("DynamicPage.onEvent($key); args: $args");
     }
     if (arguments.containsKey(key)) {
-      var event = arguments[key] as Map<String, dynamic>;
+      dynamic copyArgs = Util.getMutableMap(arguments);
+      dynamic event = copyArgs[key] as Map<String, dynamic>;
       if (event.containsKey("args")) {
         Map<String, dynamic> eventArgs = event["args"];
         Util.merge(eventArgs, args);
       } else {
         event["args"] = args;
       }
-      AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, key);
+      AbstractWidget.clickStatic(copyArgs, dynamicUIBuilderContext, key);
     }
   }
 
@@ -163,9 +165,9 @@ class DynamicPage extends StatefulWidget {
 
   void setContainer(String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     container[key] = dynamicUIBuilderContext;
-    if (key == "root") {
+    /*if (key == "root") {
       dynamicUIBuilderContext.isRoot = true;
-    }
+    }*/
   }
 
   Map<String, dynamic> getContainerData() {

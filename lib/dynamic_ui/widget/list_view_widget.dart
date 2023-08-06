@@ -36,8 +36,8 @@ class ListViewWidget extends AbstractWidget {
         )!,
         itemBuilder: (BuildContext context, int index) {
           DynamicUIBuilderContext newContext = children[index]["context"] != null
-              ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"])
-              : dynamicUIBuilderContext.clone();
+              ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"], children[index]["key"] ?? "ListView")
+              : dynamicUIBuilderContext.clone("ListView");
           newContext.index = index;
 
           return render(children[index], null, null, newContext);
@@ -69,8 +69,8 @@ class ListViewWidget extends AbstractWidget {
         )!,
         itemBuilder: (BuildContext context, int index) {
           DynamicUIBuilderContext newContext = children[index]["context"] != null
-              ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"])
-              : dynamicUIBuilderContext.clone();
+              ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"], children[index]["key"] ?? "ListView")
+              : dynamicUIBuilderContext.clone("ListView");
           newContext.index = index;
           return render(children[index], null, null, newContext);
         },

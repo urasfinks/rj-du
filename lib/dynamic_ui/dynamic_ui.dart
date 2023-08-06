@@ -176,9 +176,9 @@ class DynamicUI {
       if (selector.containsKey("onStateDataUpdate")) {
         if (selector.containsKey("link")) {
           Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
-          mapLink["stateData"] = dynamicUIBuilderContext.dynamicPage.uuid;
+          mapLink["stateData"] = dynamicUIBuilderContext.dynamicPage.stateData.uuid;
         } else {
-          selector["link"] = {"stateData": dynamicUIBuilderContext.dynamicPage.uuid};
+          selector["link"] = {"stateData": dynamicUIBuilderContext.dynamicPage.stateData.uuid};
         }
         selector.remove("onStateDataUpdate");
       }
@@ -188,14 +188,20 @@ class DynamicUI {
         Map<String, dynamic> cloneTemplate = {};
         cloneTemplate.addAll(selector);
         cloneTemplate.remove("link");
-        //То есть мы будем получать данные из DataSource по указанным uuid из link
-        //Шаблон именно в этом случаи не будет получаться из DataSource, поэтому мы его поместим в значения по умолчанию в linkDefault
+        // То есть мы будем получать данные из DataSource по указанным uuid из link
+        // По умолчанию в link мы подкладываем виртуальный Data состояний страницы
+        // Шаблон именно в этом случаи не будет получаться из DataSource, поэтому мы его поместим в значения по умолчанию в linkDefault
         Map<String, dynamic> linkDefault = {"template": cloneTemplate};
         if (selector.containsKey("linkDefault")) {
           linkDefault.addAll(selector["linkDefault"]);
         }
         return render(
-          {"flutterType": "Notify", "link": selector["link"], "linkDefault": linkDefault},
+          {
+            "flutterType": "Notify",
+            "link": selector["link"],
+            "linkDefault": linkDefault,
+            "linkContainer": selector["linkContainer"],
+          },
           null,
           defaultValue,
           dynamicUIBuilderContext,
@@ -222,10 +228,9 @@ class DynamicUI {
       } else {
         for (int i = 0; i < list.length; i++) {
           DynamicUIBuilderContext newContext = parsedJson[key][i]["context"] != null
-              ? dynamicUIBuilderContext.cloneWithNewData(parsedJson[key][i]["context"])
-              : dynamicUIBuilderContext.clone();
+              ? dynamicUIBuilderContext.cloneWithNewData(parsedJson[key][i]["context"], parsedJson[key][i]["key"] ?? key)
+              : dynamicUIBuilderContext.clone(key);
           newContext.index = i;
-          newContext.key = key;
           resultList.add(render(list[i], null, const SizedBox(), newContext));
         }
       }

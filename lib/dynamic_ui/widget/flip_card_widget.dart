@@ -25,7 +25,7 @@ class FlipCardWidget extends AbstractWidget {
       },
     );
     Data stateData = Data(parsedJson["key"], stateControl, DataType.virtual, null);
-    DynamicUIBuilderContext newContext = dynamicUIBuilderContext.cloneWithNewData({"state": stateControl});
+    DynamicUIBuilderContext newContext = dynamicUIBuilderContext.cloneWithNewData({"state": stateControl}, parsedJson["key"] ?? "FlipCard");
     return newContext.dynamicPage.storeValueNotifier.getWidget(
       {"state": parsedJson["key"]},
       newContext,

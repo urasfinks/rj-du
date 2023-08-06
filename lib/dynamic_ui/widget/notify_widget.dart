@@ -8,12 +8,16 @@ class NotifyWidget extends AbstractWidget {
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> def =
         parsedJson["linkDefault"] == null ? {} : parsedJson["linkDefault"] as Map<String, dynamic>;
-    DynamicUIBuilderContext newContext = dynamicUIBuilderContext.cloneWithNewData(def);
+    DynamicUIBuilderContext newContext =
+        dynamicUIBuilderContext.cloneWithNewData(def, parsedJson["linkContainer"] ?? "Notify");
 
-    if (parsedJson.containsKey("linkContainer")) {
+    if (parsedJson.containsKey("linkContainer") && parsedJson["linkContainer"] != null) {
       dynamicUIBuilderContext.dynamicPage.setContainer(parsedJson["linkContainer"], newContext);
     }
-
+    Map<String, dynamic> link = parsedJson["link"];
+    for (String uuidLink in link.keys) {
+      newContext.addListener(uuidLink);
+    }
     return newContext.dynamicPage.storeValueNotifier.getWidget(
       parsedJson["link"],
       newContext,

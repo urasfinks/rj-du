@@ -1,3 +1,5 @@
+import 'package:rjdu/util.dart';
+
 import '../dynamic_page.dart';
 
 class DynamicUIBuilderContext {
@@ -7,6 +9,14 @@ class DynamicUIBuilderContext {
   Map<String, dynamic> data = {};
   Map<String, dynamic> parentTemplate = {}; //Времянка, только для шаблонизации (это очень не стабильная штука)
   bool isRoot = false; //Корневой контекст данных
+  List<DynamicUIBuilderContext> children = [];
+  List<String> listener = [];
+
+  void addListener(String uuid) {
+    if (!listener.contains(uuid)) {
+      listener.add(uuid);
+    }
+  }
 
   void contextUpdate(List<String> updKeys) {
     if (isRoot) {
@@ -17,23 +27,38 @@ class DynamicUIBuilderContext {
     // По факту это отдельная структура от context
     // Поэтому для неё будем вызывать отдельный обработчик
     // Был кейс, когда я ждал данные из БД и в момент их получения устанавливал новое состоние в итоге получалась рекурсия
-    dynamicPage
-        .onEvent(updKeys.contains("stateData") ? "stateUpdate" : "contextUpdate", {"data": data, "upd": updKeys});
+    dynamicPage.onEvent(updKeys.contains("stateData") ? "stateUpdate" : "contextUpdate", {"updKeys": updKeys});
   }
 
-  DynamicUIBuilderContext(this.dynamicPage);
+  DynamicUIBuilderContext(this.dynamicPage, this.key);
 
   static String template(List<String> args) {
     return "";
   }
 
-  DynamicUIBuilderContext clone() {
-    return DynamicUIBuilderContext(dynamicPage);
+  DynamicUIBuilderContext clone(String key) {
+    DynamicUIBuilderContext newDynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage, key);
+    children.add(newDynamicUIBuilderContext);
+    return newDynamicUIBuilderContext;
   }
 
-  DynamicUIBuilderContext cloneWithNewData(Map<String, dynamic> newData) {
-    DynamicUIBuilderContext dynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage);
-    dynamicUIBuilderContext.data = newData;
-    return dynamicUIBuilderContext;
+  DynamicUIBuilderContext cloneWithNewData(Map<String, dynamic> newData, String key) {
+    DynamicUIBuilderContext newDynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage, key);
+    newDynamicUIBuilderContext.data = newData;
+    children.add(newDynamicUIBuilderContext);
+    return newDynamicUIBuilderContext;
+  }
+
+  dynamic gets() {
+    List ch = [];
+    for (DynamicUIBuilderContext ctx in children) {
+      ch.add(ctx.gets());
+    }
+    return {"root": isRoot, "key": key, "listener": listener, "data": data, "children": ch};
+  }
+
+  @override
+  String toString() {
+    return Util.jsonEncode(gets(), true);
   }
 }

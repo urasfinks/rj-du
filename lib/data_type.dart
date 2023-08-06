@@ -1,5 +1,6 @@
 enum DataType {
   //JSON data
+  json,
   template,
   systemData,
   userDataRSync, //Remote Synchronization
