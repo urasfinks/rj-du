@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:rjdu/dynamic_invoke/handler/abstract_handler.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
+import 'package:rjdu/util.dart';
 
 import '../../dynamic_ui/widget/abstract_widget.dart';
 import '../../http_client.dart';
@@ -11,8 +12,9 @@ import '../../global_settings.dart';
 
 class HttpHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    args = Util.getMutableMap(args);
+
     args["headers"] = HttpClient.upgradeHeadersAuthorization(args["headers"]);
     if (!args.containsKey("host")) {
       args["host"] = GlobalSettings().host;
@@ -23,11 +25,9 @@ class HttpHandler extends AbstractHandler {
 
     Future<Response> response;
     if (args["method"] == "POST") {
-      response = HttpClient.post(
-          "${args["host"]}${args["uri"]}", args["body"], args["headers"]);
+      response = HttpClient.post("${args["host"]}${args["uri"]}", args["body"], args["headers"]);
     } else {
-       response =
-          HttpClient.get("${args["host"]}${args["uri"]}", args["headers"]);
+      response = HttpClient.get("${args["host"]}${args["uri"]}", args["headers"]);
     }
     response.then((value) {
       if (args.containsKey("onResponse")) {
@@ -37,11 +37,23 @@ class HttpHandler extends AbstractHandler {
         httpResponseObject["statusCode"] = value.statusCode;
 
         if (httpResponseObject["status"] != true) {
-          httpResponseObject["error"] = value.body;
+          httpResponseObject["error"] = "Сервер вернул ошибку ${value.statusCode}";
         }
 
         try {
-          httpResponseObject["data"] = json.decode(value.body);
+          Map<String, dynamic> data = json.decode(value.body);
+          httpResponseObject["data"] = data;
+          if (data.containsKey("status") && data["status"] == false) {
+            httpResponseObject["status"] = false;
+            if (data.containsKey("description")) {
+              httpResponseObject["error"] = data["description"];
+            } else if (data.containsKey("exception")) {
+              httpResponseObject["error"] = (data["exception"][0] as String).substring(0, 100);
+              if (kDebugMode) {
+                print(data["exception"]);
+              }
+            }
+          }
         } catch (e) {
           httpResponseObject["status"] = false;
           httpResponseObject["error"] = e.toString();

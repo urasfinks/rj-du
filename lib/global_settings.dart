@@ -3,7 +3,7 @@ import 'package:rjdu/system_notify.dart';
 
 class GlobalSettings {
   bool debug = true;
-  String version = "v6";
+  String version = "v7";
   String host = "https://e-humidor.ru:8453";
   String ws = "https://e-humidor.ru:8453";
   double appBarHeight = 56.0;
