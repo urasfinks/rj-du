@@ -63,7 +63,7 @@ class StoreValueNotifier {
       ValueNotifier<SubscriberObject> valueNotifier = ValueNotifier<SubscriberObject>(subscriberObject);
       for (MapEntry<String, dynamic> item in link.entries) {
         DataSource().get(item.value, (uuid, data) {
-          if (data != null && data.isNotEmpty) {
+          if (data != null) { //&& data.isNotEmpty //убрал так как {} вызывает спорную ситуацию
             subscriberObject.set(item.value, data);
             valueNotifier.notifyListeners();
           }

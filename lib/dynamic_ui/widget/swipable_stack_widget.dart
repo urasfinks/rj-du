@@ -70,6 +70,10 @@ class SwipableStackWidget extends AbstractWidget {
       children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
     }
 
+    if (children.isEmpty) {
+      return const SizedBox();
+    }
+
     //print("SwipableStackWidget children: $children");
     Timer? timer;
     bool roll = TypeParser.parseBool(

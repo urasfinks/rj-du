@@ -30,7 +30,8 @@ class DynamicUIBuilderContext {
     // По факту это отдельная структура от context
     // Поэтому для неё будем вызывать отдельный обработчик
     // Был кейс, когда я ждал данные из БД и в момент их получения устанавливал новое состоние в итоге получалась рекурсия
-    dynamicPage.onEvent(updKeys.contains("stateData") ? "stateUpdate" : "contextUpdate", {"updKeys": updKeys});
+    dynamicPage
+        .onEvent(updKeys.contains("stateData") ? "onStateUpdate" : "onContextUpdate", {"key": key, "updKeys": updKeys});
   }
 
   DynamicUIBuilderContext(this.dynamicPage, this.key);

@@ -29,6 +29,7 @@ class DynamicPage extends StatefulWidget {
   final String uuid = const Uuid().v4();
   bool isRunConstructor = false;
   List<String> shadowUuidList = [];
+  List<String> listUpdateUuidToReloadDynamicPage = [];
   _DynamicPage? dynamicPageSate;
   bool isDispose = false;
 
@@ -216,6 +217,9 @@ class DynamicPage extends StatefulWidget {
       print("TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
       //DataSource().setData(stateData);
     }
+    if (listUpdateUuidToReloadDynamicPage.contains(uuid)) {
+      reloadWithoutSetState();
+    }
   }
 
   String templateByContainer(List<String> parseArguments) {
@@ -223,6 +227,12 @@ class DynamicPage extends StatefulWidget {
       String uuid = parseArguments[0];
       if (container.containsKey(uuid)) {
         return Template.stringSelector(container[uuid]!.data, parseArguments[1]);
+      }
+    }
+    if (parseArguments.length == 3) {
+      String uuid = parseArguments[0];
+      if (container.containsKey(uuid)) {
+        return Template.stringSelector(container[uuid]!.data, parseArguments[1], parseArguments[2]);
       }
     }
     return "DynamicPage.template() args: ${parseArguments.join(",")} container not exists";

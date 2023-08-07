@@ -4,7 +4,7 @@ import 'package:wakelock/wakelock.dart';
 
 import 'abstract_handler.dart';
 
-class WakeLock extends AbstractHandler {
+class WakeLockHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (TypeParser.parseBool(args["lock"]) ?? false) {
