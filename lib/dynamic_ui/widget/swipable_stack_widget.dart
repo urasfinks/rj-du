@@ -17,13 +17,20 @@ class SwipableStackWidget extends AbstractWidget {
       dynamicUIBuilderContext,
       {
         "index": 0,
+        "index1": 1,
         "swipedIndex": null,
         "swipedDirection": null,
         "overlayDirection": null,
         "overlayOpacity": 0,
+        "prc": 0,
+        "prc1": 0
       },
     );
-    //print("SwipableStack key: ${parsedJson["key"]}; state: $stateControl");
+
+    if (parsedJson.containsKey("finish") && stateControl.containsKey("finish") && stateControl["finish"]) {
+      return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
+    }
+
     Set<SwipeDirection> swipeDirection = {};
     if (parsedJson.containsKey("directions")) {
       List list = parsedJson["directions"];
@@ -62,19 +69,29 @@ class SwipableStackWidget extends AbstractWidget {
 
     final controller = SwipableStackController();
     controller.addListener(() {
-      stateControl["index"] = controller.currentIndex;
+      int index = min(controller.currentIndex, stateControl["size"] - 1);
+      stateControl["index"] = index;
+      int index1 = min((controller.currentIndex + 1), stateControl["size"]);
+      stateControl["index1"] = index1;
+
+      stateControl["prc"] = (controller.currentIndex * 100 / stateControl["size"]).ceil();
+      stateControl["prc1"] = controller.currentIndex * 1 / stateControl["size"];
+
+      if (parsedJson["setState"] ?? parsedJson["setStateOnChangeIndex"] ?? false == true) {
+        dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+      }
     });
 
     List children = [];
     if (parsedJson.containsKey("children")) {
       children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
     }
-
     if (children.isEmpty) {
       return const SizedBox();
     }
 
-    //print("SwipableStackWidget children: $children");
+    stateControl["size"] = children.length;
+
     Timer? timer;
     bool roll = TypeParser.parseBool(
       getValue(parsedJson, "roll", true, dynamicUIBuilderContext),
@@ -113,8 +130,16 @@ class SwipableStackWidget extends AbstractWidget {
             timer = Timer(Duration(seconds: rollDelay), () {
               controller.currentIndex = rollIndex;
             });
+          } else {
+            stateControl["finish"] = true;
+            dynamicUIBuilderContext.dynamicPage.dynamicPageSate?.setState(() {});
+            //print("FINISH ${controller.currentIndex}");
           }
           click(parsedJson, dynamicUIBuilderContext, "onFinish");
+        }
+
+        if (parsedJson["setState"] ?? parsedJson["setStateOnSwipeCompleted"] ?? false == true) {
+          dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
         }
       },
       onWillMoveNext: (index, direction) {
@@ -124,6 +149,12 @@ class SwipableStackWidget extends AbstractWidget {
         //   print("onWillMoveNext $index, $direction");
         // }
         click(parsedJson, dynamicUIBuilderContext, "onWillMoveNext");
+        if (parsedJson["setState"] ?? parsedJson["setStateOnWillMoveNext"] ?? false == true) {
+          dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+        }
+        if (controller.currentIndex == children.length && !roll) {
+          return false;
+        }
         return true;
       },
       horizontalSwipeThreshold: TypeParser.parseDouble(
@@ -135,6 +166,10 @@ class SwipableStackWidget extends AbstractWidget {
       overlayBuilder: (context, properties) {
         stateControl["overlayOpacity"] = min(properties.swipeProgress, 1.0);
         stateControl["overlayDirection"] = properties.direction.name.toString();
+        if (parsedJson["setState"] ?? parsedJson["setStateOnOverlayBuilder"] ?? false == true) {
+          dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+        }
+        //return Text("wefew");
         return render(
           parsedJson,
           "overlay",
@@ -148,6 +183,8 @@ class SwipableStackWidget extends AbstractWidget {
         } else {
           if (roll) {
             return render(children[rollIndex], null, const SizedBox(), dynamicUIBuilderContext);
+          } else if (parsedJson.containsKey("finish") && properties.index == children.length) {
+            return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
           } else {
             return const SizedBox();
           }
