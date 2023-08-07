@@ -29,6 +29,7 @@ import 'package:rjdu/dynamic_ui/widget/image_network.dart';
 import 'package:rjdu/dynamic_ui/widget/ink_well_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/ink_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/limited_box_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/linear_progress_indicator_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/list_view_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/margin_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_app_widget.dart';
@@ -75,6 +76,7 @@ import 'package:rjdu/dynamic_ui/widget_property/outline_input_border_property.da
 import 'package:rjdu/dynamic_ui/widget_property/rounded_rectangle_border_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/text_style_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/underline_input_border_property.dart';
+import '../util.dart';
 import 'widget/slidable_widget.dart';
 
 class DynamicUI {
@@ -144,6 +146,7 @@ class DynamicUI {
     "State": StateWidget().get,
     "SwipableStack": SwipableStackWidget().get,
     "FlipCard": FlipCardWidget().get,
+    "LinearProgressIndicator": LinearProgressIndicatorWidget().get,
 
     //Property
     "TextStyle": TextStyleProperty().get,
@@ -171,6 +174,7 @@ class DynamicUI {
     if (parsedJson.isEmpty) {
       return defaultValue;
     }
+    parsedJson = Util.templateArguments(parsedJson, dynamicUIBuilderContext);
     dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
     if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {
       if (selector.containsKey("onStateDataUpdate")) {
@@ -228,7 +232,8 @@ class DynamicUI {
       } else {
         for (int i = 0; i < list.length; i++) {
           DynamicUIBuilderContext newContext = parsedJson[key][i]["context"] != null
-              ? dynamicUIBuilderContext.cloneWithNewData(parsedJson[key][i]["context"], parsedJson[key][i]["key"] ?? key)
+              ? dynamicUIBuilderContext.cloneWithNewData(
+                  parsedJson[key][i]["context"], parsedJson[key][i]["key"] ?? key)
               : dynamicUIBuilderContext.clone(key);
           newContext.index = i;
           resultList.add(render(list[i], null, const SizedBox(), newContext));
