@@ -35,6 +35,9 @@ class HttpHandler extends AbstractHandler {
         httpResponseObject["status"] = value.statusCode == 200;
         httpResponseObject["headers"] = value.headers;
         httpResponseObject["statusCode"] = value.statusCode;
+        httpResponseObject["rawBody"] = value.body;
+
+        print(httpResponseObject);
 
         if (httpResponseObject["status"] != true) {
           httpResponseObject["error"] = "Сервер вернул ошибку ${value.statusCode}";
@@ -48,7 +51,8 @@ class HttpHandler extends AbstractHandler {
             if (data.containsKey("description")) {
               httpResponseObject["error"] = data["description"];
             } else if (data.containsKey("exception")) {
-              httpResponseObject["error"] = (data["exception"][0] as String).substring(0, 100);
+              String ex = data["exception"][0] as String;
+              httpResponseObject["error"] = ex.length > 100 ? ex.substring(0, 100) : ex;
               if (kDebugMode) {
                 print(data["exception"]);
               }
