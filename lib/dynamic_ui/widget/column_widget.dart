@@ -10,7 +10,7 @@ class ColumnWidget extends AbstractWidget {
     return Column(
       key: Util.getKey(),
       mainAxisSize: TypeParser.parseMainAxisSize(
-        getValue(parsedJson, "mainAxisSize", "max", dynamicUIBuilderContext),
+        getValue(parsedJson, "mainAxisSize", "min", dynamicUIBuilderContext),
       )!,
       crossAxisAlignment: TypeParser.parseCrossAxisAlignment(
         getValue(parsedJson, "crossAxisAlignment", "center", dynamicUIBuilderContext),
