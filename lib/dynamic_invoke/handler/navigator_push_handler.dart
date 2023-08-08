@@ -1,4 +1,5 @@
 import 'package:rjdu/dynamic_ui/type_parser.dart';
+import 'package:rjdu/global_settings.dart';
 
 import '../../navigator_app.dart';
 import 'abstract_handler.dart';
@@ -95,7 +96,15 @@ class NavigatorPushHandler extends AbstractHandler {
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       builder: (context) {
-        return dynamicPage;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            dynamicPage,
+            SizedBox(
+              height: GlobalSettings().bottomNavigationBarHeight,
+            )
+          ],
+        );
       },
     );
   }
