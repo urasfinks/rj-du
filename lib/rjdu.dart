@@ -32,6 +32,9 @@ class RjDu {
     Storage().set("unique", const Uuid().v4(), false);
     Storage().set("version", GlobalSettings().version, false);
     Storage().set("isAuth", "false", false);
+    Storage().set("mail", "", false);
+    Storage().set("lastMail", "", false);
+    Storage().set("lastSync", "", false);
 
     DataSource().init();
 

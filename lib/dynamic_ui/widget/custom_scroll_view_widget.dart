@@ -55,6 +55,7 @@ class CustomScrollViewWidget extends AbstractWidget {
           refreshIndicatorExtent: 125,
           onRefresh: () async {
             await DataSync().sync();
+            //Для того, что бы не было дёрганий перезагрузки страницы, даём свернуться pullToRefresh
             await Future.delayed(const Duration(milliseconds: 700), () {
               //dynamicUIBuilderContext.dynamicPage.reload();
               //dynamicUIBuilderContext.dynamicPage.reloadWithoutSetState();
@@ -86,9 +87,11 @@ class CustomScrollViewWidget extends AbstractWidget {
       } else if (currentSliverGroupData["name"] == "main" && sliverGroup.last["name"] != "main") {
         sliverGroup.add({"type": "list", "name": "main", "children": []});
         sliverGroup.last["children"].add(children[i]);
-      } else if (currentSliverGroupData["name"] != "main" && sliverGroup.last["name"] == currentSliverGroupData["name"]) {
+      } else if (currentSliverGroupData["name"] != "main" &&
+          sliverGroup.last["name"] == currentSliverGroupData["name"]) {
         sliverGroup.last["children"].add(children[i]);
-      } else if (currentSliverGroupData["name"] != "main" && sliverGroup.last["name"] != currentSliverGroupData["name"]) {
+      } else if (currentSliverGroupData["name"] != "main" &&
+          sliverGroup.last["name"] != currentSliverGroupData["name"]) {
         currentSliverGroupData["children"] = [];
         sliverGroup.add(currentSliverGroupData);
         sliverGroup.last["children"].add(children[i]);
@@ -164,7 +167,8 @@ class CustomScrollViewWidget extends AbstractWidget {
 
   Widget getRender(int index, List children, DynamicUIBuilderContext dynamicUIBuilderContext) {
     DynamicUIBuilderContext newContext = children[index]["context"] != null
-        ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"], children[index]["key"] ?? "CustomScrollView")
+        ? dynamicUIBuilderContext.cloneWithNewData(
+            children[index]["context"], children[index]["key"] ?? "CustomScrollView")
         : dynamicUIBuilderContext.clone("CustomScrollView");
     newContext.index = index;
     return render(children[index], null, null, newContext);
