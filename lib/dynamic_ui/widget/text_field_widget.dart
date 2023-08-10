@@ -16,8 +16,16 @@ class TextFieldWidget extends AbstractWidget {
 
     String propKey = "${key}_TextEditingController";
     //При первичной инициализации устанавливает значение в состояние
-    if (!dynamicUIBuilderContext.dynamicPage.isProperty(propKey) && (parsedJson["setState"] ?? false == true)) {
-      dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData);
+    bool onRebuildSetStateNotify = TypeParser.parseBool(
+      getValue(parsedJson, "onRebuildSetStateNotify", true, dynamicUIBuilderContext),
+    )!;
+
+    bool onChangedSetStateNotify = TypeParser.parseBool(
+      getValue(parsedJson, "onChangedSetStateNotify", true, dynamicUIBuilderContext),
+    )!;
+
+    if (!dynamicUIBuilderContext.dynamicPage.isProperty(propKey) && (parsedJson["setStateInit"] ?? false == true)) {
+      dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onRebuildSetStateNotify);
     }
     TextEditingController textController =
         dynamicUIBuilderContext.dynamicPage.getProperty(propKey, TextEditingController(text: defaultData));
@@ -37,9 +45,7 @@ class TextFieldWidget extends AbstractWidget {
       listInputFormatters.add(FilteringTextInputFormatter.allow(RegExp("^[a-z0-9_-]{3,16}\$")));
     }
 
-    bool onChangedNotify = TypeParser.parseBool(
-      getValue(parsedJson, "onChangedNotify", true, dynamicUIBuilderContext),
-    )!;
+
 
     return TextField(
       key: Util.getKey(),
@@ -108,7 +114,7 @@ class TextFieldWidget extends AbstractWidget {
       decoration: render(parsedJson, "decoration", null, dynamicUIBuilderContext),
       style: render(parsedJson, "style", null, dynamicUIBuilderContext),
       onChanged: (value) {
-        dynamicUIBuilderContext.dynamicPage.setStateData(key, value, onChangedNotify);
+        dynamicUIBuilderContext.dynamicPage.setStateData(key, value, onChangedSetStateNotify);
         click(parsedJson, dynamicUIBuilderContext, "onChanged");
       },
       onTap: () async {
@@ -123,7 +129,7 @@ class TextFieldWidget extends AbstractWidget {
           );
           if (pickedDate != null) {
             defaultData = DateFormat("dd.MM.yyyy").format(pickedDate);
-            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedNotify);
+            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedSetStateNotify);
             textController.text = defaultData;
           } else {
             textController.text = "";
@@ -149,7 +155,7 @@ class TextFieldWidget extends AbstractWidget {
           );
           if (result != null) {
             defaultData = "${Util.intLPad(result.hour, pad: 2)}:${Util.intLPad(result.minute, pad: 2)}";
-            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedNotify);
+            dynamicUIBuilderContext.dynamicPage.setStateData(key, defaultData, onChangedSetStateNotify);
             textController.text = defaultData;
           }
         }
