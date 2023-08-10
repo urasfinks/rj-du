@@ -14,6 +14,9 @@ class HttpHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     args = Util.getMutableMap(args);
+    if (kDebugMode) {
+      print("HttpHandler: args: $args");
+    }
 
     args["headers"] = HttpClient.upgradeHeadersAuthorization(args["headers"]);
     if (!args.containsKey("host")) {
