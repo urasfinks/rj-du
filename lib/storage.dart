@@ -19,8 +19,7 @@ class Storage {
     prefs = await SharedPreferences.getInstance();
   }
 
-  void onChange(
-      String key, String defaultValue, Function(String value) callback) {
+  void onChange(String key, String defaultValue, Function(String value) callback) {
     if (!mapWatcher.containsKey(key)) {
       mapWatcher[key] = [];
     }
@@ -40,6 +39,12 @@ class Storage {
       return "***";
     }
     return get(key, defaultValue);
+  }
+
+  void setMap(Map<String, dynamic> map, [bool updateIfExist = true]) {
+    for (MapEntry<String, dynamic> item in map.entries) {
+      set(item.key, item.value, updateIfExist);
+    }
   }
 
   void set(String key, String value, [bool updateIfExist = true]) {
