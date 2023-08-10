@@ -56,7 +56,7 @@ class CustomScrollViewWidget extends AbstractWidget {
           onRefresh: () async {
             await DataSync().sync();
             //Для того, что бы не было дёрганий перезагрузки страницы, даём свернуться pullToRefresh
-            await Future.delayed(const Duration(milliseconds: 700), () {
+            await Future.delayed(const Duration(milliseconds: 250), () {
               //dynamicUIBuilderContext.dynamicPage.reload();
               //dynamicUIBuilderContext.dynamicPage.reloadWithoutSetState();
               // Вижу что в последний раз удалили чистый reload и добавили без обновления состояний
