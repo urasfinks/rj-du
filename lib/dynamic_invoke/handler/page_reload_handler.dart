@@ -7,6 +7,9 @@ import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 class PageReloadHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    // if (kDebugMode) {
+    //   print("PageReloadHandler args: $args");
+    // }
     /*dynamic args = {
       "case": ["byArguments", "current"], //default byArguments
       "sync": false,
@@ -44,6 +47,8 @@ class PageReloadHandler extends AbstractHandler {
       sync2.then((_) {
         fnReload();
       });
+    } else {
+      fnReload();
     }
   }
 }
