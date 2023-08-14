@@ -64,7 +64,7 @@ class TemplateDirective {
       return result;
     },
     "timeSoFar": (data, arguments, ctx) {
-      print("timeSoFar: $data");
+      //print("timeSoFar: $data");
       int diffMs = Util.getTimestamp() - TypeParser.parseInt(data)!;
       int diffDays = (diffMs / 86400000).floor();
       if (diffDays > 0) {
@@ -83,7 +83,7 @@ class TemplateDirective {
         return "$diffSeconds сек.";
       }
       if (kDebugMode) {
-        print("$diffDays days, $diffHrs hours, $diffMins minutes, $diffSeconds seconds until");
+        //print("$diffDays days, $diffHrs hours, $diffMins minutes, $diffSeconds seconds until");
       }
       return "сейчас";
     },
