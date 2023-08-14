@@ -11,6 +11,7 @@ import 'package:rjdu/dynamic_ui/widget/custom_scroll_view_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/flip_card_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/gesture_detector_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/grid_view_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/image_base64_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/image_network_cached_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/center_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/circle_avatar_widget.dart';
@@ -147,6 +148,7 @@ class DynamicUI {
     "SwipableStack": SwipableStackWidget().get,
     "FlipCard": FlipCardWidget().get,
     "LinearProgressIndicator": LinearProgressIndicatorWidget().get,
+    "ImageBase64": ImageBase64Widget().get,
 
     //Property
     "TextStyle": TextStyleProperty().get,
