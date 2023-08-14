@@ -44,6 +44,6 @@ class Data {
 
   @override
   String toString() {
-    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value, type: $type, key: $key, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, onPersist: $onPersist}';
+    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, onPersist: $onPersist}';
   }
 }

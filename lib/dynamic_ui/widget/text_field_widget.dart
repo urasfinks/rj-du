@@ -30,7 +30,7 @@ class TextFieldWidget extends AbstractWidget {
     TextEditingController textController =
         dynamicUIBuilderContext.dynamicPage.getProperty(propKey, TextEditingController(text: defaultData));
 
-    if (parsedJson["clearControllerState"] ?? false == true) {
+    if (parsedJson["onRebuildClearTemporaryControllerText"] ?? false == true) {
       //Очищает временное состояние контроллера при rebuild
       textController.text = defaultData;
     }
