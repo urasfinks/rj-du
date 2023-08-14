@@ -103,12 +103,11 @@ class DataSource {
 
   void setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) {
     transaction.add("5 saveToDB");
-    String dataString = data.value.runtimeType != String ? json.encode(data.value) : data.value;
     db.rawQuery("SELECT * FROM data where uuid_data = ?", [data.uuid]).then((resultSet) {
       bool notify = false;
       if (resultSet.isEmpty) {
         transaction.add("6 result is empty > insert");
-        insert(data, dataString);
+        insert(data);
         notify = true;
         if (data.type == DataType.socket) {
           // После того как мы вставили сокетные данные
@@ -123,7 +122,7 @@ class DataSource {
         // данные надо иногда обновлять не только потому что изменились
         // сами данные, бывает что надо бновить флаг удаления или ревизию
         updateNullable(data, resultSet.first);
-        update(data, dataString);
+        update(data);
         notify = true;
       } else {
         transaction.add("8 NOTHING!");
@@ -223,10 +222,13 @@ class DataSource {
     }
   }
 
-  void update(Data curData, String dataString) {
-    if (curData.onUpdateResetRevision && curData.type.runtimeType.toString().endsWith("RSync")) {
+  void update(Data curData) {
+    if (curData.onUpdateResetRevision && curData.type.name.endsWith("RSync")) {
       curData.revision = 0;
     }
+    String dataString = curData.value.runtimeType != String ? json.encode(curData.value) : curData.value;
+    //print("UPD: $curData");
+    //print("UPD dataString: $dataString");
     db.rawUpdate(
       'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
       [
@@ -247,12 +249,12 @@ class DataSource {
     });
   }
 
-  void insert(Data curData, String dataString) {
+  void insert(Data curData) {
     db.rawInsert(
       'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         curData.uuid,
-        dataString,
+        curData.value.runtimeType != String ? json.encode(curData.value) : curData.value,
         curData.type.name,
         curData.parentUuid,
         curData.key,
