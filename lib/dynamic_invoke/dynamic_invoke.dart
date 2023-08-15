@@ -11,6 +11,7 @@ import 'package:flutter_js/flutter_js.dart';
 
 import '../data_type.dart';
 import '../util.dart';
+import 'handler/data_sync_handler.dart';
 import 'handler/show_handler.dart';
 import 'handler/alert_handler.dart';
 import 'handler/copy_clipboard_handler.dart';
@@ -87,6 +88,7 @@ class DynamicInvoke {
     SystemNotifyHandler();
     WakeLockHandler();
     SubscribeRefreshHandler();
+    DataSyncHandler();
 
     javascriptRuntime = getJavascriptRuntime();
     javascriptRuntime?.init();
