@@ -29,6 +29,7 @@ class RjDu {
     GlobalSettings().init();
 
     Storage().set("uuid", const Uuid().v4(), false);
+    print("I'am: ${Storage().get("uuid", "")}");
     Storage().set("unique", const Uuid().v4(), false);
     Storage().set("version", GlobalSettings().version, false);
     Storage().set("isAuth", "false", false);
@@ -57,10 +58,8 @@ class RjDu {
       );
     }
 
-    IteratorThemeLoader.load(
-        await DataMigration.loadAssetByMask("systemData", "IteratorTheme"));
-    TemplateWidget.load(
-        await DataMigration.loadAssetByMask("template", "TemplateWidget"));
+    IteratorThemeLoader.load(await DataMigration.loadAssetByMask("systemData", "IteratorTheme"));
+    TemplateWidget.load(await DataMigration.loadAssetByMask("template", "TemplateWidget"));
 
     return DynamicPage(const {
       "flutterType": "Notify",

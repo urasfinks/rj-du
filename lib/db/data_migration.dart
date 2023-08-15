@@ -13,8 +13,7 @@ class DataMigration {
   }
 
   migration() async {
-    bool updateApplication =
-        Storage().get("version", "v0") != GlobalSettings().version;
+    bool updateApplication = Storage().get("version", "v0") != GlobalSettings().version;
     if (kDebugMode) {
       print("migration() current versionL ${GlobalSettings().version}; updateApplication = $updateApplication");
     }
@@ -40,10 +39,9 @@ class DataMigration {
       if (kDebugMode) {
         print("Migration: $file");
       }
-      String migration =
-          await rootBundle.loadString("packages/rjdu/lib/assets/$file");
-      List<String> split = migration.split(
-          ";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
+      String migration = await rootBundle.loadString("packages/rjdu/lib/assets/$file");
+      List<String> split =
+          migration.split(";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
       for (String query in split) {
         query = query.trim();
         if (query.isNotEmpty) {
@@ -58,12 +56,10 @@ class DataMigration {
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       final regTab = RegExp(r'/tab[0-9]+\.json$');
-      if (path.startsWith("assets/db/data/systemData/") &&
-          regTab.hasMatch(path)) {
+      if (path.startsWith("assets/db/data/systemData/") && regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
 
-        int? index = TypeParser.parseInt(
-            path.split("assets/db/data/systemData/tab")[1].split(".json")[0]);
+        int? index = TypeParser.parseInt(path.split("assets/db/data/systemData/tab")[1].split(".json")[0]);
         if (index != null) {
           result.insert(index, fileData);
         }
@@ -77,13 +73,10 @@ class DataMigration {
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       final regTab = RegExp("$mask[a-zA-Z0-9]+\.json\$");
-      if (path.startsWith("assets/db/data/$folder/") &&
-          regTab.hasMatch(path)) {
+      if (path.startsWith("assets/db/data/$folder/") && regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
 
-        String index = path
-            .split("assets/db/data/$folder/$mask")[1]
-            .split(".json")[0];
+        String index = path.split("assets/db/data/$folder/$mask")[1].split(".json")[0];
         result[index] = fileData;
       }
     }
@@ -96,8 +89,7 @@ class DataMigration {
       if (path.startsWith("assets/db/data/")) {
         String fileData = await rootBundle.loadString(path);
         String fileName = path.split("/").last;
-        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path),
-            null, null, GlobalSettings().debug);
+        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
       }
     }
   }
