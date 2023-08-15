@@ -13,7 +13,11 @@ class ResetTextControllerHandler extends AbstractHandler {
       TextEditingController tec =
           dynamicUIBuilderContext.dynamicPage.getProperty("${key}_TextEditingController", TextEditingController());
       tec.text = "";
-      dynamicUIBuilderContext.dynamicPage.setStateData(key, "");
+      //Сброс состояния контролера не должен перезагружать страницу
+      //Перерисовка при включенном onRebuildClearTemporaryControllerText и setStateInit перезапишет состояние
+      //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
+      //А так мы просто получим перетерание на старое значение
+      dynamicUIBuilderContext.dynamicPage.setStateData(key, "", false);
     } else {
       if (kDebugMode) {
         print("DataSourceSetHandler not contains Keys: [key] in args: $args");
