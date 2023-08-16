@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/align_widget.dart';
@@ -173,53 +174,60 @@ class DynamicUI {
     dynamic defaultValue,
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
-    if (parsedJson.isEmpty) {
-      return defaultValue;
-    }
-    parsedJson = Util.templateArguments(parsedJson, dynamicUIBuilderContext);
-    dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
-    if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {
-      if (selector.containsKey("onStateDataUpdate")) {
-        if (selector.containsKey("link")) {
-          Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
-          mapLink["stateData"] = dynamicUIBuilderContext.dynamicPage.stateData.uuid;
-        } else {
-          selector["link"] = {"stateData": dynamicUIBuilderContext.dynamicPage.stateData.uuid};
-        }
-        selector.remove("onStateDataUpdate");
+    try {
+      if (parsedJson.isEmpty) {
+        return defaultValue;
       }
+      parsedJson = Util.templateArguments(parsedJson, dynamicUIBuilderContext);
+      dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
+      if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {
+        if (selector.containsKey("onStateDataUpdate")) {
+          if (selector.containsKey("link")) {
+            Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
+            mapLink["stateData"] = dynamicUIBuilderContext.dynamicPage.stateData.uuid;
+          } else {
+            selector["link"] = {"stateData": dynamicUIBuilderContext.dynamicPage.stateData.uuid};
+          }
+          selector.remove("onStateDataUpdate");
+        }
 
-      if (selector["flutterType"] != "Notify" && selector.containsKey("link")) {
-        //Клонируем selector, что бы удалить блок link
-        Map<String, dynamic> cloneTemplate = {};
-        cloneTemplate.addAll(selector);
-        cloneTemplate.remove("link");
-        // То есть мы будем получать данные из DataSource по указанным uuid из link
-        // По умолчанию в link мы подкладываем виртуальный Data состояний страницы
-        // Шаблон именно в этом случаи не будет получаться из DataSource, поэтому мы его поместим в значения по умолчанию в linkDefault
-        Map<String, dynamic> linkDefault = {"template": cloneTemplate};
-        if (selector.containsKey("linkDefault")) {
-          linkDefault.addAll(selector["linkDefault"]);
+        if (selector["flutterType"] != "Notify" && selector.containsKey("link")) {
+          //Клонируем selector, что бы удалить блок link
+          Map<String, dynamic> cloneTemplate = {};
+          cloneTemplate.addAll(selector);
+          cloneTemplate.remove("link");
+          // То есть мы будем получать данные из DataSource по указанным uuid из link
+          // По умолчанию в link мы подкладываем виртуальный Data состояний страницы
+          // Шаблон именно в этом случаи не будет получаться из DataSource, поэтому мы его поместим в значения по умолчанию в linkDefault
+          Map<String, dynamic> linkDefault = {"template": cloneTemplate};
+          if (selector.containsKey("linkDefault")) {
+            linkDefault.addAll(selector["linkDefault"]);
+          }
+          return render(
+            {
+              "flutterType": "Notify",
+              "link": selector["link"],
+              "linkDefault": linkDefault,
+              "linkContainer": selector["linkContainer"],
+            },
+            null,
+            defaultValue,
+            dynamicUIBuilderContext,
+          );
+        } else {
+          String flutterType = selector["flutterType"] as String;
+          return ui.containsKey(flutterType)
+              ? Function.apply(ui[flutterType]!, [selector, dynamicUIBuilderContext])
+              : (defaultValue ?? Text("[DynamicUI.get() Undefined type: $flutterType]"));
         }
-        return render(
-          {
-            "flutterType": "Notify",
-            "link": selector["link"],
-            "linkDefault": linkDefault,
-            "linkContainer": selector["linkContainer"],
-          },
-          null,
-          defaultValue,
-          dynamicUIBuilderContext,
-        );
-      } else {
-        String flutterType = selector["flutterType"] as String;
-        return ui.containsKey(flutterType)
-            ? Function.apply(ui[flutterType]!, [selector, dynamicUIBuilderContext])
-            : (defaultValue ?? Text("[DynamicUI.get() Undefined type: $flutterType]"));
       }
+      return selector;
+    } catch (e, stacktrace) {
+      if (kDebugMode) {
+        debugPrintStack(stackTrace: stacktrace, maxFrames: 10, label: "DynamicUI.render() Exception: $e; parsedJson: $parsedJson");
+      }
+      return Text(e.toString());
     }
-    return selector;
   }
 
   static List<Widget> renderList(

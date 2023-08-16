@@ -7,6 +7,9 @@ class BoxDecorationProperty extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return BoxDecoration(
+      shape: TypeParser.parseBoxShape(
+        getValue(parsedJson, "shape", "rectangle", dynamicUIBuilderContext),
+      )!,
       color: TypeParser.parseColor(
         getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
