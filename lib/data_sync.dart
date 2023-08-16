@@ -17,7 +17,7 @@ import 'db/data_getter.dart';
 * [Общая информация]
 *
 * Если у данных ревизия = 0 - это значит, что данные не синхронизованны с внешней БД
-* Синхронизация доступна только для типов данных заканчивающихсяна на RSync (Remote Synchronization) в текущий момент это единственный тип: userDataRSync
+* Синхронизация доступна только для типов данных заканчивающихсяна на RSync (Remote Synchronization) в текущий момент это тип: userDataRSync/blobRSync
 *
 * Возможные сценарии значений:
 * [0] При вставке по умолчанию
@@ -77,13 +77,17 @@ class DataSync {
           counter++;
           Map<String, dynamic> postDataRequest = {
             "maxRevisionByType": maxRevisionByType,
-            "userDataRSync": //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while, а то на сервере не к чему будет привязывать данные
-                (Storage().get("isAuth", "false") == "true" && counter == 1)
-                    ? await DataGetter.getUpdatedUserData()
-                    : [],
+            //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while, а то на сервере не к чему будет привязывать данные
+            "userDataRSync": [],
+            "blobRSync": [],
             "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные, все остальные итерации нужны для дозагрузки данных, которые переваливают за 1000 ревизий на сервере
                 counter == 1 ? await DataGetter.getAddSocketData() : []
           };
+
+          if (Storage().get("isAuth", "false") == "true" && counter == 1) {
+            postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
+            postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
+          }
 
           if (kDebugMode) {
             // print(

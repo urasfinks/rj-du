@@ -26,7 +26,7 @@ class DataSource {
 
   bool isInit = false;
   List<dynamic> list = [];
-  List<DataType> notJsonList = [DataType.js, DataType.any];
+  List<DataType> notJsonList = [DataType.js, DataType.any, DataType.blob, DataType.blobRSync];
   late Database db;
   Map<String, List<Function(String uuid, Map<String, dynamic>? data)>> listener = {};
   DataMigration dataMigration = DataMigration();

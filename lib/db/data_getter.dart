@@ -11,6 +11,12 @@ class DataGetter {
         [DataType.userDataRSync.name]);
   }
 
+  static Future<List<Map<String, dynamic>>> getUpdatedBlobData() async {
+    return await DataSource().db.rawQuery(
+        "SELECT * FROM data WHERE type_data = ? AND revision_data = 0",
+        [DataType.blobRSync.name]);
+  }
+
   static Future<List<Map<String, dynamic>>> getAddSocketData() async {
     return await DataSource().db.rawQuery(
         "SELECT * FROM data WHERE type_data = ? AND revision_data = 0 and is_remove_data = 0",
