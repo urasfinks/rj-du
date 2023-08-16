@@ -130,6 +130,16 @@ class TypeParser {
     return Color(colorInt);
   }
 
+  static BoxShape? parseBoxShape(String? value) {
+    if (value == null || value.trim() == "") {
+      return null;
+    }
+    Map<String, BoxShape> map = {
+      "circle": BoxShape.circle,
+      "rectangle": BoxShape.rectangle,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
   static FontWeight? parseFontWeight(String? value) {
     if (value == null || value.trim() == "") {
       return null;
