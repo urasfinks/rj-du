@@ -7,6 +7,7 @@ import 'package:rjdu/dynamic_invoke/handler/system_notify_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_open_handler.dart';
 import 'package:rjdu/system_notify.dart';
 
+import '../../dynamic_ui/widget/abstract_widget.dart';
 import '../../util.dart';
 import '../dynamic_invoke.dart';
 import 'abstract_handler.dart';
@@ -44,7 +45,7 @@ class ShowHandler extends AbstractHandler {
           DynamicInvoke().sysInvokeType(CustomLoaderOpenHandler, args, dynamicUIBuilderContext);
           break;
         case "gallery":
-          openGallery();
+          openGallery(args, dynamicUIBuilderContext);
           break;
         default:
           if (kDebugMode) {
@@ -59,42 +60,56 @@ class ShowHandler extends AbstractHandler {
     }
   }
 
-  static dynamic openGallery() async {
-    print("OPEN GALLERY");
-
+  static dynamic openGallery(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) async {
     var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
+        cropStyle: CropStyle.rectangle,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
         ],
         uiSettings: [
           AndroidUiSettings(
-              toolbarTitle: 'Редактировать',
-              toolbarColor: Colors.blue[600],
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.square,
-              lockAspectRatio: true,
-              hideBottomControls: true),
+            toolbarTitle: "",
+            toolbarColor: Colors.blue[600],
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: true,
+            hideBottomControls: true,
+          ),
           IOSUiSettings(
-              title: 'Редактировать',
-              hidesNavigationBar: true,
-              aspectRatioPickerButtonHidden: true,
-              rotateButtonsHidden: true,
-              rotateClockwiseButtonHidden: true,
-              resetAspectRatioEnabled: false),
+            title: "",
+            hidesNavigationBar: true,
+            aspectRatioPickerButtonHidden: true,
+            rotateButtonsHidden: false,
+            rotateClockwiseButtonHidden: true,
+            resetAspectRatioEnabled: false,
+            cancelButtonTitle: "Отмена",
+            doneButtonTitle: "Готово",
+            aspectRatioLockDimensionSwapEnabled: true,
+            aspectRatioLockEnabled: true,
+          ),
         ],
       );
       if (croppedFile != null) {
         File file = File(croppedFile.path);
         String base64Image = base64Encode(file.readAsBytesSync());
-        print(base64Image);
-        //await Util.uploadImage(File(croppedFile.path), "${GlobalData.host}${data["url"]}");
-        //appStoreData.onIndexRevisionError();
+        if (args.containsKey("onLoadImage")) {
+          Map<String, dynamic> onLoadImage = Util.getMutableMap(args["onLoadImage"]);
+          if (onLoadImage.containsKey("args")) {
+            onLoadImage["args"]["ImageData"] = base64Image;
+          } else {
+            onLoadImage["args"] = {"ImageData": base64Image};
+          }
+          AbstractWidget.clickStatic({"onLoadImage": onLoadImage}, dynamicUIBuilderContext, "onLoadImage");
+        } else {
+          if (kDebugMode) {
+            print("onLoad arguments does not exist");
+          }
+        }
       }
     }
-    //print("IMAGE: ${image}");
   }
 }
