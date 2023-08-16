@@ -106,7 +106,7 @@ class CustomScrollViewWidget extends AbstractWidget {
         }
         switch (item["type"]) {
           case "list":
-            sliverList.add(getSliverList(renderList));
+            sliverList.add(getSliverList(renderList, getValue(parsedJson, "padding", null, dynamicUIBuilderContext)));
             break;
           case "grid":
             sliverList.add(getSliverGrid(renderList, item, dynamicUIBuilderContext));
@@ -133,7 +133,7 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     if (list.isNotEmpty) {
-      sliverList.add(getSliverList(list));
+      sliverList.add(getSliverList(list, getValue(parsedJson, "padding", null, dynamicUIBuilderContext)));
     }
 
     if (parsedJson.containsKey("endFill")) {
@@ -174,16 +174,24 @@ class CustomScrollViewWidget extends AbstractWidget {
     return render(children[index], null, null, newContext);
   }
 
-  SliverList getSliverList(List<Widget> defList) {
+  dynamic getSliverList(List<Widget> defList, dynamic padding) {
     final List<Widget> list = [];
     list.addAll(defList);
-    return SliverList(
+    SliverList sliverList = SliverList(
       key: Util.getKey(),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) => list[index],
         childCount: list.length,
       ),
     );
+    if (padding != null) {
+      return SliverPadding(
+        padding: TypeParser.parseEdgeInsets(padding)!,
+        sliver: sliverList,
+      );
+    } else {
+      return sliverList;
+    }
   }
 
   Widget getSliverGrid(
