@@ -50,6 +50,7 @@ flutter:
   assets:
     - lib/assets/db/drop/
     - lib/assets/db/migration/
+    - lib/assets/image/
 
   # To add assets to your package, add an assets section, like this:
   # assets:

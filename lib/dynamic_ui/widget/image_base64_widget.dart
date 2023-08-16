@@ -1,18 +1,50 @@
 import 'dart:convert';
 
+import 'package:rjdu/dynamic_invoke/handler/subscribe_refresh.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../dynamic_invoke/dynamic_invoke.dart';
 import '../../util.dart';
 import '../type_parser.dart';
 
 class ImageBase64Widget extends AbstractWidget {
+  static Base64Codec base64 = const Base64Codec();
+
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    const Base64Codec base64 = Base64Codec();
+    DynamicUIBuilderContext newContext =
+        dynamicUIBuilderContext.cloneWithNewData({}, parsedJson["key"] ?? "ImageBase64");
+    return newContext.dynamicPage.storeValueNotifier.getWidget(
+      {"src": parsedJson["src"]},
+      newContext,
+      (context, child) {
+        //print("ImageBase64Widget.rebuild()");
+        if (newContext.data.containsKey("src")) {
+          String x = newContext.data["src"]["blobRSync"];
+          DynamicInvoke().sysInvokeType(SubscribeRefreshHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
+          return getMemory(x, parsedJson, dynamicUIBuilderContext);
+        } else {
+          return getAsset(parsedJson, dynamicUIBuilderContext);
+        }
+      },
+    );
+  }
+
+  getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (parsedJson.containsKey("assetLoader")) {
+      return Image(
+        image: AssetImage(parsedJson["assetLoader"]!),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  getMemory(String imageData, Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Image.memory(
-      base64.decode(parsedJson["data"]),
+      base64.decode(imageData),
       key: Util.getKey(),
       width: TypeParser.parseDouble(
         getValue(parsedJson, "width", null, dynamicUIBuilderContext),

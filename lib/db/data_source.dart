@@ -164,7 +164,7 @@ class DataSource {
   }
 
   void setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) {
-    print("setDataSocket(${diffData.uuid}) notify: $notifyDynamicPage");
+    //print("setDataSocket(${diffData.uuid}) notify: $notifyDynamicPage");
     // Обновление сокетных данных не должно обновлять локальную БД
     transaction.add("4 update socket data");
     if (notifyDynamicPage) {
@@ -288,10 +288,12 @@ class DataSource {
     } else {
       runtimeData = {curData.type.name: curData.value};
     }
-    //Оповещение для перестройки страниц
-    if (isJsonDataType(curData.type)) {
+    // Оповещение для перестройки страниц ранее было только для json форматов
+    // Сейчас я обновляю аватар с типом blobRSync и мне как бы надо получить уведомление, что аватар был заменён
+    // Пока закоментирую проверку на json тип, не знаю для чего он тут
+    //if (isJsonDataType(curData.type)) {
       NavigatorApp.updatePageNotifier(curData.uuid, runtimeData);
-    }
+    //}
     //Оповещение программных компонентов, кто подписался на onChange
     if (listener.containsKey(curData.uuid)) {
       for (Function(String uuid, Map<String, dynamic>? data) callback in listener[curData.uuid]!) {
