@@ -9,6 +9,7 @@ class GlobalSettings {
   double appBarHeight = 56.0;
   double bottomNavigationBarHeight = 56.0;
   String orientation = ""; //landscape/portrait
+  int debugStackTraceMaxFrames = 10;
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 

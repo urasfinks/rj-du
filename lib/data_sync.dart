@@ -49,7 +49,11 @@ class DataSync {
       sync();
     } catch (e, stacktrace) {
       if (kDebugMode) {
-        print("Exception: $e; Stacktrace: $stacktrace");
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label: "DataSync.restart() Exception: $e; template: $template",
+        );
       }
     }
   }
@@ -126,8 +130,11 @@ class DataSync {
         Storage().set("lastSync", "${Util.getTimestamp()}");
       } catch (e, stacktrace) {
         if (kDebugMode) {
-          print(e);
-          print(stacktrace);
+          debugPrintStack(
+            stackTrace: stacktrace,
+            maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+            label: "DataSync().sync() Exception: $e",
+          );
         }
       }
       if (kDebugMode) {

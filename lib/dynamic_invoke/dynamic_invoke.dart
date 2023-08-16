@@ -109,8 +109,11 @@ class DynamicInvoke {
           return result is String ? result : json.encode(result);
         } catch (e, stacktrace) {
           if (kDebugMode) {
-            print(e);
-            print(stacktrace);
+            debugPrintStack(
+              stackTrace: stacktrace,
+              maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+              label: "DynamicInvoke.onMessage() Exception: $e; args: $args",
+            );
           }
         }
       });

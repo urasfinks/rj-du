@@ -3,6 +3,7 @@ import 'package:rjdu/util/template/directive.dart';
 import 'package:rjdu/util/template/function.dart';
 
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
+import '../global_settings.dart';
 
 class Template {
   static dynamic mapSelector(Map<String, dynamic> data, List<String> args) {
@@ -96,6 +97,12 @@ class Template {
       }
     } catch (e, stacktrace) {
       if (kDebugMode) {
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label:
+          "Template.stringSelector() Exception: $e; path: $path; defaultValue: $defaultValue; data: $data",
+        );
         print(e);
         print(stacktrace);
         print("Exception arg: path: $path; defaultValue: $defaultValue; data: $data");

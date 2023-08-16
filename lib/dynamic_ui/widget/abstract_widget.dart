@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/state_data_iterator.dart';
+import 'package:rjdu/global_settings.dart';
 
 import '../dynamic_ui.dart';
 import '../dynamic_ui_builder_context.dart';
@@ -61,9 +62,12 @@ abstract class AbstractWidget {
       }
     } catch (e, stacktrace) {
       if (kDebugMode) {
-        print(e);
-        print(stacktrace);
-        print("Exception arg: key: $key; defaultValue: $defaultValue; parsedJson: $parsedJson");
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label:
+              "AbstractWidget.getValue() Exception: $e; key: $key; defaultValue: $defaultValue; parsedJson: $parsedJson",
+        );
       }
     }
   }
@@ -157,7 +161,12 @@ abstract class AbstractWidget {
           try {
             settings = json.decode(tmp) as Map<String, dynamic>?;
           } catch (e, stacktrace) {
-            print("clickStatic exception: $e $stacktrace");
+            debugPrintStack(
+              stackTrace: stacktrace,
+              maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+              label:
+              "AbstractWidget.clickStatic() Exception: $e; key: $key; parsedJson: $parsedJson",
+            );
           }
         }
         if (settings != null) {

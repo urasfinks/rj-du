@@ -146,9 +146,11 @@ class DataSource {
           notifyBlock(args);
         } catch (e, stacktrace) {
           if (kDebugMode) {
-            print("Exception data: $args");
-            print(e);
-            print(stacktrace);
+            debugPrintStack(
+              stackTrace: stacktrace,
+              maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+              label: "DataSource.notifyBlockAsync() Exception: $e; args: $args",
+            );
           }
         }
       }, data);
@@ -200,8 +202,11 @@ class DataSource {
       });
 
       if (kDebugMode) {
-        print(e);
-        print(stacktrace);
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label: "DataSource.sendDataSocket() Exception: $e; data: $data",
+        );
       }
     }
 

@@ -67,12 +67,12 @@ class WebSocketService {
               }
             }
           } catch (e, stacktrace) {
-            _log(e, stacktrace);
+            _log(e, stacktrace, "_disconnect()");
             _disconnect();
           }
         });
       } catch (e, stacktrace) {
-        _log(e, stacktrace);
+        _log(e, stacktrace, "_connect()");
         _disconnect();
       }
     }
@@ -93,16 +93,20 @@ class WebSocketService {
         _disconnect();
       },
       onError: (e, stacktrace) {
-        _log(e, stacktrace);
+        _log(e, stacktrace, "_listen()");
         _disconnect();
       },
     );
   }
 
-  void _log(e, stacktrace) {
+  void _log(e, stacktrace, String extra) {
     if (kDebugMode) {
-      print(e);
-      print(stacktrace);
+      debugPrintStack(
+        stackTrace: stacktrace,
+        maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+        label:
+        "WebSocketService._log() Exception: $e; $extra",
+      );
     }
   }
 
@@ -117,7 +121,7 @@ class WebSocketService {
           print("WebSocketService._disconnect() _channel.close()");
         }
       } catch (e, stacktrace) {
-        _log(e, stacktrace);
+        _log(e, stacktrace, "_disconnect");
       }
     }
     _channel = null;

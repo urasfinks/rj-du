@@ -78,6 +78,7 @@ import 'package:rjdu/dynamic_ui/widget_property/outline_input_border_property.da
 import 'package:rjdu/dynamic_ui/widget_property/rounded_rectangle_border_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/text_style_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/underline_input_border_property.dart';
+import '../global_settings.dart';
 import '../util.dart';
 import 'widget/slidable_widget.dart';
 
@@ -224,7 +225,11 @@ class DynamicUI {
       return selector;
     } catch (e, stacktrace) {
       if (kDebugMode) {
-        debugPrintStack(stackTrace: stacktrace, maxFrames: 10, label: "DynamicUI.render() Exception: $e; parsedJson: $parsedJson");
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label: "DynamicUI.render() Exception: $e; parsedJson: $parsedJson",
+        );
       }
       return Text(e.toString());
     }
