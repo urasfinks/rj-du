@@ -1,0 +1,68 @@
+{
+  "flutterType": "TextField",
+  "onChangedSetStateNotify": false,
+  "onRebuildSetStateNotify": false,
+  "onRebuildClearTemporaryControllerText": true,
+  "setStateInit": true,
+  "keyboardType": "text",
+  "textCapitalization": "sentences",
+  "style": {
+    "flutterType": "TextStyle",
+    "fontSize": 17
+  },
+  "onSubmitted": "${onSubmit|jsonEncode()}",
+  "name": "${key}",
+  "data": "${data,}",
+  "decoration": {
+    "flutterType": "InputDecoration",
+    "hintText": "${placeholder}",
+    "contentPadding": "15,0,15,0",
+    "filled": true,
+    "fillColor": "schema:onBackground",
+    "border": {
+      "flutterType": "OutlineInputBorder"
+    },
+    "suffixIconConstraints": {
+      "flutterType": "BoxConstraints",
+      "minHeight": 44,
+      "maxHeight": 44
+    },
+    "suffixIcon": {
+      "flutterType": "IconButton",
+      "padding": 0,
+      "icon": {
+        "flutterType": "Icon",
+        "color": "grey",
+        "src": "clear",
+        "size": 18
+      },
+      "onPressed": {
+        "sysInvoke": "ResetTextController",
+        "args": {
+          "key": "${key}"
+        }
+      },
+      "templateArguments": [
+        "onPressed.args.key"
+      ]
+    },
+    "enabledBorder": {
+      "flutterType": "OutlineInputBorder",
+      "borderRadius": 10,
+      "borderSide": {
+        "flutterType": "BorderSide",
+        "color": "transparent",
+        "width": 0
+      }
+    },
+    "focusedBorder": {
+      "flutterType": "OutlineInputBorder",
+      "borderRadius": 10,
+      "borderSide": {
+        "flutterType": "BorderSide",
+        "color": "transparent",
+        "width": 0
+      }
+    }
+  }
+}

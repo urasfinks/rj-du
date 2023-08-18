@@ -19,12 +19,11 @@ class TemplateWidget extends AbstractWidget {
         dynamicUIBuilderContext);
   }
 
-  static void load(Map<String, String> map) {
+  static void load(Map<String, String> map, String extra) {
+    List<String> list = [];
     for (MapEntry<String, dynamic> item in map.entries) {
       try {
-        if (kDebugMode) {
-          print("TemplateWidget.load(${item.key})");
-        }
+        list.add(item.key);
         Map<String, dynamic> parseTheme = json.decode(item.value);
         template[item.key] = parseTheme;
       } catch (e) {
@@ -32,6 +31,9 @@ class TemplateWidget extends AbstractWidget {
           print("TemplateWidgetLoader exeption: $e");
         }
       }
+    }
+    if (kDebugMode) {
+      print("TemplateWidget.load($extra) $list");
     }
   }
 }

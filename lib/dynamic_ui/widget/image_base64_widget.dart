@@ -23,6 +23,7 @@ class ImageBase64Widget extends AbstractWidget {
         //print("ImageBase64Widget.rebuild()");
         if (newContext.data.containsKey("src")) {
           String x = newContext.data["src"]["blobRSync"];
+          //TODO: можно загрузить в состояния страницы, что бы повторная перерисовка была без assetLoader
           DynamicInvoke().sysInvokeType(SubscribeRefreshHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
           return getMemory(x, parsedJson, dynamicUIBuilderContext);
         } else {

@@ -1,0 +1,149 @@
+{
+  "flutterType": "Container",
+  "color": "schema:background",
+  "child": {
+    "flutterType": "Column",
+    "mainAxisSize": "min",
+    "children": [
+      {
+        "flutterType": "SizedBox",
+        "height": 20
+      },
+      {
+        "flutterType": "Container",
+        "width": 999,
+        "padding": 5,
+        "child": {
+          "flutterType": "Text",
+          "label1": "Вы не авторизованы, пройдите авторизацию:",
+          "label": "Введите адрес электронной почты, чтобы иметь возможность восстановить доступ к аккаунту:",
+          "style": {
+            "flutterType": "TextStyle",
+            "fontSize": 16
+          }
+        }
+      },
+      {
+        "flutterType": "SizedBox",
+        "height": 20
+      },
+      {
+        "flutterType": "TextField",
+        "onChangedSetStateNotify": false,
+        "onRebuildSetStateNotify": false,
+        "setStateInit": true,
+        "keyboardType": "emailAddress",
+        "textCapitalization": "none",
+        "style": {
+          "flutterType": "TextStyle",
+          "fontSize": 17
+        },
+        "onSubmitted": {
+          "jsInvoke": "Account.js",
+          "args": {
+            "includeStateData": true,
+            "switch": "GetCode"
+          }
+        },
+        "name": "EmailValue",
+        "data": "${storage(lastMail,)}",
+        "decoration": {
+          "flutterType": "InputDecoration",
+          "hintText": "E-mail",
+          "contentPadding": "15,0,15,0",
+          "filled": true,
+          "fillColor": "schema:onBackground",
+          "border": {
+            "flutterType": "OutlineInputBorder"
+          },
+          "suffixIconConstraints": {
+            "flutterType": "BoxConstraints",
+            "minHeight": 44,
+            "maxHeight": 44
+          },
+          "suffixIcon": {
+            "flutterType": "IconButton",
+            "padding": 0,
+            "icon": {
+              "flutterType": "Icon",
+              "color": "grey",
+              "src": "clear",
+              "size": 18
+            },
+            "onPressed": {
+              "sysInvoke": "ResetTextController",
+              "args": {
+                "key": "EmailValue"
+              }
+            }
+          },
+          "enabledBorder": {
+            "flutterType": "OutlineInputBorder",
+            "borderRadius": 10,
+            "borderSide": {
+              "flutterType": "BorderSide",
+              "color": "transparent",
+              "width": 0
+            }
+          },
+          "focusedBorder": {
+            "flutterType": "OutlineInputBorder",
+            "borderRadius": 10,
+            "borderSide": {
+              "flutterType": "BorderSide",
+              "color": "transparent",
+              "width": 0
+            }
+          }
+        }
+      },
+      {
+        "flutterType": "SizedBox",
+        "height": 20
+      },
+      {
+        "flutterType": "Button",
+        "backgroundColor": "blue",
+        "onPressed": {
+          "jsInvoke": "Account.js",
+          "args": {
+            "includeStateData": true,
+            "switch": "GetCode"
+          }
+        },
+        "child": {
+          "flutterType": "Text",
+          "label": "Получить код",
+          "textAlign": "center",
+          "style": {
+            "flutterType": "TextStyle",
+            "fontSize": 14,
+            "color": "white"
+          }
+        }
+      },
+      {
+        "flutterType": "SizedBox",
+        "height": 10
+      },
+      {
+        "flutterType": "Padding",
+        "padding": 10,
+        "child": {
+          "flutterType": "Text",
+          "label1": "Авторизация даст возможность сохранять ваши данные в облаке, для использования на разных устройствах.",
+          "label": "Сохранение данных в облаке, для использования на разных устройствах",
+          "style": {
+            "flutterType": "TextStyle",
+            "fontSize": 13,
+            "color": "schema:secondary"
+          }
+        }
+      },
+      {
+        "flutterType": "SizedBox",
+        "height": 10
+      }
+    ]
+  }
+}

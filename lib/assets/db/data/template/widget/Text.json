@@ -1,0 +1,14 @@
+{
+  "flutterType": "Container",
+  "margin": "17,13,17,13",
+  "width": "infinity",
+  "child": {
+    "flutterType": "Text",
+    "label": "${label}",
+    "textAlign": "${textAlign,start}",
+    "style": {
+      "flutterType": "TextStyle",
+      "fontSize": 16
+    }
+  }
+}

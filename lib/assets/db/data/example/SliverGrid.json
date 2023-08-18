@@ -1,0 +1,26 @@
+{
+  "ChildrenExtension": "Iterator",
+  "dataType": "state",
+  "key": "gridWord",
+  "template": {
+    "SliverGroup": {
+      "crossAxisCount": 5,
+      "childAspectRatio": 3,
+      "mainAxisSpacing": 5,
+      "crossAxisSpacing": 5,
+      "padding": "20,10,20,0",
+      "type": "grid",
+      "name": "gridWord"
+    },
+    "flutterType": "Container",
+    "color": "red",
+    "child": {
+      "flutterType": "Align",
+      "textAlign": "center",
+      "child": {
+        "flutterType": "Text",
+        "label": "${label}"
+      }
+    }
+  }
+}

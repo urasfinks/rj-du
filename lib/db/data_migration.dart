@@ -68,15 +68,15 @@ class DataMigration {
     return result;
   }
 
-  static Future<Map<String, String>> loadAssetByMask(String folder, String mask) async {
+  static Future<Map<String, String>> loadAssetByMask(String folder, String mask, [String preFolder = ""]) async {
     Map<String, String> result = {};
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       final regTab = RegExp("$mask[a-zA-Z0-9]+\.json\$");
-      if (path.startsWith("assets/db/data/$folder/") && regTab.hasMatch(path)) {
+      if (path.startsWith("${preFolder}assets/db/data/$folder/") && regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
 
-        String index = path.split("assets/db/data/$folder/$mask")[1].split(".json")[0];
+        String index = path.split("${preFolder}assets/db/data/$folder/$mask")[1].split(".json")[0];
         result[index] = fileData;
       }
     }
@@ -85,12 +85,29 @@ class DataMigration {
 
   Future<void> loadAssetsData() async {
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
+    List<String> list = [];
+    for (String path in assets.keys) {
+      if (path.startsWith("packages/rjdu/lib/assets/db/data/")) {
+        String fileData = await rootBundle.loadString(path);
+        String fileName = path.split("/").last;
+        list.add(fileName);
+        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
+      }
+    }
+    if (kDebugMode) {
+      print("DataMigration.loadAssetsData(rjdu) $list");
+    }
+    list = [];
     for (String path in assets.keys) {
       if (path.startsWith("assets/db/data/")) {
         String fileData = await rootBundle.loadString(path);
         String fileName = path.split("/").last;
+        list.add(fileName);
         DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
       }
+    }
+    if (kDebugMode) {
+      print("DataMigration.loadAssetsData(project) $list");
     }
   }
 

@@ -1,0 +1,160 @@
+{
+  "flutterType": "Column",
+  "onStateDataUpdate": true,
+  "crossAxisAlignment": "start",
+  "children": [
+    {
+      "flutterType": "Center",
+      "child": {
+        "flutterType": "InkWell",
+        "onTap": {
+          "jsInvoke": "Account.js",
+          "args": {
+            "includeAll": true,
+            "switch": "showGallery"
+          }
+        },
+        "customBorder": {
+          "flutterType": "RoundedRectangleBorder",
+          "borderRadius": 100
+        },
+        "child": {
+          "flutterType": "Container",
+          "width": 100,
+          "height": 100,
+          "margin": 10,
+          "decoration": {
+            "flutterType": "BoxDecoration",
+            "color": "transparent",
+            "shape": "circle",
+            "border": {
+              "flutterType": "Border",
+              "color": "schema:onBackground",
+              "width": 10
+            }
+          },
+          "child": {
+            "flutterType": "ClipRRect",
+            "borderRadius": 100,
+            "child": {
+              "flutterType": "ImageBase64",
+              "src": "avatar",
+              "assetLoader": "packages/rjdu/lib/assets/image/no-avatar.jpg"
+            }
+          }
+        }
+      }
+    },
+    {
+      "flutterType": "SizedBox",
+      "height": 20
+    },
+    {
+      "flutterType": "Template",
+      "src": "Input",
+      "context": {
+        "data": "${state(accountValue.name)}",
+        "key": "name",
+        "placeholder": "Имя",
+        "onSubmit": {
+          "jsInvoke": "Account.js",
+          "args": {
+            "includeAll": true,
+            "switch": "setNewName"
+          }
+        }
+      },
+      "templateArguments": [
+        "context.data"
+      ]
+    },
+    {
+      "flutterType": "Container",
+      "margin": "5,20,22,20",
+      "child": {
+        "flutterType": "Text",
+        "label": "Личная информация",
+        "style": {
+          "flutterType": "TextStyle",
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "color": "schema:secondary"
+        }
+      }
+    },
+    {
+      "ChildrenExtension": "Iterator",
+      "theme": "ButtonGroup",
+      "dataType": "list",
+      "list": [
+        {
+          "label": "${storage(mail)|partHideEmail()}",
+          "iconSrc": "mail_outline",
+          "iconSize": 20,
+          "templateWidgetSrc": "Text",
+          "templateArguments": [
+            "label"
+          ]
+        },
+        {
+          "label": "Всего загружено",
+          "labelStatistic": "${state(countAllData)}",
+          "templateWidgetSrc": "TextStatistic",
+          "templateArguments": [
+            "labelStatistic"
+          ]
+        },
+        {
+          "label": "Личная информация",
+          "labelStatistic": "${state(countPersonData)}/${state(countNotSyncData)}",
+          "templateWidgetSrc": "TextStatistic",
+          "templateArguments": [
+            "labelStatistic"
+          ]
+        },
+        {
+          "label": "Последняя синхронизация",
+          "labelStatistic": "${storage(lastSync,0)|timeSoFar(dd.MM.yyyy HH:mm:ss)}",
+          "templateWidgetSrc": "TextStatistic",
+          "templateArguments": [
+            "labelStatistic"
+          ]
+        }
+      ]
+    },
+    {
+      "flutterType": "SizedBox",
+      "height": 20
+    },
+    {
+      "ChildrenExtension": "Iterator",
+      "theme": "ButtonGroup",
+      "dataType": "list",
+      "list": [
+        {
+          "label": "Выйти из аккаунта",
+          "iconSrc": "exit_to_app",
+          "iconSize": 20,
+          "iconColor": "schema:inversePrimary",
+          "templateWidgetSrc": "Text",
+          "textAlign": "center",
+          "onTap": {
+            "sysInvoke": "Alert",
+            "args": {
+              "confirmRemove": true,
+              "actionLabel": "Выйти",
+              "backgroundColor": "schema:onBackground",
+              "onPressed": {
+                "jsInvoke": "Account.js",
+                "args": {
+                  "includeAll": true,
+                  "switch": "Logout"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

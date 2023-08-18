@@ -1,0 +1,110 @@
+{
+  "template": {
+    "flutterType": "Template",
+    "src": "${templateWidgetSrc}",
+    "templateArguments": [
+      "src"
+    ]
+  },
+  "template_middle": {
+    "flutterType": "Material",
+    "color": "${background,schema:onBackground}",
+    "child": {
+      "flutterType": "InkWell",
+      "onTap": "${onTap|jsonEncode()}",
+      "templateArguments": [
+        "onTap"
+      ],
+      "child": {
+        "flutterType": "Template",
+        "src": "${templateWidgetSrc}",
+        "templateArguments": [
+          "src"
+        ]
+      }
+    }
+  },
+  "template_last": {
+    "flutterType": "Material",
+    "color": "${background,schema:onBackground}",
+    "shape": {
+      "flutterType": "RoundedRectangleBorder",
+      "borderRadius": "0,0,10,10"
+    },
+    "child": {
+      "flutterType": "InkWell",
+      "customBorder": {
+        "flutterType": "RoundedRectangleBorder",
+        "borderRadius": "0,0,10,10"
+      },
+      "onTap": "${onTap|jsonEncode()}",
+      "templateArguments": [
+        "onTap"
+      ],
+      "child": {
+        "flutterType": "Template",
+        "src": "${templateWidgetSrc}",
+        "templateArguments": [
+          "src"
+        ]
+      }
+    }
+  },
+  "template_first": {
+    "flutterType": "Material",
+    "color": "${background,schema:onBackground}",
+    "shape": {
+      "flutterType": "RoundedRectangleBorder",
+      "borderRadius": "10,10,0,0"
+    },
+    "child": {
+      "flutterType": "InkWell",
+      "customBorder": {
+        "flutterType": "RoundedRectangleBorder",
+        "borderRadius": "10,10,0,0"
+      },
+      "onTap": "${onTap|jsonEncode()}",
+      "templateArguments": [
+        "onTap"
+      ],
+      "child": {
+        "flutterType": "Template",
+        "src": "${templateWidgetSrc}",
+        "templateArguments": [
+          "src"
+        ]
+      }
+    }
+  },
+  "template_single": {
+    "flutterType": "Material",
+    "color": "${background,schema:onBackground}",
+    "shape": {
+      "flutterType": "RoundedRectangleBorder",
+      "borderRadius": "10,10,10,10"
+    },
+    "child": {
+      "flutterType": "InkWell",
+      "customBorder": {
+        "flutterType": "RoundedRectangleBorder",
+        "borderRadius": "10,10,10,10"
+      },
+      "onTap": "${onTap|jsonEncode()}",
+      "templateArguments": [
+        "onTap"
+      ],
+      "child": {
+        "flutterType": "Template",
+        "src": "${templateWidgetSrc}",
+        "templateArguments": [
+          "src"
+        ]
+      }
+    }
+  },
+  "template_divider":{
+    "flutterType": "Divider",
+    "color": "schema:background",
+    "height": 1
+  }
+}

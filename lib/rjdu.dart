@@ -57,9 +57,15 @@ class RjDu {
         BottomTabItem(json.decode(tabData)),
       );
     }
+    //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
+    IteratorThemeLoader.load(
+        await DataMigration.loadAssetByMask("systemData/iteratorTheme", "", "packages/rjdu/lib/"), "rjdu");
+    IteratorThemeLoader.load(
+        await DataMigration.loadAssetByMask("systemData/iteratorTheme", "IteratorTheme"), "project");
 
-    IteratorThemeLoader.load(await DataMigration.loadAssetByMask("systemData", "IteratorTheme"));
-    TemplateWidget.load(await DataMigration.loadAssetByMask("template", "TemplateWidget"));
+    //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
+    TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", "", "packages/rjdu/lib/"), "rjdu");
+    TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", ""), "project");
 
     return DynamicPage(const {
       "flutterType": "Notify",

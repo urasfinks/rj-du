@@ -1,0 +1,27 @@
+{
+  "flutterType": "Margin",
+  "margin": "17,13,17,13",
+  "child": {
+    "flutterType": "Row",
+    "newContext": false,
+    "children": [
+      {
+        "flutterType": "Expanded",
+        "child": {
+          "flutterType": "Text",
+          "label": "${label}",
+          "style": {
+            "flutterType": "TextStyle",
+            "fontSize": 16
+          }
+        }
+      },
+      {
+        "flutterType": "Icon",
+        "src": "${iconSrc,arrow_forward_ios_sharp}",
+        "size": "${iconSize,17}",
+        "color": "${iconColor,#999999}"
+      }
+    ]
+  }
+}
