@@ -1,0 +1,40 @@
+{
+  "flutterType": "Margin",
+  "margin": "17,13,17,13",
+  "child": {
+    "flutterType": "Row",
+    "newContext": false,
+    "children": [
+      {
+        "flutterType": "Expanded",
+        "child": {
+          "flutterType": "Text",
+          "label": "${label}",
+          "style": {
+            "flutterType": "TextStyle",
+            "fontSize": 16
+          }
+        }
+      },
+      {
+        "flutterType": "Container",
+        "padding": "7,4,7,4",
+        "decoration": {
+          "color": "schema:inversePrimary",
+          "flutterType": "BoxDecoration",
+          "borderRadius": "8"
+        },
+        "child": {
+          "flutterType": "Text",
+          "style": {
+            "flutterType": "TextStyle",
+            "color": "schema:background",
+            "fontSize": 12,
+            "fontWeight": "bold"
+          },
+          "label": "${labelStatistic}"
+        }
+      }
+    ]
+  }
+}
