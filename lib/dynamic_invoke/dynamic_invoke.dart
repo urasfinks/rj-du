@@ -270,7 +270,7 @@ $pageArgs
         $jsInit
         $js
       } catch(e) {
-        bridge.log('Exception evaluate: ' + e);
+        bridge.log('JavaScript exception: ' + e);        
       }
     """;
 /*${dynamicUIBuilderContext.toString()}*/

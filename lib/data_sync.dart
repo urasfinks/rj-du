@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
@@ -38,6 +39,7 @@ class DataSync {
   Cron? cron;
   bool appIsActive = true;
   bool isRun = false;
+  Timer? timer;
 
   void restart(String template) async {
     try {
@@ -90,8 +92,7 @@ class DataSync {
           }
 
           if (kDebugMode) {
-            // print(
-            //     "DataSync.sync(${GlobalSettings().host}/Sync) ${Util.jsonPretty(postDataRequest)}");
+            //print("DataSync.sync(${GlobalSettings().host}/Sync) ${Util.jsonPretty(postDataRequest)}");
           }
 
           Response response = await Util.asyncInvokeIsolate((args) {
@@ -145,6 +146,24 @@ class DataSync {
         print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion");
       }
       isRun = false;
+    } else {
+      // История: 3 последовательных оповещения через сокет, что надо обновить
+      // 1 запускает синхронизацию, 2 последних заходим сюда, в итоге последний апдейт не синхронизован
+      // Потому что там процесс синхронизации успел зацепить с сервера 2 обновления, а третий не попал в временой диапозон
+      // Но и тут мы обновление не дали сделать, так как уже был процесс синхронизации
+      // Просераем в итоге данные, поэтому пост обновление делаем
+      if (timer != null) {
+        timer!.cancel();
+      }
+      timer = Timer(const Duration(seconds: 1), () {
+        if (kDebugMode) {
+          print("Delay sync()");
+        }
+        sync();
+      });
+      if (kDebugMode) {
+        print("Sync Already, start delay");
+      }
     }
   }
 
