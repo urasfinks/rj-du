@@ -14,15 +14,12 @@ class ImageBase64Widget extends AbstractWidget {
 
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    DynamicUIBuilderContext newContext =
-        dynamicUIBuilderContext.cloneWithNewData({}, parsedJson["key"] ?? "ImageBase64");
-    return newContext.dynamicPage.storeValueNotifier.getWidget(
+    return dynamicUIBuilderContext.dynamicPage.storeValueNotifier.getWidget(
       {"src": parsedJson["src"]},
-      newContext,
+      dynamicUIBuilderContext,
       (context, child) {
-        //print("ImageBase64Widget.rebuild()");
-        if (newContext.data.containsKey("src")) {
-          String x = newContext.data["src"]["blobRSync"];
+        if (dynamicUIBuilderContext.data.containsKey("src")) {
+          String x = dynamicUIBuilderContext.data["src"]["blobRSync"];
           //TODO: можно загрузить в состояния страницы, что бы повторная перерисовка была без assetLoader
           DynamicInvoke().sysInvokeType(SubscribeRefreshHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
           return getMemory(x, parsedJson, dynamicUIBuilderContext);

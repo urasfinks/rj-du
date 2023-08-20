@@ -43,10 +43,13 @@ class NavigatorPushHandler extends AbstractHandler {
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
           "linkContainer": dataPage["linkContainer"] ?? "NavigatorPush",
-          "linkDefault": dataPage.containsKey("linkDefault")
-              ? dataPage["linkDefault"]
+          "context": dataPage.containsKey("context")
+              ? dataPage["context"]
               : {
-                  "template": {"flutterType": "Text", "label": ""}
+                  "key": "NavigatorPushHandlerDialog",
+                  "data": {
+                    "template": {"flutterType": "Text", "label": ""}
+                  }
                 }
         },
       );
@@ -73,10 +76,13 @@ class NavigatorPushHandler extends AbstractHandler {
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
           "linkContainer": dataPage["linkContainer"] ?? "NavigatorPush",
-          "linkDefault": dataPage.containsKey("linkDefault")
-              ? dataPage["linkDefault"]
+          "context": dataPage.containsKey("context")
+              ? dataPage["context"]
               : {
-                  "template": {"flutterType": "Text", "label": ""}
+                  "key": "NavigatorPushHandlerBottomSheet",
+                  "data": {
+                    "template": {"flutterType": "Text", "label": ""}
+                  }
                 }
         },
       );
@@ -117,14 +123,17 @@ class NavigatorPushHandler extends AbstractHandler {
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
           "linkContainer": dataPage["linkContainer"] ?? "NavigatorPush",
-          "linkDefault": dataPage.containsKey("linkDefault")
-              ? dataPage["linkDefault"]
+          "context": dataPage.containsKey("context")
+              ? dataPage["context"]
               : {
-                  "template": {
-                    "flutterType": "Scaffold",
-                    "appBar": {
-                      "flutterType": "AppBar",
-                      "title": {"flutterType": "Text", "label": dataPage["label"]}
+                  "key": "NavigatorPushHandlerWindow",
+                  "data": {
+                    "template": {
+                      "flutterType": "Scaffold",
+                      "appBar": {
+                        "flutterType": "AppBar",
+                        "title": {"flutterType": "Text", "label": dataPage["label"]}
+                      }
                     }
                   }
                 }

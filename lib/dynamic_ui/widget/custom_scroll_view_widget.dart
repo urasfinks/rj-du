@@ -166,12 +166,7 @@ class CustomScrollViewWidget extends AbstractWidget {
   }
 
   Widget getRender(int index, List children, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    DynamicUIBuilderContext newContext = children[index]["context"] != null
-        ? dynamicUIBuilderContext.cloneWithNewData(
-            children[index]["context"], children[index]["key"] ?? "CustomScrollView")
-        : dynamicUIBuilderContext.clone("CustomScrollView");
-    newContext.index = index;
-    return render(children[index], null, null, newContext);
+    return render(children[index], null, null, dynamicUIBuilderContext);
   }
 
   dynamic getSliverList(List<Widget> defList, dynamic padding) {

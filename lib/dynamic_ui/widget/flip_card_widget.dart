@@ -24,40 +24,40 @@ class FlipCardWidget extends AbstractWidget {
         )!
       },
     );
-    Data stateData = Data(parsedJson["key"], stateControl, DataType.virtual, null);
-    DynamicUIBuilderContext newContext = dynamicUIBuilderContext.cloneWithNewData({"state": stateControl}, parsedJson["key"] ?? "FlipCard");
-    return newContext.dynamicPage.storeValueNotifier.getWidget(
+    // Data создаётся, для того, что бы можно было выставить Notify на обновление состояний FlipCard
+    Data stateDataFlipCard = Data(parsedJson["key"], stateControl, DataType.virtual, null);
+    return dynamicUIBuilderContext.dynamicPage.storeValueNotifier.getWidget(
       {"state": parsedJson["key"]},
-      newContext,
+      dynamicUIBuilderContext,
       (context, child) {
         bool isBack = stateControl["isBack"];
         return GestureDetector(
           onTap: () {
             stateControl["isBack"] = !stateControl["isBack"];
             stateControl["flip"] = true;
-            click(parsedJson, newContext, "onTap");
-            DataSource().setData(stateData, true);
+            click(parsedJson, dynamicUIBuilderContext, "onTap");
+            DataSource().setData(stateDataFlipCard, true);
           },
           child: stateControl["flip"]
               ? TweenAnimationBuilder(
                   tween: Tween<double>(begin: isBack ? 0 : 180, end: isBack ? 180 : 0),
                   duration: Duration(
                     milliseconds: TypeParser.parseInt(
-                      getValue(parsedJson, "duration", 350, newContext),
+                      getValue(parsedJson, "duration", 350, dynamicUIBuilderContext),
                     )!,
                   ),
                   builder: (context, val, __) {
                     bool isSideBack = val >= (180 / 2);
                     if (isSideBack == isBack && stateControl["flip"] == true) {
                       stateControl["flip"] = false;
-                      click(parsedJson, newContext, isBack ? "onFlipBack" : "onFlipFront");
+                      click(parsedJson, dynamicUIBuilderContext, isBack ? "onFlipBack" : "onFlipFront");
                     }
                     stateControl["angle"] = val;
                     Widget widget = render(
                       parsedJson,
                       (isSideBack ? "back" : "front"),
                       const SizedBox(),
-                      newContext,
+                      dynamicUIBuilderContext,
                     );
                     return Transform(
                       alignment: Alignment.center,
@@ -78,7 +78,7 @@ class FlipCardWidget extends AbstractWidget {
                   parsedJson,
                   (isBack ? "back" : "front"),
                   const SizedBox(),
-                  newContext,
+                  dynamicUIBuilderContext,
                 ),
         );
       },

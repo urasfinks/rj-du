@@ -71,8 +71,11 @@ class RjDu {
       "flutterType": "Notify",
       "link": {"template": "main.json"},
       "linkContainer": "root",
-      "linkDefault": {
-        "template": {"flutterType": "MaterialApp"}
+      "context": {
+        "key": "Main",
+        "data": {
+          "template": {"flutterType": "MaterialApp"}
+        }
       }
     });
   }

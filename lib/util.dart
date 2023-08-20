@@ -164,4 +164,17 @@ class Util {
   static T? enumFromString<T>(Iterable<T> values, String value) {
     return values.firstWhere((type) => type.toString().split(".").last == value);
   }
+
+  static Map<String, dynamic> convertMap(Map<dynamic, dynamic> map) {
+    map.forEach((key, value) {
+      if (value is Map) {
+        // it's a map, process it
+        value = convertMap(value);
+      }
+    });
+    // use .from to ensure the keys are Strings
+    return Map<String, dynamic>.from(map);
+    // more explicit alternative way:
+    // return Map.fromEntries(map.entries.map((entry) => MapEntry(entry.key.toString(), entry.value)));
+  }
 }

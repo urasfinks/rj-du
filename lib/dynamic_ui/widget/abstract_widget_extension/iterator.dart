@@ -7,8 +7,8 @@ class Iterator extends AbstractExtension {
     //"ButtonGroup": ButtonGroup().getTheme()
   };
 
-  static void extend(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
+  static void extend(
+      Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
     String dataType = parsedJson["dataType"];
     dynamic listData;
     switch (dataType) {
@@ -29,10 +29,7 @@ class Iterator extends AbstractExtension {
       if (theme.containsKey(parsedJson["theme"])) {
         parsedJson.addAll(theme[parsedJson["theme"]]!);
       } else {
-        result.add({
-          "flutterType": "Text",
-          "label": "Theme [${parsedJson["theme"]}] is not defined"
-        });
+        result.add({"flutterType": "Text", "label": "Theme [${parsedJson["theme"]}] is not defined"});
         return;
       }
     }
@@ -40,6 +37,7 @@ class Iterator extends AbstractExtension {
     bool add = false;
     if (listData != null) {
       List<dynamic> list = listData as List<dynamic>;
+      int counter = 0;
       for (Map<String, dynamic> data in list) {
         Map<String, dynamic> newUIElement = {};
         String seqType;
@@ -62,7 +60,10 @@ class Iterator extends AbstractExtension {
         if (parsedJson.containsKey("extendDataElement")) {
           data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
         }
-        newUIElement["context"] = Util.templateArguments(data, dynamicUIBuilderContext);
+        newUIElement["context"] = {
+          "key": "Iterator${counter++}",
+          "data": Util.templateArguments(data, dynamicUIBuilderContext)
+        };
 
         if (data.containsKey("uuid_data")) {
           dynamicUIBuilderContext.dynamicPage.addShadowUuid(data["uuid_data"]);

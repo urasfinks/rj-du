@@ -3,7 +3,6 @@
   "margin": "17,13,17,13",
   "child": {
     "flutterType": "Row",
-    "newContext": false,
     "children": [
       {
         "flutterType": "Expanded",

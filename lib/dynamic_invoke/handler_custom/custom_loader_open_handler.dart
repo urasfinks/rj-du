@@ -5,8 +5,7 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 
 class CustomLoaderOpenHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     DynamicInvoke().sysInvokeType(
         NavigatorPushHandler,
         {
@@ -15,16 +14,19 @@ class CustomLoaderOpenHandler extends AbstractHandler {
           "link": {
             "template": "_Loader.json",
           },
-          "linkDefault": {
-            "template": {
-              "flutterType": "Material",
-              "type": "transparency",
-              "child": {
-                "flutterType": "Center",
+          "context": {
+            "key": "CustomLoaderOpenHandler",
+            "data": {
+              "template": {
+                "flutterType": "Material",
+                "type": "transparency",
                 "child": {
-                  "flutterType": "CircularProgressIndicator",
-                  "backgroundColor": "schema:background",
-                  "color": "schema:secondary"
+                  "flutterType": "Center",
+                  "child": {
+                    "flutterType": "CircularProgressIndicator",
+                    "backgroundColor": "schema:background",
+                    "color": "schema:secondary"
+                  }
                 }
               }
             }

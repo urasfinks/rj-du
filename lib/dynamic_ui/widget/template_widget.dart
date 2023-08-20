@@ -12,9 +12,6 @@ class TemplateWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     Map<String, dynamic> args = Util.templateArguments(Util.getMutableMap(parsedJson), dynamicUIBuilderContext);
-    if (args.containsKey("context")) {
-      dynamicUIBuilderContext = dynamicUIBuilderContext.cloneWithNewData(args["context"], args["key"] ?? "template");
-    }
     return render(Util.getMutableMap(template[args["src"]]), null, Text("Error render TemplateWidget: $args"),
         dynamicUIBuilderContext);
   }

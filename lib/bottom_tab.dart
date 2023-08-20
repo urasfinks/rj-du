@@ -23,15 +23,12 @@ class BottomTab extends StatefulWidget {
   State<BottomTab> createState() => BottomTabState();
 }
 
-class BottomTabState extends State<BottomTab>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
-
+class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, TickerProviderStateMixin {
   bool visible = true;
 
   @override
   void didChangePlatformBrightness() {
-    Storage().set(
-        "theme", View.of(context).platformDispatcher.platformBrightness.name);
+    Storage().set("theme", View.of(context).platformDispatcher.platformBrightness.name);
   }
 
   @override
@@ -76,18 +73,15 @@ class BottomTabState extends State<BottomTab>
     if (NavigatorApp.selectedTab != index) {
       setState(() {
         NavigatorApp.selectedTab = index;
-        SystemNotify()
-            .emit(SystemNotifyEnum.changeViewport, "onChangeTab");
+        SystemNotify().emit(SystemNotifyEnum.changeViewport, "onChangeTab");
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    GlobalSettings().appBarHeight =
-        MediaQuery.of(context).padding.top + kToolbarHeight + 1;
-    GlobalSettings().bottomNavigationBarHeight =
-        MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight;
+    GlobalSettings().appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight + 1;
+    GlobalSettings().bottomNavigationBarHeight = MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight;
 
     int lastTimeClick = DateTime.now().millisecondsSinceEpoch;
 
@@ -99,7 +93,10 @@ class BottomTabState extends State<BottomTab>
           "link": {
             "template": "FloatingActionButton.json",
           },
-          "linkDefault": {"template": {}}
+          "context": {
+            "key": "BottomTab",
+            "data": {"template": {}}
+          }
         }),
         null,
         null,
@@ -110,8 +107,7 @@ class BottomTabState extends State<BottomTab>
         visible: visible,
         child: ClipRRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(
-                sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
+            filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
             child: Container(
               decoration: BoxDecoration(
                 border: Border(

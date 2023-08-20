@@ -53,19 +53,22 @@
       "flutterType": "Template",
       "src": "Input",
       "context": {
-        "data": "${state(accountValue.name)}",
-        "key": "name",
-        "placeholder": "Имя",
-        "onSubmit": {
-          "jsInvoke": "Account.js",
-          "args": {
-            "includeAll": true,
-            "switch": "setNewName"
+        "key": "InputName",
+        "data": {
+          "data": "${state(accountValue.name)}",
+          "key": "name",
+          "placeholder": "Имя",
+          "onSubmit": {
+            "jsInvoke": "Account.js",
+            "args": {
+              "includeAll": true,
+              "switch": "setNewName"
+            }
           }
         }
       },
       "templateArguments": [
-        "context.data"
+        "context.data.data"
       ]
     },
     {

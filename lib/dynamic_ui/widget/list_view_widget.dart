@@ -35,12 +35,7 @@ class ListViewWidget extends AbstractWidget {
           getValue(parsedJson, "itemCount", children.length, dynamicUIBuilderContext),
         )!,
         itemBuilder: (BuildContext context, int index) {
-          DynamicUIBuilderContext newContext = children[index]["context"] != null
-              ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"], children[index]["key"] ?? "ListView")
-              : dynamicUIBuilderContext.clone("ListView");
-          newContext.index = index;
-
-          return render(children[index], null, null, newContext);
+          return render(children[index], null, null, dynamicUIBuilderContext);
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(
           height: 1,
@@ -68,11 +63,7 @@ class ListViewWidget extends AbstractWidget {
           getValue(parsedJson, "itemCount", children.length, dynamicUIBuilderContext),
         )!,
         itemBuilder: (BuildContext context, int index) {
-          DynamicUIBuilderContext newContext = children[index]["context"] != null
-              ? dynamicUIBuilderContext.cloneWithNewData(children[index]["context"], children[index]["key"] ?? "ListView")
-              : dynamicUIBuilderContext.clone("ListView");
-          newContext.index = index;
-          return render(children[index], null, null, newContext);
+          return render(children[index], null, null, dynamicUIBuilderContext);
         },
       );
     }
