@@ -6,15 +6,6 @@ import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../global_settings.dart';
 
 class Template {
-  static dynamic mapSelector(Map<String, dynamic> data, List<String> args) {
-    if (args.length == 1) {
-      return stringSelector(data, args[0]);
-    } else if (args.length == 2) {
-      return stringSelector(data, args[0], args[1]);
-    } else {
-      return "mapSelector($args) length must be 1|2";
-    }
-  }
 
   static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
@@ -79,6 +70,16 @@ class Template {
       result.add(arg.trim());
     }
     return result;
+  }
+
+  static dynamic mapSelector(Map<String, dynamic> data, List<String> args) {
+    if (args.length == 1) {
+      return stringSelector(data, args[0]);
+    } else if (args.length == 2) {
+      return stringSelector(data, args[0], args[1]);
+    } else {
+      return "mapSelector($args) length must be 1|2";
+    }
   }
 
   static dynamic stringSelector(Map<String, dynamic> data, String path, [dynamic defaultValue]) {

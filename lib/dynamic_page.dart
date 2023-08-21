@@ -23,7 +23,7 @@ class DynamicPage extends StatefulWidget {
   final Map<String, dynamic> properties = {};
   final StoreValueNotifier storeValueNotifier = StoreValueNotifier();
   late final DynamicUIBuilderContext dynamicUIBuilderContext;
-  final Map<String, DynamicUIBuilderContext> container = {};
+  final Map<String, DynamicUIBuilderContext> contextMap = {};
   BuildContext? context;
   late final Data stateData;
   final String uuid = const Uuid().v4();
@@ -164,13 +164,13 @@ class DynamicPage extends StatefulWidget {
     return defValue;
   }
 
-  void setContainer(String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    container[key] = dynamicUIBuilderContext;
+  void setContext(String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    contextMap[key] = dynamicUIBuilderContext;
   }
 
-  Map<String, dynamic> getContainerData() {
+  Map<String, dynamic> getContextMap() {
     Map<String, dynamic> result = {};
-    for (MapEntry<String, DynamicUIBuilderContext> item in container.entries) {
+    for (MapEntry<String, DynamicUIBuilderContext> item in contextMap.entries) {
       result[item.key] = item.value.data;
     }
     return result;
@@ -179,19 +179,19 @@ class DynamicPage extends StatefulWidget {
   void renderFloatingActionButton() {
     if (NavigatorApp.getLast() == this) {
       bool hide = true;
-      if (container.containsKey("root") && container["root"]!.data.containsKey("template")) {
-        if (container["root"]!.data["template"]!.containsKey("floatingActionButton")) {
+      if (contextMap.containsKey("root") && contextMap["root"]!.data.containsKey("template")) {
+        if (contextMap["root"]!.data["template"]!.containsKey("floatingActionButton")) {
           DynamicInvoke().sysInvokeType(
             ShowHandler,
             {
               "case": "actionButton",
-              "template": container["root"]!.data["template"]["floatingActionButton"],
+              "template": contextMap["root"]!.data["template"]["floatingActionButton"],
             },
             dynamicUIBuilderContext,
           );
-        } else if (container["root"]!.data["template"]!.containsKey("onRenderFloatingActionButton")) {
+        } else if (contextMap["root"]!.data["template"]!.containsKey("onRenderFloatingActionButton")) {
           AbstractWidget.clickStatic(
-            container["root"]!.data["template"],
+            contextMap["root"]!.data["template"],
             dynamicUIBuilderContext,
             "onRenderFloatingActionButton",
           );
@@ -219,20 +219,18 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  String templateByContainer(List<String> parseArguments) {
-    if (parseArguments.length == 2) {
-      String uuid = parseArguments[0];
-      if (container.containsKey(uuid)) {
-        return Template.stringSelector(container[uuid]!.data, parseArguments[1]);
-      }
+  String templateByMapContext(Map<String, dynamic> data, List<String> parseArguments) {
+    String uuid = parseArguments[0];
+    String selector = parseArguments[1];
+    dynamic defValue = parseArguments.length == 3 ? parseArguments[2] : null;
+
+    if (uuid == "this") {
+      return Template.stringSelector(data, selector, defValue);
+    } else if (contextMap.containsKey(uuid)) {
+      return Template.stringSelector(contextMap[uuid]!.data, selector, defValue);
+    } else {
+      return "DynamicPage.template() args: ${parseArguments.join(",")} context not exists";
     }
-    if (parseArguments.length == 3) {
-      String uuid = parseArguments[0];
-      if (container.containsKey(uuid)) {
-        return Template.stringSelector(container[uuid]!.data, parseArguments[1], parseArguments[2]);
-      }
-    }
-    return "DynamicPage.template() args: ${parseArguments.join(",")} container not exists";
   }
 
   void addShadowUuid(String? uuid) {

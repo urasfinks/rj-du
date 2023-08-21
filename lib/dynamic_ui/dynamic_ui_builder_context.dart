@@ -36,7 +36,7 @@ class DynamicUIBuilderContext {
 
   DynamicUIBuilderContext(this.dynamicPage, this.key) {
     if (key != null) {
-      dynamicPage.setContainer(key!, this);
+      dynamicPage.setContext(key!, this);
     }
   }
 

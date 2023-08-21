@@ -13,6 +13,9 @@ class TemplateFunction {
     "context": (data, arguments, ctx) {
       return Template.mapSelector(data, arguments);
     },
+    "contextByKey": (data, arguments, ctx) {
+      return ctx.dynamicPage.templateByMapContext(data, arguments);
+    },
     "parentTemplate": (data, arguments, ctx) {
       return Template.mapSelector(ctx.parentTemplate, arguments);
     },
@@ -23,9 +26,6 @@ class TemplateFunction {
     },
     "pageArgument": (data, arguments, ctx) {
       return Template.mapSelector(ctx.dynamicPage.arguments, arguments);
-    },
-    "container": (data, arguments, ctx) {
-      return ctx.dynamicPage.templateByContainer(arguments);
     },
     "translate": (data, arguments, ctx) {
       return Translate().get(arguments);

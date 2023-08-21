@@ -172,7 +172,7 @@ class DynamicInvoke {
     Map<String, dynamic> args,
     DynamicUIBuilderContext dynamicUIBuilderContext, [
     bool includeContext = false,
-    bool includeContainer = false,
+    bool includeContextMap = false,
     bool includeStateData = false,
     bool includePageArgument = false,
   ]) {
@@ -180,15 +180,15 @@ class DynamicInvoke {
 
     if (args.containsKey("includeAll") && args["includeAll"] == true) {
       includeStateData = true;
-      includeContainer = true;
+      includeContextMap = true;
       includeContext = true;
       includePageArgument = true;
     } else {
       if (args.containsKey("includeStateData") && args["includeStateData"] == true) {
         includeStateData = true;
       }
-      if (args.containsKey("includeContainer") && args["includeContainer"] == true) {
-        includeContainer = true;
+      if (args.containsKey("includeContextMap") && args["includeContextMap"] == true) {
+        includeContextMap = true;
       }
       if (args.containsKey("includeContext") && args["includeContext"] == true) {
         includeContext = true;
@@ -208,7 +208,7 @@ class DynamicInvoke {
           data[DataType.js.name],
           Util.jsonEncode(args, pretty),
           includeContext ? Util.jsonEncode(dynamicUIBuilderContext.data, pretty) : "",
-          includeContainer ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.getContainerData(), pretty) : "",
+          includeContextMap ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.getContextMap(), pretty) : "",
           includeStateData ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.stateData.value, pretty) : "",
           includePageArgument ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.arguments, pretty) : "",
           NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage,
@@ -227,7 +227,7 @@ class DynamicInvoke {
     });
   }
 
-  String? _eval(String scriptUuid, String pageUuid, String js, String args, String context, String container,
+  String? _eval(String scriptUuid, String pageUuid, String js, String args, String context, String contextMap,
       String state, String pageArgs, bool pageActive, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
@@ -235,8 +235,8 @@ class DynamicInvoke {
     if (context.isNotEmpty) {
       context = "bridge.context = $context;";
     }
-    if (container.isNotEmpty) {
-      container = "bridge.container = $container;";
+    if (contextMap.isNotEmpty) {
+      contextMap = "bridge.contextMap = $contextMap;";
     }
     if (state.isNotEmpty) {
       state = "bridge.state = $state;";
@@ -256,7 +256,7 @@ $args
 //--------------------------------------------------------
 $context
 //--------------------------------------------------------
-$container
+$contextMap
 //--------------------------------------------------------
 $state
 //--------------------------------------------------------
