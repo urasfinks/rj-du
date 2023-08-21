@@ -42,7 +42,6 @@ class NavigatorPushHandler extends AbstractHandler {
           "name": dataPage.containsKey("name") ? dataPage["name"] : "",
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
-          "linkContainer": dataPage["linkContainer"] ?? "NavigatorPush",
           "context": dataPage.containsKey("context")
               ? dataPage["context"]
               : {
@@ -75,7 +74,6 @@ class NavigatorPushHandler extends AbstractHandler {
           "name": dataPage.containsKey("name") ? dataPage["name"] : "",
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
-          "linkContainer": dataPage["linkContainer"] ?? "NavigatorPush",
           "context": dataPage.containsKey("context")
               ? dataPage["context"]
               : {
@@ -122,7 +120,6 @@ class NavigatorPushHandler extends AbstractHandler {
           "name": dataPage.containsKey("name") ? dataPage["name"] : "",
           "flutterType": "Notify",
           "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
-          "linkContainer": dataPage["linkContainer"] ?? "NavigatorPush",
           "context": dataPage.containsKey("context")
               ? dataPage["context"]
               : {

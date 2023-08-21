@@ -184,8 +184,8 @@ class DynamicUI {
       parsedJson = Util.templateArguments(parsedJson, dynamicUIBuilderContext);
       if (parsedJson.containsKey("context")) {
         dynamicUIBuilderContext = dynamicUIBuilderContext.cloneWithNewData(
-          Util.convertMap(parsedJson["context"]["data"]),
-          parsedJson["context"]["key"] ?? "dynamicContext${key}",
+          Util.convertMap(parsedJson["context"]["data"] ?? {}),
+          parsedJson["context"]["key"],
         );
       }
       dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
@@ -217,9 +217,6 @@ class DynamicUI {
             "link": selector["link"],
             "context": contextData,
           };
-          if (selector.containsKey("linkContainer")) {
-            renderData["linkContainer"] = selector["linkContainer"];
-          }
           return render(renderData, null, defaultValue, dynamicUIBuilderContext);
         } else {
           String flutterType = selector["flutterType"] as String;

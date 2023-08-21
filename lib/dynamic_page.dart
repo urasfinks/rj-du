@@ -166,9 +166,6 @@ class DynamicPage extends StatefulWidget {
 
   void setContainer(String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     container[key] = dynamicUIBuilderContext;
-    /*if (key == "root") {
-      dynamicUIBuilderContext.isRoot = true;
-    }*/
   }
 
   Map<String, dynamic> getContainerData() {

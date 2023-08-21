@@ -34,19 +34,23 @@ class DynamicUIBuilderContext {
         .onEvent(updKeys.contains("stateData") ? "onStateUpdate" : "onContextUpdate", {"key": key, "updKeys": updKeys});
   }
 
-  DynamicUIBuilderContext(this.dynamicPage, this.key);
+  DynamicUIBuilderContext(this.dynamicPage, this.key) {
+    if (key != null) {
+      dynamicPage.setContainer(key!, this);
+    }
+  }
 
   static String template(List<String> args) {
     return "";
   }
 
-  DynamicUIBuilderContext clone(String key) {
-    DynamicUIBuilderContext newDynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage, key);
-    children.add(newDynamicUIBuilderContext);
-    return newDynamicUIBuilderContext;
-  }
+  // DynamicUIBuilderContext clone(String key) {
+  //   DynamicUIBuilderContext newDynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage, key);
+  //   children.add(newDynamicUIBuilderContext);
+  //   return newDynamicUIBuilderContext;
+  // }
 
-  DynamicUIBuilderContext cloneWithNewData(Map<String, dynamic> newData, String key) {
+  DynamicUIBuilderContext cloneWithNewData(Map<String, dynamic> newData, String? key) {
     DynamicUIBuilderContext newDynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage, key);
     newDynamicUIBuilderContext.data = newData;
     children.add(newDynamicUIBuilderContext);

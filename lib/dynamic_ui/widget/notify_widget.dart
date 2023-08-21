@@ -6,9 +6,6 @@ import '../widget/abstract_widget.dart';
 class NotifyWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (parsedJson.containsKey("linkContainer") && parsedJson["linkContainer"] != null) {
-      dynamicUIBuilderContext.dynamicPage.setContainer(parsedJson["linkContainer"], dynamicUIBuilderContext);
-    }
     Map<String, dynamic> link = parsedJson["link"];
     for (String uuidLink in link.keys) {
       dynamicUIBuilderContext.addListener(uuidLink);

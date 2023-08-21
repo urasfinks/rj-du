@@ -192,8 +192,8 @@ class DataSource {
         });
       }
       if (kDebugMode) {
-        print(
-            "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+        // print(
+        //     "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
       }
     } catch (e, stacktrace) {
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
