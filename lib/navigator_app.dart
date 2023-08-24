@@ -24,6 +24,7 @@ class NavigatorApp {
 
   static void addNavigatorPage(DynamicPage dynamicPage, [int? indexTab]) {
     indexTab ??= selectedTab;
+    dynamicPage.openInIndexTab = indexTab;
     if (!tabNavigator.containsKey(indexTab)) {
       tabNavigator[indexTab] = [];
     }

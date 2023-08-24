@@ -7,25 +7,24 @@ import '../../navigator_app.dart';
 
 class CustomLoaderCloseHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
-    DynamicPage? dynamicPage = NavigatorApp.getLast(NavigatorApp.selectedTab);
+  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    DynamicPage? dynamicPage = NavigatorApp.getLast(dynamicUIBuilderContext.dynamicPage.openInIndexTab);
     if (dynamicPage != null) {
-      if (dynamicPage.arguments.containsKey("name") &&
-          dynamicPage.arguments["name"] == "CustomLoader") {
+      if (dynamicPage.arguments.containsKey("name") && dynamicPage.arguments["name"] == "CustomLoader") {
         int delay = args.containsKey("delay") ? args["delay"] : 0;
         if (delay > 0) {
           Future.delayed(Duration(milliseconds: delay), () {
-            pop(dynamicPage.context!);
+            pop(dynamicPage);
           });
         } else {
-          pop(dynamicPage.context!);
+          pop(dynamicPage);
         }
       }
     }
   }
 
-  void pop(BuildContext buildContext) {
-    Navigator.pop(buildContext);
+  void pop(DynamicPage dynamicPage) {
+    NavigatorApp.removePage(dynamicPage);
+    Navigator.pop(dynamicPage.context!);
   }
 }

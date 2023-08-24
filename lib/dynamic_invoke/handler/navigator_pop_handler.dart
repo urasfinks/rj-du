@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 
 class NavigatorPopHandler extends AbstractHandler {
   @override
-  dynamic handle(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
-    int indexTab =
-        args.containsKey("tab") ? args["tab"] : NavigatorApp.selectedTab;
+  dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    int indexTab = args.containsKey("tab") ? args["tab"] : NavigatorApp.selectedTab;
     int count = args.containsKey("count") ? args["count"] : 1;
     if (args.containsKey("toBegin")) {
       count = 9999; //break остановит
@@ -23,7 +21,6 @@ class NavigatorPopHandler extends AbstractHandler {
     } else {
       _pop(count, indexTab, args);
     }
-    _updateLast(args, indexTab);
   }
 
   void _updateLast(Map<String, dynamic> args, int indexTab) {
@@ -40,11 +37,13 @@ class NavigatorPopHandler extends AbstractHandler {
     while (count > 0) {
       if (!NavigatorApp.isLast(indexTab)) {
         NavigatorApp.removePage(NavigatorApp.getLast(indexTab)!);
+        //NavigatorApp.tab[indexTab].context - это глобально весь открытый Tab
         Navigator.pop(NavigatorApp.tab[indexTab].context, args);
       } else {
         break;
       }
       count--;
     }
+    _updateLast(args, indexTab);
   }
 }

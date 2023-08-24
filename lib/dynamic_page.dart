@@ -32,6 +32,8 @@ class DynamicPage extends StatefulWidget {
   List<String> listUpdateUuidToReloadDynamicPage = [];
   _DynamicPage? dynamicPageSate;
   bool isDispose = false;
+  int openInIndexTab = 0;
+
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
