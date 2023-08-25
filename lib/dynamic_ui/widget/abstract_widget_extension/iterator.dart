@@ -1,3 +1,5 @@
+import 'package:rjdu/subscribe_reload_group.dart';
+
 import '../../../util.dart';
 import '../../dynamic_ui_builder_context.dart';
 import 'abstract_extension.dart';
@@ -14,10 +16,6 @@ class Iterator extends AbstractExtension {
     switch (dataType) {
       case "state":
         String key = parsedJson["key"];
-        //Будем прихранивать неявно объявленные uuid, что бы небыло лишних перерисовок страницы
-        //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
-        //Поэтому удалим их и потом заново добавим уже обновлённые
-        AbstractExtension.removeLastShadowUuid(key, dynamicUIBuilderContext);
         listData = dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? [];
         break;
       case "list":
@@ -66,7 +64,7 @@ class Iterator extends AbstractExtension {
         };
 
         if (data.containsKey("uuid_data")) {
-          dynamicUIBuilderContext.dynamicPage.addShadowUuid(data["uuid_data"]);
+          dynamicUIBuilderContext.dynamicPage.subscribeToReload(SubscribeReloadGroup.uuid, data["uuid_data"]);
         }
         add = true;
         result.add(newUIElement);

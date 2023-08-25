@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../navigator_app.dart';
+import '../subscribe_reload_group.dart';
 
 class TypeParser {
   static dynamic parseFontStyle(String? value) {
@@ -94,8 +95,7 @@ class TypeParser {
     } else if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
       try {
-        return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!,
-            parseDouble(l[3])!);
+        return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
       } catch (e) {}
       return Colors.pink;
     } else if (value.startsWith("#")) {
@@ -103,18 +103,14 @@ class TypeParser {
     } else if (value.contains(".")) {
       try {
         List<String> l = value.split(".");
-        MaterialColor? x = (mapAssocNameColor.containsKey(l[0])
-            ? mapAssocNameColor[l[0]]
-            : null) as MaterialColor?;
+        MaterialColor? x = (mapAssocNameColor.containsKey(l[0]) ? mapAssocNameColor[l[0]] : null) as MaterialColor?;
         if (x != null) {
           return x[parseInt(l[1])!];
         }
       } catch (e) {}
       return null;
     } else {
-      return mapAssocNameColor.containsKey(value)
-          ? mapAssocNameColor[value]
-          : null;
+      return mapAssocNameColor.containsKey(value) ? mapAssocNameColor[value] : null;
     }
   }
 
@@ -140,6 +136,7 @@ class TypeParser {
     };
     return map.containsKey(value) ? map[value] : null;
   }
+
   static FontWeight? parseFontWeight(String? value) {
     if (value == null || value.trim() == "") {
       return null;
@@ -233,9 +230,7 @@ class TypeParser {
           ret.add(d);
         }
       }
-      if (parsedJson.runtimeType
-          .toString()
-          .startsWith("_InternalLinkedHashMap<String, dynamic>")) {
+      if (parsedJson.runtimeType.toString().startsWith("_InternalLinkedHashMap<String, dynamic>")) {
         Map x = parsedJson;
         for (var item in x.entries) {
           ret.add(item.value);
@@ -256,9 +251,7 @@ class TypeParser {
           }
         }
       }
-      if (parsedJson.runtimeType
-          .toString()
-          .startsWith("_InternalLinkedHashMap<String, dynamic>")) {
+      if (parsedJson.runtimeType.toString().startsWith("_InternalLinkedHashMap<String, dynamic>")) {
         Map x = parsedJson;
         for (var item in x.entries) {
           Color? x = parseColor(item.value);
@@ -357,12 +350,9 @@ class TypeParser {
       "emailAddress": TextInputType.emailAddress,
       "multiline": TextInputType.multiline,
       "number": TextInputType.number,
-      "numberS":
-          const TextInputType.numberWithOptions(signed: true, decimal: false),
-      "numberD":
-          const TextInputType.numberWithOptions(signed: false, decimal: true),
-      "numberSD":
-          const TextInputType.numberWithOptions(signed: true, decimal: true),
+      "numberS": const TextInputType.numberWithOptions(signed: true, decimal: false),
+      "numberD": const TextInputType.numberWithOptions(signed: false, decimal: true),
+      "numberSD": const TextInputType.numberWithOptions(signed: true, decimal: true),
       "phone": TextInputType.phone,
       "streetAddress": TextInputType.streetAddress,
       "text": TextInputType.text,
@@ -579,5 +569,17 @@ class TypeParser {
     }
     var split = value.split(",");
     return Size(parseDouble(split[0])!, parseDouble(split[1])!);
+  }
+
+  static SubscribeReloadGroup? parseSubscribeReloadGroup(String? value) {
+    if (value == null) {
+      return null;
+    }
+    Map<String, SubscribeReloadGroup> map = {
+      "uuid": SubscribeReloadGroup.uuid,
+      "parentUuid": SubscribeReloadGroup.parentUuid,
+      "key": SubscribeReloadGroup.key,
+    };
+    return map.containsKey(value) ? map[value] : null;
   }
 }

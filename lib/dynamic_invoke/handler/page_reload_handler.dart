@@ -17,6 +17,7 @@ class PageReloadHandler extends AbstractHandler {
     if (!args.containsKey("case") || args["case"] == null) {
       args["case"] = "byArguments";
     }
+    bool rebuild = args["rebuild"] ?? true;
     dynamic fnReload;
     switch (args["case"]) {
       case "byArguments":
@@ -24,7 +25,7 @@ class PageReloadHandler extends AbstractHandler {
           if (kDebugMode) {
             print("PageReloadHandler.fnReload(byArguments)");
           }
-          NavigatorApp.reloadPageByArguments(args["key"], args["value"]);
+          NavigatorApp.reloadPageByArguments(args["key"], args["value"], rebuild);
         };
         break;
       case "current":
@@ -32,7 +33,7 @@ class PageReloadHandler extends AbstractHandler {
           if (kDebugMode) {
             print("PageReloadHandler.fnReload(current)");
           }
-          dynamicUIBuilderContext.dynamicPage.reload();
+          dynamicUIBuilderContext.dynamicPage.reload(rebuild);
         };
         break;
       default:

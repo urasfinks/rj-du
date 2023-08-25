@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/abstract_extension.dart';
+import 'package:rjdu/subscribe_reload_group.dart';
 
 import '../../dynamic_ui_builder_context.dart';
 
@@ -8,10 +9,6 @@ class StateDataSwitch extends AbstractExtension {
       Map<String, dynamic> child, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
     String key = child["key"];
 
-    //Будем прихранивать неявно объявленные uuid, что бы небыло лишних перерисовок страницы
-    //Если это повторная отрисовка, данные, которые были на прошлом шагу могли поменятся
-    //Поэтому удалим их и потом заново добавим уже обновлённые
-    AbstractExtension.removeLastShadowUuid(key, dynamicUIBuilderContext);
     String value = dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? "default";
     List<dynamic> children = child["children"];
     Map<String, dynamic> map = {};
@@ -27,7 +24,7 @@ class StateDataSwitch extends AbstractExtension {
     bool flagAdd = false;
     if (map.containsKey(value)) {
       if (map[value].containsKey("uuid_data")) {
-        dynamicUIBuilderContext.dynamicPage.addShadowUuid(map[value]["uuid_data"]);
+        dynamicUIBuilderContext.dynamicPage.subscribeToReload(SubscribeReloadGroup.uuid, map[value]["uuid_data"]);
       }
       result.add(map[value]);
       flagAdd = true;

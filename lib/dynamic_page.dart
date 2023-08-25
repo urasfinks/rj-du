@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/dynamic_invoke/handler/hide_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/show_handler.dart';
+import 'package:rjdu/dynamic_invoke/handler/subscribe_refresh.dart';
+import 'package:rjdu/subscribe_reload_group.dart';
 import 'package:rjdu/util/template.dart';
 import 'package:rjdu/web_socket_service.dart';
 import 'data_type.dart';
@@ -28,12 +30,22 @@ class DynamicPage extends StatefulWidget {
   late final Data stateData;
   final String uuid = const Uuid().v4();
   bool isRunConstructor = false;
-  List<String> shadowUuidList = [];
-  List<String> listUpdateUuidToReloadDynamicPage = [];
+
+  final Map<SubscribeReloadGroup, List<String>> _subscribedOnReload = {
+    SubscribeReloadGroup.uuid: [],
+    SubscribeReloadGroup.parentUuid: [],
+    SubscribeReloadGroup.key: [],
+  };
   _DynamicPage? dynamicPageSate;
   bool isDispose = false;
   int openInIndexTab = 0;
 
+  void subscribeToReload(SubscribeReloadGroup group, String value) {
+    print("DynamicPage.subscribeToReload(${group.name}) $value");
+    if (!_subscribedOnReload[group]!.contains(value)) {
+      _subscribedOnReload[group]!.add(value);
+    }
+  }
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
@@ -49,6 +61,9 @@ class DynamicPage extends StatefulWidget {
       isRunConstructor = true;
       if (arguments.containsKey("constructor") && arguments["constructor"].isNotEmpty) {
         AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "constructor");
+      }
+      if (arguments.containsKey("subscribeRefresh")) {
+        DynamicInvoke().sysInvokeType(SubscribeRefreshHandler, arguments["subscribeRefresh"], dynamicUIBuilderContext);
       }
 
       if (arguments.containsKey("socket") && arguments["socket"] == true) {
@@ -102,17 +117,19 @@ class DynamicPage extends StatefulWidget {
     renderFloatingActionButton();
   }
 
-  void reloadWithoutSetState() {
-    properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
-    isRunConstructor = false;
-    constructor();
-  }
-
-  void reload() {
-    properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
-    isRunConstructor = false;
-    if (dynamicPageSate != null) {
-      dynamicPageSate!.setState(() {});
+  void reload(bool rebuild) {
+    if (rebuild) {
+      properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
+      isRunConstructor = false;
+      if (dynamicPageSate != null) {
+        dynamicPageSate!.setState(() {});
+      }
+    } else {
+      // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
+      isRunConstructor = false;
+      // Все надежды на конструктор, что он перерисует необходимые блоки
+      // В основном, это сводится к выборке из БД и обновления состояния
+      constructor();
     }
   }
 
@@ -208,17 +225,16 @@ class DynamicPage extends StatefulWidget {
   @override
   State<DynamicPage> createState() => _DynamicPage();
 
-  void updateNotifier(String uuid, Map<String, dynamic> data) {
+  void updateStoreValueNotifier(String uuid, Map<String, dynamic> data) {
     storeValueNotifier.updateValueNotifier(uuid, data);
-    // shadowUuidList содержит uuid отображённых данных без NotifyWidget
-    // Например в ChildrenExtension
-    if (shadowUuidList.contains(uuid)) {
-      print("TODO: Что то в этом блоке не так, пока видиться рекурсия на setSateData");
-      //DataSource().setData(stateData);
+    if (checkSubscribeReload(SubscribeReloadGroup.uuid, uuid)) {
+      reload(false);
     }
-    if (listUpdateUuidToReloadDynamicPage.contains(uuid)) {
-      reloadWithoutSetState();
-    }
+  }
+
+  bool checkSubscribeReload(SubscribeReloadGroup group, String value) {
+    // Косвенные зависимости, установленные в обход Notify
+    return _subscribedOnReload[group]!.contains(value);
   }
 
   String templateByMapContext(Map<String, dynamic> data, List<String> parseArguments) {
@@ -233,19 +249,6 @@ class DynamicPage extends StatefulWidget {
     } else {
       return "DynamicPage.template() args: ${parseArguments.join(",")} context not exists";
     }
-  }
-
-  void addShadowUuid(String? uuid) {
-    if (uuid == null) {
-      return;
-    }
-    if (!shadowUuidList.contains(uuid)) {
-      shadowUuidList.add(uuid);
-    }
-  }
-
-  void removeShadowUuid(String uuid) {
-    shadowUuidList.remove(uuid);
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:rjdu/subscribe_reload_group.dart';
+
 import 'bottom_tab.dart';
 import 'bottom_tab_item.dart';
 import 'dynamic_page.dart';
@@ -61,17 +63,36 @@ class NavigatorApp {
   static void updatePageNotifier(String uuid, Map<String, dynamic> data) {
     for (DynamicPage dynamicPage in allDynamicPage) {
       if (dynamicPage.isDispose == false) {
-        dynamicPage.updateNotifier(uuid, data);
+        dynamicPage.updateStoreValueNotifier(uuid, data);
       }
     }
   }
 
-  static void reloadPageByArguments(String key, String value) {
+  static void checkPageSubscribeReload(Map<SubscribeReloadGroup, List<String>> map, bool rebuild) {
+    List<DynamicPage> listPageToReload = [];
+    for (MapEntry<SubscribeReloadGroup, List<String>> item in map.entries) {
+      for (String value in item.value) {
+        for (DynamicPage dynamicPage in allDynamicPage) {
+          if (dynamicPage.isDispose == false) {
+            if (dynamicPage.checkSubscribeReload(item.key, value) && !listPageToReload.contains(dynamicPage)) {
+              listPageToReload.add(dynamicPage);
+            }
+          }
+        }
+      }
+    }
+
+    for (DynamicPage dynamicPage in listPageToReload) {
+      dynamicPage.reload(rebuild);
+    }
+  }
+
+  static void reloadPageByArguments(String key, String value, bool rebuild) {
     for (DynamicPage dynamicPage in allDynamicPage) {
       if (dynamicPage.isDispose == false &&
           dynamicPage.arguments.containsKey(key) &&
           dynamicPage.arguments[key] == value) {
-        dynamicPage.reload();
+        dynamicPage.reload(rebuild);
       }
     }
   }

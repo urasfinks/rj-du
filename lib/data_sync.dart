@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:cron/cron.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/storage.dart';
+import 'package:rjdu/subscribe_reload_group.dart';
 import 'data_type.dart';
 import 'db/data_source.dart';
 import 'global_settings.dart';
@@ -65,6 +67,10 @@ class DataSync {
       isRun = true;
       int start = Util.getTimestamp();
       int allInsertion = 0;
+      Map<SubscribeReloadGroup, List<String>> map = {
+        SubscribeReloadGroup.key: [],
+        SubscribeReloadGroup.parentUuid: [],
+      };
       try {
         int counter = 0;
         Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
@@ -113,7 +119,14 @@ class DataSync {
               for (MapEntry<String, dynamic> item in parseJson["data"]["response"].entries) {
                 DataType dataType = Util.dataTypeValueOf(item.key);
                 for (Map<String, dynamic> curData in item.value) {
-                  if (upgradeData(curData, dataType, maxRevisionByType)) {
+                  Data? updData = upgradeData(curData, dataType, maxRevisionByType);
+                  if (updData != null) {
+                    if (updData.parentUuid != null) {
+                      map[SubscribeReloadGroup.parentUuid]!.add(updData.parentUuid!);
+                    }
+                    if (updData.key != null) {
+                      map[SubscribeReloadGroup.key]!.add(updData.key!);
+                    }
                     insertion++;
                     allInsertion++;
                   }
@@ -143,7 +156,8 @@ class DataSync {
         }
       }
       if (kDebugMode) {
-        print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion");
+        print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion; map: $map");
+        NavigatorApp.checkPageSubscribeReload(map, false);
       }
       isRun = false;
     } else {
@@ -167,7 +181,7 @@ class DataSync {
     }
   }
 
-  bool upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {
+  Data? upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {
     if (curData["uuid"] != null && curData["uuid"] != "") {
       Data dataObject = Data(curData["uuid"], curData["value"], dataType, curData["parent_uuid"]);
       dataObject.dateAdd = curData["date_add"];
@@ -182,7 +196,7 @@ class DataSync {
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
-      return true;
+      return dataObject;
     } else if (curData["needUpgrade"] != null) {
       //Если ревизия на сервере оказалась меньше чем на устройстве
       //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
@@ -196,7 +210,7 @@ class DataSync {
         maxRevisionByType[dataType.name]!,
       );
     }
-    return false;
+    return null;
   }
 
   void init() {
