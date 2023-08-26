@@ -1,8 +1,10 @@
 library rjdu;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:rjdu/db/data_migration.dart';
 import 'package:rjdu/dynamic_page.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/iterator_theme/iterator_theme_loader.dart';
@@ -49,6 +51,8 @@ class RjDu {
       NavigatorApp.getLast()?.onActive();
     });
   }
+
+  static final player = AudioPlayer();
 
   static Future<DynamicPage> runApp() async {
     List<String> loadTabData = await DataMigration.loadTabData();

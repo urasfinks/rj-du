@@ -36,6 +36,7 @@ dependencies:
   swipable_stack: ^2.0.0
   image_picker: ^1.0.2
   image_cropper: ^4.0.1
+  just_audio: ^0.9.34
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,7 @@ flutter:
     - lib/assets/db/data/systemData/
     - lib/assets/db/data/systemData/iteratorTheme/
     - lib/assets/image/
+    - lib/assets/sound/
 
   # To add assets to your package, add an assets section, like this:
   # assets:
