@@ -5,12 +5,15 @@ import '../../audio_component.dart';
 class AudioHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    createAudioContext(args, dynamicUIBuilderContext);
+    createAudioContext(args, dynamicUIBuilderContext, (AudioComponentContext audioComponentContext) {
+      AudioComponent().play(audioComponentContext);
+    });
+
   }
 
-  AudioComponentContext createAudioContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  AudioComponentContext createAudioContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, [onLoadBytesCallback]) {
     AudioComponentContext audioComponentContext =
-        AudioComponentContext(args["key"], args["src"], dynamicUIBuilderContext);
+        AudioComponentContext(args["key"], args["src"], dynamicUIBuilderContext, onLoadBytesCallback);
 
     return audioComponentContext;
   }

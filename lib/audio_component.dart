@@ -105,7 +105,10 @@ class AudioComponentContext {
   AudioStream? _audioStream;
   ByteSource? byteSource;
 
-  AudioComponentContext(String key, String src, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  Function(AudioComponentContext audioComponentContext)? onLoadBytesCallback;
+
+  AudioComponentContext(String key, String src, DynamicUIBuilderContext dynamicUIBuilderContext,
+      [this.onLoadBytesCallback]) {
     dataState = getStateControl(key, dynamicUIBuilderContext, {
       "state": AudioComponentContextState.stop.name,
       "playerState": "init",
@@ -115,6 +118,9 @@ class AudioComponentContext {
 
     rootBundle.load(src).then((bytes) {
       byteSource = ByteSource(bytes.buffer.asUint8List());
+      if (onLoadBytesCallback != null) {
+        onLoadBytesCallback!(this);
+      }
     });
   }
 
