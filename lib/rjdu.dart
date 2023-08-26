@@ -52,6 +52,9 @@ class RjDu {
       AudioComponent().pause();
       NavigatorApp.getLast()?.onActive();
     });
+    SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
+      AudioComponent().pause();
+    });
   }
 
   static Future<DynamicPage> runApp() async {

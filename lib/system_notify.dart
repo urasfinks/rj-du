@@ -35,4 +35,10 @@ class SystemNotify {
   }
 }
 
-enum SystemNotifyEnum { appLifecycleState, changeViewport, changeOrientation, changeBottomNavigationTab }
+enum SystemNotifyEnum {
+  appLifecycleState,
+  changeViewport,
+  changeOrientation,
+  changeBottomNavigationTab,
+  openDynamicPage
+}

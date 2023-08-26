@@ -2,6 +2,7 @@ import 'package:rjdu/dynamic_ui/type_parser.dart';
 import 'package:rjdu/global_settings.dart';
 
 import '../../navigator_app.dart';
+import '../../system_notify.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class NavigatorPushHandler extends AbstractHandler {
         window(buildContext, raw, dataPage);
         break;
     }
+    SystemNotify().emit(SystemNotifyEnum.openDynamicPage, type);
   }
 
   void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
