@@ -4,6 +4,7 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/align_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/asset_image_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/audio_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/baseline_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/bottom_navigation_bar_item_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/button_widget.dart';
@@ -44,6 +45,7 @@ import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.da
 import 'package:rjdu/dynamic_ui/widget/sliver_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sliver_fill_remaining_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/state_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/swipable_stack_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
@@ -91,6 +93,8 @@ class DynamicUI {
     "IconButton": IconButtonWidget().get, //Кнопка с иконкой
     "FloatingActionButton": FloatingActionButtonWidget().get, //Кругляш на BottomNavigationBar
     "RawMaterialButton": RawMaterialButtonWidget().get, //Кнопка без фона (можно обернуть в Material)
+    "MaterialButton": MaterialButtonWidget().get,
+    "AudioButton": AudioButtonWidget().get,
 
     //Widget
     "MaterialApp": MaterialAppWidget().get,
@@ -144,13 +148,13 @@ class DynamicUI {
     "TextField": TextFieldWidget().get,
     "GestureDetector": GestureDetectorWidget().get,
     "Material": MaterialWidget().get,
-    "MaterialButton": MaterialButtonWidget().get,
     "Template": TemplateWidget().get,
     "State": StateWidget().get,
     "SwipableStack": SwipableStackWidget().get,
     "FlipCard": FlipCardWidget().get,
     "LinearProgressIndicator": LinearProgressIndicatorWidget().get,
     "ImageBase64": ImageBase64Widget().get,
+    "Stream": StreamWidget().get,
 
     //Property
     "TextStyle": TextStyleProperty().get,

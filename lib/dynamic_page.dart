@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/dynamic_invoke/handler/hide_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/show_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/subscribe_refresh.dart';
@@ -120,6 +121,9 @@ class DynamicPage extends StatefulWidget {
   void reload(bool rebuild) {
     if (rebuild) {
       properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
+      Map<String, dynamic> stateDataValue = {};
+      stateData.value = stateDataValue;
+      AudioComponent().stop();
       isRunConstructor = false;
       if (dynamicPageSate != null) {
         dynamicPageSate!.setState(() {});

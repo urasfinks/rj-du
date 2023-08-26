@@ -38,7 +38,7 @@ class Util {
   }
 
   static void log(dynamic mes) {
-    developer.log(mes.toString());
+    developer.log("[${DateTime.now()}] ${mes.toString()}");
   }
 
   static String jsonEncode(dynamic object, [bool pretty = false]) {
@@ -111,6 +111,9 @@ class Util {
     if (s == null) {
       return false;
     }
+    if (s == "NaN") {
+      return false;
+    }
     return double.tryParse(s) != null;
   }
 
@@ -176,5 +179,15 @@ class Util {
     return Map<String, dynamic>.from(map);
     // more explicit alternative way:
     // return Map.fromEntries(map.entries.map((entry) => MapEntry(entry.key.toString(), entry.value)));
+  }
+
+  static Map<String, dynamic> overlay(Map<String, dynamic> defObject, Map<String, dynamic>? overlayObject) {
+    if (overlayObject == null || overlayObject.isEmpty) {
+      return defObject;
+    }
+    for (MapEntry<String, dynamic> item in overlayObject.entries) {
+      defObject[item.key] = item.value;
+    }
+    return defObject;
   }
 }

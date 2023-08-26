@@ -45,8 +45,6 @@ class TextFieldWidget extends AbstractWidget {
       listInputFormatters.add(FilteringTextInputFormatter.allow(RegExp("^[a-z0-9_-]{3,16}\$")));
     }
 
-
-
     return TextField(
       key: Util.getKey(),
       focusNode: dynamicUIBuilderContext.dynamicPage.getProperty("${key}_FocusNode", FocusNode()),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rjdu/audio_component.dart';
 import '../navigator_app.dart';
 import '../subscribe_reload_group.dart';
 
@@ -579,6 +580,19 @@ class TypeParser {
       "uuid": SubscribeReloadGroup.uuid,
       "parentUuid": SubscribeReloadGroup.parentUuid,
       "key": SubscribeReloadGroup.key,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static AudioComponentContextState? parseAudioComponentContextState(String? value) {
+    if (value == null) {
+      return null;
+    }
+    Map<String, AudioComponentContextState> map = {
+      "stop": AudioComponentContextState.stop,
+      "play": AudioComponentContextState.play,
+      "pause": AudioComponentContextState.pause,
+      "loading": AudioComponentContextState.loading,
     };
     return map.containsKey(value) ? map[value] : null;
   }

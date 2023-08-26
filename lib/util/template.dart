@@ -104,9 +104,6 @@ class Template {
           label:
           "Template.stringSelector() Exception: $e; path: $path; defaultValue: $defaultValue; data: $data",
         );
-        print(e);
-        print(stacktrace);
-        print("Exception arg: path: $path; defaultValue: $defaultValue; data: $data");
       }
       find = false;
     }

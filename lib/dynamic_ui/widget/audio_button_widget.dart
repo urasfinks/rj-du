@@ -1,0 +1,93 @@
+import 'package:rjdu/dynamic_invoke/handler/audio_handler.dart';
+import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
+import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
+import 'package:flutter/material.dart';
+
+import '../../audio_component.dart';
+import '../../util.dart';
+import '../icon.dart';
+import '../type_parser.dart';
+
+class AudioButtonWidget extends AbstractWidget {
+  @override
+  get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    String key = parsedJson["key"] ?? "Audio";
+    if (!dynamicUIBuilderContext.dynamicPage.isProperty(key)) {
+      dynamicUIBuilderContext.dynamicPage.setProperty(
+        key,
+        AudioHandler().createAudioContext(parsedJson, dynamicUIBuilderContext),
+      );
+    }
+    AudioComponentContext audioComponentContext = dynamicUIBuilderContext.dynamicPage.getProperty(key, null);
+    return Center(
+      child: Container(
+          color: Colors.transparent,
+          width: 50,
+          height: 50,
+          child: StreamBuilder(
+            stream: audioComponentContext.getStream(),
+            builder: (BuildContext buildContext, AsyncSnapshot asyncSnapshot) {
+              Map<String, dynamic> value = Util.overlay(
+                {"prc": 0.0, "state": AudioComponentContextState.stop.name, "playerState": ""},
+                asyncSnapshot.data,
+              );
+
+              if (!Util.isNumeric(value["prc"].toString())) {
+                value["prc"] = 0.0;
+              }
+
+              Icon icon = Icon(iconsMap["play_arrow"]);
+              switch (TypeParser.parseAudioComponentContextState(audioComponentContext.dataState["state"])) {
+                case AudioComponentContextState.stop:
+                case AudioComponentContextState.pause:
+                  icon = Icon(iconsMap["play_arrow"]);
+                  break;
+                case AudioComponentContextState.loading:
+                  icon = Icon(iconsMap["timelapse"]);
+                  break;
+                case AudioComponentContextState.play:
+                  icon = Icon(iconsMap["pause"]);
+                  break;
+                default:
+                  break;
+              }
+              return Stack(
+                fit: StackFit.expand,
+                alignment: Alignment.center,
+                children: [
+                  //Text(value["state"]),
+                  CircularProgressIndicator(
+                    value: value["prc"],
+                    key: Util.getKey(),
+                    backgroundColor: TypeParser.parseColor(
+                      getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
+                    ),
+                    color: TypeParser.parseColor(
+                      getValue(parsedJson, "color", "schema:onBackground", dynamicUIBuilderContext),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      switch (TypeParser.parseAudioComponentContextState(audioComponentContext.dataState["state"])) {
+                        case AudioComponentContextState.stop:
+                          AudioComponent().play(audioComponentContext);
+                          break;
+                        case AudioComponentContextState.pause:
+                          AudioComponent().resume(audioComponentContext);
+                          break;
+                        case AudioComponentContextState.play:
+                          AudioComponent().pause();
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                    icon: icon,
+                  ),
+                ],
+              );
+            },
+          )),
+    );
+  }
+}

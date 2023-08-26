@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/db/data_migration.dart';
 import 'package:rjdu/dynamic_page.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/iterator_theme/iterator_theme_loader.dart';
@@ -29,6 +29,7 @@ class RjDu {
     DynamicInvoke().init();
     await Storage().init();
     GlobalSettings().init();
+    AudioComponent().init();
 
     Storage().set("uuid", const Uuid().v4(), false);
     print("I'am: ${Storage().get("uuid", "")}");
@@ -48,11 +49,10 @@ class RjDu {
     DeepLink.init();
 
     SystemNotify().subscribe(SystemNotifyEnum.changeViewport, (state) {
+      AudioComponent().pause();
       NavigatorApp.getLast()?.onActive();
     });
   }
-
-  static final player = AudioPlayer();
 
   static Future<DynamicPage> runApp() async {
     List<String> loadTabData = await DataMigration.loadTabData();

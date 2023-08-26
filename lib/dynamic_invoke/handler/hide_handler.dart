@@ -4,6 +4,7 @@ import 'package:rjdu/dynamic_invoke/handler/system_notify_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_close_handler.dart';
 import 'package:rjdu/system_notify.dart';
 
+import '../../global_settings.dart';
 import '../../util.dart';
 import '../dynamic_invoke.dart';
 import 'abstract_handler.dart';
@@ -18,9 +19,13 @@ class HideHandler extends AbstractHandler {
         case "snackBar":
           try {
             ScaffoldMessenger.of(dynamicUIBuilderContext.dynamicPage.context!).hideCurrentSnackBar();
-          } catch (e) {
+          } catch (e, stacktrace) {
             if (kDebugMode) {
-              print(e);
+              debugPrintStack(
+                stackTrace: stacktrace,
+                maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+                label: "HideHandler.snackBar Exception: $e; args: $args",
+              );
             }
           }
           break;

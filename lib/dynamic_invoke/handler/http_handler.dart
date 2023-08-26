@@ -71,8 +71,11 @@ class HttpHandler extends AbstractHandler {
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {
-        print(error);
-        print(stackTrace);
+        debugPrintStack(
+          stackTrace: stackTrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label: "HttpHandler.onError() Exception: $error",
+        );
       }
     });
   }
