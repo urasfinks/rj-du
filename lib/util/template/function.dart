@@ -19,12 +19,15 @@ class TemplateFunction {
     "parentTemplate": (data, arguments, ctx) {
       return Template.mapSelector(ctx.parentTemplate, arguments);
     },
+    "getStateUuid": (data, arguments, ctx) {
+      return ctx.dynamicPage.stateData.uuid;
+    },
     "state": (data, arguments, ctx) {
       // Ранее stateData.value оборачивалось через MutableMap
       // Я убрал, так как ломалось зацикливание для FlipCard
       return Template.mapSelector(ctx.dynamicPage.stateData.value, arguments);
     },
-    "pageArgument": (data, arguments, ctx) {
+    "pageArgs": (data, arguments, ctx) {
       return Template.mapSelector(ctx.dynamicPage.arguments, arguments);
     },
     "translate": (data, arguments, ctx) {
