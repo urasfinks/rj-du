@@ -1,0 +1,26 @@
+[
+  {
+    "flutterType": "AudioButton",
+    "key": "s1",
+    "type": "db",
+    "uuid": "tutututu-mem-demotivator.mp3"
+  },
+  {
+    "flutterType": "AudioButton",
+    "key": "s2",
+    "type": "db",
+    "uuid": "zdarova-zeal-privetstvie-kazahov.mp3"
+  },
+  {
+    "flutterType": "AudioButton",
+    "key": "s3",
+    "type": "db",
+    "uuid": "nu-che-narod-pognali.mp3"
+  },
+  {
+    "flutterType": "AudioButton",
+    "key": "s4",
+    "type": "asset",
+    "src": "packages/rjdu/lib/assets/sound/zdarova-kz.mp3"
+  }
+]

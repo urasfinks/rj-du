@@ -1,0 +1,14 @@
+{
+  "flutterType": "Stream",
+  "stream": {
+    "name": "Periodic",
+    "timerMillis": 1000,
+    "data": {
+      "count": 0
+    }
+  },
+  "child": {
+    "flutterType": "Text",
+    "label": "Hello world ${count}"
+  }
+}
