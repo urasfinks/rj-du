@@ -36,8 +36,11 @@ class AudioButtonWidget extends AbstractWidget {
                 value["prc"] = 0.0;
               }
 
-              Icon icon = Icon(iconsMap["play_arrow"]);
-              switch (TypeParser.parseAudioComponentContextState(audioComponentContext.dataState["state"])) {
+              Icon icon = Icon(iconsMap["radio_button_unchecked"]);
+              AudioComponentContextState audioComponentContextState =
+                  TypeParser.parseAudioComponentContextState(audioComponentContext.dataState["state"]) ??
+                      AudioComponentContextState.error;
+              switch (audioComponentContextState) {
                 case AudioComponentContextState.stop:
                 case AudioComponentContextState.pause:
                   icon = Icon(iconsMap["play_arrow"]);
@@ -48,6 +51,9 @@ class AudioButtonWidget extends AbstractWidget {
                 case AudioComponentContextState.play:
                   icon = Icon(iconsMap["pause"]);
                   break;
+                case AudioComponentContextState.error:
+                  icon = Icon(iconsMap["error"]);
+                  break;
                 default:
                   break;
               }
@@ -57,7 +63,7 @@ class AudioButtonWidget extends AbstractWidget {
                 children: [
                   //Text(value["state"]),
                   CircularProgressIndicator(
-                    value: value["prc"],
+                    value: audioComponentContextState == AudioComponentContextState.stop ? 0.0 : value["prc"],
                     key: Util.getKey(),
                     backgroundColor: TypeParser.parseColor(
                       getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
@@ -68,7 +74,7 @@ class AudioButtonWidget extends AbstractWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      switch (TypeParser.parseAudioComponentContextState(audioComponentContext.dataState["state"])) {
+                      switch (audioComponentContextState) {
                         case AudioComponentContextState.stop:
                           AudioComponent().play(audioComponentContext);
                           break;

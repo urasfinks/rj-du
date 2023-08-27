@@ -11,6 +11,8 @@ import 'dynamic_ui/dynamic_ui_builder_context.dart';
 import 'data_type.dart';
 
 class Util {
+  static Base64Codec base64 = const Base64Codec();
+
   static bool isIOs() {
     return Platform.isIOS;
   }
@@ -189,5 +191,9 @@ class Util {
       defObject[item.key] = item.value;
     }
     return defObject;
+  }
+
+  static Uint8List base64Decode(String data) {
+    return base64.decode(data);
   }
 }

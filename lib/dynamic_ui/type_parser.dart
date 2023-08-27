@@ -593,6 +593,7 @@ class TypeParser {
       "play": AudioComponentContextState.play,
       "pause": AudioComponentContextState.pause,
       "loading": AudioComponentContextState.loading,
+      "error": AudioComponentContextState.error,
     };
     return map.containsKey(value) ? map[value] : null;
   }

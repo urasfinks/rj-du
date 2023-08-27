@@ -57,7 +57,7 @@ class SocketCache {
 
   void renderDBData(Data data) {
     removeCache(data.uuid);
-    DataGetter.getData(data.uuid, (dataDB) {
+    DataGetter.getDataJson(data.uuid, (dataDB) {
       data.value = dataDB;
       SyncTimer(data).notify();
     });
@@ -124,7 +124,7 @@ class SyncTimer {
   void setDiff(Data diffData) {
     //print("SyncTimer.setDiff(${data.uuid})");
     if (loadFromDb == false) {
-      DataGetter.getData(data.uuid, (dataDB) {
+      DataGetter.getDataJson(data.uuid, (dataDB) {
         loadFromDb = true;
         data.value = dataDB;
         _mergeData(diffData);

@@ -13,7 +13,7 @@ class AudioHandler extends AbstractHandler {
 
   AudioComponentContext createAudioContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, [onLoadBytesCallback]) {
     AudioComponentContext audioComponentContext =
-        AudioComponentContext(args["key"], args["src"], dynamicUIBuilderContext, onLoadBytesCallback);
+        AudioComponentContext(args, dynamicUIBuilderContext, onLoadBytesCallback);
 
     return audioComponentContext;
   }

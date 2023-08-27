@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:rjdu/dynamic_invoke/handler/subscribe_refresh.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
@@ -10,8 +8,6 @@ import '../../util.dart';
 import '../type_parser.dart';
 
 class ImageBase64Widget extends AbstractWidget {
-  static Base64Codec base64 = const Base64Codec();
-
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return dynamicUIBuilderContext.dynamicPage.storeValueNotifier.getWidget(
@@ -42,7 +38,7 @@ class ImageBase64Widget extends AbstractWidget {
 
   getMemory(String imageData, Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return Image.memory(
-      base64.decode(imageData),
+      Util.base64Decode(imageData),
       key: Util.getKey(),
       width: TypeParser.parseDouble(
         getValue(parsedJson, "width", null, dynamicUIBuilderContext),

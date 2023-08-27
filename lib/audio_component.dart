@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:rjdu/db/data_getter.dart';
 import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 import 'package:rjdu/util.dart';
 
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
+import 'global_settings.dart';
 
 class AudioComponent {
   static final AudioComponent _singleton = AudioComponent._internal();
@@ -22,6 +25,7 @@ class AudioComponent {
       if (audioComponentContext != null) {
         PlayerState st = event;
         Map<String, dynamic> data = {
+          "caller": "playerState",
           "playing": st.playing.toString(),
           "playerState": st.processingState.name.toString(),
         };
@@ -35,6 +39,7 @@ class AudioComponent {
     audioPlayer.bufferedPositionStream.listen((event) {
       if (audioComponentContext != null) {
         audioComponentContext!.notifyStream({
+          "caller": "bufferedPosition",
           "bufferedPosition": event.toString(),
         });
       }
@@ -43,6 +48,7 @@ class AudioComponent {
       Duration? ev = event;
       if (audioComponentContext != null && ev != null) {
         audioComponentContext!.notifyStream({
+          "caller": "duration",
           "duration": ev.toString(),
           "durationMillis": ev.inMilliseconds,
         });
@@ -56,6 +62,7 @@ class AudioComponent {
           prc = ev.inMilliseconds / audioComponentContext!.dataState["durationMillis"];
         }
         audioComponentContext!.notifyStream({
+          "caller": "position",
           "position": ev.toString(),
           "positionMillis": ev.inMilliseconds,
           "prc": prc,
@@ -107,25 +114,62 @@ class AudioComponentContext {
 
   Function(AudioComponentContext audioComponentContext)? onLoadBytesCallback;
 
-  AudioComponentContext(String key, String src, DynamicUIBuilderContext dynamicUIBuilderContext,
+  AudioComponentContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext,
       [this.onLoadBytesCallback]) {
-    dataState = getStateControl(key, dynamicUIBuilderContext, {
-      "state": AudioComponentContextState.stop.name,
+    dataState = getStateControl(args["key"] ?? "Audio", dynamicUIBuilderContext, {
+      "state": AudioComponentContextState.loading.name,
       "playerState": "init",
       "bufferedPosition": "init",
       "position": "init",
     });
-
-    rootBundle.load(src).then((bytes) {
-      byteSource = ByteSource(bytes.buffer.asUint8List());
-      if (onLoadBytesCallback != null) {
-        onLoadBytesCallback!(this);
+    try {
+      switch (args["type"] ?? "undefined") {
+        case "asset":
+          rootBundle.load(args["src"]).then((bytes) {
+            byteSource = ByteSource(bytes.buffer.asUint8List());
+            notifyStream({
+              "caller": "loadAsset()",
+              "state": AudioComponentContextState.stop.name,
+            });
+            if (onLoadBytesCallback != null) {
+              onLoadBytesCallback!(this);
+            }
+          });
+          break;
+        case "db":
+          DataGetter.getDataBlob(args["uuid"], (data) {
+            if (data != null) {
+              byteSource = ByteSource(data);
+              notifyStream({
+                "caller": "getDataBlob()",
+                "state": AudioComponentContextState.stop.name,
+              });
+            } else {
+              notifyStream({
+                "caller": "getDataBlob()",
+                "state": AudioComponentContextState.error.name,
+              });
+            }
+          });
+          break;
+        default:
+          dataState["state"] = AudioComponentContextState.error.name;
+          break;
       }
-    });
+    } catch (e, stacktrace) {
+      if (kDebugMode) {
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label: "AudioComponentContext Exception: $e; ars: $args; onLoadBytesCallback: $onLoadBytesCallback",
+        );
+      }
+    }
   }
 
   void notifyStream(Map<String, dynamic> map) {
     if (_audioStream != null) {
+      //Util.log(map);
       Util.overlay(dataState, map);
       _audioStream!.notify();
     }
@@ -137,23 +181,23 @@ class AudioComponentContext {
   }
 
   void play() {
-    notifyStream({"state": AudioComponentContextState.play.name});
+    notifyStream({"caller": "play()", "state": AudioComponentContextState.play.name});
   }
 
   void loading() {
-    notifyStream({"state": AudioComponentContextState.loading.name});
+    notifyStream({"caller": "loading()", "state": AudioComponentContextState.loading.name});
   }
 
   void pause() {
-    notifyStream({"state": AudioComponentContextState.pause.name});
+    notifyStream({"caller": "pause()", "state": AudioComponentContextState.pause.name});
   }
 
   void resume() {
-    notifyStream({"state": AudioComponentContextState.play.name});
+    notifyStream({"caller": "resume()", "state": AudioComponentContextState.play.name});
   }
 
   void stop() {
-    notifyStream({"state": AudioComponentContextState.stop.name, "prc": 0.0});
+    notifyStream({"caller": "stop()", "state": AudioComponentContextState.stop.name, "prc": 0.0});
   }
 
   Map<String, dynamic> getStateControl(
@@ -162,7 +206,13 @@ class AudioComponentContext {
   }
 }
 
-enum AudioComponentContextState { play, pause, stop, loading }
+enum AudioComponentContextState {
+  play,
+  pause,
+  stop,
+  loading,
+  error,
+}
 
 class ByteSource extends StreamAudioSource {
   final List<int> bytes;
