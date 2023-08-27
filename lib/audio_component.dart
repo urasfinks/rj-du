@@ -122,6 +122,7 @@ class AudioComponentContext {
       "bufferedPosition": "init",
       "position": "init",
     });
+    //print("AudioComponentContext args: $args");
     try {
       switch (args["type"] ?? "undefined") {
         case "asset":

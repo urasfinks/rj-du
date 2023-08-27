@@ -66,10 +66,10 @@ class AudioButtonWidget extends AbstractWidget {
                     value: audioComponentContextState == AudioComponentContextState.stop ? 0.0 : value["prc"],
                     key: Util.getKey(),
                     backgroundColor: TypeParser.parseColor(
-                      getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
+                      getValue(parsedJson, "backgroundColor", "schema:onBackground", dynamicUIBuilderContext),
                     ),
                     color: TypeParser.parseColor(
-                      getValue(parsedJson, "color", "schema:onBackground", dynamicUIBuilderContext),
+                      getValue(parsedJson, "color", "schema:secondary", dynamicUIBuilderContext),
                     ),
                   ),
                   IconButton(
