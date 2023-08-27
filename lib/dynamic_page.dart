@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/dynamic_invoke/handler/hide_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/show_handler.dart';
-import 'package:rjdu/dynamic_invoke/handler/subscribe_refresh.dart';
+import 'package:rjdu/dynamic_invoke/handler/subscribe_reload.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
 import 'package:rjdu/util/template.dart';
 import 'package:rjdu/web_socket_service.dart';
@@ -64,7 +64,7 @@ class DynamicPage extends StatefulWidget {
         AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "constructor");
       }
       if (arguments.containsKey("subscribeRefresh")) {
-        DynamicInvoke().sysInvokeType(SubscribeRefreshHandler, arguments["subscribeRefresh"], dynamicUIBuilderContext);
+        DynamicInvoke().sysInvokeType(SubscribeReloadHandler, arguments["subscribeRefresh"], dynamicUIBuilderContext);
       }
 
       if (arguments.containsKey("socket") && arguments["socket"] == true) {

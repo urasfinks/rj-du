@@ -1,6 +1,4 @@
-import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/util.dart';
-
 import '../dynamic_page.dart';
 
 class DynamicUIBuilderContext {
@@ -11,17 +9,9 @@ class DynamicUIBuilderContext {
   Map<String, dynamic> parentTemplate = {}; //Времянка, только для шаблонизации (это очень не стабильная штука)
   bool isRoot = false; //Корневой контекст данных
   List<DynamicUIBuilderContext> children = [];
-  List<String> listener = [];
+  Map<String, dynamic> listener = {};
 
-  void addListener(String uuid) {
-    if (GlobalSettings().debug) {
-      if (!listener.contains(uuid)) {
-        listener.add(uuid);
-      }
-    }
-  }
-
-  void contextUpdate(List<String> updKeys) {
+  void contextUpdate(List<String> updateUuidList) {
     if (isRoot) {
       dynamicPage.renderFloatingActionButton();
     }
@@ -30,8 +20,13 @@ class DynamicUIBuilderContext {
     // По факту это отдельная структура от context
     // Поэтому для неё будем вызывать отдельный обработчик
     // Был кейс, когда я ждал данные из БД и в момент их получения устанавливал новое состоние в итоге получалась рекурсия
-    dynamicPage
-        .onEvent(updKeys.contains("stateData") ? "onStateUpdate" : "onContextUpdate", {"key": key, "updKeys": updKeys});
+    dynamicPage.onEvent(
+      updateUuidList.contains("stateData") ? "onStateUpdate" : "onContextUpdate",
+      {
+        "contextKey": key,
+        "updateUuidList": updateUuidList,
+      },
+    );
   }
 
   DynamicUIBuilderContext(this.dynamicPage, this.key) {

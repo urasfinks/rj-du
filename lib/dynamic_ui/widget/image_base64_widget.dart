@@ -1,4 +1,4 @@
-import 'package:rjdu/dynamic_invoke/handler/subscribe_refresh.dart';
+import 'package:rjdu/dynamic_invoke/handler/subscribe_reload.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class ImageBase64Widget extends AbstractWidget {
         if (dynamicUIBuilderContext.data.containsKey("src")) {
           String x = dynamicUIBuilderContext.data["src"]["blobRSync"];
           //TODO: можно загрузить в состояния страницы, что бы повторная перерисовка была без assetLoader
-          DynamicInvoke().sysInvokeType(SubscribeRefreshHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
+          DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
           return getMemory(x, parsedJson, dynamicUIBuilderContext);
         } else {
           return getAsset(parsedJson, dynamicUIBuilderContext);
