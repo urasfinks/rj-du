@@ -192,6 +192,11 @@ class DynamicUI {
           parsedJson["context"]["key"],
         );
       }
+      if (parsedJson.containsKey("debug")) {
+        if (kDebugMode) {
+          print("DEBUG RENDER (${dynamicUIBuilderContext.listener}): $parsedJson");
+        }
+      }
       dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
       if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {
         if (selector.containsKey("onStateDataUpdate")) {
