@@ -32,7 +32,7 @@ import 'handler/navigator_pop_handler.dart';
 import 'handler/select_tab_handler.dart';
 import 'handler/set_storage_handler.dart';
 import 'handler/share_handler.dart';
-import 'handler/subscribe_refresh.dart';
+import 'handler/subscribe_reload.dart';
 import 'handler/system_notify_handler.dart';
 import 'handler/template_handler.dart';
 import 'handler/test_handler.dart';
@@ -88,7 +88,7 @@ class DynamicInvoke {
     HideHandler();
     SystemNotifyHandler();
     WakeLockHandler();
-    SubscribeRefreshHandler();
+    SubscribeReloadHandler();
     DataSyncHandler();
     AudioHandler();
 

@@ -3,7 +3,7 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/type_parser.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
 
-class SubscribeRefreshHandler extends AbstractHandler {
+class SubscribeReloadHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     add(args, dynamicUIBuilderContext, SubscribeReloadGroup.uuid.name);
