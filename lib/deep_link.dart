@@ -3,6 +3,7 @@ import 'package:rjdu/navigator_app.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'dynamic_invoke/dynamic_invoke.dart';
+import 'global_settings.dart';
 
 class DeepLink {
   static void init() {
@@ -40,9 +41,13 @@ class DeepLink {
       if (uri != null) {
         open(uri);
       }
-    }, onError: (Object err) {
+    }, onError: (e, stacktrace) {
       if (kDebugMode) {
-        print(err);
+        debugPrintStack(
+          stackTrace: stacktrace,
+          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+          label: "DeepLink.uriLinkStream.listen() Exception: $e",
+        );
       }
     });
   }
