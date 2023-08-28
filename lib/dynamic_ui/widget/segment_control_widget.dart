@@ -12,7 +12,7 @@ class SegmentControlWidget extends AbstractWidget {
 
     String data = getValue(parsedJson, "data", "-", dynamicUIBuilderContext);
     if (parsedJson["setState"] ?? false == true) {
-      dynamicUIBuilderContext.dynamicPage.setStateData(keyState, data);
+      dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], keyState, data);
     }
 
     List<Widget> children = renderList(parsedJson, "children", dynamicUIBuilderContext);
@@ -55,8 +55,8 @@ class SegmentControlWidget extends AbstractWidget {
           getValue(parsedJson, "isStretch", true, dynamicUIBuilderContext),
         )!,
         onValueChanged: (int index) {
-          dynamicUIBuilderContext.dynamicPage
-              .setStateData(keyState, parsedJson["children"][index]["case"], onChangedNotify);
+          dynamicUIBuilderContext.dynamicPage.stateData
+              .set(parsedJson["state"], keyState, parsedJson["children"][index]["case"], onChangedNotify);
           click(parsedJson, dynamicUIBuilderContext, "onChanged");
         },
         initialValue: getIndex(parsedJson, data),

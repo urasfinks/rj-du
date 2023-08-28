@@ -39,13 +39,14 @@ class StoreValueNotifier {
           List<String> updateUuidList = [];
           for (MapEntry<String, dynamic> item in subscriberObject.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
-            updateUuidList.add(item.key);
+            updateUuidList.add(subscriberObject.link[item.key]); //link: {blabla: uuid}; data:{blabla: {...}}
           }
           dynamicUIBuilderContext.contextUpdate(updateUuidList);
         }
         dynamic resultWidget = builder(context, child);
         if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
-          return Text("DynamicPageNotifier.builder() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+          return Text(
+              "DynamicPageNotifier.builder() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
         }
         return resultWidget;
       },
@@ -65,7 +66,8 @@ class StoreValueNotifier {
       // Первичное заполнение контейнеров
       for (MapEntry<String, dynamic> item in link.entries) {
         DataSource().get(item.value, (uuid, data) {
-          if (data != null) { //&& data.isNotEmpty //убрал так как {} вызывает спорную ситуацию
+          if (data != null) {
+            //&& data.isNotEmpty //убрал так как {} вызывает спорную ситуацию
             subscriberObject.set(item.value, data);
             valueNotifier.notifyListeners();
           }

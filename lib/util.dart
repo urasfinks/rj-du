@@ -209,4 +209,6 @@ class Util {
   static String uuid() {
     return uuidObject.v4();
   }
+
+  static String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 }

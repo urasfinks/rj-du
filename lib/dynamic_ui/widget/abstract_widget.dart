@@ -15,9 +15,9 @@ import 'package:flutter/material.dart';
 abstract class AbstractWidget {
   dynamic get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext);
 
-  Map<String, dynamic> getStateControl(
+  static Map<String, dynamic> getStateControl(
       String key, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
-    return dynamicUIBuilderContext.dynamicPage.getStateData(key, defaultState, true);
+    return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(key, defaultState).value;
   }
 
   static dynamic getValueStatic(

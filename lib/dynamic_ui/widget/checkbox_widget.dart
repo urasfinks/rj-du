@@ -11,7 +11,7 @@ class CheckboxWidget extends AbstractWidget {
     bool value = TypeParser.parseBool(
       getValue(parsedJson, "value", false, dynamicUIBuilderContext),
     )!;
-    dynamicUIBuilderContext.dynamicPage.setStateData(key, value);
+    dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, value);
     return Checkbox(
       key: Util.getKey(),
       side: MaterialStateBorderSide.resolveWith(
@@ -44,7 +44,7 @@ class CheckboxWidget extends AbstractWidget {
       )!,
       splashRadius: TypeParser.parseDouble(getValue(parsedJson, "splashRadius", null, dynamicUIBuilderContext)),
       onChanged: (bool? value) {
-        dynamicUIBuilderContext.dynamicPage.setStateData(key, value);
+        dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, value);
         click(parsedJson, dynamicUIBuilderContext, "onChanged");
       },
     );

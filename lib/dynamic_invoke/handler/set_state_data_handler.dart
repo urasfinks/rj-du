@@ -7,9 +7,9 @@ class SetStateDataHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ["key", "value"])) {
-      dynamicUIBuilderContext.dynamicPage.setStateData(args["key"], args["value"], args["notify"] ?? true);
+      dynamicUIBuilderContext.dynamicPage.stateData.set(args["state"], args["key"], args["value"], args["notify"] ?? true);
     } else if (Util.containsKeys(args, ["map"])) {
-      dynamicUIBuilderContext.dynamicPage.setStateDataMap(args["map"], args["notify"] ?? true);
+      dynamicUIBuilderContext.dynamicPage.stateData.setMap(args["state"], args["map"], args["notify"] ?? true);
     } else {
       if (kDebugMode) {
         print("SetStateDataHandler undefined scheme args: $args");

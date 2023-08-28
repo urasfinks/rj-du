@@ -7,9 +7,7 @@ import '../../dynamic_ui_builder_context.dart';
 class StateDataSwitch extends AbstractExtension {
   static void extend(
       Map<String, dynamic> child, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
-    String key = child["key"];
-
-    String value = dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? "default";
+    String value = dynamicUIBuilderContext.dynamicPage.stateData.get(child["state"], child["key"], "default");
     List<dynamic> children = child["children"];
     Map<String, dynamic> map = {};
     for (Map<String, dynamic> item in children) {

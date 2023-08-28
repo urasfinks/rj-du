@@ -6,7 +6,8 @@ import 'abstract_widget.dart';
 class StateWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> data = dynamicUIBuilderContext.dynamicPage.stateData.value[parsedJson["key"]] ?? {};
+    Map<String, dynamic> data =
+        dynamicUIBuilderContext.dynamicPage.stateData.get(parsedJson["state"], parsedJson["key"], {});
     return render(
       data,
       null,

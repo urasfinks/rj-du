@@ -26,7 +26,8 @@ class NavigatorPopHandler extends AbstractHandler {
   void _updateLast(Map<String, dynamic> args, int indexTab) {
     DynamicPage dynamicPage = NavigatorApp.getLast(indexTab)!;
     if (args.containsKey("setStateDataMap")) {
-      dynamicPage.setStateDataMap(args["setStateDataMap"]);
+      Map<String, dynamic> data = args["setStateDataMap"];
+      dynamicPage.stateData.setMap(data["state"], data["map"]);
     }
     if (args.containsKey("reloadParent")) {
       dynamicPage.reload(args["rebuild"] ?? true);

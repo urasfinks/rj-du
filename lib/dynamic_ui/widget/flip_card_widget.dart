@@ -11,7 +11,7 @@ import '../type_parser.dart';
 class FlipCardWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> stateControl = getStateControl(
+    Map<String, dynamic> stateControl = AbstractWidget.getStateControl(
       parsedJson["key"],
       dynamicUIBuilderContext,
       {

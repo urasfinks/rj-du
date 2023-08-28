@@ -2,6 +2,7 @@ import 'package:rjdu/dynamic_invoke/handler/abstract_handler.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/type_parser.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
+import 'package:rjdu/util.dart';
 
 class SubscribeReloadHandler extends AbstractHandler {
   @override
@@ -12,7 +13,7 @@ class SubscribeReloadHandler extends AbstractHandler {
   }
 
   void add(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, String key) {
-    String listKeyCapitalize = "list${capitalize(key)}";
+    String listKeyCapitalize = "list${Util.capitalize(key)}";
     SubscribeReloadGroup? subscribeReloadGroup = TypeParser.parseSubscribeReloadGroup(key);
     if (subscribeReloadGroup != null) {
       if (args.containsKey(key)) {
@@ -25,5 +26,5 @@ class SubscribeReloadHandler extends AbstractHandler {
     }
   }
 
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
 }

@@ -12,7 +12,7 @@ import 'abstract_widget.dart';
 class SwipableStackWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> stateControl = getStateControl(
+    Map<String, dynamic> stateControl = AbstractWidget.getStateControl(
       parsedJson["key"],
       dynamicUIBuilderContext,
       {
@@ -78,7 +78,7 @@ class SwipableStackWidget extends AbstractWidget {
       stateControl["prc1"] = controller.currentIndex * 1 / stateControl["size"];
 
       if (parsedJson["setState"] ?? parsedJson["setStateOnChangeIndex"] ?? false == true) {
-        dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+        dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], parsedJson["key"], stateControl);
       }
     });
 
@@ -132,14 +132,15 @@ class SwipableStackWidget extends AbstractWidget {
             });
           } else {
             stateControl["finish"] = true;
-            dynamicUIBuilderContext.dynamicPage.dynamicPageSate?.setState(() {});
+            dynamicUIBuilderContext.dynamicPage.reload(false);
+            //dynamicUIBuilderContext.dynamicPage.dynamicPageSate?.setState(() {});
             //print("FINISH ${controller.currentIndex}");
           }
           click(parsedJson, dynamicUIBuilderContext, "onFinish");
         }
 
         if (parsedJson["setState"] ?? parsedJson["setStateOnSwipeCompleted"] ?? false == true) {
-          dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+          dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], parsedJson["key"], stateControl);
         }
       },
       onWillMoveNext: (index, direction) {
@@ -150,7 +151,7 @@ class SwipableStackWidget extends AbstractWidget {
         // }
         click(parsedJson, dynamicUIBuilderContext, "onWillMoveNext");
         if (parsedJson["setState"] ?? parsedJson["setStateOnWillMoveNext"] ?? false == true) {
-          dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+          dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], parsedJson["key"], stateControl);
         }
         if (controller.currentIndex == children.length && !roll) {
           return false;
@@ -167,7 +168,7 @@ class SwipableStackWidget extends AbstractWidget {
         stateControl["overlayOpacity"] = min(properties.swipeProgress, 1.0);
         stateControl["overlayDirection"] = properties.direction.name.toString();
         if (parsedJson["setState"] ?? parsedJson["setStateOnOverlayBuilder"] ?? false == true) {
-          dynamicUIBuilderContext.dynamicPage.setStateData(parsedJson["key"], stateControl);
+          dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], parsedJson["key"], stateControl);
         }
         //return Text("wefew");
         return render(

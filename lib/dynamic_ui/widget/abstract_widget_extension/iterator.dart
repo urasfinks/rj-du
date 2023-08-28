@@ -15,8 +15,7 @@ class Iterator extends AbstractExtension {
     dynamic listData;
     switch (dataType) {
       case "state":
-        String key = parsedJson["key"];
-        listData = dynamicUIBuilderContext.dynamicPage.stateData.value[key] ?? [];
+        listData = dynamicUIBuilderContext.dynamicPage.stateData.get(parsedJson["state"], parsedJson["key"], []);
         break;
       case "list":
         listData = parsedJson["list"] ?? [];

@@ -20,13 +20,22 @@ class DynamicUIBuilderContext {
     // По факту это отдельная структура от context
     // Поэтому для неё будем вызывать отдельный обработчик
     // Был кейс, когда я ждал данные из БД и в момент их получения устанавливал новое состоние в итоге получалась рекурсия
-    dynamicPage.onEvent(
-      updateUuidList.contains("stateData") ? "onStateUpdate" : "onContextUpdate",
-      {
-        "contextKey": key,
-        "updateUuidList": updateUuidList,
-      },
-    );
+
+    List<String> contextUpdateList = [];
+    List<String> stateUpdateList = [];
+    for (String updateUuid in updateUuidList) {
+      if (dynamicPage.stateData.isStateUuid(updateUuid)) {
+        stateUpdateList.add(updateUuid);
+      } else {
+        contextUpdateList.add(updateUuid);
+      }
+    }
+    if (contextUpdateList.isNotEmpty) {
+      dynamicPage.onEvent("onContextUpdate", {"contextKey": key, "updateUuidList": contextUpdateList});
+    }
+    if (stateUpdateList.isNotEmpty) {
+      dynamicPage.onEvent("onStateUpdate", {"contextKey": key, "updateUuidList": stateUpdateList});
+    }
   }
 
   DynamicUIBuilderContext(this.dynamicPage, this.key) {

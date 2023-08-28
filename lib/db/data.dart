@@ -35,6 +35,9 @@ class Data {
   // Функция выполнится когда данные будут закомичены в локальной БД
   Function? onPersist;
 
+  //Признак, что эти данные относятся к состоянию страницы
+  bool isStateData = false;
+
   Data(
     this.uuid,
     this.value,

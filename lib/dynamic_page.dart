@@ -6,9 +6,9 @@ import 'package:rjdu/dynamic_invoke/handler/show_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/subscribe_reload.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
 import 'package:rjdu/util/template.dart';
+import 'package:rjdu/state_data.dart';
 import 'package:rjdu/web_socket_service.dart';
-import 'data_type.dart';
-import 'db/data.dart';
+
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'store_value_notifier.dart';
 import 'dynamic_ui/dynamic_ui.dart';
@@ -17,7 +17,6 @@ import 'system_notify.dart';
 import 'util.dart';
 import 'db/data_source.dart';
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
-import 'package:uuid/uuid.dart';
 
 import 'dynamic_ui/widget/abstract_widget.dart';
 
@@ -25,11 +24,12 @@ class DynamicPage extends StatefulWidget {
   late final Map<String, dynamic> arguments;
   final Map<String, dynamic> properties = {};
   final StoreValueNotifier storeValueNotifier = StoreValueNotifier();
+  final StateData stateData = StateData();
   late final DynamicUIBuilderContext dynamicUIBuilderContext;
   final Map<String, DynamicUIBuilderContext> contextMap = {};
   BuildContext? context;
-  late final Data stateData;
-  final String uuid = const Uuid().v4();
+
+  final String uuid = Util.uuid();
   bool isRunConstructor = false;
 
   final Map<SubscribeReloadGroup, List<String>> _subscribedOnReload = {
@@ -37,12 +37,14 @@ class DynamicPage extends StatefulWidget {
     SubscribeReloadGroup.parentUuid: [],
     SubscribeReloadGroup.key: [],
   };
-  _DynamicPage? dynamicPageSate;
+  _DynamicPage? _setState;
   bool isDispose = false;
   int openInIndexTab = 0;
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
-    print("DynamicPage.subscribeToReload(${group.name}) $value");
+    if (kDebugMode) {
+      print("DynamicPage.subscribeToReload(${group.name}) $value");
+    }
     if (!_subscribedOnReload[group]!.contains(value)) {
       _subscribedOnReload[group]!.add(value);
     }
@@ -50,10 +52,12 @@ class DynamicPage extends StatefulWidget {
 
   DynamicPage(parseJson, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
-    Map<String, dynamic> stateDataValue = {};
-    stateData = Data(uuid, stateDataValue, DataType.virtual, null);
     dynamicUIBuilderContext = DynamicUIBuilderContext(this, "root");
     dynamicUIBuilderContext.isRoot = true;
+    //Инициализируем основной контейнер, так как js constructor начинает работать раньше чем будет возможноя отрисовка
+    // Notify "onStateDataUpdate": true к примеру. Так было на Less.js, когда пытались поработать с main, который ещё
+    // не успел инициализироваться
+    stateData.getInstanceData(null);
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
   }
 
@@ -121,12 +125,11 @@ class DynamicPage extends StatefulWidget {
   void reload(bool rebuild) {
     if (rebuild) {
       properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
-      Map<String, dynamic> stateDataValue = {};
-      stateData.value = stateDataValue;
+      stateData.clear();
       AudioComponent().stop();
       isRunConstructor = false;
-      if (dynamicPageSate != null) {
-        dynamicPageSate!.setState(() {});
+      if (_setState != null) {
+        _setState!.setState(() {});
       }
     } else {
       // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
@@ -134,40 +137,6 @@ class DynamicPage extends StatefulWidget {
       // Все надежды на конструктор, что он перерисует необходимые блоки
       // В основном, это сводится к выборке из БД и обновления состояния
       constructor();
-    }
-  }
-
-  void setStateData(String key, dynamic value, [bool notifyDynamicPage = true]) {
-    if (stateData.value[key] != value) {
-      stateData.value[key] = value;
-      DataSource().setData(stateData, notifyDynamicPage);
-    }
-  }
-
-  void setStateDataMap(Map<String, dynamic> map, [bool notifyDynamicPage = true]) {
-    bool change = false;
-    for (MapEntry<String, dynamic> item in map.entries) {
-      if (stateData.value[item.key] != item.value) {
-        stateData.value[item.key] = item.value;
-        change = true;
-      }
-    }
-    if (change) {
-      DataSource().setData(stateData, notifyDynamicPage);
-    }
-  }
-
-  dynamic getStateData(String key, dynamic defaultValue, [insertIfNotExist = false]) {
-    Map<String, dynamic> map = stateData.value;
-    if (map.containsKey(key)) {
-      return map[key];
-    } else {
-      if (insertIfNotExist && !map.containsKey(key)) {
-        map[key] = defaultValue;
-        return map[key];
-      } else {
-        return defaultValue;
-      }
     }
   }
 
@@ -259,7 +228,7 @@ class DynamicPage extends StatefulWidget {
 class _DynamicPage extends State<DynamicPage> {
   @override
   void initState() {
-    widget.dynamicPageSate = this;
+    widget._setState = this;
     NavigatorApp.addPage(widget);
     super.initState();
   }

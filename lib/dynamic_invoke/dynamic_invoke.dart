@@ -211,7 +211,7 @@ class DynamicInvoke {
           Util.jsonEncode(args, pretty),
           includeContext ? Util.jsonEncode(dynamicUIBuilderContext.data, pretty) : "",
           includeContextMap ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.getContextMap(), pretty) : "",
-          includeStateData ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.stateData.value, pretty) : "",
+          includeStateData ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.stateData.getAllData(), pretty) : "",
           includePageArgument ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.arguments, pretty) : "",
           NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage,
           dynamicUIBuilderContext,

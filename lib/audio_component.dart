@@ -6,6 +6,7 @@ import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 import 'package:rjdu/util.dart';
 
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
+import 'dynamic_ui/widget/abstract_widget.dart';
 import 'global_settings.dart';
 
 class AudioComponent {
@@ -116,7 +117,7 @@ class AudioComponentContext {
 
   AudioComponentContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext,
       [this.onLoadBytesCallback]) {
-    dataState = getStateControl(args["key"] ?? "Audio", dynamicUIBuilderContext, {
+    dataState = AbstractWidget.getStateControl(args["key"] ?? "Audio", dynamicUIBuilderContext, {
       "state": AudioComponentContextState.loading.name,
       "playerState": "init",
       "bufferedPosition": "init",
@@ -199,11 +200,6 @@ class AudioComponentContext {
 
   void stop() {
     notifyStream({"caller": "stop()", "state": AudioComponentContextState.stop.name, "prc": 0.0});
-  }
-
-  Map<String, dynamic> getStateControl(
-      String key, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
-    return dynamicUIBuilderContext.dynamicPage.getStateData(key, defaultState, true);
   }
 }
 

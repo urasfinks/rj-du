@@ -2,6 +2,7 @@ import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/storage.dart';
 import 'package:rjdu/util/template.dart';
 
+import '../../db/data.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../../translate.dart';
 
@@ -19,13 +20,19 @@ class TemplateFunction {
     "parentTemplate": (data, arguments, ctx) {
       return Template.mapSelector(ctx.parentTemplate, arguments);
     },
-    "getStateUuid": (data, arguments, ctx) {
-      return ctx.dynamicPage.stateData.uuid;
-    },
     "state": (data, arguments, ctx) {
       // Ранее stateData.value оборачивалось через MutableMap
       // Я убрал, так как ломалось зацикливание для FlipCard
-      return Template.mapSelector(ctx.dynamicPage.stateData.value, arguments);
+      Data d = ctx.dynamicPage.stateData.getInstanceData(null);
+      return Template.mapSelector(d.value, arguments);
+    },
+    "stateExt": (data, arguments, ctx) {
+      Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.removeAt(0));
+      return Template.mapSelector(d.value, arguments);
+    },
+    "stateUuid": (data, arguments, ctx) {
+      Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.isNotEmpty ? arguments.first : null);
+      return d.uuid;
     },
     "pageArgs": (data, arguments, ctx) {
       return Template.mapSelector(ctx.dynamicPage.arguments, arguments);

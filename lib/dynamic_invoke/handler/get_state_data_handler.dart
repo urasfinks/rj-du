@@ -6,16 +6,13 @@ import 'abstract_handler.dart';
 
 class GetStateDataHandler extends AbstractHandler {
   @override
-  handle(Map<String, dynamic> args,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ["key", "default"])) {
-      dynamic value = dynamicUIBuilderContext.dynamicPage
-          .getStateData(args["key"], args["default"]);
+      dynamic value = dynamicUIBuilderContext.dynamicPage.stateData.get(args["state"], args["key"], args["default"]);
       return {args["key"]: value};
     } else {
       if (kDebugMode) {
-        print(
-            "GetStateDataHandler not contains Keys: [key, default] in args: $args");
+        print("GetStateDataHandler not contains Keys: [key, default] in args: $args");
       }
     }
   }

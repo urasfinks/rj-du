@@ -17,7 +17,7 @@ class ResetTextControllerHandler extends AbstractHandler {
       //Перерисовка при включенном onRebuildClearTemporaryControllerText и setStateInit перезапишет состояние
       //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
       //А так мы просто получим перетерание на старое значение
-      dynamicUIBuilderContext.dynamicPage.setStateData(key, "", false);
+      dynamicUIBuilderContext.dynamicPage.stateData.set(args["state"], key, false);
     } else {
       if (kDebugMode) {
         print("DataSourceSetHandler not contains Keys: [key] in args: $args");

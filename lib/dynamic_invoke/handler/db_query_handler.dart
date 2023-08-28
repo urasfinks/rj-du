@@ -21,8 +21,8 @@ class DbQueryHandler extends AbstractHandler {
           }
           newList.add(newItem);
         }
-        if (args.containsKey("stateKey")) {
-          dynamicUIBuilderContext.dynamicPage.setStateData(args["stateKey"], newList);
+        if (args.containsKey("setState")) {
+          dynamicUIBuilderContext.dynamicPage.stateData.set(null, args["stateKey"], newList);
         }
         if (args.containsKey("onFetch")) {
           var onFetch = args["onFetch"] as Map;

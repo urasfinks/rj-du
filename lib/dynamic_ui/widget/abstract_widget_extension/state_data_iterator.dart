@@ -7,8 +7,7 @@ class StateDataIterator extends AbstractExtension {
   static void extend(Map<String, dynamic> child,
       DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
     bool divider = child.containsKey("Divider");
-    String key = child["key"];
-    dynamic value = dynamicUIBuilderContext.dynamicPage.stateData.value[key];
+    dynamic value = dynamicUIBuilderContext.dynamicPage.stateData.get(child["state"], child["key"], []);
     bool add = false;
     if (value != null) {
       List<dynamic> list = value as List<dynamic>;
