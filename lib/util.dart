@@ -7,11 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/util/template.dart';
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
+import 'package:uuid/uuid.dart';
 
 import 'data_type.dart';
 
 class Util {
   static Base64Codec base64 = const Base64Codec();
+  static Uuid uuidObject = const Uuid();
 
   static bool isIOs() {
     return Platform.isIOS;
@@ -202,5 +204,9 @@ class Util {
 
   static Uint8List base64Decode(String data) {
     return base64.decode(data);
+  }
+
+  static String uuid() {
+    return uuidObject.v4();
   }
 }

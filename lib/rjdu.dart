@@ -12,8 +12,8 @@ import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/translate.dart';
+import 'package:rjdu/util.dart';
 import 'package:rjdu/web_socket_service.dart';
-import 'package:uuid/uuid.dart';
 import 'bottom_tab_item.dart';
 import 'data_sync.dart';
 import 'db/data_source.dart';
@@ -31,9 +31,9 @@ class RjDu {
     GlobalSettings().init();
     AudioComponent().init();
 
-    Storage().set("uuid", const Uuid().v4(), false);
+    Storage().set("uuid", Util.uuid(), false);
     print("I'am: ${Storage().get("uuid", "")}");
-    Storage().set("unique", const Uuid().v4(), false);
+    Storage().set("unique", Util.uuid(), false);
     Storage().set("version", GlobalSettings().version, false);
     Storage().set("isAuth", "false", false);
     Storage().set("mail", "", false);
