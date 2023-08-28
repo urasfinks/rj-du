@@ -16,10 +16,11 @@ class StoreValueNotifier {
   bool updateValueNotifier(String uuid, Map<String, dynamic> data) {
     bool isNotify = false;
     for (MapEntry<String, ValueNotifier<SubscriberObject>> item in mapValueNotifier.entries) {
-      SubscriberObject subscriberObject = item.value.value;
+      ValueNotifier valueNotifier = item.value;
+      SubscriberObject subscriberObject = valueNotifier.value;
       if (subscriberObject.link.values.toList().contains(uuid)) {
         subscriberObject.set(uuid, data);
-        item.value.notifyListeners();
+        valueNotifier.notifyListeners();
         isNotify = true;
       }
     }
@@ -33,10 +34,10 @@ class StoreValueNotifier {
   ) {
     return ValueListenableBuilder<SubscriberObject>(
       valueListenable: getValueNotifier(link),
-      builder: (BuildContext context, SubscriberObject value, Widget? child) {
-        if (value.data.isNotEmpty) {
+      builder: (BuildContext context, SubscriberObject subscriberObject, Widget? child) {
+        if (subscriberObject.data.isNotEmpty) {
           List<String> updateUuidList = [];
-          for (MapEntry<String, dynamic> item in value.data.entries) {
+          for (MapEntry<String, dynamic> item in subscriberObject.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
             updateUuidList.add(item.key);
           }
@@ -61,6 +62,7 @@ class StoreValueNotifier {
     if (!mapValueNotifier.containsKey(complexKey)) {
       SubscriberObject subscriberObject = SubscriberObject(link);
       ValueNotifier<SubscriberObject> valueNotifier = ValueNotifier<SubscriberObject>(subscriberObject);
+      // Первичное заполнение контейнеров
       for (MapEntry<String, dynamic> item in link.entries) {
         DataSource().get(item.value, (uuid, data) {
           if (data != null) { //&& data.isNotEmpty //убрал так как {} вызывает спорную ситуацию

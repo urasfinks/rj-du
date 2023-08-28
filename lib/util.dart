@@ -183,6 +183,13 @@ class Util {
     // return Map.fromEntries(map.entries.map((entry) => MapEntry(entry.key.toString(), entry.value)));
   }
 
+  static Map<String, List<String>> convertMapStringListString(Map<String, dynamic> map) {
+    for (MapEntry<String, dynamic> item in map.entries) {
+      map[item.key] = List<String>.from(item.value);
+    }
+    return Map<String, List<String>>.from(map);
+  }
+
   static Map<String, dynamic> overlay(Map<String, dynamic> defObject, Map<String, dynamic>? overlayObject) {
     if (overlayObject == null || overlayObject.isEmpty) {
       return defObject;
