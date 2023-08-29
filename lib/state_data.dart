@@ -48,10 +48,18 @@ class StateData {
     state ??= "main";
     Data data = getInstanceData(state);
     bool change = false;
-    for (MapEntry<String, dynamic> item in map.entries) {
-      if (data.value[item.key] != item.value) {
-        data.value[item.key] = item.value;
-        change = true;
+    // Если мы используем функцию AbstractWidget.getStateControl
+    // Мы получаем ссылку на Data.value
+    // Если мы поменяем данные по ссылке в widget, то тут мы никогда не сможем понять какие поля были обновлены
+    // По этому если ссылки одинаковые - делаем вид, что, что-то поменялось. Ну вот так вот!)
+    if (data.value == map) {
+      change = true;
+    } else {
+      for (MapEntry<String, dynamic> item in map.entries) {
+        if (data.value[item.key] != item.value) {
+          data.value[item.key] = item.value;
+          change = true;
+        }
       }
     }
     if (change) {

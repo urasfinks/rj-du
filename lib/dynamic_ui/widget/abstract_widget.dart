@@ -16,8 +16,8 @@ abstract class AbstractWidget {
   dynamic get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext);
 
   static Map<String, dynamic> getStateControl(
-      String key, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
-    return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(key, defaultState).value;
+      String state, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
+    return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state, defaultState).value;
   }
 
   static dynamic getValueStatic(

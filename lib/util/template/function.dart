@@ -14,19 +14,19 @@ class TemplateFunction {
     "context": (data, arguments, ctx) {
       return Template.mapSelector(data, arguments);
     },
-    "contextByKey": (data, arguments, ctx) {
+    "contextMap": (data, arguments, ctx) {
       return ctx.dynamicPage.templateByMapContext(data, arguments);
     },
     "parentTemplate": (data, arguments, ctx) {
       return Template.mapSelector(ctx.parentTemplate, arguments);
     },
-    "state": (data, arguments, ctx) {
+    /*"state": (data, arguments, ctx) {
       // Ранее stateData.value оборачивалось через MutableMap
       // Я убрал, так как ломалось зацикливание для FlipCard
       Data d = ctx.dynamicPage.stateData.getInstanceData(null);
       return Template.mapSelector(d.value, arguments);
-    },
-    "stateExt": (data, arguments, ctx) {
+    },*/
+    "state": (data, arguments, ctx) {
       Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.removeAt(0));
       return Template.mapSelector(d.value, arguments);
     },
