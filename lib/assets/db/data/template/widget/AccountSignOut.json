@@ -55,7 +55,7 @@
       "context": {
         "key": "InputName",
         "data": {
-          "data": "${state(accountValue.name)}",
+          "data": "${state(main,accountValue.name,)}",
           "key": "name",
           "placeholder": "Имя",
           "onSubmit": {
@@ -101,7 +101,7 @@
         },
         {
           "label": "Всего загружено",
-          "labelStatistic": "${state(countAllData)}",
+          "labelStatistic": "${state(main,countAllData)}",
           "templateWidgetSrc": "TextStatistic",
           "templateArguments": [
             "labelStatistic"
@@ -109,7 +109,7 @@
         },
         {
           "label": "Личная информация",
-          "labelStatistic": "${state(countPersonData)}/${state(countNotSyncData)}",
+          "labelStatistic": "${state(main,countPersonData)}/${state(main,countNotSyncData)}",
           "templateWidgetSrc": "TextStatistic",
           "templateArguments": [
             "labelStatistic"
