@@ -112,6 +112,7 @@ class AudioComponentContext {
   late Map<String, dynamic> dataState;
   AudioStream? _audioStream;
   ByteSource? byteSource;
+  bool autoPlayOnLoad = false;
 
   Function(AudioComponentContext audioComponentContext)? onLoadBytesCallback;
 
@@ -136,6 +137,9 @@ class AudioComponentContext {
             if (onLoadBytesCallback != null) {
               onLoadBytesCallback!(this);
             }
+            if (autoPlayOnLoad) {
+              AudioComponent().play(this);
+            }
           });
           break;
         case "db":
@@ -146,6 +150,12 @@ class AudioComponentContext {
                 "caller": "getDataBlob()",
                 "state": AudioComponentContextState.stop.name,
               });
+              if (onLoadBytesCallback != null) {
+                onLoadBytesCallback!(this);
+              }
+              if (autoPlayOnLoad) {
+                AudioComponent().play(this);
+              }
             } else {
               notifyStream({
                 "caller": "getDataBlob()",

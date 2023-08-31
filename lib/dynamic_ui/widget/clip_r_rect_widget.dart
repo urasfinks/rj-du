@@ -11,7 +11,7 @@ class ClipRRectWidget extends AbstractWidget {
       key: Util.getKey(),
       borderRadius: TypeParser.parseBorderRadius(
         getValue(parsedJson, "borderRadius", null, dynamicUIBuilderContext),
-      ),
+      ) ?? BorderRadius.zero,
       clipBehavior: TypeParser.parseClip(
         getValue(parsedJson, "clipBehavior", "antiAlias", dynamicUIBuilderContext),
       )!,
