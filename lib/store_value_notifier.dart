@@ -37,11 +37,13 @@ class StoreValueNotifier {
       builder: (BuildContext context, SubscriberObject subscriberObject, Widget? child) {
         if (subscriberObject.data.isNotEmpty) {
           List<String> updateUuidList = [];
+          List<String> updateKeyList = [];
           for (MapEntry<String, dynamic> item in subscriberObject.data.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
             updateUuidList.add(subscriberObject.link[item.key]); //link: {blabla: uuid}; data:{blabla: {...}}
+            updateKeyList.add(item.key);
           }
-          dynamicUIBuilderContext.contextUpdate(updateUuidList);
+          dynamicUIBuilderContext.contextUpdate(updateUuidList, updateKeyList);
         }
         dynamic resultWidget = builder(context, child);
         if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
