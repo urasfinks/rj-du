@@ -36,6 +36,8 @@ class GlobalSettings {
     switch (key) {
       case "host":
         return host;
+      case "version":
+        return version;
       case "ws":
         return ws;
       case "appBarHeight":
