@@ -11,7 +11,7 @@ class DynamicUIBuilderContext {
   List<DynamicUIBuilderContext> children = [];
   Map<String, dynamic> listener = {};
 
-  void contextUpdate(List<String> updateUuidList) {
+  void contextUpdate(List<String> updateUuidList, List<String> updateKeyList) {
     if (isRoot) {
       dynamicPage.renderFloatingActionButton();
     }
@@ -31,10 +31,18 @@ class DynamicUIBuilderContext {
       }
     }
     if (contextUpdateList.isNotEmpty) {
-      dynamicPage.onEvent("onContextUpdate", {"contextKey": key, "updateUuidList": contextUpdateList});
+      dynamicPage.onEvent("onContextUpdate", {
+        "contextKey": key,
+        "updateUuidList": contextUpdateList,
+        "updateKeyList": updateKeyList,
+      });
     }
     if (stateUpdateList.isNotEmpty) {
-      dynamicPage.onEvent("onStateUpdate", {"contextKey": key, "updateUuidList": stateUpdateList});
+      dynamicPage.onEvent("onStateUpdate", {
+        "contextKey": key,
+        "updateUuidList": stateUpdateList,
+        "updateKeyList": updateKeyList,
+      });
     }
   }
 

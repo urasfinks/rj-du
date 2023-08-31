@@ -14,14 +14,24 @@ class DeepLink {
   static void open(Uri uri) {
     List<String> listArg = [];
     listArg.addAll(uri.pathSegments);
-    listArg.removeAt(0);
+    //[deeplink, v1, ConnectCodeNames, code, 392496]
     Map<String, dynamic> args = {};
-    args["version"] = listArg[0];
-    args["switch"] = listArg[1];
-    for (int i = 2; i < listArg.length; i += 2) {
-      String key = listArg[i];
-      String value = listArg[i + 1];
-      args[key] = value;
+    args["deeplink"] = listArg.removeAt(0);
+    args["version"] = listArg.removeAt(0);
+    args["switch"] = listArg.removeAt(0);
+    try {
+      for (int i = 0; i < listArg.length; i += 2) {
+        String key = listArg[i];
+        String value = listArg[i + 1];
+        args[key] = value;
+      }
+    } catch (e, stacktrace) {
+      debugPrintStack(
+        stackTrace: stacktrace,
+        maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+        label: "DeepLink.open() Exception: $e",
+      );
+      args["error"] = e.toString();
     }
     if (kDebugMode) {
       print("DeepLink $uri; args: ${args}");
