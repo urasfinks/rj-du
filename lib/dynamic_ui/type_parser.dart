@@ -4,15 +4,10 @@ import '../navigator_app.dart';
 import '../subscribe_reload_group.dart';
 
 class TypeParser {
-  static dynamic parseFontStyle(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, FontStyle> map = {
-      "normal": FontStyle.normal,
-      "italic": FontStyle.italic,
-    };
-    return map.containsKey(value) ? map[value] : null;
+
+  static final Map<String, FontStyle> _mapFontStyle = convertEnumToMap(FontStyle.values);
+  static FontStyle? parseFontStyle(String? value) {
+    return enumValueOf(value, _mapFontStyle);
   }
 
   static bool? parseBool(dynamic value) {
@@ -176,33 +171,14 @@ class TypeParser {
     }
   }
 
+  static final Map<String, BoxFit> _mapBoxFit = convertEnumToMap(BoxFit.values);
   static BoxFit? parseBoxFit(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, BoxFit> map = {
-      "contain": BoxFit.contain,
-      "cover": BoxFit.cover,
-      "fill": BoxFit.fill,
-      "fitHeight": BoxFit.fitHeight,
-      "fitWidth": BoxFit.fitWidth,
-      "none": BoxFit.none,
-      "scaleDown": BoxFit.scaleDown,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapBoxFit);
   }
 
+  static final Map<String, ImageRepeat> _mapImageRepeat = convertEnumToMap(ImageRepeat.values);
   static ImageRepeat? parseImageRepeat(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, ImageRepeat> map = {
-      "noRepeat": ImageRepeat.noRepeat,
-      "repeat": ImageRepeat.repeat,
-      "repeatX": ImageRepeat.repeatX,
-      "repeatY": ImageRepeat.repeatY
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapImageRepeat);
   }
 
   static Alignment? parseAlignment(String? value) {
@@ -265,60 +241,24 @@ class TypeParser {
     return ret;
   }
 
+  static final Map<String, MainAxisAlignment> _mapMainAxisAlignment = convertEnumToMap(MainAxisAlignment.values);
   static MainAxisAlignment? parseMainAxisAlignment(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, MainAxisAlignment> map = {
-      "start": MainAxisAlignment.start,
-      "center": MainAxisAlignment.center,
-      "end": MainAxisAlignment.end,
-      "spaceEvenly": MainAxisAlignment.spaceEvenly,
-      "spaceBetween": MainAxisAlignment.spaceBetween,
-      "spaceAround": MainAxisAlignment.spaceAround,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapMainAxisAlignment);
   }
 
+  static final Map<String, MainAxisSize> _mapMainAxisSize = convertEnumToMap(MainAxisSize.values);
   static MainAxisSize? parseMainAxisSize(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, MainAxisSize> map = {
-      "min": MainAxisSize.min,
-      "max": MainAxisSize.max,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapMainAxisSize);
   }
 
+  static final Map<String, CrossAxisAlignment> _mapCrossAxisAlignment = convertEnumToMap(CrossAxisAlignment.values);
   static CrossAxisAlignment? parseCrossAxisAlignment(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, CrossAxisAlignment> map = {
-      "start": CrossAxisAlignment.start,
-      "center": CrossAxisAlignment.center,
-      "end": CrossAxisAlignment.end,
-      "baseline": CrossAxisAlignment.baseline,
-      "stretch": CrossAxisAlignment.stretch,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapCrossAxisAlignment);
   }
 
+  static final Map<String, MaterialType> _mapMaterialType = convertEnumToMap(MaterialType.values);
   static MaterialType? parseMaterialType(dynamic value) {
-    switch (value) {
-      case "transparency":
-        return MaterialType.transparency;
-      case "button":
-        return MaterialType.button;
-      case "canvas":
-        return MaterialType.canvas;
-      case "card":
-        return MaterialType.card;
-      case "circle":
-        return MaterialType.circle;
-    }
-    return null;
+    return enumValueOf(value, _mapMaterialType);
   }
 
   static BorderRadius? parseBorderRadius(dynamic value) {
@@ -362,50 +302,27 @@ class TypeParser {
     return map.containsKey(value) ? map[value] : null;
   }
 
+  static final Map<String, BorderStyle> _mapBorderStyle = convertEnumToMap(BorderStyle.values);
   static BorderStyle? parseBorderStyle(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, BorderStyle> map = {
-      "solid": BorderStyle.solid,
-      "none": BorderStyle.none,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapBorderStyle);
   }
+
+  static final Map<String, Axis> _mapAxis = convertEnumToMap(Axis.values);
 
   static Axis? parseAxis(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, Axis> map = {
-      "vertical": Axis.vertical,
-      "horizontal": Axis.horizontal,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapAxis);
   }
+
+  static final Map<String, Clip> _mapClip = convertEnumToMap(Clip.values);
 
   static Clip? parseClip(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, Clip> map = {
-      "antiAlias": Clip.antiAlias,
-      "antiAliasWithSaveLayer": Clip.antiAliasWithSaveLayer,
-      "hardEdge": Clip.hardEdge,
-      "none": Clip.none,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapClip);
   }
 
+  static final Map<String, TextBaseline> _mapTextBaseline = convertEnumToMap(TextBaseline.values);
+
   static TextBaseline? parseTextBaseline(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, TextBaseline> map = {
-      "alphabetic": TextBaseline.alphabetic,
-      "ideographic": TextBaseline.ideographic,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapTextBaseline);
   }
 
   static AlignmentDirectional? parseAlignmentDirectional(String? value) {
@@ -439,42 +356,22 @@ class TypeParser {
     return map.containsKey(value) ? map[value] : null;
   }
 
+  static final Map<String, TextDirection> _mapTextDirection = convertEnumToMap(TextDirection.values);
+
   static TextDirection? parseTextDirection(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, TextDirection> map = {
-      "ltr": TextDirection.ltr,
-      "rtl": TextDirection.rtl,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapTextDirection);
   }
+
+  static final Map<String, StackFit> _mapStackFit = convertEnumToMap(StackFit.values);
 
   static StackFit? parseStackFit(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, StackFit> map = {
-      "expand": StackFit.expand,
-      "loose": StackFit.loose,
-      "passthrough": StackFit.passthrough,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapStackFit);
   }
 
+  static final Map<String, TextAlign> _mapTextAlign = convertEnumToMap(TextAlign.values);
+
   static TextAlign? parseTextAlign(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, TextAlign> map = {
-      "left": TextAlign.left,
-      "start": TextAlign.start,
-      "center": TextAlign.center,
-      "end": TextAlign.end,
-      "justify": TextAlign.justify,
-      "right": TextAlign.right,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapTextAlign);
   }
 
   static TextAlignVertical? parseTextAlignVertical(String? value) {
@@ -489,79 +386,40 @@ class TypeParser {
     return map.containsKey(value) ? map[value] : null;
   }
 
+  static final Map<String, TextOverflow> _mapTextOverflow = convertEnumToMap(TextOverflow.values);
+
   static TextOverflow? parseTextOverflow(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, TextOverflow> map = {
-      "clip": TextOverflow.clip,
-      "ellipsis": TextOverflow.ellipsis,
-      "fade": TextOverflow.fade,
-      "visible": TextOverflow.visible,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapTextOverflow);
   }
+
+  static final Map<String, TextWidthBasis> _mapTextWidthBasis = convertEnumToMap(TextWidthBasis.values);
 
   static TextWidthBasis? parseTextWidthBasis(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, TextWidthBasis> map = {
-      "longestLine": TextWidthBasis.longestLine,
-      "parent": TextWidthBasis.parent,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapTextWidthBasis);
   }
+
+  static final Map<String, WrapAlignment> _mapWrapAlignment = convertEnumToMap(WrapAlignment.values);
 
   static WrapAlignment? parseWrapAlignment(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, WrapAlignment> map = {
-      "end": WrapAlignment.end,
-      "center": WrapAlignment.center,
-      "start": WrapAlignment.start,
-      "spaceAround": WrapAlignment.spaceAround,
-      "spaceBetween": WrapAlignment.spaceBetween,
-      "spaceEvenly": WrapAlignment.spaceEvenly,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapWrapAlignment);
   }
+
+  static final Map<String, WrapCrossAlignment> _mapWrapCrossAlignment = convertEnumToMap(WrapCrossAlignment.values);
 
   static WrapCrossAlignment? parseWrapCrossAlignment(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, WrapCrossAlignment> map = {
-      "end": WrapCrossAlignment.end,
-      "center": WrapCrossAlignment.center,
-      "start": WrapCrossAlignment.start,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapWrapCrossAlignment);
   }
+
+  static final Map<String, VerticalDirection> _mapVerticalDirection = convertEnumToMap(VerticalDirection.values);
 
   static VerticalDirection? parseVerticalDirection(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, VerticalDirection> map = {
-      "down": VerticalDirection.down,
-      "up": VerticalDirection.up,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapVerticalDirection);
   }
 
+  static final Map<String, TextCapitalization> _mapTextCapitalization = convertEnumToMap(TextCapitalization.values);
+
   static TextCapitalization? parseTextCapitalization(String? value) {
-    if (value == null || value.trim() == "") {
-      return null;
-    }
-    Map<String, TextCapitalization> map = {
-      "none": TextCapitalization.none,
-      "characters": TextCapitalization.characters,
-      "sentences": TextCapitalization.sentences,
-      "words": TextCapitalization.words,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapTextCapitalization);
   }
 
   static Size? parseSize(String? value) {
@@ -572,29 +430,32 @@ class TypeParser {
     return Size(parseDouble(split[0])!, parseDouble(split[1])!);
   }
 
+  static final Map<String, SubscribeReloadGroup> _mapSubscribeReloadGroup =
+      convertEnumToMap(SubscribeReloadGroup.values);
+
   static SubscribeReloadGroup? parseSubscribeReloadGroup(String? value) {
-    if (value == null) {
-      return null;
-    }
-    Map<String, SubscribeReloadGroup> map = {
-      "uuid": SubscribeReloadGroup.uuid,
-      "parentUuid": SubscribeReloadGroup.parentUuid,
-      "key": SubscribeReloadGroup.key,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return enumValueOf(value, _mapSubscribeReloadGroup);
   }
 
+  static final Map<String, AudioComponentContextState> _mapAudioComponentContextState =
+      convertEnumToMap(AudioComponentContextState.values);
+
   static AudioComponentContextState? parseAudioComponentContextState(String? value) {
-    if (value == null) {
+    return enumValueOf(value, _mapAudioComponentContextState);
+  }
+
+  static Map<String, T> convertEnumToMap<T extends Enum>(List<T> list) {
+    Map<String, T> result = {};
+    for (T item in list) {
+      result[item.name] = item;
+    }
+    return result;
+  }
+
+  static T? enumValueOf<T>(String? value, Map<String, T> map) {
+    if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, AudioComponentContextState> map = {
-      "stop": AudioComponentContextState.stop,
-      "play": AudioComponentContextState.play,
-      "pause": AudioComponentContextState.pause,
-      "loading": AudioComponentContextState.loading,
-      "error": AudioComponentContextState.error,
-    };
     return map.containsKey(value) ? map[value] : null;
   }
 }
