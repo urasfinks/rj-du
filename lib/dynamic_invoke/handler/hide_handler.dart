@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_invoke/handler/data_source_set_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/system_notify_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_close_handler.dart';
@@ -50,15 +49,11 @@ class HideHandler extends AbstractHandler {
           DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, args, dynamicUIBuilderContext);
           break;
         default:
-          if (kDebugMode) {
-            print("HideHandler default case: $args");
-          }
+          Util.p("HideHandler default case: $args");
           break;
       }
     } else {
-      if (kDebugMode) {
-        print("HideHandler not contains Keys: [case] in args: $args");
-      }
+      Util.p("HideHandler not contains Keys: [case] in args: $args");
     }
   }
 }

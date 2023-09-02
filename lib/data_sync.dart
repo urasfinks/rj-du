@@ -72,7 +72,7 @@ class DataSync {
           if (counter > 20) {
             //Default = 20
             if (kDebugMode) {
-              print("DataSync.handler() break infinity while");
+              Util.p("DataSync.handler() break infinity while");
             }
             break;
           }
@@ -91,10 +91,6 @@ class DataSync {
             postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
           }
 
-          if (kDebugMode) {
-            //print("DataSync.sync(${GlobalSettings().host}/Sync) ${Util.jsonPretty(postDataRequest)}");
-          }
-
           Response response = await Util.asyncInvokeIsolate((args) {
             return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
           }, {
@@ -102,10 +98,8 @@ class DataSync {
             "body": postDataRequest,
             "host": GlobalSettings().host,
           });
-          if (kDebugMode) {
-            // print(
-            //     "DataSync.sync() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
-          }
+          // Util.p(
+          //     "DataSync.sync() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
           if (response.statusCode == 200) {
             int insertion = 0;
             Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
@@ -143,10 +137,8 @@ class DataSync {
       } catch (e, stacktrace) {
         Util.printStackTrace("DataSync().sync()", e, stacktrace);
       }
-      if (kDebugMode) {
-        print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion; map: $map");
-        NavigatorApp.checkPageSubscribeReload(map, false);
-      }
+      Util.p("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion; map: $map");
+      NavigatorApp.checkPageSubscribeReload(map, false);
       isRun = false;
     } else {
       // История: 3 последовательных оповещения через сокет, что надо обновить
@@ -158,14 +150,10 @@ class DataSync {
         timer!.cancel();
       }
       timer = Timer(const Duration(seconds: 1), () {
-        if (kDebugMode) {
-          print("Delay sync()");
-        }
+        Util.p("Delay sync()");
         sync();
       });
-      if (kDebugMode) {
-        print("Sync Already, start delay");
-      }
+      Util.p("Sync Already, start delay");
     }
   }
 
@@ -180,7 +168,6 @@ class DataSync {
       dataObject.beforeSync = true;
       dataObject.onUpdateOverlayNullField = true;
       dataObject.isRemove = curData["is_remove"];
-      //print("! $dataObject");
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
@@ -189,9 +176,7 @@ class DataSync {
       //Если ревизия на сервере оказалась меньше чем на устройстве
       //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
       // Что бы мы ему повторно выслали данные с устройства этот лаг недастающих ревизий
-      if (kDebugMode) {
-        print("!!!NEED UPGRADE from ${curData["needUpgrade"]} .. ${maxRevisionByType[dataType.name]}");
-      }
+      Util.p("!!!NEED UPGRADE from ${curData["needUpgrade"]} .. ${maxRevisionByType[dataType.name]}");
       // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
       // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
       DataGetter.resetRevision(
@@ -204,14 +189,10 @@ class DataSync {
   }
 
   void init() {
-    if (kDebugMode) {
-      print("DataSync.init()");
-    }
+    Util.p("DataSync.init()");
     DataSource().subscribe("DataSync.json", (uuid, data) {
       if (data != null) {
-        if (kDebugMode) {
-          print("DataSync.init.onChange() => $data");
-        }
+        Util.p("DataSync.init.onChange() => $data");
         restart(data["cron"]);
       }
     });
@@ -220,9 +201,7 @@ class DataSync {
       if (appIsActive) {
         sync();
       }
-      if (kDebugMode) {
-        print("DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
-      }
+      Util.p("DataSync:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
     });
   }
 }

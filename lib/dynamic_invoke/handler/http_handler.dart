@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:rjdu/dynamic_invoke/handler/abstract_handler.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
@@ -14,9 +13,7 @@ class HttpHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     args = Util.getMutableMap(args);
-    if (kDebugMode) {
-      print("HttpHandler: args: $args");
-    }
+    Util.p("HttpHandler: args: $args");
 
     args["headers"] = HttpClient.upgradeHeadersAuthorization(args["headers"]);
     if (!args.containsKey("host")) {
@@ -40,8 +37,6 @@ class HttpHandler extends AbstractHandler {
         httpResponseObject["statusCode"] = value.statusCode;
         httpResponseObject["rawBody"] = value.body;
 
-        print(httpResponseObject);
-
         if (httpResponseObject["status"] != true) {
           httpResponseObject["error"] = "Сервер вернул ошибку ${value.statusCode}";
         }
@@ -56,9 +51,7 @@ class HttpHandler extends AbstractHandler {
             } else if (data.containsKey("exception")) {
               String ex = data["exception"][0] as String;
               httpResponseObject["error"] = ex.length > 100 ? ex.substring(0, 100) : ex;
-              if (kDebugMode) {
-                print(data["exception"]);
-              }
+              Util.p(data["exception"]);
             }
           }
         } catch (e) {

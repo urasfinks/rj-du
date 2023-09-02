@@ -10,7 +10,6 @@ class SystemNotify {
   Map<SystemNotifyEnum, List<Function(String state)>> notify = {};
 
   void emit(SystemNotifyEnum key, String value) {
-    //print("SystemNotify().emit($key, $value)");
     if (notify.containsKey(key)) {
       for (Function(String state) callback in notify[key]!) {
         callback(value);
@@ -19,7 +18,6 @@ class SystemNotify {
   }
 
   void subscribe(SystemNotifyEnum key, Function(String state) callback) {
-    //print("SystemNotify().subscribe($key)");
     if (!notify.containsKey(key)) {
       notify[key] = [];
     }

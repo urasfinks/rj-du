@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/abstract_extension.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
 
+import '../../../util.dart';
 import '../../dynamic_ui_builder_context.dart';
 
 class StateDataSwitch extends AbstractExtension {
@@ -14,9 +14,7 @@ class StateDataSwitch extends AbstractExtension {
       if (item.containsKey("case")) {
         map[item["case"]] = item;
       } else {
-        if (kDebugMode) {
-          print("extensionStateDataSwitch item key 'case' not exist");
-        }
+        Util.p("extensionStateDataSwitch item key 'case' not exist");
       }
     }
     bool flagAdd = false;
@@ -32,9 +30,7 @@ class StateDataSwitch extends AbstractExtension {
       flagAdd = true;
     }
     if (!flagAdd) {
-      if (kDebugMode) {
-        print("extensionStateDataSwitch not found 'case' =  $value || default");
-      }
+      Util.p("extensionStateDataSwitch not found 'case' =  $value || default");
     }
   }
 }

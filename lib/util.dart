@@ -48,7 +48,7 @@ class Util {
 
   static void p(dynamic mes) {
     if (kDebugMode) {
-      print(mes);
+      print("[${DateTime.now()}] $mes");
     }
   }
 
@@ -232,15 +232,10 @@ class Util {
   }
 
   static void printCurrentStack(String label) {
-    try {
-      Object? x;
-      x!.toString();
-    } catch (e, stacktrace) {
-      debugPrintStack(
-        stackTrace: stacktrace,
-        maxFrames: 50,
-        label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
-      );
-    }
+    debugPrintStack(
+      stackTrace: StackTrace.current,
+      maxFrames: 50,
+      label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
+    );
   }
 }

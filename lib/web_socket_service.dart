@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:cron/cron.dart';
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/data_sync.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
@@ -32,9 +31,7 @@ class WebSocketService {
       } else {
         _disconnect();
       }
-      if (kDebugMode) {
-        print("WebSocketService:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
-      }
+      Util.p("WebSocketService:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
     });
   }
 
@@ -47,23 +44,17 @@ class WebSocketService {
   void _connect() {
     if (_channel == null) {
       try {
-        if (kDebugMode) {
-          print("WebSocketService._connect() start connect");
-        }
+        Util.p("WebSocketService._connect() start connect");
         WebSocket.connect("${GlobalSettings().ws}/${Storage().get("uuid", "undefined")}")
             .timeout(const Duration(seconds: 4))
             .then((ws) {
           try {
             _disconnect(); //Если кто-то уже создал коннект
             _channel = IOWebSocketChannel(ws);
-            if (kDebugMode) {
-              print("WebSocketService._connect() connect chanel");
-            }
+            Util.p("WebSocketService._connect() connect chanel");
             if (_channel != null) {
               _listen(_channel!);
-              if (kDebugMode) {
-                print("WebSocketService._connect() channel.stream.listen");
-              }
+              Util.p("WebSocketService._connect() channel.stream.listen");
             }
           } catch (e, stacktrace) {
             _log(e, stacktrace, "_disconnect()");
@@ -82,9 +73,7 @@ class WebSocketService {
   void _listen(WebSocketChannel channel) {
     channel.stream.listen(
       (message) {
-        if (kDebugMode) {
-          print("WebSocketService._listen()::onRead($message)");
-        }
+        Util.p("WebSocketService._listen()::onRead($message)");
         // TODO: доработать парсинг сообщения,
         // Map<String, dynamic> jsonDecoded = json.decode(message);
         // но пока обработчик будет только запуск синхронизации
@@ -107,13 +96,9 @@ class WebSocketService {
   void _disconnect() {
     if (_channel != null) {
       try {
-        if (kDebugMode) {
-          print("WebSocketService._disconnect() start disconnect");
-        }
+        Util.p("WebSocketService._disconnect() start disconnect");
         _channel!.sink.close(status.goingAway);
-        if (kDebugMode) {
-          print("WebSocketService._disconnect() _channel.close()");
-        }
+        Util.p("WebSocketService._disconnect() _channel.close()");
       } catch (e, stacktrace) {
         _log(e, stacktrace, "_disconnect");
       }

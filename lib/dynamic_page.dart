@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/dynamic_invoke/handler/hide_handler.dart';
@@ -43,9 +42,7 @@ class DynamicPage extends StatefulWidget {
   int openInIndexTab = 0;
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
-    if (kDebugMode) {
-      print("DynamicPage.subscribeToReload(${group.name}) $value");
-    }
+    Util.p("DynamicPage.subscribeToReload(${group.name}) $value");
     if (!_subscribedOnReload[group]!.contains(value)) {
       _subscribedOnReload[group]!.add(value);
     }
@@ -94,9 +91,6 @@ class DynamicPage extends StatefulWidget {
   }
 
   void onEvent(String key, Map<String, dynamic> args) {
-    if (kDebugMode) {
-      //print("DynamicPage.onEvent($key); args: $args");
-    }
     if (arguments.containsKey(key)) {
       dynamic copyArgs = Util.getMutableMap(arguments);
       dynamic event = copyArgs[key] as Map<String, dynamic>;

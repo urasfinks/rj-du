@@ -33,7 +33,6 @@ class SocketCache {
     if (fullData.value.runtimeType == String) {
       fullData.value = json.decode(fullData.value);
     }
-    //print("SocketCache.setFull(${fullData.uuid})");
     if (cache.containsKey(fullData.uuid)) {
       SyncTimer syncTimer = cache[fullData.uuid]!;
       syncTimer.setNewData(fullData);
@@ -48,7 +47,6 @@ class SocketCache {
     if (diffData.value.runtimeType == String) {
       diffData.value = json.decode(diffData.value);
     }
-    //print("SocketCache.setDiff(${diffData.uuid})");
     if (!cache.containsKey(diffData.uuid)) {
       cache[diffData.uuid] = SyncTimer(diffData);
     }
@@ -77,10 +75,8 @@ class SyncTimer {
   //Вызывается исключительно из процесса синхронизации
   void setNewData(Data syncData) {
     if (syncData.value.runtimeType == String) {
-      //print("!!! STRING3 !!!");
       syncData.value = json.decode(syncData.value);
     }
-    //print("SyncTimer.setNewData(${data.uuid})");
     delayData = syncData;
     delayAction();
   }
@@ -91,7 +87,6 @@ class SyncTimer {
       timer!.cancel();
     }
     timer = Timer(const Duration(seconds: 2), () {
-      //print("SyncTimer.delayAction(${data.uuid})");
       SocketCache().removeCache(data.uuid); //Всегда сливаем кеш (решали задачу только быстрых прокликиваний)
       if (delayData != null) {
         data = delayData!;
@@ -101,7 +96,6 @@ class SyncTimer {
   }
 
   void notify() {
-    //print("SyncTimer.notify(${data.uuid})");
     DataSource().notifyBlockAsync(data, [], true);
   }
 
@@ -122,7 +116,6 @@ class SyncTimer {
   }
 
   void setDiff(Data diffData) {
-    //print("SyncTimer.setDiff(${data.uuid})");
     if (loadFromDb == false) {
       DataGetter.getDataJson(data.uuid, (dataDB) {
         loadFromDb = true;

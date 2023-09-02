@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +23,9 @@ class TemplateWidget extends AbstractWidget {
         Map<String, dynamic> parseTheme = json.decode(item.value);
         template[item.key] = parseTheme;
       } catch (e) {
-        if (kDebugMode) {
-          print("TemplateWidgetLoader exeption: $e");
-        }
+        Util.p("TemplateWidgetLoader exeption: $e");
       }
     }
-    if (kDebugMode) {
-      print("TemplateWidget.load($extra) $list");
-    }
+    Util.p("TemplateWidget.load($extra) $list");
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import '../../util.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../widget/abstract_widget.dart';
 
@@ -25,9 +25,7 @@ class NotifyWidget extends AbstractWidget {
             render(dynamicUIBuilderContext.data["template"], null, const SizedBox(), dynamicUIBuilderContext),
           );
         }
-        if (kDebugMode) {
-          print("NotifyWidget.build() key template not exist; parsedJson: $parsedJson; data: ${dynamicUIBuilderContext.data}");
-        }
+        Util.p("NotifyWidget.build() key template not exist; parsedJson: $parsedJson; data: ${dynamicUIBuilderContext.data}");
         return Text("NotifyWidget.getWidget() key template not exist; data: ${dynamicUIBuilderContext.data}");
       },
     );

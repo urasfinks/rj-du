@@ -126,9 +126,6 @@ class SwipableStackWidget extends AbstractWidget {
       onSwipeCompleted: (index, direction) {
         stateControl["swipedIndex"] = index;
         stateControl["swipedDirection"] = direction.name.toString();
-        // if (kDebugMode) {
-        //   print("onSwipeCompleted $index, $direction");
-        // }
         click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
         if (controller.currentIndex == children.length - 1) {
           if (roll) {
@@ -144,8 +141,6 @@ class SwipableStackWidget extends AbstractWidget {
           } else {
             stateControl["finish"] = true;
             dynamicUIBuilderContext.dynamicPage.reload(false);
-            //dynamicUIBuilderContext.dynamicPage.dynamicPageSate?.setState(() {});
-            //print("FINISH ${controller.currentIndex}");
           }
           click(parsedJson, dynamicUIBuilderContext, "onFinish");
         }
@@ -157,9 +152,6 @@ class SwipableStackWidget extends AbstractWidget {
       onWillMoveNext: (index, direction) {
         stateControl["swipedIndex"] = index;
         stateControl["swipedDirection"] = direction.name.toString();
-        // if (kDebugMode) {
-        //   print("onWillMoveNext $index, $direction");
-        // }
         click(parsedJson, dynamicUIBuilderContext, "onWillMoveNext");
         if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnWillMoveNext.name] ?? false == true) {
           dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);

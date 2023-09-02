@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -14,7 +13,6 @@ class TemplateDirective {
       return data != null ? Util.jsonStringEscape(data) : "";
     },
     "jsonEncode": (data, arguments, ctx) {
-      //print("TemplateDirective.jsonEncode ${data.runtimeType} > ${json.encode(data)}");
       return data != null ? json.encode(data) : "";
     },
     "formatNumber": (data, arguments, ctx) {
@@ -64,7 +62,6 @@ class TemplateDirective {
       return result;
     },
     "timeSoFar": (data, arguments, ctx) {
-      //print("timeSoFar: $data");
       int diffMs = Util.getTimestamp() - TypeParser.parseInt(data)!;
       int diffDays = (diffMs / 86400000).floor();
       if (diffDays > 0) {
@@ -81,9 +78,6 @@ class TemplateDirective {
       int diffSeconds = (((diffMs % 86400000) % 3600000) / 1000).round();
       if (diffSeconds > 0) {
         return "$diffSeconds сек.";
-      }
-      if (kDebugMode) {
-        //print("$diffDays days, $diffHrs hours, $diffMins minutes, $diffSeconds seconds until");
       }
       return "сейчас";
     },

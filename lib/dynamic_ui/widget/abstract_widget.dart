@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/state_data_iterator.dart';
 
 import '../dynamic_ui.dart';
@@ -38,10 +37,7 @@ abstract class AbstractWidget {
       return Text("$className.build() Return: $resultWidget; Must be Widget");
     }
     if (resultWidget != null && resultWidget.runtimeType.toString().contains("Map<String,")) {
-      if (kDebugMode) {
-        print(
-            "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
-      }
+      Util.p("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
       return Text("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;
@@ -162,9 +158,7 @@ abstract class AbstractWidget {
         }
         return null;
       }).then((result) {}).catchError((error, stacktrace) {
-        if (kDebugMode) {
-          print("clickStatic exception: $error $stacktrace");
-        }
+        Util.printStackTrace("clickStatic", error, stacktrace);
       }).onError((error, stackTrace) {
         Util.printStackTrace("AbstractWidget.clickStatic()", error, stackTrace);
       });

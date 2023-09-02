@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import '../../db/data_source.dart';
 import '../../dynamic_ui/widget/abstract_widget.dart';
 import '../../util.dart';
@@ -36,9 +35,7 @@ class DbQueryHandler extends AbstractHandler {
         Util.printStackTrace("DbQueryHandler.handle()", error, stackTrace);
       });
     } else {
-      if (kDebugMode) {
-        print("SetStateDataHandler not contains Keys: [sql, args] in args: $args");
-      }
+      Util.p("SetStateDataHandler not contains Keys: [sql, args] in args: $args");
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +18,7 @@ class ResetTextControllerHandler extends AbstractHandler {
       //А так мы просто получим перетерание на старое значение
       dynamicUIBuilderContext.dynamicPage.stateData.set(args["state"], key, false);
     } else {
-      if (kDebugMode) {
-        print("DataSourceSetHandler not contains Keys: [key] in args: $args");
-        print(StackTrace.current);
-      }
+      Util.printCurrentStack("DataSourceSetHandler not contains Keys: [key] in args: $args");
     }
   }
 }

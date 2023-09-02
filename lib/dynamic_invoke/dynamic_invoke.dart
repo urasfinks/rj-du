@@ -56,10 +56,7 @@ class DynamicInvoke {
   Map<String, Function> handler = {};
 
   init() {
-    //print("${ShowHandler().getName()}!!");
-    if (kDebugMode) {
-      print("DynamicInvoke.init()");
-    }
+    Util.p("DynamicInvoke.init()");
 
     NavigatorPushHandler();
     NavigatorPopHandler();
@@ -97,7 +94,6 @@ class DynamicInvoke {
     for (MapEntry<String, Function> item in handler.entries) {
       javascriptRuntime!.onMessage(item.key, (dynamic args) {
         try {
-          //print("DynamicInvoke.onMessage() args: $args");
           String pageUuid = args["_rjduPageUuid"];
           args.removeWhere((key, value) => key == "_rjduPageUuid");
           DynamicPage? pageByUuid = NavigatorApp.getPageByUuid(pageUuid);
@@ -156,9 +152,7 @@ class DynamicInvoke {
         return result;
       }
     } else {
-      if (kDebugMode) {
-        print("DynamicInvoke.call() handler[$handler] undefined");
-      }
+      Util.p("DynamicInvoke.call() handler[$handler] undefined");
     }
     return null;
   }
@@ -198,7 +192,7 @@ class DynamicInvoke {
     DataSource().get(uuid, (uuid, data) {
       if (data != null && data.containsKey(DataType.js.name)) {
         bool pretty = true;
-        String? result = _eval(
+        _eval(
           uuid,
           dynamicUIBuilderContext.dynamicPage.uuid,
           data[DataType.js.name],
@@ -210,15 +204,8 @@ class DynamicInvoke {
           NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage,
           dynamicUIBuilderContext,
         );
-        if (result != null) {
-          if (kDebugMode) {
-            //print("DynamicInvoke.eval() => $result");
-          }
-        }
       } else {
-        if (kDebugMode) {
-          print("DynamicJS.eval() DataSource.get($uuid) undefined");
-        }
+        Util.p("DynamicJS.eval() DataSource.get($uuid) undefined");
       }
     });
   }
@@ -269,8 +256,6 @@ $pageArgs
         bridge.log('JavaScript exception: ' + e);        
       }
     """;
-/*${dynamicUIBuilderContext.toString()}*/
-    //print("\n\nJS CODE BLOCK======================\n$jsInit\n===================FINISH BLOCK\n\n");
     return javascriptRuntime!.evaluate(tryBlock).stringResult;
   }
 }

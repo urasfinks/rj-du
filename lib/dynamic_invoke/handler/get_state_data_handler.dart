@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../../util.dart';
 import 'abstract_handler.dart';
@@ -11,9 +9,7 @@ class GetStateDataHandler extends AbstractHandler {
       dynamic value = dynamicUIBuilderContext.dynamicPage.stateData.get(args["state"], args["key"], args["default"]);
       return {args["key"]: value};
     } else {
-      if (kDebugMode) {
-        print("GetStateDataHandler not contains Keys: [key, default] in args: $args");
-      }
+      Util.p("GetStateDataHandler not contains Keys: [key, default] in args: $args");
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rjdu/data_sync.dart';
@@ -32,9 +31,7 @@ class DataSource {
   DataMigration dataMigration = DataMigration();
 
   init() async {
-    if (kDebugMode) {
-      print("DataSource.init()");
-    }
+    Util.p("DataSource.init()");
     final directory = await getApplicationDocumentsDirectory();
     db = await openDatabase("${directory.path}/mister-craft-1.sqlite3", version: 1);
     await dataMigration.init();
@@ -96,8 +93,8 @@ class DataSource {
   }
 
   void printTransaction(Data data, List<String> transaction) {
-    if (kDebugMode && data.debugTransaction) {
-      print("setData: ${data.uuid} transaction: $transaction");
+    if (data.debugTransaction) {
+      Util.p("setData: ${data.uuid} transaction: $transaction");
     }
   }
 
@@ -160,7 +157,6 @@ class DataSource {
   }
 
   void setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) {
-    //print("setDataSocket(${diffData.uuid}) notify: $notifyDynamicPage");
     // Обновление сокетных данных не должно обновлять локальную БД
     transaction.add("4 update socket data");
     if (notifyDynamicPage) {
@@ -187,10 +183,7 @@ class DataSource {
           SocketCache().renderDBData(data);
         });
       }
-      if (kDebugMode) {
-        // print(
-        //     "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
-      }
+      Util.p("DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
     } catch (e, stacktrace) {
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {
@@ -221,8 +214,6 @@ class DataSource {
       curData.revision = 0;
     }
     String dataString = curData.value.runtimeType != String ? json.encode(curData.value) : curData.value;
-    //print("UPD: $curData");
-    //print("UPD dataString: $dataString");
     db.rawUpdate(
       'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
       [
@@ -318,7 +309,6 @@ class DataSource {
   }
 
   void subscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
-    //print("subscribe: ${uuid}");
     get(uuid, callback);
     if (!listener.containsKey(uuid)) {
       listener[uuid] = [];
@@ -332,7 +322,6 @@ class DataSource {
     List<String> clear = [];
     for (MapEntry<String, List<Function(String uuid, Map<String, dynamic>? data)>> item in listener.entries) {
       if (item.value.contains(callback)) {
-        //print("unsubscribe: ${item.key}");
         item.value.remove(callback);
       }
       if (item.value.isEmpty) {

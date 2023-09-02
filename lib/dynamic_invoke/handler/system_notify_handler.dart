@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/system_notify.dart';
 
@@ -13,14 +12,10 @@ class SystemNotifyHandler extends AbstractHandler {
       if (enumFromString != null) {
         SystemNotify().emit(enumFromString, args["state"]);
       } else {
-        if (kDebugMode) {
-          print("SystemNotifyHandler SystemNotifyEnum.valueOf('${args["SystemNotifyEnum"]}') return null value;");
-        }
+        Util.p("SystemNotifyHandler SystemNotifyEnum.valueOf('${args["SystemNotifyEnum"]}') return null value;");
       }
     } else {
-      if (kDebugMode) {
-        print("SystemNotifyHandler not contains Keys: [SystemNotifyEnum, state] in args: $args");
-      }
+      Util.p("SystemNotifyHandler not contains Keys: [SystemNotifyEnum, state] in args: $args");
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:rjdu/util.dart';
 import '../iterator.dart';
 
 class IteratorThemeLoader {
@@ -11,14 +11,10 @@ class IteratorThemeLoader {
         list.add(item.key);
         Map<String, dynamic> parseTheme = json.decode(item.value);
         Iterator.theme[item.key] = parseTheme;
-      } catch (e) {
-        if (kDebugMode) {
-          print("IteratorThemeLoader exeption: $e");
-        }
+      } catch (e, stacktrace) {
+        Util.printStackTrace("IteratorThemeLoader", e, stacktrace);
       }
     }
-    if (kDebugMode) {
-      print("IteratorThemeLoader.load()::$extra $list");
-    }
+    Util.p("IteratorThemeLoader.load()::$extra $list");
   }
 }

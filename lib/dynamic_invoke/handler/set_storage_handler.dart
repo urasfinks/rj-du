@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_invoke/handler/abstract_handler.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 
@@ -13,9 +12,7 @@ class SetStorageHandler extends AbstractHandler {
     } else if (Util.containsKeys(args, ["map"])) {
       Storage().setMap(args["map"], args["updateIfExist"] ?? true);
     } else {
-      if (kDebugMode) {
-        print("SetStorageHandler not contains Keys: [key, value] in args: $args");
-      }
+      Util.p("SetStorageHandler not contains Keys: [key, value] in args: $args");
     }
   }
 }

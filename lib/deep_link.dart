@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/util.dart';
 import 'package:uni_links/uni_links.dart';
@@ -29,9 +28,7 @@ class DeepLink {
       Util.printStackTrace("DeepLink.open()", e, stacktrace);
       args["error"] = e.toString();
     }
-    if (kDebugMode) {
-      print("DeepLink $uri; args: ${args}");
-    }
+    Util.p("DeepLink $uri; args: $args");
     DynamicInvoke().jsInvoke("DeepLink.js", args, NavigatorApp.getLast()!.dynamicUIBuilderContext);
   }
 

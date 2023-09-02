@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/system_notify.dart';
+import 'package:rjdu/util.dart';
 
 class GlobalSettings {
   bool debug = true;
@@ -23,9 +23,7 @@ class GlobalSettings {
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, (state) {
       orientation = state;
     });
-    if (kDebugMode) {
-      print("GlobalSettings.init()");
-    }
+    Util.p("GlobalSettings.init()");
   }
 
   void setHost(String host) {

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import '../../data_sync.dart';
 import '../../navigator_app.dart';
 import '../../util.dart';
@@ -8,13 +7,6 @@ import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 class PageReloadHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    // if (kDebugMode) {
-    //   print("PageReloadHandler args: $args");
-    // }
-    /*dynamic args = {
-      "case": ["byArguments", "current"], //default byArguments
-      "sync": false,
-    };*/
     if (!args.containsKey("case") || args["case"] == null) {
       args["case"] = "byArguments";
     }
@@ -23,24 +15,18 @@ class PageReloadHandler extends AbstractHandler {
     switch (args["case"]) {
       case "byArguments":
         fnReload = () {
-          if (kDebugMode) {
-            print("PageReloadHandler.fnReload(byArguments)");
-          }
+          Util.p("PageReloadHandler.fnReload(byArguments)");
           NavigatorApp.reloadPageByArguments(args["key"], args["value"], rebuild);
         };
         break;
       case "current":
         fnReload = () {
-          if (kDebugMode) {
-            print("PageReloadHandler.fnReload(current)");
-          }
+          Util.p("PageReloadHandler.fnReload(current)");
           dynamicUIBuilderContext.dynamicPage.reload(rebuild);
         };
         break;
       default:
-        if (kDebugMode) {
-          print("PageReloadHandler WTF?");
-        }
+        Util.p("PageReloadHandler WTF?");
         break;
     }
     bool sync = args.containsKey("sync") && args["sync"] == true;

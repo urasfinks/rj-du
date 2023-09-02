@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:rjdu/dynamic_ui/type_parser.dart';
 import 'package:rjdu/storage.dart';
 import '../data_type.dart';
 import '../global_settings.dart';
+import '../util.dart';
 import 'data_source.dart';
 
 class DataMigration {
@@ -14,13 +14,9 @@ class DataMigration {
 
   migration() async {
     bool updateApplication = Storage().get("version", "v0") != GlobalSettings().version;
-    if (kDebugMode) {
-      print("migration() current versionL ${GlobalSettings().version}; updateApplication = $updateApplication");
-    }
+    Util.p("migration() current versionL ${GlobalSettings().version}; updateApplication = $updateApplication");
     if (updateApplication) {
-      if (kDebugMode) {
-        print("migration() set new version = ${GlobalSettings().version}");
-      }
+      Util.p("migration() set new version = ${GlobalSettings().version}");
       Storage().set("version", GlobalSettings().version);
     }
     await _sqlExecute([
@@ -28,7 +24,7 @@ class DataMigration {
       "db/migration/2023-01-29.sql",
     ]);
     await loadAssetsData();
-    debugPrint("Migration complete");
+    Util.p("Migration complete");
   }
 
   Future<void> _sqlExecute(List<String> files) async {
@@ -36,9 +32,7 @@ class DataMigration {
       if (file.trim() == "") {
         continue;
       }
-      if (kDebugMode) {
-        print("Migration: $file");
-      }
+      Util.p("Migration: $file");
       String migration = await rootBundle.loadString("packages/rjdu/lib/assets/$file");
       List<String> split =
           migration.split(";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
@@ -94,9 +88,7 @@ class DataMigration {
         DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
       }
     }
-    if (kDebugMode) {
-      print("DataMigration.loadAssetsData(rjdu) $list");
-    }
+    Util.p("DataMigration.loadAssetsData(rjdu) $list");
     list = [];
     for (String path in assets.keys) {
       if (path.startsWith("assets/db/data/")) {
@@ -106,9 +98,7 @@ class DataMigration {
         DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
       }
     }
-    if (kDebugMode) {
-      print("DataMigration.loadAssetsData(project) $list");
-    }
+    Util.p("DataMigration.loadAssetsData(project) $list");
   }
 
   DataType parseDataTypeFromDirectory(String path) {

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/align_widget.dart';
@@ -192,9 +191,7 @@ class DynamicUI {
         );
       }
       if (parsedJson.containsKey("debug")) {
-        if (kDebugMode) {
-          print("DEBUG RENDER (${dynamicUIBuilderContext.listener}): $parsedJson");
-        }
+        Util.p("DEBUG RENDER (${dynamicUIBuilderContext.listener}): $parsedJson");
       }
       dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
       if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {

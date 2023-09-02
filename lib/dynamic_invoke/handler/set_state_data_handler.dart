@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../../util.dart';
@@ -13,9 +12,7 @@ class SetStateDataHandler extends AbstractHandler {
       //Util.log("SetStateDataHandler args: $args");
       dynamicUIBuilderContext.dynamicPage.stateData.setMap(args["state"], args["map"], args["notify"] ?? true);
     } else {
-      if (kDebugMode) {
-        print("SetStateDataHandler undefined scheme args: $args");
-      }
+      Util.p("SetStateDataHandler undefined scheme args: $args");
     }
   }
 }

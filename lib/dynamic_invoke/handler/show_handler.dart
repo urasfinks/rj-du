@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,15 +47,11 @@ class ShowHandler extends AbstractHandler {
           openGallery(args, dynamicUIBuilderContext);
           break;
         default:
-          if (kDebugMode) {
-            print("HideHandler default case: $args");
-          }
+          Util.p("HideHandler default case: $args");
           break;
       }
     } else {
-      if (kDebugMode) {
-        print("HideHandler not contains Keys: [case] in args: $args");
-      }
+      Util.p("HideHandler not contains Keys: [case] in args: $args");
     }
   }
 
@@ -105,9 +100,7 @@ class ShowHandler extends AbstractHandler {
           }
           AbstractWidget.clickStatic({"onLoadImage": onLoadImage}, dynamicUIBuilderContext, "onLoadImage");
         } else {
-          if (kDebugMode) {
-            print("onLoad arguments does not exist");
-          }
+          Util.p("onLoad arguments does not exist");
         }
       }
     }

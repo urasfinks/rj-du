@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:rjdu/util.dart';
 
 import 'db/data_source.dart';
 import 'storage.dart';
@@ -16,9 +16,7 @@ class Translate {
   Translate._internal();
 
   void init() {
-    if (kDebugMode) {
-      print("Translate.init()");
-    }
+    Util.p("Translate.init()");
     DataSource().subscribe("Translate.json", (uuid, data) {
       if (data != null) {
         map = data;
