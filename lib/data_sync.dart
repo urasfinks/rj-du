@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cron/cron.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/storage.dart';
@@ -71,9 +70,7 @@ class DataSync {
         while (true) {
           if (counter > 20) {
             //Default = 20
-            if (kDebugMode) {
-              Util.p("DataSync.handler() break infinity while");
-            }
+            Util.p("DataSync.handler() break infinity while");
             break;
           }
           counter++;

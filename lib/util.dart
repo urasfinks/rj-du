@@ -47,7 +47,7 @@ class Util {
   }
 
   static void p(dynamic mes) {
-    if (kDebugMode) {
+    if (kDebugMode && GlobalSettings().debug) {
       print("[${DateTime.now()}] $mes");
     }
   }
@@ -222,7 +222,7 @@ class Util {
   static String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   static void printStackTrace(String label, Object? e, StackTrace stacktrace) {
-    if (kDebugMode) {
+    if (kDebugMode && GlobalSettings().debug) {
       debugPrintStack(
         stackTrace: stacktrace,
         maxFrames: GlobalSettings().debugStackTraceMaxFrames,

@@ -135,7 +135,7 @@ class DynamicInvoke {
       dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
       Map<String, dynamic> args = Util.templateArguments(Util.getMutableMap(inArgs), dynamicUIBuilderContext);
       String log = "";
-      if (kDebugMode) {
+      if (kDebugMode && GlobalSettings().debug) {
         log = "DynamicInvoke.sysInvoke($handler, $inArgs)\ntemplate:\n";
         log += "${Util.jsonPretty(args)}\n";
         if (jsContext) {
@@ -143,7 +143,7 @@ class DynamicInvoke {
         }
       }
       dynamic result = Function.apply(this.handler[handler]!, [args, dynamicUIBuilderContext]);
-      if (kDebugMode) {
+      if (kDebugMode && GlobalSettings().debug) {
         if (args.containsKey("printResult")) {
           Util.log("$log => $result");
         }
