@@ -1,13 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rjdu/db/data_getter.dart';
 import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 import 'package:rjdu/util.dart';
 
+import 'dynamic_invoke/handler/alert_handler.dart';
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
 import 'dynamic_ui/widget/abstract_widget.dart';
-import 'global_settings.dart';
 
 class AudioComponent {
   static final AudioComponent _singleton = AudioComponent._internal();
@@ -83,7 +82,12 @@ class AudioComponent {
       audioPlayer.setAudioSource(audioComponentContext.byteSource!).then((value) {
         this.audioComponentContext!.play();
         audioPlayer.play();
+      }).onError((error, stackTrace) {
+        Util.printStackTrace("AudioComponent.play()", error, stackTrace);
+        this.audioComponentContext!.error(error.toString());
       });
+    } else {
+      this.audioComponentContext!.error("Файл не загружен");
     }
   }
 
@@ -140,6 +144,9 @@ class AudioComponentContext {
             if (autoPlayOnLoad) {
               AudioComponent().play(this);
             }
+          }).onError((error, stackTrace) {
+            Util.printStackTrace("AudioComponentContext.constructor()", error, stackTrace);
+            this.error(error.toString());
           });
           break;
         case "db":
@@ -169,13 +176,8 @@ class AudioComponentContext {
           break;
       }
     } catch (e, stacktrace) {
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stacktrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label: "AudioComponentContext Exception: $e; ars: $args; onLoadBytesCallback: $onLoadBytesCallback",
-        );
-      }
+      Util.printStackTrace(
+          "AudioComponentContext ars: $args; onLoadBytesCallback: $onLoadBytesCallback", e, stacktrace);
     }
   }
 
@@ -198,6 +200,11 @@ class AudioComponentContext {
 
   void loading() {
     notifyStream({"caller": "loading()", "state": AudioComponentContextState.loading.name});
+  }
+
+  void error(String message) {
+    notifyStream({"caller": "error()", "state": AudioComponentContextState.error.name});
+    AlertHandler.alertSimple(message);
   }
 
   void pause() {

@@ -23,18 +23,17 @@ class AudioButtonWidget extends AbstractWidget {
     if (parsedJson.containsKey("autoPlayOnLoad")) {
       audioComponentContext.autoPlayOnLoad = TypeParser.parseBool(parsedJson["autoPlayOnLoad"]) ?? false;
     }
-    if (parsedJson.containsKey("autoPlayOnInit")) {
-      if (TypeParser.parseBool(parsedJson["autoPlayOnInit"]) ?? false) {
-        if (audioComponentContext.byteSource != null) {
-          AudioComponent().play(audioComponentContext);
-        } else {
-          audioComponentContext.onLoadBytesCallback = (AudioComponentContext audioComponentContext) {
-            print("!!!! ${audioComponentContext.byteSource}");
-            AudioComponent().play(audioComponentContext);
-          };
-        }
+
+    if (TypeParser.parseBool(parsedJson["autoPlayOnInit"]) ?? false) {
+      if (audioComponentContext.byteSource != null) {
+        AudioComponent().play(audioComponentContext);
+      } else {
+        audioComponentContext.onLoadBytesCallback = (AudioComponentContext ctx) {
+          AudioComponent().play(ctx);
+        };
       }
     }
+
     return Center(
       child: Container(
           color: Colors.transparent,

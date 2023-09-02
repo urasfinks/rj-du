@@ -28,6 +28,7 @@ class DynamicPage extends StatefulWidget {
   late final DynamicUIBuilderContext dynamicUIBuilderContext;
   final Map<String, DynamicUIBuilderContext> contextMap = {};
   BuildContext? context;
+  bool newRender = true;
 
   final String uuid = Util.uuid();
   bool isRunConstructor = false;
@@ -129,6 +130,7 @@ class DynamicPage extends StatefulWidget {
       AudioComponent().stop();
       isRunConstructor = false;
       if (_setState != null) {
+        newRender = true;
         _setState!.setState(() {});
       }
     } else {
@@ -239,13 +241,18 @@ class _DynamicPage extends State<DynamicPage> {
     super.dispose();
   }
 
+  dynamic resultWidget = const Text("DynamicUI");
+
   @override
   Widget build(BuildContext context) {
     widget.context = context;
-    widget.constructor();
-    dynamic resultWidget = DynamicUI.render(widget.arguments, null, const SizedBox(), widget.dynamicUIBuilderContext);
-    if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
-      return Text("DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+    if (widget.newRender) {
+      widget.constructor();
+      resultWidget = DynamicUI.render(widget.arguments, null, const SizedBox(), widget.dynamicUIBuilderContext);
+      if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
+        return Text("DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
+      }
+      widget.newRender = false;
     }
     return resultWidget;
   }

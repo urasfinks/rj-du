@@ -64,7 +64,7 @@ class DataSource {
         count++;
       }
     }
-    debugPrint("flushQueue complete: $count");
+    Util.p("flushQueue complete: $count");
   }
 
   void set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) {

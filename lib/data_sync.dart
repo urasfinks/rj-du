@@ -189,7 +189,9 @@ class DataSync {
       //Если ревизия на сервере оказалась меньше чем на устройстве
       //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
       // Что бы мы ему повторно выслали данные с устройства этот лаг недастающих ревизий
-      print("!!!NEED UPGRADE from ${curData["needUpgrade"]} .. ${maxRevisionByType[dataType.name]}");
+      if (kDebugMode) {
+        print("!!!NEED UPGRADE from ${curData["needUpgrade"]} .. ${maxRevisionByType[dataType.name]}");
+      }
       // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
       // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
       DataGetter.resetRevision(

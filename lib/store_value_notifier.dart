@@ -35,15 +35,16 @@ class StoreValueNotifier {
     return ValueListenableBuilder<SubscriberObject>(
       valueListenable: getValueNotifier(link),
       builder: (BuildContext context, SubscriberObject subscriberObject, Widget? child) {
-        if (subscriberObject.data.isNotEmpty) {
+        if (subscriberObject.isUpdated) {
           List<String> updateUuidList = [];
           List<String> updateKeyList = [];
-          for (MapEntry<String, dynamic> item in subscriberObject.data.entries) {
+          Map<String, dynamic> map = subscriberObject.get();
+          for (MapEntry<String, dynamic> item in map.entries) {
             dynamicUIBuilderContext.data[item.key] = item.value;
             updateUuidList.add(subscriberObject.link[item.key]); //link: {blabla: uuid}; data:{blabla: {...}}
             updateKeyList.add(item.key);
           }
-          dynamicUIBuilderContext.contextUpdate(updateUuidList, updateKeyList);
+          dynamicUIBuilderContext.onContextUpdate(updateUuidList, updateKeyList);
         }
         dynamic resultWidget = builder(context, child);
         if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
@@ -77,6 +78,7 @@ class StoreValueNotifier {
       }
       mapValueNotifier[complexKey] = valueNotifier;
     }
+    mapValueNotifier[complexKey]!.value.isUpdated = true;
     return mapValueNotifier[complexKey]!;
   }
 }

@@ -46,6 +46,12 @@ class Util {
     developer.log("[${DateTime.now()}] ${mes.toString()}");
   }
 
+  static void p(dynamic mes) {
+    if (kDebugMode) {
+      print(mes);
+    }
+  }
+
   static String jsonEncode(dynamic object, [bool pretty = false]) {
     return pretty ? jsonPretty(object) : json.encode(object);
   }
