@@ -13,17 +13,14 @@ class DataMigration {
   }
 
   migration() async {
-    bool updateApplication = Storage().get("version", "v0") != GlobalSettings().version;
-    Util.p("migration() current versionL ${GlobalSettings().version}; updateApplication = $updateApplication");
-    if (updateApplication) {
-      Util.p("migration() set new version = ${GlobalSettings().version}");
-      Storage().set("version", GlobalSettings().version);
-    }
+    bool updateApplication = Storage().isUpdateApplication();
+    Util.p("migration() current version: ${GlobalSettings().version}; updateApplication = $updateApplication");
     await _sqlExecute([
       updateApplication ? "db/drop/2023-01-31.sql" : "",
       "db/migration/2023-01-29.sql",
     ]);
-    await loadAssetsData();
+    await loadAssetsData("packages/rjdu/lib/assets/db/data/");
+    await loadAssetsData("assets/db/data/");
     Util.p("Migration complete");
   }
 
@@ -34,12 +31,14 @@ class DataMigration {
       }
       Util.p("Migration: $file");
       String migration = await rootBundle.loadString("packages/rjdu/lib/assets/$file");
-      List<String> split =
-          migration.split(";"); //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
+      //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
+      List<String> split = migration.split(";");
       for (String query in split) {
         query = query.trim();
         if (query.isNotEmpty) {
-          DataSource().db.execute(query);
+          DataSource().db.execute(query).onError((error, stackTrace) {
+            Util.printStackTrace("DataMigration._sqlExecute()", error, stackTrace);
+          });
         }
       }
     }
@@ -77,28 +76,19 @@ class DataMigration {
     return result;
   }
 
-  Future<void> loadAssetsData() async {
+  Future<void> loadAssetsData(String path) async {
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     List<String> list = [];
-    for (String path in assets.keys) {
-      if (path.startsWith("packages/rjdu/lib/assets/db/data/")) {
-        String fileData = await rootBundle.loadString(path);
-        String fileName = path.split("/").last;
+
+    for (String pathItem in assets.keys) {
+      if (pathItem.startsWith(path)) {
+        String fileData = await rootBundle.loadString(pathItem);
+        String fileName = pathItem.split("/").last;
         list.add(fileName);
-        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
+        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(pathItem), null, null, GlobalSettings().debug);
       }
     }
-    Util.p("DataMigration.loadAssetsData(rjdu) $list");
-    list = [];
-    for (String path in assets.keys) {
-      if (path.startsWith("assets/db/data/")) {
-        String fileData = await rootBundle.loadString(path);
-        String fileName = path.split("/").last;
-        list.add(fileName);
-        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(path), null, null, GlobalSettings().debug);
-      }
-    }
-    Util.p("DataMigration.loadAssetsData(project) $list");
+    Util.p("DataMigration.loadAssetsData($path) $list");
   }
 
   DataType parseDataTypeFromDirectory(String path) {

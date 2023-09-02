@@ -230,6 +230,7 @@ class DynamicInvoke {
     String jsInit = """
         bridge.clearAll();
         bridge.pageUuid = '$pageUuid';
+        bridge.debug = ${GlobalSettings().debug ? 'true' : 'false'};
         bridge.unique = '${Storage().get("unique", "")}';
         bridge.scriptUuid = '$scriptUuid';
         bridge.orientation = '${GlobalSettings().orientation}';

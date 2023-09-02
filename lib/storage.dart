@@ -1,10 +1,13 @@
 import 'package:rjdu/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'global_settings.dart';
+
 class Storage {
   static final Storage _singleton = Storage._internal();
   SharedPreferences? prefs;
   Map<String, List<Function(String value)>> mapWatcher = {};
+  bool updateApplication = false;
 
   factory Storage() {
     return _singleton;
@@ -12,9 +15,19 @@ class Storage {
 
   Storage._internal();
 
+  bool isUpdateApplication() {
+    return updateApplication;
+  }
+
   init() async {
     Util.p("Storage.init()");
     prefs = await SharedPreferences.getInstance();
+    updateApplication = get("version", "v0") != GlobalSettings().version;
+    if (isUpdateApplication()) {
+      Util.p(
+          "Storage.init() clear; current version: ${GlobalSettings().version}; old version: ${get("version", "v0")}");
+      prefs!.clear();
+    }
   }
 
   void onChange(String key, String defaultValue, Function(String value) callback) {

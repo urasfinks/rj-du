@@ -55,6 +55,10 @@ class RjDu {
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
       AudioComponent().pause();
     });
+
+    if (Storage().isUpdateApplication()) {
+      Storage().set("version", GlobalSettings().version);
+    }
   }
 
   static Future<DynamicPage> runApp() async {
@@ -67,11 +71,10 @@ class RjDu {
     //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
     IteratorThemeLoader.load(
         await DataMigration.loadAssetByMask("systemData/iteratorTheme", "", "packages/rjdu/lib/"), "rjdu");
+    TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", "", "packages/rjdu/lib/"), "rjdu");
+
     IteratorThemeLoader.load(
         await DataMigration.loadAssetByMask("systemData/iteratorTheme", "IteratorTheme"), "project");
-
-    //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
-    TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", "", "packages/rjdu/lib/"), "rjdu");
     TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", ""), "project");
 
     return DynamicPage(const {

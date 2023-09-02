@@ -221,12 +221,12 @@ class Util {
 
   static String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  static void printStackTrace(String label, Object? e, StackTrace stacktrace) {
+  static void printStackTrace(String label, Object? error, StackTrace stackTrace) {
     if (kDebugMode && GlobalSettings().debug) {
       debugPrintStack(
-        stackTrace: stacktrace,
+        stackTrace: stackTrace,
         maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-        label: "$label; Exception: $e",
+        label: "$label; Exception: $error",
       );
     }
   }
