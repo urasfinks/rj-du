@@ -52,13 +52,7 @@ class DataSync {
       cron!.schedule(Schedule.parse(template), sync);
       sync();
     } catch (e, stacktrace) {
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stacktrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label: "DataSync.restart() Exception: $e; template: $template",
-        );
-      }
+      Util.printStackTrace("DataSync.restart() template: $template", e, stacktrace);
     }
   }
 
@@ -147,13 +141,7 @@ class DataSync {
         // Не пугайтесь всегда будет отставание на одно значение от реальности
         Storage().set("lastSync", "${Util.getTimestamp()}");
       } catch (e, stacktrace) {
-        if (kDebugMode) {
-          debugPrintStack(
-            stackTrace: stacktrace,
-            maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-            label: "DataSync().sync() Exception: $e",
-          );
-        }
+        Util.printStackTrace("DataSync().sync()", e, stacktrace);
       }
       if (kDebugMode) {
         print("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion; map: $map");

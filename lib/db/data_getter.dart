@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 import '../data_type.dart';
-import '../global_settings.dart';
 import '../util.dart';
 import 'data_source.dart';
 
@@ -58,6 +57,8 @@ class DataGetter {
           callback(json.decode(resultSet.first["value_data"] as String));
         }
       }
+    }).onError((error, stackTrace){
+      Util.printStackTrace("DataGetter.getDataJson() uuid: $uuid", error, stackTrace);
     });
   }
 
@@ -65,14 +66,8 @@ class DataGetter {
     DataSource().db.rawQuery("SELECT * FROM data where uuid_data = ? and type_data IN (?,?)",
         [uuid, DataType.blob.name, DataType.blobRSync.name]).then((resultSet) {
       callback(resultSet.isEmpty ? null : Util.base64Decode(resultSet.first["value_data"] as String));
-    }).onError((e, stacktrace){
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stacktrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label: "DataGetter.getDataBlob() Exception: $e; uuid: $uuid",
-        );
-      }
+    }).onError((error, stackTrace) {
+      Util.printStackTrace("DataGetter.getDataBlob() uuid: $uuid", error, stackTrace);
     });
   }
 }

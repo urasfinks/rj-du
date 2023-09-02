@@ -10,6 +10,7 @@ import 'dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:uuid/uuid.dart';
 
 import 'data_type.dart';
+import 'global_settings.dart';
 
 class Util {
   static Base64Codec base64 = const Base64Codec();
@@ -161,6 +162,8 @@ class Util {
   static Future<void> asyncInvoke(Function(dynamic args) fn, dynamic args) async {
     Future<void>.delayed(Duration.zero).then((_) {
       fn(args);
+    }).onError((error, stackTrace) {
+      Util.printStackTrace("Util.asyncInvoke()", error, stackTrace);
     });
   }
 
@@ -211,4 +214,27 @@ class Util {
   }
 
   static String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
+  static void printStackTrace(String label, Object? e, StackTrace stacktrace) {
+    if (kDebugMode) {
+      debugPrintStack(
+        stackTrace: stacktrace,
+        maxFrames: GlobalSettings().debugStackTraceMaxFrames,
+        label: "$label; Exception: $e",
+      );
+    }
+  }
+
+  static void printCurrentStack(String label) {
+    try {
+      Object? x;
+      x!.toString();
+    } catch (e, stacktrace) {
+      debugPrintStack(
+        stackTrace: stacktrace,
+        maxFrames: 50,
+        label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
+      );
+    }
+  }
 }

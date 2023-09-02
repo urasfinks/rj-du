@@ -76,7 +76,7 @@ class AlertHandler extends AbstractHandler {
   }
 
   static void alertSimple(String label) {
-    alert(700, label, "schema:inversePrimary", "schema:background", null);
+    alert(1500, label, "schema:inversePrimary", "schema:background", null);
   }
 
   static void alert(int milliseconds, String label, String color, String backgroundColor, SnackBarAction? action) {

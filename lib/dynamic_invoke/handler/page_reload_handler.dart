@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../../data_sync.dart';
 import '../../navigator_app.dart';
+import '../../util.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 
@@ -47,6 +48,8 @@ class PageReloadHandler extends AbstractHandler {
       Future<void> sync2 = DataSync().sync();
       sync2.then((_) {
         fnReload();
+      }).onError((error, stackTrace) {
+        Util.printStackTrace("PageReloadHandler.handle()", error, stackTrace);
       });
     } else {
       fnReload();

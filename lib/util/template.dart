@@ -1,12 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:rjdu/util/template/directive.dart';
 import 'package:rjdu/util/template/function.dart';
 
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
-import '../global_settings.dart';
+import '../util.dart';
 
 class Template {
-
   static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
     if (!template.contains("\${")) {
@@ -97,14 +95,8 @@ class Template {
         }
       }
     } catch (e, stacktrace) {
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stacktrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label:
-          "Template.stringSelector() Exception: $e; path: $path; defaultValue: $defaultValue; data: $data",
-        );
-      }
+      Util.printStackTrace(
+          "Template.stringSelector() path: $path; defaultValue: $defaultValue; data: $data", e, stacktrace);
       find = false;
     }
     if (!find) {

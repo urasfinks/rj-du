@@ -11,7 +11,7 @@ class DynamicUIBuilderContext {
   List<DynamicUIBuilderContext> children = [];
   Map<String, dynamic> listener = {};
 
-  void contextUpdate(List<String> updateUuidList, List<String> updateKeyList) {
+  void onContextUpdate(List<String> updateUuidList, List<String> updateKeyList) {
     if (isRoot) {
       dynamicPage.renderFloatingActionButton();
     }

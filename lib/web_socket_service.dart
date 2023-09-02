@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rjdu/data_sync.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
+import 'package:rjdu/util.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:io';
@@ -32,8 +33,7 @@ class WebSocketService {
         _disconnect();
       }
       if (kDebugMode) {
-        print(
-            "WebSocketService:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
+        print("WebSocketService:init:SystemNotify.emit(AppLifecycleState) => $state; isActive: $appIsActive");
       }
     });
   }
@@ -50,8 +50,7 @@ class WebSocketService {
         if (kDebugMode) {
           print("WebSocketService._connect() start connect");
         }
-        WebSocket.connect(
-                "${GlobalSettings().ws}/${Storage().get("uuid", "undefined")}")
+        WebSocket.connect("${GlobalSettings().ws}/${Storage().get("uuid", "undefined")}")
             .timeout(const Duration(seconds: 4))
             .then((ws) {
           try {
@@ -70,6 +69,8 @@ class WebSocketService {
             _log(e, stacktrace, "_disconnect()");
             _disconnect();
           }
+        }).onError((error, stackTrace) {
+          Util.printStackTrace("WebSocketService._connect()", error, stackTrace);
         });
       } catch (e, stacktrace) {
         _log(e, stacktrace, "_connect()");
@@ -100,14 +101,7 @@ class WebSocketService {
   }
 
   void _log(e, stacktrace, String extra) {
-    if (kDebugMode) {
-      debugPrintStack(
-        stackTrace: stacktrace,
-        maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-        label:
-        "WebSocketService._log() Exception: $e; $extra",
-      );
-    }
+    Util.printStackTrace("WebSocketService._log() $extra", e, stacktrace);
   }
 
   void _disconnect() {

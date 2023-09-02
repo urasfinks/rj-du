@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:rjdu/navigator_app.dart';
+import 'package:rjdu/util.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'dynamic_invoke/dynamic_invoke.dart';
-import 'global_settings.dart';
 
 class DeepLink {
   static void init() {
@@ -26,11 +26,7 @@ class DeepLink {
         args[key] = value;
       }
     } catch (e, stacktrace) {
-      debugPrintStack(
-        stackTrace: stacktrace,
-        maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-        label: "DeepLink.open() Exception: $e",
-      );
+      Util.printStackTrace("DeepLink.open()", e, stacktrace);
       args["error"] = e.toString();
     }
     if (kDebugMode) {
@@ -52,13 +48,7 @@ class DeepLink {
         open(uri);
       }
     }, onError: (e, stacktrace) {
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stacktrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label: "DeepLink.uriLinkStream.listen() Exception: $e",
-        );
-      }
+      Util.printStackTrace("DeepLink.uriLinkStream.listen()", e, stacktrace);
     });
   }
 }

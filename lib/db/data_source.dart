@@ -134,6 +134,8 @@ class DataSource {
       } else {
         printTransaction(data, transaction);
       }
+    }).onError((error, stackTrace) {
+      Util.printStackTrace("setDataStandard()", error, stackTrace);
     });
   }
 
@@ -145,13 +147,7 @@ class DataSource {
         try {
           notifyBlock(args);
         } catch (e, stacktrace) {
-          if (kDebugMode) {
-            debugPrintStack(
-              stackTrace: stacktrace,
-              maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-              label: "DataSource.notifyBlockAsync() Exception: $e; args: $args",
-            );
-          }
+          Util.printStackTrace("DataSource.notifyBlockAsync() args: $args", e, stacktrace);
         }
       }, data);
     }
@@ -200,14 +196,7 @@ class DataSource {
       Future.delayed(const Duration(seconds: 1), () {
         SocketCache().renderDBData(data);
       });
-
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stacktrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label: "DataSource.sendDataSocket() Exception: $e; data: $data",
-        );
-      }
+      Util.printStackTrace("DataSource.sendDataSocket() data: $data", e, stacktrace);
     }
 
     // тут не будем вызывать синхронизацию данных,
@@ -251,6 +240,8 @@ class DataSource {
       if (curData.onPersist != null) {
         Function.apply(curData.onPersist!, null);
       }
+    }).onError((error, stackTrace) {
+      Util.printStackTrace("DataSource.update()", error, stackTrace);
     });
   }
 
@@ -272,6 +263,8 @@ class DataSource {
       if (curData.onPersist != null) {
         Function.apply(curData.onPersist!, null);
       }
+    }).onError((error, stackTrace) {
+      Util.printStackTrace("DataSource.insert()", error, stackTrace);
     });
   }
 
@@ -316,6 +309,8 @@ class DataSource {
         } else {
           handler(uuid, null);
         }
+      }).onError((error, stackTrace) {
+        Util.printStackTrace("DataSource.get()", error, stackTrace);
       });
     } else {
       list.add(GetterTask(uuid, handler));

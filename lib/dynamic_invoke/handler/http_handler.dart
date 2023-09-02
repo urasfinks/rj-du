@@ -70,13 +70,7 @@ class HttpHandler extends AbstractHandler {
         AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onResponse");
       }
     }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        debugPrintStack(
-          stackTrace: stackTrace,
-          maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-          label: "HttpHandler.onError() Exception: $error",
-        );
-      }
+      Util.printStackTrace("HttpHandler.onError()", error, stackTrace);
     });
   }
 }

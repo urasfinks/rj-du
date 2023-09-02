@@ -32,6 +32,8 @@ class DbQueryHandler extends AbstractHandler {
           args["onFetch"]["args"]["fetchDb"] = newList;
           AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onFetch");
         }
+      }).onError((error, stackTrace) {
+        Util.printStackTrace("DbQueryHandler.handle()", error, stackTrace);
       });
     } else {
       if (kDebugMode) {
