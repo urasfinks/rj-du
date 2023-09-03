@@ -36,7 +36,11 @@ dependencies:
   swipable_stack: ^2.0.0
   image_picker: ^1.0.2
   image_cropper: ^4.0.1
-  just_audio: ^0.9.34
+  just_audio:
+    git:
+      url: https://github.com/rwrz/just_audio.git
+      ref: fix_cache
+      path: just_audio
 
 dev_dependencies:
   flutter_test:

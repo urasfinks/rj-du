@@ -21,6 +21,11 @@ class AudioComponent {
   AudioComponentContext? audioComponentContext;
 
   init() async {
+    Util.p("AudioComponent.init()");
+    await audioPlayer.stop();
+    await audioPlayer.dispose();
+
+    audioPlayer = AudioPlayer();
     audioPlayer.playerStateStream.listen((event) {
       if (audioComponentContext != null) {
         PlayerState st = event;

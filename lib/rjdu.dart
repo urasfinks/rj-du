@@ -55,6 +55,15 @@ class RjDu {
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
       AudioComponent().pause();
     });
+    SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
+      AudioComponent().pause();
+    });
+
+    SystemNotify().subscribe(SystemNotifyEnum.appLifecycleState, (state) {
+      if (state == AppLifecycleState.resumed.name) {
+        AudioComponent().init();
+      }
+    });
 
     if (Storage().isUpdateApplication()) {
       Storage().set("version", GlobalSettings().version);

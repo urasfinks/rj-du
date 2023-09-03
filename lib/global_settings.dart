@@ -2,7 +2,7 @@ import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/util.dart';
 
 class GlobalSettings {
-  bool debug = true;
+  bool debug = false;
   String version = "v3";
   String host = "https://e-humidor.ru:8453";
   String ws = "https://e-humidor.ru:8453";
