@@ -7,11 +7,17 @@ class StateData {
   final Map<String, Data> map = {};
 
   void clear() {
-    for (MapEntry<String, Data> item in map.entries) {
+    map.clear();
+    // Проблема частичной очистки только value выглядит так:
+    // При получении состояния мы устанавливаем дефолтное значение
+    // Дефолтное значение устанавливается только в том случаи если в map нет по этому ключу ничего
+    // при попытки получения у нас дефолтное значение просто исчезает
+    // Мы в коде опираемся на дефолтные ключи и падаем на Null
+    /*for (MapEntry<String, Data> item in map.entries) {
       Map<String, dynamic> empty = {};
       Data data = item.value;
       data.value = empty;
-    }
+    }*/
   }
 
   Data getInstanceData(String? state, [Map<String, dynamic>? def]) {
