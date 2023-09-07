@@ -25,7 +25,7 @@ import 'handler/hide_keyboard_handler.dart';
 import 'handler/http_handler.dart';
 import 'handler/navigator_push_handler.dart';
 import 'handler/page_reload_handler.dart';
-import 'handler/reset_text_controller_handler.dart';
+import 'handler/controller_handler.dart';
 import 'handler/set_state_data_handler.dart';
 import 'handler/md5_handler.dart';
 import 'handler/navigator_pop_handler.dart';
@@ -74,7 +74,7 @@ class DynamicInvoke {
     UuidHandler();
     DbQueryHandler();
     HideKeyboardHandler();
-    ResetTextControllerHandler();
+    ControllerHandler();
     PageReloadHandler();
     HttpHandler();
     CustomLoaderOpenHandler();

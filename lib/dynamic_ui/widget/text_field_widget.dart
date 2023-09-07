@@ -1,5 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import '../../controller_wrap.dart';
+import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
@@ -14,7 +16,6 @@ class TextFieldWidget extends AbstractWidget {
 
     String type = getValue(parsedJson, "keyboardType", "text", dynamicUIBuilderContext);
 
-    String propKey = "${key}_TextEditingController";
     //При первичной инициализации устанавливает значение в состояние
     bool onRebuildSetStateNotify = TypeParser.parseBool(
       getValue(parsedJson, "onRebuildSetStateNotify", true, dynamicUIBuilderContext),
@@ -24,12 +25,12 @@ class TextFieldWidget extends AbstractWidget {
       getValue(parsedJson, "onChangedSetStateNotify", true, dynamicUIBuilderContext),
     )!;
 
-    if (!dynamicUIBuilderContext.dynamicPage.isProperty(propKey) && (parsedJson["setStateInit"] ?? false == true)) {
-      dynamicUIBuilderContext.dynamicPage.stateData
-          .set(parsedJson["state"], key, defaultData, onRebuildSetStateNotify);
+    if (!dynamicUIBuilderContext.dynamicPage.isProperty(key) && (parsedJson["setStateInit"] ?? false == true)) {
+      dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, defaultData, onRebuildSetStateNotify);
     }
-    TextEditingController textController =
-        dynamicUIBuilderContext.dynamicPage.getProperty(propKey, TextEditingController(text: defaultData));
+    TextEditingController textController = getController(key, dynamicUIBuilderContext, () {
+      return TextEditingControllerWrap(TextEditingController(text: defaultData));
+    });
 
     if (parsedJson["onRebuildClearTemporaryControllerText"] ?? false == true) {
       //Очищает временное состояние контроллера при rebuild
@@ -162,5 +163,29 @@ class TextFieldWidget extends AbstractWidget {
         }
       },
     );
+  }
+}
+
+class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
+  TextEditingControllerWrap(super.controller);
+
+  @override
+  void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    switch (args["case"] ?? "default") {
+      case "default":
+        controller.text = args["text"] ?? "";
+        //Сброс состояния контролера не должен перезагружать страницу
+        //Перерисовка при включенном onRebuildClearTemporaryControllerText и setStateInit перезапишет состояние
+        //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
+        //А так мы просто получим перетерание на старое значение
+        if (args["setState"] ?? true) {
+          dynamicUIBuilderContext.dynamicPage.stateData
+              .set(args["state"], args["key"], controller.text, args["notify"] ?? false);
+        }
+        break;
+      default:
+        AlertHandler.alertSimple("TextEditingControllerWrap.invoke() args: $args");
+        break;
+    }
   }
 }

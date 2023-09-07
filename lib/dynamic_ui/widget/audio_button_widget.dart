@@ -12,13 +12,9 @@ class AudioButtonWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String key = parsedJson["key"] ?? "Audio";
-    if (!dynamicUIBuilderContext.dynamicPage.isProperty(key)) {
-      dynamicUIBuilderContext.dynamicPage.setProperty(
-        key,
-        AudioHandler().createAudioContext(parsedJson, dynamicUIBuilderContext),
-      );
-    }
-    AudioComponentContext audioComponentContext = dynamicUIBuilderContext.dynamicPage.getProperty(key, null);
+    AudioComponentContext audioComponentContext = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, () {
+      return AudioHandler().createAudioContext(parsedJson, dynamicUIBuilderContext);
+    });
 
     if (parsedJson.containsKey("autoPlayOnLoad")) {
       audioComponentContext.autoPlayOnLoad = TypeParser.parseBool(parsedJson["autoPlayOnLoad"]) ?? false;

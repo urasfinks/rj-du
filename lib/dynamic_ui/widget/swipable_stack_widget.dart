@@ -5,6 +5,8 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:flutter/material.dart';
 
+import '../../controller_wrap.dart';
+import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../dynamic_ui.dart';
 import '../type_parser.dart';
 import 'abstract_widget.dart';
@@ -30,10 +32,15 @@ class SwipableStackWidget extends AbstractWidget {
         "swipedDirection": null,
         "overlayDirection": null,
         "overlayOpacity": 0,
+        "finish": false,
         "prc": 0,
         "prc1": 0
       },
     );
+
+    SwipableStackController controller = getController(parsedJson["state"], dynamicUIBuilderContext, () {
+      return SwipableStackControllerWrap(SwipableStackController());
+    });
 
     if (parsedJson.containsKey("finish") && stateControl.containsKey("finish") && stateControl["finish"]) {
       return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
@@ -75,7 +82,6 @@ class SwipableStackWidget extends AbstractWidget {
       }
     }
 
-    final controller = SwipableStackController();
     controller.addListener(() {
       int index = min(controller.currentIndex, stateControl["size"] - 1);
       stateControl["index"] = index;
@@ -195,5 +201,46 @@ class SwipableStackWidget extends AbstractWidget {
         }
       },
     );
+  }
+}
+
+class SwipableStackControllerWrap extends ControllerWrap<SwipableStackController> {
+  SwipableStackControllerWrap(super.controller);
+
+  @override
+  void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    switch (args["case"] ?? "default") {
+      case "index":
+        controller.currentIndex = args["index"] ?? 0;
+        break;
+      case "next":
+        switch (args["direction"] ?? "right") {
+          case "right":
+            controller.next(swipeDirection: SwipeDirection.right);
+            break;
+          case "left":
+            controller.next(swipeDirection: SwipeDirection.left);
+            break;
+          case "up":
+            controller.next(swipeDirection: SwipeDirection.up);
+            break;
+          case "down":
+            controller.next(swipeDirection: SwipeDirection.down);
+            break;
+        }
+        break;
+      case "cancelAction":
+        controller.cancelAction();
+        break;
+      case "rewind":
+        controller.rewind();
+        break;
+      case "dispose":
+        controller.dispose();
+        break;
+      default:
+        AlertHandler.alertSimple("SwipableStackControllerWrap.invoke() args: $args");
+        break;
+    }
   }
 }

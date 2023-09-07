@@ -71,7 +71,7 @@
               "size": 18
             },
             "onPressed": {
-              "sysInvoke": "ResetTextController",
+              "sysInvoke": "Controller",
               "args": {
                 "key": "EmailValue"
               }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:rjdu/controller_wrap.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/state_data_iterator.dart';
 
 import '../dynamic_ui.dart';
@@ -16,6 +17,11 @@ abstract class AbstractWidget {
   static Map<String, dynamic> getStateControl(
       String state, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
     return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state, defaultState).value;
+  }
+
+  T getController<T>(String state, DynamicUIBuilderContext dynamicUIBuilderContext, ControllerWrap<T> Function() getDefault) {
+    ControllerWrap ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(state, getDefault);
+    return ctx.getController();
   }
 
   static dynamic getValueStatic(
@@ -37,7 +43,8 @@ abstract class AbstractWidget {
       return Text("$className.build() Return: $resultWidget; Must be Widget");
     }
     if (resultWidget != null && resultWidget.runtimeType.toString().contains("Map<String,")) {
-      Util.p("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
+      Util.p(
+          "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
       return Text("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;

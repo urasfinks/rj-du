@@ -37,9 +37,10 @@
         "size": 18
       },
       "onPressed": {
-        "sysInvoke": "ResetTextController",
+        "sysInvoke": "Controller",
         "args": {
-          "key": "${key}"
+          "key": "${key}",
+          "setState": false
         }
       },
       "templateArguments": [
