@@ -23,14 +23,14 @@
         "key": "SwitchKey",
         "children": [
           {
-            "case": "default",
+            "case": "profile",
             "flutterType": "Template",
-            "src": "AccountSignIn"
+            "src": "AccountProfile"
           },
           {
-            "case": "auth",
+            "case": "signIn",
             "flutterType": "Template",
-            "src": "AccountSignOut"
+            "src": "AccountSignIn"
           }
         ]
       }

@@ -17,6 +17,9 @@ class StateDataSwitch extends AbstractExtension {
         Util.p("extensionStateDataSwitch item key 'case' not exist");
       }
     }
+    if (!map.containsKey("default")) {
+      map["default"] = {"flutterType": "SizedBox"};
+    }
     bool flagAdd = false;
     if (map.containsKey(value)) {
       if (map[value].containsKey("uuid_data")) {
