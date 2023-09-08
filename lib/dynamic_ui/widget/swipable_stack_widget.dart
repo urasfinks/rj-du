@@ -12,7 +12,7 @@ import '../type_parser.dart';
 import 'abstract_widget.dart';
 
 enum SwipableEvent {
-  setStateOnChangeIndex,
+  setStateOnControllerListen,
   setStateOnSwipeCompleted,
   setStateOnWillMoveNext,
   setStateOnOverlayBuilder,
@@ -92,7 +92,7 @@ class SwipableStackWidget extends AbstractWidget {
       stateControl["prc"] = (controller.currentIndex * 100 / stateControl["size"]).ceil();
       stateControl["prc1"] = controller.currentIndex * 1 / stateControl["size"];
 
-      if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnChangeIndex.name] ?? false == true) {
+      if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnControllerListen.name] ?? false == true) {
         dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
       }
     });
@@ -180,7 +180,6 @@ class SwipableStackWidget extends AbstractWidget {
         if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnOverlayBuilder.name] ?? false == true) {
           dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
         }
-        //return Text("wefew");
         return render(
           parsedJson,
           "overlay",
