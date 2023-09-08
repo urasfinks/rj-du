@@ -28,7 +28,7 @@ class TextFieldWidget extends AbstractWidget {
     if (!dynamicUIBuilderContext.dynamicPage.isProperty(key) && (parsedJson["setStateInit"] ?? false == true)) {
       dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, defaultData, onRebuildSetStateNotify);
     }
-    TextEditingController textController = getController(key, dynamicUIBuilderContext, () {
+    TextEditingController textController = getController(parsedJson, key, dynamicUIBuilderContext, () {
       return TextEditingControllerWrap(TextEditingController(text: defaultData));
     });
 

@@ -22,6 +22,7 @@ enum SwipableEvent {
 class SwipableStackWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    parsedJson["state"] ??= "Key";
     Map<String, dynamic> stateControl = AbstractWidget.getStateControl(
       parsedJson["state"],
       dynamicUIBuilderContext,
@@ -38,7 +39,7 @@ class SwipableStackWidget extends AbstractWidget {
       },
     );
 
-    SwipableStackController controller = getController(parsedJson["state"], dynamicUIBuilderContext, () {
+    SwipableStackController controller = getController(parsedJson, "SwipableStack", dynamicUIBuilderContext, () {
       return SwipableStackControllerWrap(SwipableStackController());
     });
 

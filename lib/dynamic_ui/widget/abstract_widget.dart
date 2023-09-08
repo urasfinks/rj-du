@@ -19,8 +19,9 @@ abstract class AbstractWidget {
     return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state, defaultState).value;
   }
 
-  T getController<T>(String state, DynamicUIBuilderContext dynamicUIBuilderContext, ControllerWrap<T> Function() getDefault) {
-    ControllerWrap ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(state, getDefault);
+  T getController<T>(Map<String, dynamic> parsedJson, String defaultValue, DynamicUIBuilderContext dynamicUIBuilderContext, ControllerWrap<T> Function() getDefault) {
+    String key = parsedJson["controller"] ?? parsedJson["state"] ?? defaultValue;
+    ControllerWrap ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, getDefault);
     return ctx.getController();
   }
 
@@ -77,13 +78,13 @@ abstract class AbstractWidget {
     return DynamicUI.render(parsedJson, key, defaultValue, dynamicUIBuilderContext);
   }
 
-  dynamic renderList(
+  List<Widget> renderList(
     Map<String, dynamic> parsedJson,
     String key,
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
     if (!parsedJson.containsKey(key)) {
-      return null;
+      return [];
     }
     String keyDefaultBeforeUpdate = "${key}DefaultBeforeUpdate";
     if (parsedJson.containsKey(keyDefaultBeforeUpdate)) {

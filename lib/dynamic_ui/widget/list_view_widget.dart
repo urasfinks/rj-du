@@ -1,3 +1,5 @@
+import 'package:rjdu/dynamic_ui/widget/scrollbar_widget.dart';
+
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
@@ -12,11 +14,13 @@ class ListViewWidget extends AbstractWidget {
     )!;
 
     List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
-
+    ScrollController controller = getController(parsedJson, "ScrollBarController", dynamicUIBuilderContext, () {
+      return ScrollControllerWrap(ScrollController());
+    });
     if (separated) {
       return ListView.separated(
         key: Util.getKey(),
-        controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
+        controller: controller,
         addAutomaticKeepAlives: true,
         scrollDirection: TypeParser.parseAxis(
           getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
@@ -44,7 +48,7 @@ class ListViewWidget extends AbstractWidget {
     } else {
       return ListView.builder(
         key: Util.getKey(),
-        controller: dynamicUIBuilderContext.dynamicPage.properties["ScrollBarController"],
+        controller: controller,
         addAutomaticKeepAlives: true,
         scrollDirection: TypeParser.parseAxis(
           getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
