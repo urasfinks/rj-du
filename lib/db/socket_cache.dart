@@ -29,7 +29,7 @@ class SocketCache {
   }
 
   //Вызывается когда приходят новые сокет данные через синхронизацию
-  void setFull(Data fullData) {
+  void updateFromSync(Data fullData) {
     if (fullData.value.runtimeType == String) {
       fullData.value = json.decode(fullData.value);
     }

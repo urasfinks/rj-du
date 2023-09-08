@@ -79,7 +79,7 @@ class DataSource {
         //Состояние страницы (для виртуалок beforeSync не актуален)
         setDataVirtual(data, transaction, notifyDynamicPage);
       } else if (data.type == DataType.socket && data.beforeSync == false) {
-        //В runtime изменили данные
+        // Отправим сокетные данные на сервере
         setDataSocket(data, transaction, notifyDynamicPage);
       } else {
         //Если beforeSync = true, попадём сюда!
@@ -125,7 +125,7 @@ class DataSource {
         transaction.add("8 NOTHING!");
       }
       if (data.type == DataType.socket && data.beforeSync == true) {
-        SocketCache().setFull(data);
+        SocketCache().updateFromSync(data);
       } else if (notify) {
         notifyBlockAsync(data, transaction, notifyDynamicPage);
       } else {
