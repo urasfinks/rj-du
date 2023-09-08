@@ -4,8 +4,8 @@ import '../navigator_app.dart';
 import '../subscribe_reload_group.dart';
 
 class TypeParser {
-
   static final Map<String, FontStyle> _mapFontStyle = convertEnumToMap(FontStyle.values);
+
   static FontStyle? parseFontStyle(String? value) {
     return enumValueOf(value, _mapFontStyle);
   }
@@ -47,7 +47,7 @@ class TypeParser {
     return null;
   }
 
-  static Map<String, Color> mapAssocNameColor = {
+  static Map<String, Color> mapColor = {
     "grey": Colors.grey,
     "blue": Colors.blue,
     "red": Colors.red,
@@ -99,14 +99,14 @@ class TypeParser {
     } else if (value.contains(".")) {
       try {
         List<String> l = value.split(".");
-        MaterialColor? x = (mapAssocNameColor.containsKey(l[0]) ? mapAssocNameColor[l[0]] : null) as MaterialColor?;
+        MaterialColor? x = (mapColor.containsKey(l[0]) ? mapColor[l[0]] : null) as MaterialColor?;
         if (x != null) {
           return x[parseInt(l[1])!];
         }
       } catch (e) {}
       return null;
     } else {
-      return mapAssocNameColor.containsKey(value) ? mapAssocNameColor[value] : null;
+      return mapColor.containsKey(value) ? mapColor[value] : null;
     }
   }
 
@@ -133,24 +133,25 @@ class TypeParser {
     return map.containsKey(value) ? map[value] : null;
   }
 
+  static Map<String, FontWeight> mapFontWeight = {
+    "normal": FontWeight.normal,
+    "bold": FontWeight.bold,
+    "w100": FontWeight.w100,
+    "w200": FontWeight.w200,
+    "w300": FontWeight.w300,
+    "w400": FontWeight.w400,
+    "w500": FontWeight.w500,
+    "w600": FontWeight.w600,
+    "w700": FontWeight.w700,
+    "w800": FontWeight.w800,
+    "w900": FontWeight.w900,
+  };
+
   static FontWeight? parseFontWeight(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, FontWeight> map = {
-      "normal": FontWeight.normal,
-      "bold": FontWeight.bold,
-      "w100": FontWeight.w100,
-      "w200": FontWeight.w200,
-      "w300": FontWeight.w300,
-      "w400": FontWeight.w400,
-      "w500": FontWeight.w500,
-      "w600": FontWeight.w600,
-      "w700": FontWeight.w700,
-      "w800": FontWeight.w800,
-      "w900": FontWeight.w900,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return mapFontWeight.containsKey(value) ? mapFontWeight[value] : null;
   }
 
   static EdgeInsets? parseEdgeInsets(dynamic value) {
@@ -172,31 +173,34 @@ class TypeParser {
   }
 
   static final Map<String, BoxFit> _mapBoxFit = convertEnumToMap(BoxFit.values);
+
   static BoxFit? parseBoxFit(String? value) {
     return enumValueOf(value, _mapBoxFit);
   }
 
   static final Map<String, ImageRepeat> _mapImageRepeat = convertEnumToMap(ImageRepeat.values);
+
   static ImageRepeat? parseImageRepeat(String? value) {
     return enumValueOf(value, _mapImageRepeat);
   }
+
+  static Map<String, Alignment> mapAlignment = {
+    "center": Alignment.center,
+    "centerLeft": Alignment.centerLeft,
+    "centerRight": Alignment.centerRight,
+    "bottomCenter": Alignment.bottomCenter,
+    "bottomLeft": Alignment.bottomLeft,
+    "bottomRight": Alignment.bottomRight,
+    "topCenter": Alignment.topCenter,
+    "topLeft": Alignment.topLeft,
+    "topRight": Alignment.topRight,
+  };
 
   static Alignment? parseAlignment(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, Alignment> map = {
-      "center": Alignment.center,
-      "centerLeft": Alignment.centerLeft,
-      "centerRight": Alignment.centerRight,
-      "bottomCenter": Alignment.bottomCenter,
-      "bottomLeft": Alignment.bottomLeft,
-      "bottomRight": Alignment.bottomRight,
-      "topCenter": Alignment.topCenter,
-      "topLeft": Alignment.topLeft,
-      "topRight": Alignment.topRight,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return mapAlignment.containsKey(value) ? mapAlignment[value] : null;
   }
 
   static List<double>? parseListDouble(parsedJson) {
@@ -242,21 +246,25 @@ class TypeParser {
   }
 
   static final Map<String, MainAxisAlignment> _mapMainAxisAlignment = convertEnumToMap(MainAxisAlignment.values);
+
   static MainAxisAlignment? parseMainAxisAlignment(String? value) {
     return enumValueOf(value, _mapMainAxisAlignment);
   }
 
   static final Map<String, MainAxisSize> _mapMainAxisSize = convertEnumToMap(MainAxisSize.values);
+
   static MainAxisSize? parseMainAxisSize(String? value) {
     return enumValueOf(value, _mapMainAxisSize);
   }
 
   static final Map<String, CrossAxisAlignment> _mapCrossAxisAlignment = convertEnumToMap(CrossAxisAlignment.values);
+
   static CrossAxisAlignment? parseCrossAxisAlignment(String? value) {
     return enumValueOf(value, _mapCrossAxisAlignment);
   }
 
   static final Map<String, MaterialType> _mapMaterialType = convertEnumToMap(MaterialType.values);
+
   static MaterialType? parseMaterialType(dynamic value) {
     return enumValueOf(value, _mapMaterialType);
   }
@@ -278,31 +286,33 @@ class TypeParser {
     }
   }
 
+  static Map<String, TextInputType> mapTextInputType = {
+    "none": TextInputType.none,
+    "url": TextInputType.url,
+    "name": TextInputType.name,
+    "datetime": TextInputType.datetime,
+    "time": TextInputType.text,
+    "emailAddress": TextInputType.emailAddress,
+    "multiline": TextInputType.multiline,
+    "number": TextInputType.number,
+    "numberS": const TextInputType.numberWithOptions(signed: true, decimal: false),
+    "numberD": const TextInputType.numberWithOptions(signed: false, decimal: true),
+    "numberSD": const TextInputType.numberWithOptions(signed: true, decimal: true),
+    "phone": TextInputType.phone,
+    "streetAddress": TextInputType.streetAddress,
+    "text": TextInputType.text,
+    "visiblePassword": TextInputType.visiblePassword
+  };
+
   static TextInputType? parseTextInputType(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, TextInputType> map = {
-      "none": TextInputType.none,
-      "url": TextInputType.url,
-      "name": TextInputType.name,
-      "datetime": TextInputType.datetime,
-      "time": TextInputType.text,
-      "emailAddress": TextInputType.emailAddress,
-      "multiline": TextInputType.multiline,
-      "number": TextInputType.number,
-      "numberS": const TextInputType.numberWithOptions(signed: true, decimal: false),
-      "numberD": const TextInputType.numberWithOptions(signed: false, decimal: true),
-      "numberSD": const TextInputType.numberWithOptions(signed: true, decimal: true),
-      "phone": TextInputType.phone,
-      "streetAddress": TextInputType.streetAddress,
-      "text": TextInputType.text,
-      "visiblePassword": TextInputType.visiblePassword
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return mapTextInputType.containsKey(value) ? mapTextInputType[value] : null;
   }
 
   static final Map<String, BorderStyle> _mapBorderStyle = convertEnumToMap(BorderStyle.values);
+
   static BorderStyle? parseBorderStyle(String? value) {
     return enumValueOf(value, _mapBorderStyle);
   }
@@ -325,35 +335,37 @@ class TypeParser {
     return enumValueOf(value, _mapTextBaseline);
   }
 
+  static Map<String, AlignmentDirectional> mapAlignmentDirectional = {
+    "bottomCenter": AlignmentDirectional.bottomCenter,
+    "bottomEnd": AlignmentDirectional.bottomEnd,
+    "bottomStart": AlignmentDirectional.bottomStart,
+    "center": AlignmentDirectional.center,
+    "centerEnd": AlignmentDirectional.centerEnd,
+    "centerStart": AlignmentDirectional.centerStart,
+    "topCenter": AlignmentDirectional.topCenter,
+    "topEnd": AlignmentDirectional.topEnd,
+    "topStart": AlignmentDirectional.topStart,
+  };
+
   static AlignmentDirectional? parseAlignmentDirectional(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, AlignmentDirectional> map = {
-      "bottomCenter": AlignmentDirectional.bottomCenter,
-      "bottomEnd": AlignmentDirectional.bottomEnd,
-      "bottomStart": AlignmentDirectional.bottomStart,
-      "center": AlignmentDirectional.center,
-      "centerEnd": AlignmentDirectional.centerEnd,
-      "centerStart": AlignmentDirectional.centerStart,
-      "topCenter": AlignmentDirectional.topCenter,
-      "topEnd": AlignmentDirectional.topEnd,
-      "topStart": AlignmentDirectional.topStart,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return mapAlignmentDirectional.containsKey(value) ? mapAlignmentDirectional[value] : null;
   }
+
+  static Map<String, TextDecoration> mapTextDecoration = {
+    "none": TextDecoration.none,
+    "underline": TextDecoration.underline,
+    "overline": TextDecoration.overline,
+    "lineThrough": TextDecoration.lineThrough,
+  };
 
   static TextDecoration? parseTextDecoration(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, TextDecoration> map = {
-      "none": TextDecoration.none,
-      "underline": TextDecoration.underline,
-      "overline": TextDecoration.overline,
-      "lineThrough": TextDecoration.lineThrough,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return mapTextDecoration.containsKey(value) ? mapTextDecoration[value] : null;
   }
 
   static final Map<String, TextDirection> _mapTextDirection = convertEnumToMap(TextDirection.values);
@@ -374,16 +386,17 @@ class TypeParser {
     return enumValueOf(value, _mapTextAlign);
   }
 
+  static Map<String, TextAlignVertical> mapTextAlignVertical = {
+    "center": TextAlignVertical.center,
+    "bottom": TextAlignVertical.bottom,
+    "top": TextAlignVertical.top,
+  };
+
   static TextAlignVertical? parseTextAlignVertical(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }
-    Map<String, TextAlignVertical> map = {
-      "center": TextAlignVertical.center,
-      "bottom": TextAlignVertical.bottom,
-      "top": TextAlignVertical.top,
-    };
-    return map.containsKey(value) ? map[value] : null;
+    return mapTextAlignVertical.containsKey(value) ? mapTextAlignVertical[value] : null;
   }
 
   static final Map<String, TextOverflow> _mapTextOverflow = convertEnumToMap(TextOverflow.values);
@@ -457,5 +470,58 @@ class TypeParser {
       return null;
     }
     return map.containsKey(value) ? map[value] : null;
+  }
+
+  static Map<String, Curve> mapCurve = {
+    "linear": Curves.linear,
+    "decelerate": Curves.decelerate,
+    "fastLinearToSlowEaseIn": Curves.fastLinearToSlowEaseIn,
+    "fastEaseInToSlowEaseOut": Curves.fastEaseInToSlowEaseOut,
+    "ease": Curves.ease,
+    "easeIn": Curves.easeIn,
+    "easeInToLinear": Curves.easeInToLinear,
+    "easeInSine": Curves.easeInSine,
+    "easeInQuad": Curves.easeInQuad,
+    "easeInCubic": Curves.easeInCubic,
+    "easeInQuart": Curves.easeInQuart,
+    "easeInQuint": Curves.easeInQuint,
+    "easeInExpo": Curves.easeInExpo,
+    "easeInCirc": Curves.easeInCirc,
+    "easeInBack": Curves.easeInBack,
+    "easeOut": Curves.easeOut,
+    "linearToEaseOut": Curves.linearToEaseOut,
+    "easeOutSine": Curves.easeOutSine,
+    "easeOutQuad": Curves.easeOutQuad,
+    "easeOutCubic": Curves.easeOutCubic,
+    "easeOutQuart": Curves.easeOutQuart,
+    "easeOutQuint": Curves.easeOutQuint,
+    "easeOutExpo": Curves.easeOutExpo,
+    "easeOutCirc": Curves.easeOutCirc,
+    "easeOutBack": Curves.easeOutBack,
+    "easeInOut": Curves.easeInOut,
+    "easeInOutSine": Curves.easeInOutSine,
+    "easeInOutQuad": Curves.easeInOutQuad,
+    "easeInOutCubic": Curves.easeInOutCubic,
+    "easeInOutCubicEmphasized": Curves.easeInOutCubicEmphasized,
+    "easeInOutQuart": Curves.easeInOutQuart,
+    "easeInOutQuint": Curves.easeInOutQuint,
+    "easeInOutExpo": Curves.easeInOutExpo,
+    "easeInOutCirc": Curves.easeInOutCirc,
+    "easeInOutBack": Curves.easeInOutBack,
+    "fastOutSlowIn": Curves.fastOutSlowIn,
+    "slowMiddle": Curves.slowMiddle,
+    "bounceIn": Curves.bounceIn,
+    "bounceOut": Curves.bounceOut,
+    "bounceInOut": Curves.bounceInOut,
+    "elasticIn": Curves.elasticIn,
+    "elasticOut": Curves.elasticOut,
+    "elasticInOut": Curves.elasticInOut
+  };
+
+  static Curve? parseCurve(value) {
+    if (value == null || value.trim() == "") {
+      return null;
+    }
+    return mapCurve.containsKey(value) ? mapCurve[value] : null;
   }
 }
