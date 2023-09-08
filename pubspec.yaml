@@ -41,6 +41,7 @@ dependencies:
       url: https://github.com/rwrz/just_audio.git
       ref: fix_cache
       path: just_audio
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

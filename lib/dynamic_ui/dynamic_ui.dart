@@ -7,6 +7,7 @@ import 'package:rjdu/dynamic_ui/widget/audio_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/baseline_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/bottom_navigation_bar_item_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/button_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/carousel_slider_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/checkbox_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/custom_scroll_view_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/flip_card_widget.dart';
@@ -28,6 +29,7 @@ import 'package:rjdu/dynamic_ui/widget/floating_action_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/icon_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/icon_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/image_network.dart';
+import 'package:rjdu/dynamic_ui/widget/image_titled_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/ink_well_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/ink_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/limited_box_widget.dart';
@@ -153,6 +155,8 @@ class DynamicUI {
     "LinearProgressIndicator": LinearProgressIndicatorWidget().get,
     "ImageBase64": ImageBase64Widget().get,
     "Stream": StreamWidget().get,
+    "CarouselSlider": CarouselSliderWidget().get,
+    "ImageTitled": ImageTitledWidget().get,
 
     //Property
     "TextStyle": TextStyleProperty().get,

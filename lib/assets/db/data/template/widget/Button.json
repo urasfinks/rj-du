@@ -1,0 +1,16 @@
+{
+  "flutterType": "Button",
+  "minimumSize": "9999,44",
+  "backgroundColor": "blue",
+  "onPressed": "${onPressed|jsonEncode()}",
+  "child": {
+    "flutterType": "Text",
+    "label": "${label}",
+    "textAlign": "center",
+    "style": {
+      "flutterType": "TextStyle",
+      "fontSize": 14,
+      "color": "white"
+    }
+  }
+}
