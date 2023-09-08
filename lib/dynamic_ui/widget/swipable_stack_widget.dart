@@ -243,4 +243,9 @@ class SwipableStackControllerWrap extends ControllerWrap<SwipableStackController
         break;
     }
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+  }
 }

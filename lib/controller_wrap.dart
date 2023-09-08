@@ -10,4 +10,6 @@ abstract class ControllerWrap<T> {
   }
 
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext);
+
+  void dispose();
 }

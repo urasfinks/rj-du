@@ -188,4 +188,9 @@ class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
         break;
     }
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+  }
 }

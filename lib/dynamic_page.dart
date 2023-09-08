@@ -8,6 +8,7 @@ import 'package:rjdu/util/template.dart';
 import 'package:rjdu/state_data.dart';
 import 'package:rjdu/web_socket_service.dart';
 
+import 'controller_wrap.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'store_value_notifier.dart';
 import 'dynamic_ui/dynamic_ui.dart';
@@ -119,7 +120,7 @@ class DynamicPage extends StatefulWidget {
 
   void reload(bool rebuild) {
     if (rebuild) {
-      properties.clear(); //Что бы стереть TextFieldController при перезагрузке страницы
+      clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
       stateData.clear();
       AudioComponent().stop();
       isRunConstructor = false;
@@ -134,6 +135,15 @@ class DynamicPage extends StatefulWidget {
       // В основном, это сводится к выборке из БД и обновления состояния
       constructor();
     }
+  }
+
+  void clearProperty() {
+    for (MapEntry<String, dynamic> item in properties.entries) {
+      if (item.value is ControllerWrap) {
+        (item.value as ControllerWrap).dispose();
+      }
+    }
+    properties.clear();
   }
 
   void setProperty(String key, dynamic value) {
