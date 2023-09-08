@@ -1,0 +1,51 @@
+[
+  {
+    "flutterType": "CarouselSlider",
+    "state": "s1",
+    "height": 40,
+    "children": [
+      {
+        "flutterType": "Text",
+        "label": "Hello"
+      },
+      {
+        "flutterType": "Text",
+        "label": "Kitty"
+      }
+    ]
+  },
+  {
+    "flutterType": "Template",
+    "src": "Button",
+    "context": {
+      "key": "ButtonNext",
+      "data": {
+        "label": "next",
+        "onPressed": {
+          "sysInvoke": "Controller",
+          "args": {
+            "key": "s1",
+            "case": "nextPage"
+          }
+        }
+      }
+    }
+  },
+  {
+    "flutterType": "Template",
+    "src": "Button",
+    "context": {
+      "key": "ButtonNext",
+      "data": {
+        "label": "prev",
+        "onPressed": {
+          "sysInvoke": "Controller",
+          "args": {
+            "key": "s1",
+            "case": "previousPage"
+          }
+        }
+      }
+    }
+  }
+]
