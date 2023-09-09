@@ -135,7 +135,7 @@ class DataSource {
       } else {
         transaction.add("8 NOTHING!");
       }
-      if (data.type == DataType.socket && data.beforeSync == true) {
+      if (data.isRemove == 0 && data.type == DataType.socket && data.beforeSync == true) {
         SocketCache().updateFromSync(data);
       } else if (notify) {
         notifyBlockAsync(data, transaction, notifyDynamicPage);
