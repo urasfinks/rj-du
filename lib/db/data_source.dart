@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,6 +10,7 @@ import '../data_type.dart';
 import '../../http_client.dart';
 import '../global_settings.dart';
 import '../navigator_app.dart';
+import '../subscribe_reload_group.dart';
 import '../util.dart';
 import 'data_getter.dart';
 import 'data_migration.dart';
@@ -78,6 +80,7 @@ class DataSource {
   }
 
   void setData(Data data, [bool notifyDynamicPage = true]) {
+    groupMultiUpdate(data);
     List<String> transaction = [];
     if (isInit) {
       transaction.add("1 is init");
@@ -96,6 +99,34 @@ class DataSource {
       list.add(data);
       printTransaction(data, transaction);
     }
+  }
+
+  Timer? timerMultiUpdate;
+  Map<SubscribeReloadGroup, List<String>> mapMultiUpdate = {
+    SubscribeReloadGroup.key: [],
+    SubscribeReloadGroup.parentUuid: [],
+    SubscribeReloadGroup.uuid: [],
+  };
+
+  void groupMultiUpdate(Data data) {
+    //Группируем множественные обновления по подписке для единоразового обновления
+    mapMultiUpdate[SubscribeReloadGroup.uuid]!.add(data.uuid);
+    if (data.parentUuid != null) {
+      mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.add(data.parentUuid!);
+    }
+    if (data.key != null) {
+      mapMultiUpdate[SubscribeReloadGroup.key]!.add(data.key!);
+    }
+    if (timerMultiUpdate != null) {
+      timerMultiUpdate!.cancel();
+    }
+    timerMultiUpdate = Timer(const Duration(seconds: 1), () {
+      NavigatorApp.reloadPageBySubscription(mapMultiUpdate, true);
+      for (MapEntry<SubscribeReloadGroup, List<String>> item in mapMultiUpdate.entries) {
+        item.value.clear();
+      }
+      timerMultiUpdate = null;
+    });
   }
 
   void printTransaction(Data data, List<String> transaction) {

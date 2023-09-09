@@ -68,8 +68,8 @@ class DynamicPage extends StatefulWidget {
       if (arguments.containsKey("constructor") && arguments["constructor"].isNotEmpty) {
         AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "constructor");
       }
-      if (arguments.containsKey("subscribeRefresh")) {
-        DynamicInvoke().sysInvokeType(SubscribeReloadHandler, arguments["subscribeRefresh"], dynamicUIBuilderContext);
+      if (arguments.containsKey("subscribeToRefresh")) {
+        DynamicInvoke().sysInvokeType(SubscribeReloadHandler, arguments["subscribeToRefresh"], dynamicUIBuilderContext);
       }
 
       if (arguments.containsKey("socket") && arguments["socket"] == true) {
@@ -217,7 +217,7 @@ class DynamicPage extends StatefulWidget {
 
   void _updateStoreValueNotifierNative(String uuid, Map<String, dynamic> data) {
     storeValueNotifier.updateValueNotifier(uuid, data);
-    if (checkSubscribeReload(SubscribeReloadGroup.uuid, uuid)) {
+    if (checkSubscriptionOnReload(SubscribeReloadGroup.uuid, uuid)) {
       reload(false);
     }
   }
@@ -234,7 +234,7 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  bool checkSubscribeReload(SubscribeReloadGroup group, String value) {
+  bool checkSubscriptionOnReload(SubscribeReloadGroup group, String value) {
     // Косвенные зависимости, установленные в обход Notify
     return _subscribedOnReload[group]!.contains(value);
   }

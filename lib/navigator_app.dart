@@ -1,4 +1,5 @@
 import 'package:rjdu/subscribe_reload_group.dart';
+import 'package:rjdu/util.dart';
 
 import 'bottom_tab.dart';
 import 'bottom_tab_item.dart';
@@ -68,20 +69,20 @@ class NavigatorApp {
     }
   }
 
-  static void checkPageSubscribeReload(Map<SubscribeReloadGroup, List<String>> map, bool rebuild) {
+  static void reloadPageBySubscription(Map<SubscribeReloadGroup, List<String>> map, bool rebuild) {
+    Util.p("reloadPageBySubscription $map");
     List<DynamicPage> listPageToReload = [];
     for (MapEntry<SubscribeReloadGroup, List<String>> item in map.entries) {
       for (String value in item.value) {
         for (DynamicPage dynamicPage in allDynamicPage) {
           if (dynamicPage.isDispose == false) {
-            if (dynamicPage.checkSubscribeReload(item.key, value) && !listPageToReload.contains(dynamicPage)) {
+            if (dynamicPage.checkSubscriptionOnReload(item.key, value) && !listPageToReload.contains(dynamicPage)) {
               listPageToReload.add(dynamicPage);
             }
           }
         }
       }
     }
-
     for (DynamicPage dynamicPage in listPageToReload) {
       dynamicPage.reload(rebuild);
     }

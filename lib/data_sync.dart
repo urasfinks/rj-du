@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cron/cron.dart';
 import 'package:http/http.dart';
-import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/storage.dart';
-import 'package:rjdu/subscribe_reload_group.dart';
 import 'data_type.dart';
 import 'db/data_source.dart';
 import 'global_settings.dart';
@@ -61,10 +59,6 @@ class DataSync {
       isRun = true;
       int start = Util.getTimestamp();
       int allInsertion = 0;
-      Map<SubscribeReloadGroup, List<String>> map = {
-        SubscribeReloadGroup.key: [],
-        SubscribeReloadGroup.parentUuid: [],
-      };
       try {
         int counter = 0;
         Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
@@ -113,12 +107,6 @@ class DataSync {
                 for (Map<String, dynamic> curData in item.value) {
                   Data? updData = upgradeData(curData, dataType, maxRevisionByType);
                   if (updData != null) {
-                    if (updData.parentUuid != null) {
-                      map[SubscribeReloadGroup.parentUuid]!.add(updData.parentUuid!);
-                    }
-                    if (updData.key != null) {
-                      map[SubscribeReloadGroup.key]!.add(updData.key!);
-                    }
                     insertion++;
                     allInsertion++;
                   }
@@ -132,6 +120,8 @@ class DataSync {
             }
           } else {
             //Сервер какой-то не очень отзывчивый на 200 код) Остановим долбление
+            Util.p(
+                "DataSync.sync() Error! Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
             break;
           }
         }
@@ -141,8 +131,7 @@ class DataSync {
       } catch (e, stacktrace) {
         Util.printStackTrace("DataSync().sync()", e, stacktrace);
       }
-      Util.p("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion; map: $map");
-      NavigatorApp.checkPageSubscribeReload(map, false);
+      Util.p("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion;");
       isRun = false;
     } else {
       // История: 3 последовательных оповещения через сокет, что надо обновить

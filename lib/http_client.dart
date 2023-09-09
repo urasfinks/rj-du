@@ -32,10 +32,12 @@ class HttpClient {
     return obj.timeout(
       Duration(seconds: timeout),
       onTimeout: () {
-        return http.Response(json.encode({
-          "status": false,
-          "exception": ["Request timeout"]
-        }), 408);
+        return http.Response(
+            json.encode({
+              "status": false,
+              "exception": ["Request timeout"]
+            }),
+            408);
       },
     );
   }
