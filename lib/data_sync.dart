@@ -16,16 +16,17 @@ import 'db/data.dart';
 import 'db/data_getter.dart';
 
 /*
-* [Общая информация]
-*
 * Если у данных ревизия = 0 - это значит, что данные не синхронизованны с внешней БД
-* Синхронизация доступна только для типов данных заканчивающихсяна на RSync (Remote Synchronization) в текущий момент это тип: userDataRSync/blobRSync
+* Синхронизация доступна только для типов данных заканчивающихсяна на RSync (Remote Synchronization)
+* В текущий момент это тип: userDataRSync/blobRSync
+* + socket, причём в неавтаризованной синхронизации!
 *
-* Возможные сценарии значений:
+* Возможные сценарии установки значений для revision:
 * [0] При вставке по умолчанию
-* [0] При обновлении если устаноавлен флаг updateIfExist = true и onUpdateNeedSync = true
-* [~] При вставке с предзаполненным revision
-* [~] При обновлении данных если updateIfExist = true и onUpdateNeedSync = false и cloneFieldIfNull = true
+* [0] При обновлении если устаноавлен флаг updateIfExist = true и тип данных заканчивается на RSync
+* [~] При вставке/обновлении с предзаполненным revision
+*
+* Для сокетных данных - сервер является мастер системой. На локали ревизии для сокетных данных не обновляются
 * */
 
 class DataSync {
@@ -82,12 +83,18 @@ class DataSync {
             "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные, все остальные итерации нужны для дозагрузки данных, которые переваливают за 1000 ревизий на сервере
                 counter == 1 ? await DataGetter.getAddSocketData() : []
           };
-
+          // Сокеты работают без авторизации, значит и блок removed выходит за рамки авторизации, так как удалять можно
+          // все персональные данные socket, userDataRSync, blobRSync
+          List<String> removed = await DataGetter.getRemovedUuid();
+          if (removed.isNotEmpty) {
+            postDataRequest["removed"] = removed;
+          }
           if (Storage().get("isAuth", "false") == "true" && counter == 1) {
             postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
             postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
           }
-
+          // Util.p("sync request");
+          // Util.p(Util.jsonPretty(postDataRequest));
           Response response = await Util.asyncInvokeIsolate((args) {
             return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
           }, {

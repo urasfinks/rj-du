@@ -10,6 +10,7 @@ import '../../http_client.dart';
 import '../global_settings.dart';
 import '../navigator_app.dart';
 import '../util.dart';
+import 'data_getter.dart';
 import 'data_migration.dart';
 import 'getter_task.dart';
 import 'data.dart';
@@ -37,6 +38,11 @@ class DataSource {
     await dataMigration.init();
     isInit = true;
     flushQueue();
+    if (GlobalSettings().debug && GlobalSettings().debugSql.isNotEmpty) {
+      for (String sql in GlobalSettings().debugSql) {
+        DataGetter.debug(sql);
+      }
+    }
   }
 
   bool isJsonDataType(DataType? dataType) {
@@ -102,7 +108,12 @@ class DataSource {
     transaction.add("5 saveToDB");
     db.rawQuery("SELECT * FROM data where uuid_data = ?", [data.uuid]).then((resultSet) {
       bool notify = false;
-      if (resultSet.isEmpty) {
+      if (data.isRemove == 1) {
+        transaction.add("5.1 remove");
+        delete(data);
+        //notify = true; //Когда удаляются данные, нечего посылать в notifyBlockAsync, value уже пустое
+        //Для фиксации изменений используйте DynamicPage._subscribedOnReload (косвенные взаимосвязи в обход Notify)
+      } else if (resultSet.isEmpty) {
         transaction.add("6 result is empty > insert");
         insert(data);
         notify = true;
@@ -183,7 +194,8 @@ class DataSource {
           SocketCache().renderDBData(data);
         });
       }
-      Util.p("DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+      Util.p(
+          "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
     } catch (e, stacktrace) {
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {
@@ -259,6 +271,26 @@ class DataSource {
     });
   }
 
+  void delete(Data curData) {
+    // Будучи в здравии))) Я отдаю отчёт, что удаляя записи из локальной БД может быть фон, что сервер при синхронизации
+    // Постоянно будет отдавать их, так как getMaxRevisionByType будет отдавать ревизии меньшии по значению чем удаление
+    // А сервер будет говорит, вот смотри тут удаление произошло
+    // Так будет продолжаться до тех пор, пока не появится свежая ревизия из этого типа
+    // В БД что бы не расходовать место, надо уничтожать данные, но удалять из удалённой БД мы не имеем права
+    // Так как если данные были на нескольких устройств, и одно устройство используется реже, то может так получится,
+    // Что если на сервере удалить данные, то на второе устройство не дойдёт ревизия удаления и у нас получится рассинхрон
+    db.rawInsert(
+      'DELETE FROM data WHERE uuid_data = ?',
+      [curData.uuid],
+    ).then((value) {
+      if (curData.onPersist != null) {
+        Function.apply(curData.onPersist!, null);
+      }
+    }).onError((error, stackTrace) {
+      Util.printStackTrace("DataSource.insert()", error, stackTrace);
+    });
+  }
+
   void notifyBlock(Data curData) {
     Map<String, dynamic> runtimeData = {};
     if (curData.value.runtimeType == String && isJsonDataType(curData.type)) {
@@ -276,7 +308,7 @@ class DataSource {
     // Сейчас я обновляю аватар с типом blobRSync и мне как бы надо получить уведомление, что аватар был заменён
     // Пока закоментирую проверку на json тип, не знаю для чего он тут
     //if (isJsonDataType(curData.type)) {
-      NavigatorApp.updatePageNotifier(curData.uuid, runtimeData);
+    NavigatorApp.updatePageNotifier(curData.uuid, runtimeData);
     //}
     //Оповещение программных компонентов, кто подписался на onChange
     if (listener.containsKey(curData.uuid)) {

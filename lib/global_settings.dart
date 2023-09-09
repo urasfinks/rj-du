@@ -2,7 +2,12 @@ import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/util.dart';
 
 class GlobalSettings {
-  bool debug = false;
+  bool debug = true;
+  List<String> debugSql = [
+    //"update data set is_remove_data = 1 where key_data = 'new_game' and is_remove_data = 0",
+    //"SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 GROUP BY type_data",
+    //"SELECT * from data where type_data = 'blobRSync'"
+  ];
   String version = "v3";
   String host = "https://e-humidor.ru:8453";
   String ws = "https://e-humidor.ru:8453";

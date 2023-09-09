@@ -42,6 +42,13 @@ class RjDu {
 
     DataSource().init();
 
+    if (GlobalSettings().debugSql.isNotEmpty) {
+      // Для отладки запросов нет необходимости в загрузке всего приложения
+      // Загрузка приложения может только мешать выборке изменяя данные в ходе работы
+      // Поэтому если смотрим что в локальной БД - дальнейшая работа приложения невозможна
+      return;
+    }
+
     HttpClient.init();
     Translate().init();
     DataSync().init();
@@ -71,6 +78,9 @@ class RjDu {
   }
 
   static Future<DynamicPage> runApp() async {
+    if (GlobalSettings().debugSql.isNotEmpty) {
+      return DynamicPage(const {"flutterType": "SizeBox"});
+    }
     List<String> loadTabData = await DataMigration.loadTabData();
     for (String tabData in loadTabData) {
       NavigatorApp.tab.add(

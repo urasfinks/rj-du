@@ -57,7 +57,7 @@ class DataGetter {
           callback(json.decode(resultSet.first["value_data"] as String));
         }
       }
-    }).onError((error, stackTrace){
+    }).onError((error, stackTrace) {
       Util.printStackTrace("DataGetter.getDataJson() uuid: $uuid", error, stackTrace);
     });
   }
@@ -69,5 +69,27 @@ class DataGetter {
     }).onError((error, stackTrace) {
       Util.printStackTrace("DataGetter.getDataBlob() uuid: $uuid", error, stackTrace);
     });
+  }
+
+  static void debug(String sql) {
+    if (sql.isNotEmpty) {
+      DataSource().db.rawQuery(sql, []).then((resultSet) {
+        Util.p("DataGetter.debug($sql)");
+        Util.p(resultSet);
+      }).onError((error, stackTrace) {
+        Util.printStackTrace("DataGetter.debug()", error, stackTrace);
+      });
+    }
+  }
+
+  static Future<List<String>> getRemovedUuid() async {
+    List<Map<String, dynamic>> result = await DataSource().db.rawQuery(
+        "SELECT uuid_data FROM data WHERE is_remove_data = 1 AND type_data IN (?,?,?)",
+        [DataType.socket.name, DataType.blob.name, DataType.blobRSync.name]);
+    List<String> ret = [];
+    for (Map<String, dynamic> item in result) {
+      ret.add(item["uuid_data"]);
+    }
+    return ret;
   }
 }
