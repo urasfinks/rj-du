@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:rjdu/db/data_source.dart';
+import '../multi_invoke.dart';
 import 'data.dart';
 import 'data_getter.dart';
 
@@ -63,7 +63,7 @@ class SocketCache {
 }
 
 class SyncTimer {
-  Timer? timer;
+  final MultiInvoke multiInvoke = MultiInvoke(2000);
   late Data data;
   bool loadFromDb = false;
   Data? delayData;
@@ -82,11 +82,7 @@ class SyncTimer {
   }
 
   void delayAction() {
-    if (timer != null) {
-      //Если пришло второе обновление, а ещё не исполнилось первое, отменим выполнение первого вообще
-      timer!.cancel();
-    }
-    timer = Timer(const Duration(seconds: 2), () {
+    multiInvoke.invoke(() {
       SocketCache().removeCache(data.uuid); //Всегда сливаем кеш (решали задачу только быстрых прокликиваний)
       if (delayData != null) {
         data = delayData!;

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../controller_wrap.dart';
 import '../../dynamic_invoke/handler/alert_handler.dart';
+import '../../multi_invoke.dart';
 import '../dynamic_ui.dart';
 import '../type_parser.dart';
 import 'abstract_widget.dart';
@@ -107,7 +107,9 @@ class SwipableStackWidget extends AbstractWidget {
 
     stateControl["size"] = children.length;
 
-    Timer? timer;
+    final MultiInvoke multiInvoke = MultiInvoke(TypeParser.parseInt(
+      getValue(parsedJson, "rollDelay", 0, dynamicUIBuilderContext),
+    )!);
     bool roll = TypeParser.parseBool(
       getValue(parsedJson, "roll", true, dynamicUIBuilderContext),
     )!;
@@ -136,13 +138,7 @@ class SwipableStackWidget extends AbstractWidget {
         click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
         if (controller.currentIndex == children.length - 1) {
           if (roll) {
-            if (timer != null) {
-              timer!.cancel();
-            }
-            int rollDelay = TypeParser.parseInt(
-              getValue(parsedJson, "rollDelay", 0, dynamicUIBuilderContext),
-            )!;
-            timer = Timer(Duration(seconds: rollDelay), () {
+            multiInvoke.invoke((){
               controller.currentIndex = rollIndex;
             });
           } else {

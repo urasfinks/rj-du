@@ -9,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import '../data_type.dart';
 import '../../http_client.dart';
 import '../global_settings.dart';
+import '../multi_invoke.dart';
 import '../navigator_app.dart';
 import '../subscribe_reload_group.dart';
 import '../util.dart';
@@ -101,7 +102,8 @@ class DataSource {
     }
   }
 
-  Timer? timerMultiUpdate;
+  final MultiInvoke multiInvoke = MultiInvoke(1000);
+
   Map<SubscribeReloadGroup, List<String>> mapMultiUpdate = {
     SubscribeReloadGroup.key: [],
     SubscribeReloadGroup.parentUuid: [],
@@ -117,15 +119,11 @@ class DataSource {
     if (data.key != null) {
       mapMultiUpdate[SubscribeReloadGroup.key]!.add(data.key!);
     }
-    if (timerMultiUpdate != null) {
-      timerMultiUpdate!.cancel();
-    }
-    timerMultiUpdate = Timer(const Duration(seconds: 1), () {
+    multiInvoke.invoke(() {
       NavigatorApp.reloadPageBySubscription(mapMultiUpdate, true);
       for (MapEntry<SubscribeReloadGroup, List<String>> item in mapMultiUpdate.entries) {
         item.value.clear();
       }
-      timerMultiUpdate = null;
     });
   }
 

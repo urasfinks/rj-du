@@ -4,6 +4,7 @@ import 'package:cron/cron.dart';
 import 'package:http/http.dart';
 import 'package:rjdu/dynamic_invoke/handler/controller_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_close_handler.dart';
+import 'package:rjdu/multi_invoke.dart';
 import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/storage.dart';
 import 'data_type.dart';
@@ -34,6 +35,7 @@ import 'db/data_getter.dart';
 
 class DataSync {
   static final DataSync _singleton = DataSync._internal();
+  final MultiInvoke multiInvoke = MultiInvoke(1000);
 
   factory DataSync() {
     return _singleton;
@@ -44,7 +46,6 @@ class DataSync {
   Cron? cron;
   bool appIsActive = true;
   bool isRun = false;
-  Timer? timer;
 
   void restart(String template) async {
     try {
@@ -173,11 +174,8 @@ class DataSync {
       // Потому что там процесс синхронизации успел зацепить с сервера 2 обновления, а третий не попал в временой диапозон
       // Но и тут мы обновление не дали сделать, так как уже был процесс синхронизации
       // Просераем в итоге данные, поэтому пост обновление делаем
-      if (timer != null) {
-        timer!.cancel();
-      }
-      timer = Timer(const Duration(seconds: 1), () {
-        Util.p("Delay sync()");
+      multiInvoke.invoke(() {
+        Util.p("Run delay sync()");
         sync();
       });
       Util.p("Sync Already, start delay");
