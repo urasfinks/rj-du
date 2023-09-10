@@ -69,6 +69,10 @@ class RjDu {
       }
     });
 
+    SystemNotify().subscribe(SystemNotifyEnum.changeThemeData, (state) {
+      NavigatorApp.reloadAllPages();
+    });
+
     if (Storage().isUpdateApplicationVersion()) {
       Storage().set("version", GlobalSettings().version);
     }

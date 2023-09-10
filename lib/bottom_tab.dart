@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:rjdu/dynamic_invoke/handler/navigator_pop_handler.dart';
 import 'package:rjdu/global_settings.dart';
+import 'package:rjdu/multi_invoke.dart';
 import 'package:rjdu/theme_provider.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'dynamic_ui/dynamic_ui.dart';
@@ -25,10 +26,18 @@ class BottomTab extends StatefulWidget {
 
 class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, TickerProviderStateMixin {
   bool visible = true;
+  MultiInvoke multiDelay = MultiInvoke(500);
 
   @override
   void didChangePlatformBrightness() {
-    Storage().set("theme", View.of(context).platformDispatcher.platformBrightness.name);
+    multiDelay.invoke(() {
+      String theme = View.of(context).platformDispatcher.platformBrightness.name;
+      var currentTheme = Storage().get("theme", "");
+      if (theme != currentTheme) {
+        Storage().set("theme", theme);
+        SystemNotify().emit(SystemNotifyEnum.changeThemeData, theme);
+      }
+    });
   }
 
   @override

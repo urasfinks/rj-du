@@ -90,6 +90,12 @@ class NavigatorApp {
     }
   }
 
+  static void reloadAllPages() {
+    for (DynamicPage dynamicPage in allDynamicPage) {
+      dynamicPage.reload(true);
+    }
+  }
+
   static void reloadPageByArguments(String key, String value, bool rebuild) {
     for (DynamicPage dynamicPage in allDynamicPage) {
       if (dynamicPage.isDispose == false &&

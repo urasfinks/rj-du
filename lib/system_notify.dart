@@ -38,5 +38,6 @@ enum SystemNotifyEnum {
   changeViewport,
   changeOrientation,
   changeBottomNavigationTab,
-  openDynamicPage
+  openDynamicPage,
+  changeThemeData
 }
