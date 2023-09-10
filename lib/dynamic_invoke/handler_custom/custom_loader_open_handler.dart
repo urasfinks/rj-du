@@ -23,9 +23,35 @@ class CustomLoaderOpenHandler extends AbstractHandler {
                 "child": {
                   "flutterType": "Center",
                   "child": {
-                    "flutterType": "CircularProgressIndicator",
-                    "backgroundColor": "schema:background",
-                    "color": "schema:secondary"
+                    "flutterType": "Container",
+                    "width": 50,
+                    "height": 50,
+                    "child": {
+                      "flutterType": "Stack",
+                      "fit": "expand",
+                      "alignment": "center",
+                      "children": [
+                        {
+                          "flutterType": "CircularProgressIndicator",
+                          "backgroundColor": "schema:background",
+                          "color": "schema:secondary"
+                        },
+                        {
+                          "flutterType": "Center",
+                          "child": {
+                            "flutterType": "Stream",
+                            "controller": "loader",
+                            "stream": {
+                              "data": {"prc": 0}
+                            },
+                            "child": {
+                              "flutterType": "Text",
+                              "label": "\${prc}%",
+                            }
+                          }
+                        }
+                      ]
+                    }
                   }
                 }
               }
