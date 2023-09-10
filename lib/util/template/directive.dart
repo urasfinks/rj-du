@@ -82,12 +82,17 @@ class TemplateDirective {
       return "сейчас";
     },
     "map": (data, arguments, ctx) {
+      dynamic result = data;
+      if (arguments.length % 2 != 0) { //Если кол-во не чётное значит есть значение по умолчанию
+        result = arguments.last;
+        arguments.removeLast();
+      }
       for (int i = 0; i < arguments.length; i += 2) {
-        if (arguments[i] == data) {
+        if (arguments[i] == data.toString()) {
           return arguments[i + 1];
         }
       }
-      return data;
+      return result;
     }
   };
 }
