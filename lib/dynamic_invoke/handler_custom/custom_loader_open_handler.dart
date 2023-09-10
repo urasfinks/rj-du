@@ -46,7 +46,7 @@ class CustomLoaderOpenHandler extends AbstractHandler {
                             },
                             "child": {
                               "flutterType": "Text",
-                              "label": "\${prc}%",
+                              "label": "\${prc|map(0,)}\${prc|map(0,,%)}",
                             }
                           }
                         }
