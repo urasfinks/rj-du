@@ -17,6 +17,7 @@ import 'system_notify.dart';
 import 'util.dart';
 import 'db/data_source.dart';
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
+import 'db/data.dart';
 
 import 'dynamic_ui/widget/abstract_widget.dart';
 
@@ -44,7 +45,7 @@ class DynamicPage extends StatefulWidget {
   int timeCreate = 0;
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
-    Util.p("DynamicPage.subscribeToReload(${group.name}) $value");
+    Util.p("DynamicPage.subscribeToReload() uuidPage: $uuid; group: ${group.name}; value: $value");
     if (!_subscribedOnReload[group]!.contains(value)) {
       _subscribedOnReload[group]!.add(value);
     }
@@ -57,9 +58,10 @@ class DynamicPage extends StatefulWidget {
     //Инициализируем основной контейнер, так как js constructor начинает работать раньше чем будет возможноя отрисовка
     // Notify "onStateDataUpdate": true к примеру. Так было на Less.js, когда пытались поработать с main, который ещё
     // не успел инициализироваться
-    stateData.getInstanceData(null);
+    Data state = stateData.getInstanceData(null);
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
     timeCreate = DateTime.now().millisecondsSinceEpoch;
+    Util.p("CreateInstance DynamicPage uuidPage: $uuid; uuidState: ${state.uuid}; args: $arguments");
   }
 
   void constructor() {
@@ -121,10 +123,13 @@ class DynamicPage extends StatefulWidget {
   }
 
   void reload(bool rebuild) {
+    Util.p("DynamicPage.reload() uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
     if (rebuild) {
       clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
       stateData.clear();
-      AudioComponent().stop();
+      if (NavigatorApp.getLast() == this) { //Если перезагружается страница, на которой мы сейчас находимся
+        AudioComponent().stop();
+      }
       isRunConstructor = false;
       if (_setState != null) {
         newRender = true;
