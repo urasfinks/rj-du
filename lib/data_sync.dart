@@ -2,9 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cron/cron.dart';
 import 'package:http/http.dart';
+import 'package:rjdu/dynamic_invoke/handler/controller_handler.dart';
+import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_close_handler.dart';
+import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/storage.dart';
 import 'data_type.dart';
 import 'db/data_source.dart';
+import 'dynamic_invoke/dynamic_invoke.dart';
+import 'dynamic_invoke/handler_custom/custom_loader_open_handler.dart';
 import 'global_settings.dart';
 import 'http_client.dart';
 import 'system_notify.dart';
@@ -57,16 +62,29 @@ class DataSync {
   Future<void> sync() async {
     if (appIsActive && !isRun) {
       isRun = true;
+      bool openLoader = false;
       int start = Util.getTimestamp();
       int allInsertion = 0;
+      int firstTotalCountItem = -1;
       try {
         int counter = 0;
         Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
         while (true) {
-          if (counter > 20) {
+          Util.p("sync while $counter");
+          // Сервер выдаёт пачки по 100kb
+          // на LTE выдавать пачки большего размера не целесообразно
+          // Лучше мельче нарезать, чем пропихивать 5mb одной пачкой
+          if (counter > 1000) {
             //Default = 20
             Util.p("DataSync.handler() break infinity while");
             break;
+          }
+          if (counter > 2) {
+            if (!openLoader) {
+              DynamicInvoke()
+                  .sysInvokeType(CustomLoaderOpenHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+              openLoader = true;
+            }
           }
           counter++;
           Map<String, dynamic> postDataRequest = {
@@ -102,6 +120,20 @@ class DataSync {
             int insertion = 0;
             Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
             if (parseJson["status"] == true) {
+              if (firstTotalCountItem == -1) {
+                firstTotalCountItem = parseJson["data"]["totalCountItem"];
+              }
+              int curTotalCountItem = parseJson["data"]["totalCountItem"];
+              if (openLoader) {
+                DynamicInvoke().sysInvokeType(
+                  ControllerHandler,
+                  {
+                    "controller": "loader",
+                    "data": {"prc": ((firstTotalCountItem - curTotalCountItem) * 100 / firstTotalCountItem).ceil()}
+                  },
+                  NavigatorApp.getLast()!.dynamicUIBuilderContext,
+                );
+              }
               for (MapEntry<String, dynamic> item in parseJson["data"]["response"].entries) {
                 DataType dataType = Util.dataTypeValueOf(item.key);
                 for (Map<String, dynamic> curData in item.value) {
@@ -113,7 +145,7 @@ class DataSync {
                 }
               }
             }
-            if (insertion == 0 || insertion < 10) {
+            if (insertion == 0) {
               //Подумал, что слишком много запросов на синхронизацию
               //Если не было инсертов, нет смысла более опрашивать сервер на предмет новых ревизий
               break;
@@ -132,6 +164,9 @@ class DataSync {
         Util.printStackTrace("DataSync().sync()", e, stacktrace);
       }
       Util.p("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion;");
+      if (openLoader) {
+        DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+      }
       isRun = false;
     } else {
       // История: 3 последовательных оповещения через сокет, что надо обновить
