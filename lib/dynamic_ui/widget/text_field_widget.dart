@@ -172,7 +172,7 @@ class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
   @override
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     switch (args["case"] ?? "default") {
-      case "default":
+      case "reset":
         controller.text = args["text"] ?? "";
         //Сброс состояния контролера не должен перезагружать страницу
         //Перерисовка при включенном onRebuildClearTemporaryControllerText и setStateInit перезапишет состояние

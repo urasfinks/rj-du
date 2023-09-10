@@ -70,7 +70,6 @@ class NavigatorApp {
   }
 
   static void reloadPageBySubscription(Map<SubscribeReloadGroup, List<String>> map, bool rebuild) {
-    Util.p("reloadPageBySubscription $map");
     List<DynamicPage> listPageToReload = [];
     for (MapEntry<SubscribeReloadGroup, List<String>> item in map.entries) {
       for (String value in item.value) {
@@ -82,6 +81,9 @@ class NavigatorApp {
           }
         }
       }
+    }
+    if (listPageToReload.isNotEmpty) {
+      Util.p("NavigatorApp.reloadPageBySubscription() $map");
     }
     for (DynamicPage dynamicPage in listPageToReload) {
       dynamicPage.reload(rebuild);

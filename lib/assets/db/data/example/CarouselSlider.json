@@ -24,7 +24,7 @@
         "onPressed": {
           "sysInvoke": "Controller",
           "args": {
-            "key": "s1",
+            "controller": "s1",
             "case": "nextPage"
           }
         }
@@ -41,7 +41,7 @@
         "onPressed": {
           "sysInvoke": "Controller",
           "args": {
-            "key": "s1",
+            "controller": "s1",
             "case": "previousPage"
           }
         }

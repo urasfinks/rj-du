@@ -47,7 +47,8 @@
             "onPressed": {
               "sysInvoke": "Controller",
               "args": {
-                "key": "CodeValue"
+                "controller": "CodeValue",
+                "case": "reset"
               }
             }
           },

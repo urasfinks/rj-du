@@ -38,12 +38,12 @@ class AudioComponent {
           data["prc"] = 0.0;
           data["state"] = AudioComponentContextState.stop.name;
         }
-        audioComponentContext!.notifyStream(data);
+        audioComponentContext!.streamNotify(data);
       }
     });
     audioPlayer.bufferedPositionStream.listen((event) {
       if (audioComponentContext != null) {
-        audioComponentContext!.notifyStream({
+        audioComponentContext!.streamNotify({
           "caller": "bufferedPosition",
           "bufferedPosition": event.toString(),
         });
@@ -52,7 +52,7 @@ class AudioComponent {
     audioPlayer.durationStream.listen((event) {
       Duration? ev = event;
       if (audioComponentContext != null && ev != null) {
-        audioComponentContext!.notifyStream({
+        audioComponentContext!.streamNotify({
           "caller": "duration",
           "duration": ev.toString(),
           "durationMillis": ev.inMilliseconds,
@@ -66,7 +66,7 @@ class AudioComponent {
         if (audioComponentContext!.dataState.containsKey("durationMillis")) {
           prc = ev.inMilliseconds / audioComponentContext!.dataState["durationMillis"];
         }
-        audioComponentContext!.notifyStream({
+        audioComponentContext!.streamNotify({
           "caller": "position",
           "position": ev.toString(),
           "positionMillis": ev.inMilliseconds,
@@ -119,7 +119,7 @@ class AudioComponent {
 
 class AudioComponentContext {
   late Map<String, dynamic> dataState;
-  AudioStream? _audioStream;
+  StreamData? _streamData;
   ByteSource? byteSource;
   bool autoPlayOnLoad = false;
 
@@ -138,7 +138,7 @@ class AudioComponentContext {
         case "asset":
           rootBundle.load(args["src"]).then((bytes) {
             byteSource = ByteSource(bytes.buffer.asUint8List());
-            notifyStream({
+            streamNotify({
               "caller": "loadAsset()",
               "state": AudioComponentContextState.stop.name,
             });
@@ -157,7 +157,7 @@ class AudioComponentContext {
           DataGetter.getDataBlob(args["uuid"], (data) {
             if (data != null) {
               byteSource = ByteSource(data);
-              notifyStream({
+              streamNotify({
                 "caller": "getDataBlob()",
                 "state": AudioComponentContextState.stop.name,
               });
@@ -168,7 +168,7 @@ class AudioComponentContext {
                 AudioComponent().play(this);
               }
             } else {
-              notifyStream({
+              streamNotify({
                 "caller": "getDataBlob()",
                 "state": AudioComponentContextState.error.name,
               });
@@ -185,42 +185,40 @@ class AudioComponentContext {
     }
   }
 
-  void notifyStream(Map<String, dynamic> map) {
-    if (_audioStream != null) {
-      //Util.log(map);
-      Util.overlay(dataState, map);
-      _audioStream!.notify();
+  void streamNotify(Map<String, dynamic> map) {
+    if (_streamData != null) {
+      _streamData!.setData(map);
     }
   }
 
   Stream getStream() {
-    _audioStream = AudioStream(dataState);
-    return _audioStream!.getStream();
+    _streamData = StreamData(dataState);
+    return _streamData!.getStream();
   }
 
   void play() {
-    notifyStream({"caller": "play()", "state": AudioComponentContextState.play.name});
+    streamNotify({"caller": "play()", "state": AudioComponentContextState.play.name});
   }
 
   void loading() {
-    notifyStream({"caller": "loading()", "state": AudioComponentContextState.loading.name});
+    streamNotify({"caller": "loading()", "state": AudioComponentContextState.loading.name});
   }
 
   void error(String message) {
-    notifyStream({"caller": "error()", "state": AudioComponentContextState.error.name});
+    streamNotify({"caller": "error()", "state": AudioComponentContextState.error.name});
     AlertHandler.alertSimple(message);
   }
 
   void pause() {
-    notifyStream({"caller": "pause()", "state": AudioComponentContextState.pause.name});
+    streamNotify({"caller": "pause()", "state": AudioComponentContextState.pause.name});
   }
 
   void resume() {
-    notifyStream({"caller": "resume()", "state": AudioComponentContextState.play.name});
+    streamNotify({"caller": "resume()", "state": AudioComponentContextState.play.name});
   }
 
   void stop() {
-    notifyStream({"caller": "stop()", "state": AudioComponentContextState.stop.name, "prc": 0.0});
+    streamNotify({"caller": "stop()", "state": AudioComponentContextState.stop.name, "prc": 0.0});
   }
 }
 

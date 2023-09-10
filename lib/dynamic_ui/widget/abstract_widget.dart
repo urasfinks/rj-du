@@ -19,8 +19,8 @@ abstract class AbstractWidget {
     return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state, defaultState).value;
   }
 
-  T getController<T>(Map<String, dynamic> parsedJson, String defaultValue, DynamicUIBuilderContext dynamicUIBuilderContext, ControllerWrap<T> Function() getDefault) {
-    String key = parsedJson["controller"] ?? parsedJson["state"] ?? defaultValue;
+  T getController<T>(Map<String, dynamic> parsedJson, String state, DynamicUIBuilderContext dynamicUIBuilderContext, ControllerWrap<T> Function() getDefault) {
+    String key = parsedJson["controller"] ?? parsedJson["state"] ?? state;
     ControllerWrap ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, getDefault);
     return ctx.getController();
   }

@@ -1,7 +1,7 @@
 {
   "flutterType": "Stream",
   "stream": {
-    "name": "Periodic",
+    "case": "Periodic",
     "timerMillis": 1000,
     "data": {
       "count": 0

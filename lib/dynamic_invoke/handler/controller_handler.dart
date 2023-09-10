@@ -6,8 +6,8 @@ import '../../util.dart';
 class ControllerHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (Util.containsKeys(args, ["key"])) {
-      String key = args["key"];
+    if (Util.containsKeys(args, ["controller"])) {
+      String key = args["controller"];
       if (dynamicUIBuilderContext.dynamicPage.isProperty(key)) {
         ControllerWrap tec = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, () {
           return null;

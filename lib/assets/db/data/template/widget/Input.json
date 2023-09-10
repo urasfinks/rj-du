@@ -39,12 +39,13 @@
       "onPressed": {
         "sysInvoke": "Controller",
         "args": {
-          "key": "${key}",
+          "controller": "${key}",
+          "case": "reset",
           "setState": false
         }
       },
       "templateArguments": [
-        "onPressed.args.key"
+        "onPressed.args.controller"
       ]
     },
     "enabledBorder": {
