@@ -70,7 +70,6 @@ class DataSync {
         int counter = 0;
         Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
         while (true) {
-          Util.p("sync while $counter");
           // Сервер выдаёт пачки по 100kb
           // на LTE выдавать пачки большего размера не целесообразно
           // Лучше мельче нарезать, чем пропихивать 5mb одной пачкой
