@@ -6,8 +6,6 @@ class ThemeProvider {
 
   static Brightness deviceBrightness = Brightness.light;
 
-  static List<Color> grad = [];
-
   static ThemeData lightThemeData() {
     List<Color> cur = [
       Colors.grey[200]!,
@@ -26,7 +24,6 @@ class ThemeProvider {
       Colors.grey[400]!,
       Colors.white,
     ];
-    cur.addAll(grad);
     ThemeData themeData = ThemeData.dark();
     return get(cur, themeData);
   }
