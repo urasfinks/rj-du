@@ -13,7 +13,7 @@ class DataMigration {
   }
 
   migration() async {
-    bool updateApplication = Storage().isUpdateApplication();
+    bool updateApplication = Storage().isUpdateApplicationVersion();
     Util.p("migration() current version: ${GlobalSettings().version}; updateApplication = $updateApplication");
     await _sqlExecute([
       updateApplication ? "db/drop/2023-01-31.sql" : "",

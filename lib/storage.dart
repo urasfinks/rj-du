@@ -7,7 +7,7 @@ class Storage {
   static final Storage _singleton = Storage._internal();
   SharedPreferences? prefs;
   Map<String, List<Function(String value)>> mapWatcher = {};
-  bool updateApplication = false;
+  bool updateApplicationVersion = false;
 
   factory Storage() {
     return _singleton;
@@ -15,15 +15,15 @@ class Storage {
 
   Storage._internal();
 
-  bool isUpdateApplication() {
-    return updateApplication;
+  bool isUpdateApplicationVersion() {
+    return updateApplicationVersion;
   }
 
   init() async {
     Util.p("Storage.init()");
     prefs = await SharedPreferences.getInstance();
-    updateApplication = get("version", "v0") != GlobalSettings().version;
-    if (isUpdateApplication()) {
+    updateApplicationVersion = get("version", "v0") != GlobalSettings().version;
+    if (isUpdateApplicationVersion() && GlobalSettings().clearStorageOnUpdateVersion) {
       Util.p(
           "Storage.init() clear; current version: ${GlobalSettings().version}; old version: ${get("version", "v0")}");
       prefs!.clear();

@@ -56,14 +56,11 @@ class RjDu {
     DeepLink.init();
 
     SystemNotify().subscribe(SystemNotifyEnum.changeViewport, (state) {
-      AudioComponent().pause();
+      AudioComponent().stop(); //Лучше stop чем pause а то вдруг на другой странице тоже проигрыватель будет
       NavigatorApp.getLast()?.onActive();
     });
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
-      AudioComponent().pause();
-    });
-    SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
-      AudioComponent().pause();
+      AudioComponent().stop();
     });
 
     SystemNotify().subscribe(SystemNotifyEnum.appLifecycleState, (state) {
@@ -72,7 +69,7 @@ class RjDu {
       }
     });
 
-    if (Storage().isUpdateApplication()) {
+    if (Storage().isUpdateApplicationVersion()) {
       Storage().set("version", GlobalSettings().version);
     }
   }

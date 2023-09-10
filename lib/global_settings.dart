@@ -9,7 +9,9 @@ class GlobalSettings {
     //"SELECT * from data where type_data = 'socket'"
     //"delete from data where type_data = 'socket'"
   ];
-  String version = "v3";
+  //String version = "v${Util.getTimestamp()}";
+  String version = "v1";
+  bool clearStorageOnUpdateVersion = false;
   String host = "https://e-humidor.ru:8453";
   String ws = "https://e-humidor.ru:8453";
   double appBarHeight = 56.0;
