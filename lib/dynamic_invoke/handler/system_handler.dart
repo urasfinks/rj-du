@@ -14,8 +14,11 @@ class SystemHandler extends AbstractHandler {
       case "reloadAllPage":
         NavigatorApp.reloadAllPages();
         break;
-      case "listenWebSocket":
+      case "webSocketConnect":
         WebSocketService().addListener(dynamicUIBuilderContext.dynamicPage);
+        break;
+      case "webSocketDisconnect":
+        WebSocketService().removeListener(dynamicUIBuilderContext.dynamicPage);
         break;
       case "dataSync":
         if (args["onSync"] != null) {
