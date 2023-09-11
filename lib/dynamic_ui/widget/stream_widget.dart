@@ -35,15 +35,22 @@ class StreamWidget extends AbstractWidget {
       return StreamControllerWrap(streamCustom);
     });
 
+    return getWidget(stream, (data) {
+      DynamicUIBuilderContext newDynamicUIBuilderContext = dynamicUIBuilderContext.cloneWithNewData(
+        Util.convertMap(data),
+        parsedJson["key"] ?? "StreamWidget",
+      );
+      return render(parsedJson, "child", const SizedBox(), newDynamicUIBuilderContext);
+    });
+  }
+
+  static Widget getWidget(StreamCustom stream, dynamic Function(Map<String, dynamic> data) builder) {
     return StreamBuilder(
       key: Util.getKey(),
       stream: stream.getStream(),
       builder: (BuildContext buildContext, AsyncSnapshot asyncSnapshot) {
-        DynamicUIBuilderContext newDynamicUIBuilderContext = dynamicUIBuilderContext.cloneWithNewData(
-          Util.convertMap(asyncSnapshot.data ?? {}),
-          parsedJson["key"] ?? "StreamWidget",
-        );
-        return render(parsedJson, "child", const SizedBox(), newDynamicUIBuilderContext);
+        Map<String, dynamic> snapshot = asyncSnapshot.data ?? {};
+        return builder(snapshot);
       },
       initialData: stream.getData(),
     );
@@ -68,10 +75,11 @@ class StreamControllerWrap extends ControllerWrap<StreamCustom> {
 
 abstract class StreamCustom {
   Map<String, dynamic> data = {};
-  final _controller = StreamController();
+  StreamController controller = StreamController();
 
   Stream getStream() {
-    return _controller.stream;
+    controller = StreamController();
+    return controller.stream;
   }
 
   Map<String, dynamic> getData() {
@@ -80,7 +88,7 @@ abstract class StreamCustom {
 
   setData(Map<String, dynamic> newData) {
     Util.overlay(data, newData);
-    _controller.sink.add(data);
+    controller.sink.add(data);
   }
 }
 
@@ -90,7 +98,7 @@ class StreamPeriodic extends StreamCustom {
     data = defData;
     Timer.periodic(Duration(milliseconds: milliseconds), (timer) {
       callback(data, timer);
-      _controller.sink.add(data);
+      controller.sink.add(data);
     });
   }
 }
