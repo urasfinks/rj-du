@@ -24,8 +24,8 @@ class CustomLoaderOpenHandler extends AbstractHandler {
                   "flutterType": "Center",
                   "child": {
                     "flutterType": "Container",
-                    "width": 50,
-                    "height": 50,
+                    "width": 55,
+                    "height": 55,
                     "child": {
                       "flutterType": "Stack",
                       "fit": "expand",
