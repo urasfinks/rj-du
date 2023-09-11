@@ -12,7 +12,6 @@ import 'package:flutter_js/flutter_js.dart';
 
 import '../data_type.dart';
 import '../util.dart';
-import 'handler/data_sync_handler.dart';
 import 'handler/show_handler.dart';
 import 'handler/alert_handler.dart';
 import 'handler/copy_clipboard_handler.dart';
@@ -33,6 +32,7 @@ import 'handler/select_tab_handler.dart';
 import 'handler/set_storage_handler.dart';
 import 'handler/share_handler.dart';
 import 'handler/subscribe_reload.dart';
+import 'handler/system_handler.dart';
 import 'handler/system_notify_handler.dart';
 import 'handler/template_handler.dart';
 import 'handler/test_handler.dart';
@@ -86,7 +86,7 @@ class DynamicInvoke {
     SystemNotifyHandler();
     WakeLockHandler();
     SubscribeReloadHandler();
-    DataSyncHandler();
+    SystemHandler();
     AudioHandler();
 
     javascriptRuntime = getJavascriptRuntime();
