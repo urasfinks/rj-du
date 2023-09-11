@@ -18,6 +18,7 @@ class GlobalSettings {
   double bottomNavigationBarHeight = 56.0;
   String orientation = ""; //landscape/portrait
   int debugStackTraceMaxFrames = 10;
+  double barSeparatorOpacity = 0.05;
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 

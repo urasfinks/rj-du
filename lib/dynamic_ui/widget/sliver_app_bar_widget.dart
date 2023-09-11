@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
+import 'package:rjdu/global_settings.dart';
 
 import '../../theme_provider.dart';
 import '../type_parser.dart';
@@ -38,7 +39,7 @@ class SliverAppBarWidget extends AbstractWidget {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(4.0),
         child: Opacity(
-          opacity: 0.2,
+          opacity: GlobalSettings().barSeparatorOpacity,
           child: Container(
             color: TypeParser.parseColor("schema:secondary"),
             height: 1.0,

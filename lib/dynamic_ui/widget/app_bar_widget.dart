@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import '../../global_settings.dart';
 import '../../theme_provider.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
@@ -18,7 +19,7 @@ class AppBarWidget extends AbstractWidget {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(4.0),
         child: Opacity(
-          opacity: 0.2,
+          opacity: GlobalSettings().barSeparatorOpacity,
           child: Container(
             color: TypeParser.parseColor("schema:secondary"),
             height: 1.0,
@@ -44,7 +45,7 @@ class AppBarWidget extends AbstractWidget {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(4.0),
         child: Opacity(
-          opacity: 0.1,
+          opacity: GlobalSettings().barSeparatorOpacity,
           child: Container(
             color: TypeParser.parseColor("schema:secondary"),
             height: 1.0,
