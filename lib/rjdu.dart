@@ -99,7 +99,7 @@ class RjDu {
 
     return DynamicPage(const {
       "flutterType": "Notify",
-      "link": {"template": "main.json"},
+      "link": {},
       "context": {
         "key": "runApp",
         "data": {
