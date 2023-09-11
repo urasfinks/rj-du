@@ -55,7 +55,7 @@
       "context": {
         "key": "InputName",
         "data": {
-          "data": "${state(main,accountValue.name,)}",
+          "data": "${state(main,account.name,)}",
           "key": "name",
           "placeholder": "Имя",
           "onSubmit": {

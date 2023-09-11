@@ -39,6 +39,7 @@ class RjDu {
     Storage().set("mail", "", false);
     Storage().set("lastMail", "", false);
     Storage().set("lastSync", "", false);
+    Storage().set("accountName", "", false);
 
     DataSource().init();
 

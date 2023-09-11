@@ -83,7 +83,8 @@ class TemplateDirective {
     },
     "map": (data, arguments, ctx) {
       dynamic result = data;
-      if (arguments.length % 2 != 0) { //Если кол-во не чётное значит есть значение по умолчанию
+      if (arguments.length % 2 != 0) {
+        //Если кол-во не чётное значит есть значение по умолчанию
         result = arguments.last;
         arguments.removeLast();
       }
@@ -93,6 +94,15 @@ class TemplateDirective {
         }
       }
       return result;
+    },
+    "ifNotExist": (data, arguments, ctx) {
+      if(data == null || data == ""){
+        return arguments[0];
+        // Было добавлено для подстановки имени, типо если указали, взять из состояния
+        // если нет взять из Storage.accountName
+        //TODO: надо шаблонизатор воткнуть
+      }
+      return data;
     }
   };
 }
