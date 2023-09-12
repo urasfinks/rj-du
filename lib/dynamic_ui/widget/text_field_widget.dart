@@ -155,7 +155,7 @@ class TextFieldWidget extends AbstractWidget {
             context: dynamicUIBuilderContext.dynamicPage.context!,
           );
           if (result != null) {
-            defaultData = "${Util.intLPad(result.hour, pad: 2)}:${Util.intLPad(result.minute, pad: 2)}";
+            defaultData = "${Util.lPad(result.hour.toString(), pad: 2)}:${Util.lPad(result.minute.toString(), pad: 2)}";
             dynamicUIBuilderContext.dynamicPage.stateData
                 .set(parsedJson["state"], key, defaultData, onChangedSetStateNotify);
             textController.text = defaultData;

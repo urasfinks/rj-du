@@ -83,9 +83,16 @@ class Util {
     return def;
   }
 
-  static String intLPad(int i, {int pad = 0, String char = "0"}) => i.toString().padLeft(pad, char);
+  static dynamic listGet(List list, int index, dynamic def) {
+    if (list.asMap().containsKey(index)) {
+      return list[index];
+    }
+    return def;
+  }
 
-  static String intRPad(int i, {int pad = 0, String char = "0"}) => i.toString().padRight(pad, char);
+  static String lPad(String input, {int pad = 0, String char = "0"}) => input.padLeft(pad, char);
+
+  static String rPad(String input, {int pad = 0, String char = "0"}) => input.padRight(pad, char);
 
   static bool isIndexKey(dynamic data) {
     if (data.runtimeType.toString().contains("Map<")) {

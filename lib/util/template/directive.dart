@@ -61,7 +61,23 @@ class TemplateDirective {
       }
       return result;
     },
+    "capitalize": (data, arguments, ctx) {
+      return Util.capitalize(data);
+    },
+    "lPad": (data, arguments, ctx) {
+      int pad = TypeParser.parseInt(Util.listGet(arguments, 0, "0"))!;
+      String char = Util.listGet(arguments, 1, "0")!;
+      return Util.lPad(data, pad: pad, char: char);
+    },
+    "rPad": (data, arguments, ctx) {
+      int pad = TypeParser.parseInt(Util.listGet(arguments, 0, "0"))!;
+      String char = Util.listGet(arguments, 1, "0")!;
+      return Util.rPad(data, pad: pad, char: char);
+    },
     "timeSoFar": (data, arguments, ctx) {
+      if (data == null || data == "") {
+        return "неизвестно";
+      }
       int diffMs = Util.getTimestamp() - TypeParser.parseInt(data)!;
       int diffDays = (diffMs / 86400000).floor();
       if (diffDays > 0) {
@@ -96,13 +112,21 @@ class TemplateDirective {
       return result;
     },
     "ifNotExist": (data, arguments, ctx) {
-      if(data == null || data == ""){
-        return arguments[0];
-        // Было добавлено для подстановки имени, типо если указали, взять из состояния
-        // если нет взять из Storage.accountName
-        //TODO: надо шаблонизатор воткнуть
+      if (data == null || data == "") {
+        return Util.listGet(arguments, 0, "");
       }
       return data;
+    },
+    "template": (data, arguments, ctx) {
+      Util.template(data, ctx);
     }
   };
+
+  static dynamic invoke(
+      String fn, dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (map.containsKey(fn)) {
+      return map[fn]!(data, arguments, dynamicUIBuilderContext);
+    }
+    return data;
+  }
 }
