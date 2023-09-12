@@ -3,7 +3,6 @@ import '../../navigator_app.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../../dynamic_ui/type_parser.dart';
-import 'abstract_handler.dart';
 
 class SelectTabHandler extends AbstractHandler {
   @override
