@@ -15,6 +15,7 @@
       },
       {
         "flutterType": "TextField",
+        "autoFocus": true,
         "keyboardType": "number",
         "style": {
           "flutterType": "TextStyle",
