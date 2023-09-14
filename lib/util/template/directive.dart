@@ -118,7 +118,7 @@ class TemplateDirective {
       return data;
     },
     "template": (data, arguments, ctx) {
-      Util.template(data, ctx);
+      return Util.template(data, ctx);
     }
   };
 
