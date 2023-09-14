@@ -25,7 +25,6 @@ class BottomTab extends StatefulWidget {
 }
 
 class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, TickerProviderStateMixin {
-  bool visible = true;
   MultiInvoke multiDelay = MultiInvoke(500);
 
   @override
@@ -51,7 +50,7 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
     NavigatorApp.bottomTabState = this;
     WidgetsBinding.instance.addObserver(this);
     SystemNotify().subscribe(SystemNotifyEnum.changeBottomNavigationTab, (state) {
-      visible = TypeParser.parseBool(state) ?? true;
+      GlobalSettings().bottomNavigationBar = TypeParser.parseBool(state) ?? true;
       setState(() {});
     });
   }
@@ -90,7 +89,12 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
   @override
   Widget build(BuildContext context) {
     GlobalSettings().appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight + 1;
-    GlobalSettings().bottomNavigationBarHeight = MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight;
+    // Ситуация: открываетчя keyboard -> reloadAllPage -> navigator_pop
+    // В момент открытой keyboard: MediaQuery.of(context).padding.bottom = 0 а бео открытого keyboard = 34
+    // Страница при перестроениении отображается не корректно
+    // Пока захардкодим, посмотрим как проявляются будет
+
+    GlobalSettings().bottomNavigationBarHeight = GlobalSettings().bottomNavigationBar ? (kBottomNavigationBarHeight + 34) : 0;
 
     int lastTimeClick = DateTime.now().millisecondsSinceEpoch;
 
@@ -113,7 +117,7 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Visibility(
-        visible: visible,
+        visible: GlobalSettings().bottomNavigationBar,
         child: ClipRRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
@@ -122,7 +126,7 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
                 border: Border(
                   top: BorderSide(
                     color: TypeParser.parseColor("schema:secondary", context)!
-                        .withOpacity(GlobalSettings().barSeparatorOpacity/2),
+                        .withOpacity(GlobalSettings().barSeparatorOpacity / 2),
                     width: 1.0,
                   ),
                 ),

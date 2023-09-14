@@ -123,24 +123,31 @@ class DynamicPage extends StatefulWidget {
   }
 
   void reload(bool rebuild) {
-    Util.p("DynamicPage.reload() uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
-    if (rebuild) {
-      clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
-      stateData.clear();
-      if (NavigatorApp.getLast() == this) { //Если перезагружается страница, на которой мы сейчас находимся
-        AudioComponent().stop();
+    if (isDispose == false) {
+      Util.p("DynamicPage.reload() uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
+      if (rebuild) {
+        clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
+        stateData.clear();
+        if (NavigatorApp.getLast() == this) {
+          //Если перезагружается страница, на которой мы сейчас находимся
+          AudioComponent().stop();
+        }
+        isRunConstructor = false;
+        if (_setState != null) {
+          newRender = true;
+          try {
+            _setState!.setState(() {});
+          } catch (error, stackTrace) {
+            Util.printStackTrace("setState", error, stackTrace);
+          }
+        }
+      } else {
+        // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
+        isRunConstructor = false;
+        // Все надежды на конструктор, что он перерисует необходимые блоки
+        // В основном, это сводится к выборке из БД и обновления состояния
+        constructor();
       }
-      isRunConstructor = false;
-      if (_setState != null) {
-        newRender = true;
-        _setState!.setState(() {});
-      }
-    } else {
-      // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
-      isRunConstructor = false;
-      // Все надежды на конструктор, что он перерисует необходимые блоки
-      // В основном, это сводится к выборке из БД и обновления состояния
-      constructor();
     }
   }
 

@@ -69,14 +69,6 @@ class CustomScrollViewWidget extends AbstractWidget {
       );
     }
 
-    /*for (int i = 0; i < children.length; i++) {
-      list.add(getRender(i, children, dynamicUIBuilderContext));
-      if (i > 0 && i % numberOfItemsPerList == 0) {
-        sliverList.add(getSliverList(list));
-        list.clear();
-      }
-    }*/
-
     List<Map<String, dynamic>> sliverGroup = [
       {"type": "list", "name": "main", "children": []}
     ];
@@ -159,7 +151,7 @@ class CustomScrollViewWidget extends AbstractWidget {
         getValue(parsedJson, "shrinkWrap", false, dynamicUIBuilderContext),
       )!,
       cacheExtent: TypeParser.parseDouble(
-        getValue(parsedJson, "radius", null, dynamicUIBuilderContext),
+        getValue(parsedJson, "cacheExtent", null, dynamicUIBuilderContext),
       ),
       slivers: sliverList,
     );

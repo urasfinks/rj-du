@@ -6,8 +6,8 @@ class GlobalSettings {
   List<String> debugSql = [
     //"update data set is_remove_data = 1 where key_data = 'new_game' and is_remove_data = 0",
     //"SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 GROUP BY type_data",
-    //"SELECT * from data where type_data = 'socket'"
-    //"delete from data where type_data = 'socket'"
+    //"SELECT * from data where key_data = 'Game'"
+    //"delete from data where key_data = 'Game'"
   ];
   //String version = "v${Util.getTimestamp()}";
   String version = "v1";
@@ -19,6 +19,7 @@ class GlobalSettings {
   String orientation = ""; //landscape/portrait
   int debugStackTraceMaxFrames = 10;
   double barSeparatorOpacity = 0.04;
+  bool bottomNavigationBar = true;
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 
