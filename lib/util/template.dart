@@ -22,7 +22,10 @@ class Template {
       }
       String templateName = exp2[0];
       List<String> expDirective = exp2[0].split("|");
-      dynamic value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext);
+      if(debug){
+        Util.p("Template.template() template: $template");
+      }
+      dynamic value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext, debug);
       // if (autoEscape == true && expDirective.isEmpty) {
       //   value = jsonStringEscape(value);
       // }
@@ -46,17 +49,17 @@ class Template {
     return template;
   }
 
-  static dynamic parseTemplateQuery(String query, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static dynamic parseTemplateQuery(String query, DynamicUIBuilderContext dynamicUIBuilderContext, bool debug) {
     if (!query.contains("(")) {
       query = "context($query)";
     }
     for (MapEntry<
         String,
         dynamic Function(Map<String, dynamic> data, List<String> arguments,
-            DynamicUIBuilderContext dynamicUIBuilderContext)> item in TemplateFunction.map.entries) {
+            DynamicUIBuilderContext dynamicUIBuilderContext, bool debug)> item in TemplateFunction.map.entries) {
       if (query.startsWith("${item.key}(")) {
         List<String> arguments = parseArguments(query.substring(item.key.length + 1, query.length - 1));
-        return item.value(dynamicUIBuilderContext.data, arguments, dynamicUIBuilderContext);
+        return item.value(dynamicUIBuilderContext.data, arguments, dynamicUIBuilderContext, debug);
       }
     }
     return "Undefined handler for: $query";
