@@ -1,5 +1,4 @@
 import 'package:rjdu/dynamic_ui/type_parser.dart';
-import 'package:rjdu/global_settings.dart';
 
 import '../../navigator_app.dart';
 import '../../system_notify.dart';
@@ -11,8 +10,6 @@ import '../../dynamic_page.dart';
 class NavigatorPushHandler extends AbstractHandler {
   @override
   dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> dataPage = args;
-
     String type = args.containsKey("type") ? args["type"] : "Window";
     if (!["Window", "BottomSheet", "Dialog"].contains(type)) {
       type = "Window";
@@ -25,27 +22,27 @@ class NavigatorPushHandler extends AbstractHandler {
 
     switch (type) {
       case "BottomSheet":
-        bottomSheet(buildContext, raw, dataPage);
+        bottomSheet(buildContext, raw, args);
         break;
       case "Dialog":
-        dialog(buildContext, raw, dataPage);
+        dialog(buildContext, raw, args);
         break;
       default:
-        window(buildContext, raw, dataPage);
+        window(buildContext, raw, args);
         break;
     }
     SystemNotify().emit(SystemNotifyEnum.openDynamicPage, type);
   }
 
-  void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+  void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> args) {
     if (!raw) {
-      dataPage.addAll(
+      args.addAll(
         {
-          "name": dataPage.containsKey("name") ? dataPage["name"] : "",
+          "name": args.containsKey("name") ? args["name"] : "",
           "flutterType": "Notify",
-          "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
-          "context": dataPage.containsKey("context")
-              ? dataPage["context"]
+          "link": args.containsKey("uuid") ? {"template": args["uuid"]} : args["link"],
+          "context": args.containsKey("context")
+              ? args["context"]
               : {
                   "key": "NavigatorPushHandlerDialog",
                   "data": {
@@ -56,28 +53,29 @@ class NavigatorPushHandler extends AbstractHandler {
       );
     }
     showGeneralDialog(
+      useRootNavigator: TypeParser.parseBool(args["useRootNavigator"]) ?? true,
       context: buildContext,
       pageBuilder: (
         BuildContext context,
         Animation<double> animation,
         Animation<double> secondaryAnimation,
       ) {
-        DynamicPage dynamicPage = DynamicPage(dataPage);
+        DynamicPage dynamicPage = DynamicPage(args);
         NavigatorApp.addNavigatorPage(dynamicPage);
         return dynamicPage;
       },
     );
   }
 
-  void bottomSheet(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+  void bottomSheet(BuildContext buildContext, bool raw, Map<String, dynamic> args) {
     if (!raw) {
-      dataPage.addAll(
+      args.addAll(
         {
-          "name": dataPage.containsKey("name") ? dataPage["name"] : "",
+          "name": args.containsKey("name") ? args["name"] : "",
           "flutterType": "Notify",
-          "link": dataPage.containsKey("uuid") ? {"template": dataPage["uuid"]} : dataPage["link"],
-          "context": dataPage.containsKey("context")
-              ? dataPage["context"]
+          "link": args.containsKey("uuid") ? {"template": args["uuid"]} : args["link"],
+          "context": args.containsKey("context")
+              ? args["context"]
               : {
                   "key": "NavigatorPushHandlerBottomSheet",
                   "data": {
@@ -87,30 +85,45 @@ class NavigatorPushHandler extends AbstractHandler {
         },
       );
     }
-    DynamicPage dynamicPage = DynamicPage(dataPage);
+    DynamicPage dynamicPage = DynamicPage(args);
     NavigatorApp.addNavigatorPage(dynamicPage);
     //showModalBottomSheet вызывает builder при скроле
     //Постоянное пересоздание страницы создаёт мерцание
     //Подкешируем для избежания лагов UI
 
     showModalBottomSheet(
+      // Закрытие tap по пустому месту
+      isDismissible: TypeParser.parseBool(args["isDismissible"]) ?? true,
+      // Тащить пальцем для закрытия
+      enableDrag: TypeParser.parseBool(args["enableDrag"]) ?? true,
+      useSafeArea: TypeParser.parseBool(args["useSafeArea"]) ?? true,
+      //Если false - содержимое bottomSheet будет под bottomTabBar
+      useRootNavigator: TypeParser.parseBool(args["useRootNavigator"]) ?? true,
+      isScrollControlled: TypeParser.parseBool(args["isScrollControlled"]) ?? true,
       context: buildContext,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(TypeParser.parseDouble(dataPage["borderRadius"]) ?? 15.0),
+          top: Radius.circular(TypeParser.parseDouble(args["borderRadius"]) ?? 15.0),
         ),
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            dynamicPage,
-            SizedBox(
-              height: GlobalSettings().bottomNavigationBarHeight,
-            )
-          ],
-        );
+        if (args.containsKey("height")) {
+          return SizedBox(
+            height: MediaQuery.of(context).viewInsets.bottom + (TypeParser.parseDouble(args["height"]) ?? 300.0),
+            //Scafold нужен для Snackbar иначе Alert мы никогда не увидим
+            child: Scaffold(
+              backgroundColor: TypeParser.parseColor(args["backgroundColor"] ?? "schema:primaryContainer", context),
+              body: dynamicPage,
+            ),
+          );
+        } else {
+          //Scafold нужен для Snackbar иначе Alert мы никогда не увидим
+          return Scaffold(
+            backgroundColor: TypeParser.parseColor(args["backgroundColor"] ?? "schema:primaryContainer", context),
+            body: dynamicPage,
+          );
+        }
       },
     );
   }
