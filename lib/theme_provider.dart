@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dynamic_ui/type_parser.dart';
 
 class ThemeProvider {
-  static int alpha = 125;
+  static int alpha = 175;
   static double blur = 15;
 
   static Brightness deviceBrightness = Brightness.light;

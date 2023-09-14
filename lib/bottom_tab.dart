@@ -122,7 +122,7 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
                 border: Border(
                   top: BorderSide(
                     color: TypeParser.parseColor("schema:secondary", context)!
-                        .withOpacity(GlobalSettings().barSeparatorOpacity),
+                        .withOpacity(GlobalSettings().barSeparatorOpacity/2),
                     width: 1.0,
                   ),
                 ),
