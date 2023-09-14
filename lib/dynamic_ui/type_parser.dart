@@ -75,19 +75,36 @@ class TypeParser {
     if (value.startsWith("schema:")) {
       var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
       Map<String, dynamic> schema = {
-        "primary": colorScheme.primary,
-        "inversePrimary": colorScheme.inversePrimary,
-        "onPrimary": colorScheme.onPrimary,
-        "secondary": colorScheme.secondary,
-        "onSecondary": colorScheme.onSecondary,
-        "error": colorScheme.error,
-        "onError": colorScheme.onError,
         "background": colorScheme.background,
         "onBackground": colorScheme.onBackground,
+
+        //text
+        "primary": colorScheme.primary,
+        //background
+        "primaryContainer": colorScheme.primaryContainer,
+        //onBackground
+        "onPrimary": colorScheme.onPrimary,
+
+        //text
+        "secondary": colorScheme.secondary,
+        //background
+        "secondaryContainer": colorScheme.secondaryContainer,
+        //onBackground
+        "onSecondary": colorScheme.onSecondary,
+
+        "inversePrimary": colorScheme.inversePrimary,
+
+        // Other
+        "error": colorScheme.error,
+        "onError": colorScheme.onError,
         "surface": colorScheme.surface,
         "onSurface": colorScheme.onSurface,
       };
-      return schema[value.split(":")[1]];
+      String key = value.split(":")[1];
+      if (!schema.containsKey(key)) {
+        print(key);
+      }
+      return schema[key] ?? Colors.yellow;
     } else if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
       try {
