@@ -84,14 +84,15 @@ class AlertHandler extends AbstractHandler {
   static void alert(int milliseconds, String label, String color, String backgroundColor, SnackBarAction? action) {
     ScaffoldMessenger.of(NavigatorApp.getLast()!.context!).showSnackBar(
       SnackBar(
-        padding: TypeParser.parseEdgeInsets("17,10,10,10")!,
+        padding: TypeParser.parseEdgeInsets("17,13,10,13")!,
+        margin: TypeParser.parseEdgeInsets("10")!,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
         duration: Duration(milliseconds: milliseconds),
         content: Text(label, style: TextStyle(color: TypeParser.parseColor(color))),
         backgroundColor: TypeParser.parseColor(backgroundColor),
-        behavior: SnackBarBehavior.fixed,
+        behavior: SnackBarBehavior.floating,
         elevation: 0,
         action: action,
       ),
