@@ -101,9 +101,6 @@ class TypeParser {
         "onSurface": colorScheme.onSurface,
       };
       String key = value.split(":")[1];
-      if (!schema.containsKey(key)) {
-        print(key);
-      }
       return schema[key] ?? Colors.yellow;
     } else if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");

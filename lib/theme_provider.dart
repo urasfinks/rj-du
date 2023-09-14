@@ -16,7 +16,6 @@ class ThemeProvider {
       parseColor.darkness(40),
     ];
     ThemeData themeData = ThemeData.light();
-    print("light");
     return get(cur, themeData);
   }
 
@@ -27,7 +26,6 @@ class ThemeProvider {
       Colors.black.lightness(40),
     ];
     ThemeData themeData = ThemeData.dark();
-    print("dark");
     return get(cur, themeData);
   }
 
