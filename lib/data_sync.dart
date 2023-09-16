@@ -80,7 +80,7 @@ class DataSync {
             break;
           }
           if (counter > 2) {
-            if (!openLoader) {
+            if (!openLoader && NavigatorApp.getLast() != null) {
               DynamicInvoke()
                   .sysInvokeType(CustomLoaderOpenHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
               openLoader = true;
@@ -92,7 +92,9 @@ class DataSync {
             //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while, а то на сервере не к чему будет привязывать данные
             "userDataRSync": [],
             "blobRSync": [],
-            "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные, все остальные итерации нужны для дозагрузки данных, которые переваливают за 1000 ревизий на сервере
+            "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные,
+                // все остальные итерации нужны для дозагрузки данных, которые переваливают
+                // за 1000 ревизий на сервере или превышают 100kb
                 counter == 1 ? await DataGetter.getAddSocketData() : []
           };
           // Сокеты работают без авторизации, значит и блок removed выходит за рамки авторизации, так как удалять можно
@@ -101,6 +103,7 @@ class DataSync {
           if (removed.isNotEmpty) {
             postDataRequest["removed"] = removed;
           }
+          // Если человек авторизован + это первая итерация
           if (Storage().get("isAuth", "false") == "true" && counter == 1) {
             postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
             postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
@@ -134,14 +137,31 @@ class DataSync {
                   NavigatorApp.getLast()!.dynamicUIBuilderContext,
                 );
               }
-              for (MapEntry<String, dynamic> item in parseJson["data"]["response"].entries) {
-                DataType dataType = Util.dataTypeValueOf(item.key);
-                for (Map<String, dynamic> curData in item.value) {
-                  Data? updData = upgradeData(curData, dataType, maxRevisionByType);
-                  if (updData != null) {
-                    insertion++;
-                    allInsertion++;
+              if (parseJson["data"]["upgrade"] != null) {
+                for (MapEntry<String, dynamic> item in parseJson["data"]["upgrade"].entries) {
+                  DataType dataType = Util.dataTypeValueOf(item.key);
+                  for (Map<String, dynamic> curData in item.value) {
+                    Data? updData = upgradeData(curData, dataType, maxRevisionByType);
+                    if (updData != null) {
+                      insertion++;
+                      allInsertion++;
+                    }
                   }
+                }
+              }
+              // Если ревизия на сервере меньше чем на устройстве будет возвращён блок serverNeedUpgrade
+              if (parseJson["data"]["serverNeedUpgrade"] != null) {
+                for (MapEntry<String, dynamic> item in parseJson["data"]["serverNeedUpgrade"].entries) {
+                  DataType dataType = Util.dataTypeValueOf(item.key);
+                  Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
+                  // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
+                  // Грубо говоря - это восстановление данных на сервере
+                  // Конечно вероятность такого мала, но на всякий случай, если сервер когда-нибудь невозвратимо утухнет
+                  DataGetter.resetRevision(
+                    dataType,
+                    item.value,
+                    maxRevisionByType[dataType.name]!,
+                  );
                 }
               }
             }
@@ -164,7 +184,7 @@ class DataSync {
         Util.printStackTrace("DataSync().sync()", e, stacktrace);
       }
       Util.p("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion;");
-      if (openLoader) {
+      if (openLoader && NavigatorApp.getLast() != null) {
         DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
       }
       isRun = false;
@@ -183,6 +203,8 @@ class DataSync {
   }
 
   Data? upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {
+    // По факту пустого uuid быть не может, это ответвление на needUpgrade, который вышел в отлеьную структуру
+    // Но остаётся по сегодняшний день, как дополнительная проверка
     if (curData["uuid"] != null && curData["uuid"] != "") {
       Data dataObject = Data(curData["uuid"], curData["value"], dataType, curData["parent_uuid"]);
       dataObject.dateAdd = curData["date_add"];
@@ -193,22 +215,11 @@ class DataSync {
       dataObject.beforeSync = true;
       dataObject.onUpdateOverlayNullField = true;
       dataObject.isRemove = curData["is_remove"];
+      dataObject.parentUuid = curData["parent_uuid"];
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
       return dataObject;
-    } else if (curData["needUpgrade"] != null) {
-      //Если ревизия на сервере оказалась меньше чем на устройстве
-      //Сервер высылает нам в needUpgrade актульный номер ревизии на серевере
-      // Что бы мы ему повторно выслали данные с устройства этот лаг недастающих ревизий
-      Util.p("!!!NEED UPGRADE from ${curData["needUpgrade"]} .. ${maxRevisionByType[dataType.name]}");
-      // Данные которые готовятся к синхронизации с сервером помечаютсчя revision = 0
-      // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
-      DataGetter.resetRevision(
-        dataType,
-        curData["needUpgrade"],
-        maxRevisionByType[dataType.name]!,
-      );
     }
     return null;
   }
