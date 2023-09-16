@@ -83,7 +83,7 @@ class RjDu {
 
   static Future<DynamicPage> runApp() async {
     if (GlobalSettings().debugSql.isNotEmpty) {
-      return DynamicPage(const {"flutterType": "SizeBox"});
+      return DynamicPage(const {"flutterType": "SizeBox"}, DynamicPageOpenType.window);
     }
     List<String> loadTabData = await DataMigration.loadTabData();
     for (String tabData in loadTabData) {
@@ -109,6 +109,6 @@ class RjDu {
           "template": {"flutterType": "MaterialApp"}
         }
       }
-    });
+    }, DynamicPageOpenType.window);
   }
 }

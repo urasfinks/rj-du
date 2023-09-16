@@ -38,10 +38,20 @@ class NavigatorPopHandler extends AbstractHandler {
 
   void _pop(int count, int indexTab, Map<String, dynamic> args) {
     while (count > 0) {
-      if (!NavigatorApp.isLast(indexTab) && NavigatorApp.getLast() != null) {
-        NavigatorApp.removePage(NavigatorApp.getLast(indexTab)!);
+      DynamicPage? dynamicPage = NavigatorApp.getLast();
+      if (!NavigatorApp.isLast(indexTab) && dynamicPage != null) {
+        NavigatorApp.removePage(dynamicPage);
         //NavigatorApp.tab[indexTab].context - это глобально весь открытый Tab
-        Navigator.pop(NavigatorApp.tab[indexTab].context, args);
+        switch (dynamicPage.dynamicPageOpenType) {
+          case DynamicPageOpenType.dialog:
+          case DynamicPageOpenType.bottomSheet:
+            Navigator.of(NavigatorApp.tab[indexTab].context, rootNavigator: true).pop(args);
+            break;
+          case DynamicPageOpenType.window:
+          default:
+            Navigator.pop(NavigatorApp.tab[indexTab].context, args);
+            break;
+        }
       } else {
         break;
       }

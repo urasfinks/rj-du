@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/util.dart';
+import '../dynamic_page.dart';
 import '../navigator_app.dart';
 import '../subscribe_reload_group.dart';
 
@@ -544,5 +545,11 @@ class TypeParser {
       return null;
     }
     return mapCurve.containsKey(value) ? mapCurve[value] : null;
+  }
+
+  static final Map<String, DynamicPageOpenType> _mapDynamicPageOpenType = convertEnumToMap(DynamicPageOpenType.values);
+
+  static DynamicPageOpenType? parseDynamicPageOpenType(String? value) {
+    return enumValueOf(value, _mapDynamicPageOpenType);
   }
 }

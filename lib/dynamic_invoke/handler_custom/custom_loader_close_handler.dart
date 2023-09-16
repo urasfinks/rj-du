@@ -24,7 +24,18 @@ class CustomLoaderCloseHandler extends AbstractHandler {
   }
 
   void pop(DynamicPage dynamicPage) {
-    NavigatorApp.removePage(dynamicPage);
-    Navigator.pop(dynamicPage.context!);
+    if (!NavigatorApp.isLast()) {
+      NavigatorApp.removePage(dynamicPage);
+      switch (dynamicPage.dynamicPageOpenType) {
+        case DynamicPageOpenType.dialog:
+        case DynamicPageOpenType.bottomSheet:
+          Navigator.of(dynamicPage.context!, rootNavigator: true).pop();
+          break;
+        case DynamicPageOpenType.window:
+        default:
+          Navigator.pop(dynamicPage.context!);
+          break;
+      }
+    }
   }
 }

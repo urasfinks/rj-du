@@ -37,16 +37,19 @@ class NavigatorApp {
   }
 
   static void removePage(DynamicPage dynamicPage) {
-    Future.delayed(const Duration(seconds: 5), () {
-      // Задержка сделана для того, что бы была возможность отработать destruct js для закрытой DynamicPage
-      // Если сразу удалить, то getPageByUuid вернёт null, что приведёт к невозможности запустить
-      // асинхронные вызовы SysInvoke
-      // Для кейса при закрытии страницы - отобразить bottomNavigationBar, так как он мог был быть скрыт
-      allDynamicPage.remove(dynamicPage);
-    });
-
-    if (tabNavigator.containsKey(selectedTab)) {
-      tabNavigator[selectedTab]!.remove(dynamicPage);
+    if (!isLast(selectedTab)) {
+      Future.delayed(const Duration(seconds: 5), () {
+        // Задержка сделана для того, что бы была возможность отработать destruct js для закрытой DynamicPage
+        // Если сразу удалить, то getPageByUuid вернёт null, что приведёт к невозможности запустить
+        // асинхронные вызовы SysInvoke
+        // Для кейса при закрытии страницы - отобразить bottomNavigationBar, так как он мог был быть скрыт
+        if (allDynamicPage.contains(dynamicPage)) {
+          allDynamicPage.remove(dynamicPage);
+        }
+      });
+      if (tabNavigator.containsKey(selectedTab)) {
+        tabNavigator[selectedTab]!.remove(dynamicPage);
+      }
     }
     dynamicPage.destructor();
   }
@@ -58,7 +61,7 @@ class NavigatorApp {
 
   static bool isLast([int? indexTab]) {
     indexTab ??= selectedTab;
-    return tabNavigator.containsKey(indexTab) ? (tabNavigator[indexTab]!.length == 1) : true;
+    return tabNavigator.containsKey(indexTab) ? (tabNavigator[indexTab]!.length <= 1) : true;
   }
 
   static void updatePageNotifier(String uuid, Map<String, dynamic> data) {

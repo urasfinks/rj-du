@@ -10,28 +10,26 @@ import '../../dynamic_page.dart';
 class NavigatorPushHandler extends AbstractHandler {
   @override
   dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String type = args.containsKey("type") ? args["type"] : "Window";
-    if (!["Window", "BottomSheet", "Dialog"].contains(type)) {
-      type = "Window";
-    }
+    DynamicPageOpenType dynamicPageOpenType =
+        TypeParser.parseDynamicPageOpenType(args["type"]) ?? DynamicPageOpenType.window;
 
     bool raw = args.containsKey("raw") && args["raw"] == true;
     BuildContext buildContext = args.containsKey("tab")
         ? NavigatorApp.tab[args["tab"]].context
         : NavigatorApp.tab[NavigatorApp.selectedTab].context;
 
-    switch (type) {
-      case "BottomSheet":
+    switch (dynamicPageOpenType) {
+      case DynamicPageOpenType.bottomSheet:
         bottomSheet(buildContext, raw, args);
         break;
-      case "Dialog":
+      case DynamicPageOpenType.dialog:
         dialog(buildContext, raw, args);
         break;
       default:
         window(buildContext, raw, args);
         break;
     }
-    SystemNotify().emit(SystemNotifyEnum.openDynamicPage, type);
+    SystemNotify().emit(SystemNotifyEnum.openDynamicPage, dynamicPageOpenType.name);
   }
 
   void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> args) {
@@ -53,14 +51,16 @@ class NavigatorPushHandler extends AbstractHandler {
       );
     }
     showGeneralDialog(
-      useRootNavigator: TypeParser.parseBool(args["useRootNavigator"]) ?? true,
+      //Если false - содержимое dialog будет под bottomTabBar
+      //Менять нельзя, потому что Navigator.pop настроен на удаление данного типа открытия через корневой контекст
+      useRootNavigator: true,
       context: buildContext,
       pageBuilder: (
         BuildContext context,
         Animation<double> animation,
         Animation<double> secondaryAnimation,
       ) {
-        DynamicPage dynamicPage = DynamicPage(args);
+        DynamicPage dynamicPage = DynamicPage(args, DynamicPageOpenType.dialog);
         NavigatorApp.addNavigatorPage(dynamicPage);
         return dynamicPage;
       },
@@ -85,7 +85,7 @@ class NavigatorPushHandler extends AbstractHandler {
         },
       );
     }
-    DynamicPage dynamicPage = DynamicPage(args);
+    DynamicPage dynamicPage = DynamicPage(args, DynamicPageOpenType.bottomSheet);
     NavigatorApp.addNavigatorPage(dynamicPage);
     //showModalBottomSheet вызывает builder при скроле
     //Постоянное пересоздание страницы создаёт мерцание
@@ -97,8 +97,10 @@ class NavigatorPushHandler extends AbstractHandler {
       // Тащить пальцем для закрытия
       enableDrag: TypeParser.parseBool(args["enableDrag"]) ?? true,
       useSafeArea: TypeParser.parseBool(args["useSafeArea"]) ?? true,
+
       //Если false - содержимое bottomSheet будет под bottomTabBar
-      useRootNavigator: TypeParser.parseBool(args["useRootNavigator"]) ?? true,
+      //Менять нельзя, потому что Navigator.pop настроен на удаление данного типа открытия через корневой контекст
+      useRootNavigator: true,
       isScrollControlled: TypeParser.parseBool(args["isScrollControlled"]) ?? true,
       context: buildContext,
       shape: RoundedRectangleBorder(
@@ -158,7 +160,7 @@ class NavigatorPushHandler extends AbstractHandler {
       MaterialPageRoute(
         fullscreenDialog: dataPage["fullscreenDialog"] ?? false,
         builder: (context) {
-          DynamicPage dynamicPage = DynamicPage(dataPage);
+          DynamicPage dynamicPage = DynamicPage(dataPage, DynamicPageOpenType.window);
           NavigatorApp.addNavigatorPage(dynamicPage);
           return dynamicPage;
         },

@@ -21,6 +21,8 @@ import 'db/data.dart';
 
 import 'dynamic_ui/widget/abstract_widget.dart';
 
+enum DynamicPageOpenType { window, dialog, bottomSheet }
+
 class DynamicPage extends StatefulWidget {
   late final Map<String, dynamic> arguments;
   final Map<String, dynamic> properties = {};
@@ -30,6 +32,7 @@ class DynamicPage extends StatefulWidget {
   final Map<String, DynamicUIBuilderContext> contextMap = {};
   BuildContext? context;
   bool newRender = true;
+  late final DynamicPageOpenType dynamicPageOpenType;
 
   final String uuid = Util.uuid();
   bool isRunConstructor = false;
@@ -45,13 +48,13 @@ class DynamicPage extends StatefulWidget {
   int timeCreate = 0;
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
-    Util.p("DynamicPage.subscribeToReload() uuidPage: $uuid; group: ${group.name}; value: $value");
     if (!_subscribedOnReload[group]!.contains(value)) {
+      Util.p("DynamicPage.subscribeToReload() uuidPage: $uuid; group: ${group.name}; value: $value");
       _subscribedOnReload[group]!.add(value);
     }
   }
 
-  DynamicPage(parseJson, {super.key}) {
+  DynamicPage(Map<String, dynamic> parseJson, this.dynamicPageOpenType, {super.key}) {
     arguments = Util.getMutableMap(parseJson);
     dynamicUIBuilderContext = DynamicUIBuilderContext(this, "root");
     dynamicUIBuilderContext.isRoot = true;
