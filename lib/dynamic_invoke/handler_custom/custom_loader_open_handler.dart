@@ -10,9 +10,9 @@ class CustomLoaderOpenHandler extends AbstractHandler {
         NavigatorPushHandler,
         {
           "name": "CustomLoader",
-          "type": "Dialog",
+          "type": "dialog",
           "link": {
-            "template": "_Loader.json",
+            "template": "_Loader.json_this_is_not_exist",
           },
           "context": {
             "key": "CustomLoaderOpenHandler",
