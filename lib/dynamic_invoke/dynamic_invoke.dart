@@ -100,7 +100,7 @@ class DynamicInvoke {
   }
 
   DynamicUIBuilderContext changeContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (args.containsKey("changeContext") && args["changeContext"] == "lastPage") {
+    if (args.containsKey("changeContext") && args["changeContext"] == "lastPage" && NavigatorApp.getLast() != null) {
       dynamicUIBuilderContext = NavigatorApp.getLast()!.dynamicUIBuilderContext;
     }
     return dynamicUIBuilderContext;

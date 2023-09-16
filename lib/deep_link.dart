@@ -29,7 +29,9 @@ class DeepLink {
       args["error"] = e.toString();
     }
     Util.p("DeepLink $uri; args: $args");
-    DynamicInvoke().jsInvoke("DeepLink.js", args, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+    if (NavigatorApp.getLast() != null) {
+      DynamicInvoke().jsInvoke("DeepLink.js", args, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+    }
   }
 
   static Future<void> handleInitialUri() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rjdu/audio_component.dart';
+import 'package:rjdu/util.dart';
 import '../navigator_app.dart';
 import '../subscribe_reload_group.dart';
 
@@ -73,35 +74,39 @@ class TypeParser {
     }
 
     if (value.startsWith("schema:")) {
-      var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
-      Map<String, dynamic> schema = {
-        "background": colorScheme.background,
-        "onBackground": colorScheme.onBackground,
+      if (NavigatorApp.getLast() != null) {
+        var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
+        Map<String, dynamic> schema = {
+          "background": colorScheme.background,
+          "onBackground": colorScheme.onBackground,
 
-        //text
-        "primary": colorScheme.primary,
-        //background
-        "primaryContainer": colorScheme.primaryContainer,
-        //onBackground
-        "onPrimary": colorScheme.onPrimary,
+          //text
+          "primary": colorScheme.primary,
+          //background
+          "primaryContainer": colorScheme.primaryContainer,
+          //onBackground
+          "onPrimary": colorScheme.onPrimary,
 
-        //text
-        "secondary": colorScheme.secondary,
-        //background
-        "secondaryContainer": colorScheme.secondaryContainer,
-        //onBackground
-        "onSecondary": colorScheme.onSecondary,
+          //text
+          "secondary": colorScheme.secondary,
+          //background
+          "secondaryContainer": colorScheme.secondaryContainer,
+          //onBackground
+          "onSecondary": colorScheme.onSecondary,
 
-        "inversePrimary": colorScheme.inversePrimary,
+          "inversePrimary": colorScheme.inversePrimary,
 
-        // Other
-        "error": colorScheme.error,
-        "onError": colorScheme.onError,
-        "surface": colorScheme.surface,
-        "onSurface": colorScheme.onSurface,
-      };
-      String key = value.split(":")[1];
-      return schema[key] ?? Colors.yellow;
+          // Other
+          "error": colorScheme.error,
+          "onError": colorScheme.onError,
+          "surface": colorScheme.surface,
+          "onSurface": colorScheme.onSurface,
+        };
+        String key = value.split(":")[1];
+        return schema[key] ?? Colors.yellow;
+      } else {
+        return Colors.greenAccent;
+      }
     } else if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
       try {
@@ -117,7 +122,9 @@ class TypeParser {
         if (x != null) {
           return x[parseInt(l[1])!];
         }
-      } catch (e) {}
+      } catch (error, stackTrace) {
+        Util.printStackTrace("Util.parseColor() value: $value", error, stackTrace);
+      }
       return null;
     } else {
       return mapColor.containsKey(value) ? mapColor[value] : null;

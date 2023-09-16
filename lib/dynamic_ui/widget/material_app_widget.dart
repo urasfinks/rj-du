@@ -29,11 +29,13 @@ class MaterialAppWidget extends AbstractWidget {
           home: WillPopScope(
             onWillPop: () async {
               bool result = NavigatorApp.isLast();
-              DynamicInvoke().sysInvokeType(
-                NavigatorPopHandler,
-                {},
-                NavigatorApp.getLast()!.dynamicUIBuilderContext,
-              );
+              if (NavigatorApp.getLast() != null) {
+                DynamicInvoke().sysInvokeType(
+                  NavigatorPopHandler,
+                  {},
+                  NavigatorApp.getLast()!.dynamicUIBuilderContext,
+                );
+              }
               return result;
             },
             child: BottomTab(dynamicUIBuilderContext),

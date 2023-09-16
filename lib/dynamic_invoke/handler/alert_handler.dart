@@ -82,20 +82,22 @@ class AlertHandler extends AbstractHandler {
   }
 
   static void alert(int milliseconds, String label, String color, String backgroundColor, SnackBarAction? action) {
-    ScaffoldMessenger.of(NavigatorApp.getLast()!.context!).showSnackBar(
-      SnackBar(
-        padding: TypeParser.parseEdgeInsets("17,13,10,13")!,
-        margin: TypeParser.parseEdgeInsets("10")!,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    if (NavigatorApp.getLast() != null) {
+      ScaffoldMessenger.of(NavigatorApp.getLast()!.context!).showSnackBar(
+        SnackBar(
+          padding: TypeParser.parseEdgeInsets("17,13,10,13")!,
+          margin: TypeParser.parseEdgeInsets("10")!,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          ),
+          duration: Duration(milliseconds: milliseconds),
+          content: Text(label, style: TextStyle(color: TypeParser.parseColor(color))),
+          backgroundColor: TypeParser.parseColor(backgroundColor),
+          behavior: SnackBarBehavior.floating,
+          elevation: 0,
+          action: action,
         ),
-        duration: Duration(milliseconds: milliseconds),
-        content: Text(label, style: TextStyle(color: TypeParser.parseColor(color))),
-        backgroundColor: TypeParser.parseColor(backgroundColor),
-        behavior: SnackBarBehavior.floating,
-        elevation: 0,
-        action: action,
-      ),
-    );
+      );
+    }
   }
 }

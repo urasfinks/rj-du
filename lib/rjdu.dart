@@ -58,7 +58,9 @@ class RjDu {
 
     SystemNotify().subscribe(SystemNotifyEnum.changeViewport, (state) {
       AudioComponent().stop(); //Лучше stop чем pause а то вдруг на другой странице тоже проигрыватель будет
-      NavigatorApp.getLast()?.onActive();
+      if (NavigatorApp.getLast() != null) {
+        NavigatorApp.getLast()?.onActive();
+      }
     });
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
       AudioComponent().stop();

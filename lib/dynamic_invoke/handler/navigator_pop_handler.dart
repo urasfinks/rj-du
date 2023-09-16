@@ -24,19 +24,21 @@ class NavigatorPopHandler extends AbstractHandler {
   }
 
   void _updateLast(Map<String, dynamic> args, int indexTab) {
-    DynamicPage dynamicPage = NavigatorApp.getLast(indexTab)!;
-    if (args.containsKey("setStateDataMap")) {
-      Map<String, dynamic> data = args["setStateDataMap"];
-      dynamicPage.stateData.setMap(data["state"], data["map"]);
-    }
-    if (args.containsKey("reloadParent")) {
-      dynamicPage.reload(args["rebuild"] ?? true);
+    if (NavigatorApp.getLast() != null) {
+      DynamicPage dynamicPage = NavigatorApp.getLast(indexTab)!;
+      if (args.containsKey("setStateDataMap")) {
+        Map<String, dynamic> data = args["setStateDataMap"];
+        dynamicPage.stateData.setMap(data["state"], data["map"]);
+      }
+      if (args.containsKey("reloadParent")) {
+        dynamicPage.reload(args["rebuild"] ?? true);
+      }
     }
   }
 
   void _pop(int count, int indexTab, Map<String, dynamic> args) {
     while (count > 0) {
-      if (!NavigatorApp.isLast(indexTab)) {
+      if (!NavigatorApp.isLast(indexTab) && NavigatorApp.getLast() != null) {
         NavigatorApp.removePage(NavigatorApp.getLast(indexTab)!);
         //NavigatorApp.tab[indexTab].context - это глобально весь открытый Tab
         Navigator.pop(NavigatorApp.tab[indexTab].context, args);
