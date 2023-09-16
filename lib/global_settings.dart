@@ -1,6 +1,8 @@
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/util.dart';
 
+//# 16.09.2023 v10 - были исправления API сервера на синхронизацию
+
 class GlobalSettings {
   bool debug = true;
   List<String> debugSql = [
@@ -10,7 +12,7 @@ class GlobalSettings {
     //"delete from data where key_data = 'Game'"
   ];
   //String version = "v${Util.getTimestamp()}";
-  String version = "v1";
+  String version = "v10";
   bool clearStorageOnUpdateVersion = false;
   String host = "https://e-humidor.ru:8453";
   String ws = "https://e-humidor.ru:8453";
