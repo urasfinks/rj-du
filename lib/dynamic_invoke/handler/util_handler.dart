@@ -83,6 +83,9 @@ class UtilHandler extends AbstractHandler {
         Clipboard.setData(ClipboardData(text: args["data"]));
         DynamicInvoke().sysInvokeType(AlertHandler, {"label": "Скопировано в буфер обмена"}, dynamicUIBuilderContext);
         break;
+      case "dynamicInvoke":
+        AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "invokeArgs");
+        break;
       default:
         Util.p("SystemHandler.handle() default case args: $args");
         break;
