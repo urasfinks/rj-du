@@ -112,7 +112,7 @@ class TemplateDirective {
       return result;
     },
     "ifNotExist": (data, arguments, ctx) {
-      if (data == null || data == "") {
+      if (data == null || data.toString().trim() == "") {
         return Util.listGet(arguments, 0, "");
       }
       return data;
