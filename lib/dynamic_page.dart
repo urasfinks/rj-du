@@ -6,6 +6,7 @@ import 'package:rjdu/dynamic_invoke/handler/subscribe_reload.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
 import 'package:rjdu/util/template.dart';
 import 'package:rjdu/state_data.dart';
+import 'package:rjdu/util/template/Parser/template_item.dart';
 import 'package:rjdu/web_socket_service.dart';
 
 import 'controller_wrap.dart';
@@ -33,6 +34,7 @@ class DynamicPage extends StatefulWidget {
   BuildContext? context;
   bool newRender = true;
   late final DynamicPageOpenType dynamicPageOpenType;
+  Map<String, List<TemplateItem>> cacheTemplate = {};
 
   final String uuid = Util.uuid();
   bool isRunConstructor = false;

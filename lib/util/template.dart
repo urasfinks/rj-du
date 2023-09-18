@@ -1,3 +1,5 @@
+import 'package:rjdu/util/template/Parser/new_template.dart';
+import 'package:rjdu/util/template/Parser/template_item.dart';
 import 'package:rjdu/util/template/directive.dart';
 import 'package:rjdu/util/template/function.dart';
 
@@ -5,48 +7,51 @@ import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../util.dart';
 
 class Template {
+  static List<TemplateItem> getRegisteredListTemplateItem(
+      String template, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (!dynamicUIBuilderContext.dynamicPage.cacheTemplate.containsKey(template)) {
+      dynamicUIBuilderContext.dynamicPage.cacheTemplate[template] = NewTemplate.getParsedTemplate(template);
+    }
+    return dynamicUIBuilderContext.dynamicPage.cacheTemplate[template]!;
+  }
+
   static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
     if (!template.contains("\${")) {
       return template;
     }
-    List<String> exp = template.split("\${");
+    if (!dynamicUIBuilderContext.dynamicPage.cacheTemplate.containsKey(template)) {
+      dynamicUIBuilderContext.dynamicPage.cacheTemplate[template] = NewTemplate.getParsedTemplate(template);
+    }
+    List<TemplateItem> parsedTemplate = getRegisteredListTemplateItem(template, dynamicUIBuilderContext);
+    return NewTemplate.templateCallback(
+        parsedTemplate, (templateValue) => evolute(templateValue, dynamicUIBuilderContext, debug));
+  }
 
-    for (String expItem in exp) {
-      if (!expItem.contains("}")) {
-        continue;
-      }
-      List<String> exp2 = expItem.split("}");
-      if (exp2.isEmpty) {
-        continue;
-      }
-      String templateName = exp2[0];
-      List<String> expDirective = exp2[0].split("|");
-      if(debug){
-        Util.p("Template.template() template: $template");
-      }
-      dynamic value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext, debug);
-      // if (autoEscape == true && expDirective.isEmpty) {
-      //   value = jsonStringEscape(value);
-      // }
-      if (expDirective.isNotEmpty) {
-        for (String directive in expDirective) {
-          for (MapEntry<
-                  String,
-                  dynamic Function(
-                      dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
-              in TemplateDirective.map.entries) {
-            if (directive.startsWith("${item.key}(")) {
-              List<String> arguments = parseArguments(directive.substring(item.key.length + 1, directive.length - 1));
-              value = item.value(value, arguments, dynamicUIBuilderContext);
-              break;
-            }
+  static String evolute(String templateValue, DynamicUIBuilderContext dynamicUIBuilderContext, bool debug) {
+    if (templateValue.contains("\$")) {
+      templateValue = template(templateValue, dynamicUIBuilderContext);
+    }
+    List<String> expDirective = templateValue.split("|");
+    dynamic value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext, debug);
+    if (expDirective.isNotEmpty) {
+      for (String directive in expDirective) {
+        for (MapEntry<
+                String,
+                dynamic Function(
+                    dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
+            in TemplateDirective.map.entries) {
+          if (directive.startsWith("${item.key}(")) {
+            // отрезаем имя директивы + скобки
+            String directiveValue = directive.substring(item.key.length + 1, directive.length - 1);
+            List<String> arguments = parseArguments(directiveValue);
+            value = item.value(value, arguments, dynamicUIBuilderContext);
+            break;
           }
         }
       }
-      template = template.replaceAll("\${$templateName}", value.toString());
     }
-    return template;
+    return value.toString();
   }
 
   static dynamic parseTemplateQuery(String query, DynamicUIBuilderContext dynamicUIBuilderContext, bool debug) {
@@ -105,29 +110,7 @@ class Template {
     if (!find) {
       return defaultValue;
     }
-    // if (cur == null) {
-    //   return "null";
-    // }
-    //Наткнулся на проблему, надо вернуть Map что бы потом через дерективу сделать jsonEncode
     return cur;
-    //return cur.toString();
-    // if (cur.runtimeType.toString() == "bool") {
-    //   return cur == true ? "true" : "false";
-    // }
-    // if (cur.runtimeType.toString() == "String") {
-    //   return cur != null ? cur.toString() : "null";
-    // }
-    // if (defaultValue != "") {
-    //   return defaultValue;
-    // } else {
-    //   String result = "Path: $path is not String";
-    //   try {
-    //     result = jsonEncode(cur);
-    //   } catch (e) {
-    //     result += e.toString();
-    //   }
-    //   return result;
-    // }
   }
 
   static Map<String, dynamic> templateArguments(
