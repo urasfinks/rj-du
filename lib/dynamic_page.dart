@@ -205,23 +205,23 @@ class DynamicPage extends StatefulWidget {
   void renderFloatingActionButton() {
     if (NavigatorApp.getLast() == this) {
       bool hide = true;
-      if (contextMap.containsKey("root") && contextMap["root"]!.data.containsKey("template")) {
-        if (contextMap["root"]!.data["template"]!.containsKey("floatingActionButton")) {
-          DynamicInvoke().sysInvokeType(
-            ShowHandler,
-            {
-              "case": "actionButton",
-              "template": contextMap["root"]!.data["template"]["floatingActionButton"],
-            },
-            dynamicUIBuilderContext,
-          );
-        } else if (contextMap["root"]!.data["template"]!.containsKey("onRenderFloatingActionButton")) {
-          AbstractWidget.clickStatic(
-            contextMap["root"]!.data["template"],
-            dynamicUIBuilderContext,
-            "onRenderFloatingActionButton",
-          );
-        }
+      if (arguments.containsKey("floatingActionButton")) {
+        DynamicInvoke().sysInvokeType(
+          ShowHandler,
+          {
+            "case": "actionButton",
+            "template": arguments["floatingActionButton"],
+          },
+          dynamicUIBuilderContext,
+        );
+        hide = false;
+      } else if (arguments.containsKey("onRenderFloatingActionButton")) {
+        AbstractWidget.clickStatic(
+          arguments,
+          dynamicUIBuilderContext,
+          "onRenderFloatingActionButton",
+        );
+        hide = false;
       }
       if (hide) {
         DynamicInvoke().sysInvokeType(HideHandler, {"case": "actionButton"}, dynamicUIBuilderContext);
