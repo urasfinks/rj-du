@@ -61,7 +61,7 @@ class ThemeProvider {
         inversePrimary: cur[0].inverse(),
       ),
       floatingActionButtonTheme: themeData.floatingActionButtonTheme.copyWith(
-        backgroundColor: cur[0],
+        backgroundColor: cur[0].lightness(light),
         foregroundColor: cur[0].inverse(),
         elevation: 0,
         disabledElevation: 0,

@@ -115,7 +115,7 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
         null,
         widget.dynamicUIBuilderContext,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: GlobalSettings().floatingActionButtonLocation,
       bottomNavigationBar: Visibility(
         visible: GlobalSettings().bottomNavigationBar,
         child: ClipRRect(

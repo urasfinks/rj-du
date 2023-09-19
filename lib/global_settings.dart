@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/util.dart';
 
@@ -22,6 +23,7 @@ class GlobalSettings {
   int debugStackTraceMaxFrames = 10;
   double barSeparatorOpacity = 0.04;
   bool bottomNavigationBar = true;
+  FloatingActionButtonLocation floatingActionButtonLocation = FloatingActionButtonLocation.endFloat;
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 

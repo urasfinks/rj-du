@@ -8,8 +8,8 @@ class FloatingActionButtonWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return SizedBox(
-      width: 66,
-      height: 66,
+      width: 57,
+      height: 57,
       child: FittedBox(
         child: FloatingActionButton(
           key: Util.getKey(),
