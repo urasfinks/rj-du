@@ -3,7 +3,7 @@
   "onChangedSetStateNotify": false,
   "onRebuildSetStateNotify": false,
   "onRebuildClearTemporaryControllerText": true,
-  "setStateInit": true,
+  "setState": true,
   "keyboardType": "text",
   "textCapitalization": "sentences",
   "style": {

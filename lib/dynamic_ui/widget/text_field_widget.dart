@@ -25,7 +25,8 @@ class TextFieldWidget extends AbstractWidget {
       getValue(parsedJson, "onChangedSetStateNotify", true, dynamicUIBuilderContext),
     )!;
 
-    if (!dynamicUIBuilderContext.dynamicPage.isProperty(key) && (parsedJson["setStateInit"] ?? false == true)) {
+    //Как будто мы в пропертях проверяем наличие контроллера, если его нет, значит это первая загрузка
+    if (!dynamicUIBuilderContext.dynamicPage.isProperty(key) && (parsedJson["setState"] ?? false == true)) {
       dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, defaultData, onRebuildSetStateNotify);
     }
     TextEditingController textController = getController(parsedJson, key, dynamicUIBuilderContext, () {
@@ -175,7 +176,7 @@ class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
       case "reset":
         controller.text = args["text"] ?? "";
         //Сброс состояния контролера не должен перезагружать страницу
-        //Перерисовка при включенном onRebuildClearTemporaryControllerText и setStateInit перезапишет состояние
+        //Перерисовка при включенном onRebuildClearTemporaryControllerText и setState перезапишет состояние
         //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
         //А так мы просто получим перетерание на старое значение
         if (args["setState"] ?? true) {
