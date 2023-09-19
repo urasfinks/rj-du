@@ -9,7 +9,7 @@ class ThemeProvider {
   static Brightness deviceBrightness = Brightness.light;
 
   static ThemeData lightThemeData() {
-    Color parseColor = TypeParser.parseColor("#f4f4f4")!;
+    Color parseColor = TypeParser.parseColor("#f2f2f2")!;
     List<Color> cur = [
       parseColor,
       parseColor.darkness(20),

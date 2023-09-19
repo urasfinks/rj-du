@@ -19,7 +19,7 @@
         "flutterType": "Container",
         "padding": "7,4,7,4",
         "decoration": {
-          "color": "schema:inversePrimary",
+          "color": "schema:background",
           "flutterType": "BoxDecoration",
           "borderRadius": "8"
         },
@@ -27,7 +27,7 @@
           "flutterType": "Text",
           "style": {
             "flutterType": "TextStyle",
-            "color": "schema:background",
+            "color": "schema:secondary",
             "fontSize": 12,
             "fontWeight": "bold"
           },
