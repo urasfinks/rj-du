@@ -226,8 +226,8 @@ class DataSource {
           SocketCache().renderDBData(data);
         });
       }
-      Util.p(
-          "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+      // Util.p(
+      //     "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
     } catch (e, stacktrace) {
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {

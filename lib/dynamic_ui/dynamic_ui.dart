@@ -195,7 +195,7 @@ class DynamicUI {
         );
       }
       if (parsedJson.containsKey("debug")) {
-        Util.p("DEBUG RENDER (${dynamicUIBuilderContext.listener}): $parsedJson");
+        Util.p("DEBUG RENDER (${dynamicUIBuilderContext.linkedNotify}): $parsedJson");
       }
       dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
       if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {

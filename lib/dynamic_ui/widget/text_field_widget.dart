@@ -16,7 +16,6 @@ class TextFieldWidget extends AbstractWidget {
 
     String type = getValue(parsedJson, "keyboardType", "text", dynamicUIBuilderContext);
 
-    //При первичной инициализации устанавливает значение в состояние
     bool onRebuildSetStateNotify = TypeParser.parseBool(
       getValue(parsedJson, "onRebuildSetStateNotify", true, dynamicUIBuilderContext),
     )!;
@@ -25,7 +24,7 @@ class TextFieldWidget extends AbstractWidget {
       getValue(parsedJson, "onChangedSetStateNotify", true, dynamicUIBuilderContext),
     )!;
 
-    //Как будто мы в пропертях проверяем наличие контроллера, если его нет, значит это первая загрузка
+    //При первичной инициализации устанавливает значение в состояние
     if (!dynamicUIBuilderContext.dynamicPage.isProperty(key) && (parsedJson["setState"] ?? false == true)) {
       dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, defaultData, onRebuildSetStateNotify);
     }

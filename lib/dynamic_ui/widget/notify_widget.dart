@@ -6,7 +6,7 @@ import '../widget/abstract_widget.dart';
 class NotifyWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    dynamicUIBuilderContext.listener = parsedJson["link"];
+    dynamicUIBuilderContext.linkedNotify = parsedJson["link"];
     return dynamicUIBuilderContext.dynamicPage.storeValueNotifier.getWidget(
       parsedJson["link"],
       dynamicUIBuilderContext,

@@ -8,8 +8,8 @@ class DynamicUIBuilderContext {
   Map<String, dynamic> data = {};
   Map<String, dynamic> parentTemplate = {}; //Времянка, только для шаблонизации (это очень не стабильная штука)
   bool isRoot = false; //Корневой контекст данных
-  List<DynamicUIBuilderContext> children = [];
-  Map<String, dynamic> listener = {};
+  List<DynamicUIBuilderContext> cloned = [];
+  Map<String, dynamic> linkedNotify = {}; //Прилинкованные Данные
 
   void onContextUpdate(List<String> updateUuidList, List<String> updateKeyList) {
     if (isRoot) {
@@ -65,16 +65,16 @@ class DynamicUIBuilderContext {
   DynamicUIBuilderContext cloneWithNewData(Map<String, dynamic> newData, String? key) {
     DynamicUIBuilderContext newDynamicUIBuilderContext = DynamicUIBuilderContext(dynamicPage, key);
     newDynamicUIBuilderContext.data = newData;
-    children.add(newDynamicUIBuilderContext);
+    cloned.add(newDynamicUIBuilderContext);
     return newDynamicUIBuilderContext;
   }
 
   dynamic gets() {
     List ch = [];
-    for (DynamicUIBuilderContext ctx in children) {
+    for (DynamicUIBuilderContext ctx in cloned) {
       ch.add(ctx.gets());
     }
-    return {"root": isRoot, "key": key, "listener": listener, "data": data, "children": ch};
+    return {"root": isRoot, "key": key, "linkedNotify": linkedNotify, "data": data, "cloned": ch};
   }
 
   @override
