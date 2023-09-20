@@ -4,9 +4,9 @@ import '../dynamic_ui/dynamic_ui_builder_context.dart';
 
 enum ControlStateHelperEvent {
   onInitSetStateNotify(false), // Оповестить Notify при инициализации / переинициализации
+  onInitSetState(true), // Необходимость устанавливать состояние при инициализации виджета
   onChangedSetStateNotify(true), // Оповестить Notify при изменении состояния
   onChangeSetState(true), // Необходимость устанавливать состояние при изменении значения
-  onInitSetState(true), // Необходимость устанавливать состояние при инициализации виджета
   onRebuildClearTemporaryControllerText(false); //Очищает временное состояние контроллера при rebuild
 
   final bool defValue;
