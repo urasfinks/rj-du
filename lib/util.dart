@@ -242,7 +242,8 @@ class Util {
     debugPrintStack(
       stackTrace: StackTrace.current,
       maxFrames: 50,
-      label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
+      //label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
+      label: ":::PrintCurrentStack::: $label",
     );
   }
 }
