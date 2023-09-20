@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:rjdu/util/control_state_helper.dart';
 import '../../controller_wrap.dart';
 import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../dynamic_ui_builder_context.dart';
@@ -11,30 +12,17 @@ import '../../util.dart';
 class TextFieldWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String key = getValue(parsedJson, "name", "-", dynamicUIBuilderContext);
-    String defaultData = getValue(parsedJson, "data", "", dynamicUIBuilderContext);
-
     String type = getValue(parsedJson, "keyboardType", "text", dynamicUIBuilderContext);
 
-    bool onRebuildSetStateNotify = TypeParser.parseBool(
-      getValue(parsedJson, "onRebuildSetStateNotify", true, dynamicUIBuilderContext),
-    )!;
+    ControlStateHelper controlStateHelper = ControlStateHelper(parsedJson, dynamicUIBuilderContext);
 
-    bool onChangedSetStateNotify = TypeParser.parseBool(
-      getValue(parsedJson, "onChangedSetStateNotify", true, dynamicUIBuilderContext),
-    )!;
-
-    //При первичной инициализации устанавливает значение в состояние
-    if (!dynamicUIBuilderContext.dynamicPage.isProperty(key) && (parsedJson["setState"] ?? false == true)) {
-      dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, defaultData, onRebuildSetStateNotify);
-    }
-    TextEditingController textController = getController(parsedJson, key, dynamicUIBuilderContext, () {
-      return TextEditingControllerWrap(TextEditingController(text: defaultData));
+    TextEditingController textController =
+        getController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext, () {
+      return TextEditingControllerWrap(TextEditingController(text: controlStateHelper.defaultData));
     });
 
-    if (parsedJson["onRebuildClearTemporaryControllerText"] ?? false == true) {
-      //Очищает временное состояние контроллера при rebuild
-      textController.text = defaultData;
+    if (controlStateHelper.isStatus(ControlStateHelperEvent.onRebuildClearTemporaryControllerText)) {
+      textController.text = controlStateHelper.defaultData;
     }
 
     if (textController.text.isNotEmpty) {
@@ -49,7 +37,8 @@ class TextFieldWidget extends AbstractWidget {
 
     return TextField(
       key: Util.getKey(),
-      focusNode: dynamicUIBuilderContext.dynamicPage.getProperty("${key}_FocusNode", FocusNode()),
+      focusNode:
+          dynamicUIBuilderContext.dynamicPage.getProperty("${controlStateHelper.keyState}_FocusNode", FocusNode()),
       onSubmitted: (_) {
         if (parsedJson["hideKeyboardOnSubmitted"] ?? true == true) {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -114,8 +103,7 @@ class TextFieldWidget extends AbstractWidget {
       decoration: render(parsedJson, "decoration", null, dynamicUIBuilderContext),
       style: render(parsedJson, "style", null, dynamicUIBuilderContext),
       onChanged: (value) {
-        dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, value, onChangedSetStateNotify);
-        click(parsedJson, dynamicUIBuilderContext, "onChanged");
+        controlStateHelper.onChange(value);
       },
       onTap: () async {
         if (type == "datetime") {
@@ -128,10 +116,9 @@ class TextFieldWidget extends AbstractWidget {
             lastDate: DateTime(2101),
           );
           if (pickedDate != null) {
-            defaultData = DateFormat("dd.MM.yyyy").format(pickedDate);
-            dynamicUIBuilderContext.dynamicPage.stateData
-                .set(parsedJson["state"], key, defaultData, onChangedSetStateNotify);
-            textController.text = defaultData;
+            controlStateHelper.defaultData = DateFormat("dd.MM.yyyy").format(pickedDate);
+            controlStateHelper.onChange(controlStateHelper.defaultData);
+            textController.text = controlStateHelper.defaultData;
           } else {
             textController.text = "";
           }
@@ -155,10 +142,10 @@ class TextFieldWidget extends AbstractWidget {
             context: dynamicUIBuilderContext.dynamicPage.context!,
           );
           if (result != null) {
-            defaultData = "${Util.lPad(result.hour.toString(), pad: 2)}:${Util.lPad(result.minute.toString(), pad: 2)}";
-            dynamicUIBuilderContext.dynamicPage.stateData
-                .set(parsedJson["state"], key, defaultData, onChangedSetStateNotify);
-            textController.text = defaultData;
+            controlStateHelper.defaultData =
+                "${Util.lPad(result.hour.toString(), pad: 2)}:${Util.lPad(result.minute.toString(), pad: 2)}";
+            controlStateHelper.onChange(controlStateHelper.defaultData);
+            textController.text = controlStateHelper.defaultData;
           }
         }
       },

@@ -1,4 +1,5 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
+import '../../util/control_state_helper.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
@@ -8,12 +9,7 @@ import '../../util.dart';
 class SegmentControlWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String keyState = getValue(parsedJson, "name", "-", dynamicUIBuilderContext);
-
-    String data = getValue(parsedJson, "data", "-", dynamicUIBuilderContext);
-    if (parsedJson["setState"] ?? false == true) {
-      dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], keyState, data);
-    }
+    ControlStateHelper controlStateHelper = ControlStateHelper(parsedJson, dynamicUIBuilderContext);
 
     List<Widget> children = renderList(parsedJson, "children", dynamicUIBuilderContext);
     Map<int, Widget> ch = {};
@@ -21,9 +17,6 @@ class SegmentControlWidget extends AbstractWidget {
     for (Widget w in children) {
       ch[count++] = w;
     }
-    bool onChangedNotify = TypeParser.parseBool(
-      getValue(parsedJson, "onChangedNotify", true, dynamicUIBuilderContext),
-    )!;
 
     return SizedBox(
       height: TypeParser.parseDouble(
@@ -55,11 +48,9 @@ class SegmentControlWidget extends AbstractWidget {
           getValue(parsedJson, "isStretch", true, dynamicUIBuilderContext),
         )!,
         onValueChanged: (int index) {
-          dynamicUIBuilderContext.dynamicPage.stateData
-              .set(parsedJson["state"], keyState, parsedJson["children"][index]["case"], onChangedNotify);
-          click(parsedJson, dynamicUIBuilderContext, "onChanged");
+          controlStateHelper.onChange(parsedJson["children"][index]["case"]);
         },
-        initialValue: getIndex(parsedJson, data),
+        initialValue: getIndex(parsedJson, controlStateHelper.defaultData),
         innerPadding: TypeParser.parseEdgeInsets(
           getValue(parsedJson, "padding", 2.0, dynamicUIBuilderContext),
         )!,
