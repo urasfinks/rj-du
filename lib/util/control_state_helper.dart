@@ -3,7 +3,7 @@ import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
 
 enum ControlStateHelperEvent {
-  onRebuildSetStateNotify(false), // Оповестить Notify при инициализации / переинициализации
+  onInitSetStateNotify(false), // Оповестить Notify при инициализации / переинициализации
   onChangedSetStateNotify(true), // Оповестить Notify при изменении состояния
   onChangeSetState(true), // Необходимость устанавливать состояние при изменении значения
   onInitSetState(true), // Необходимость устанавливать состояние при инициализации виджета
@@ -36,7 +36,7 @@ class ControlStateHelper {
         parsedJson["state"],
         keyState,
         defaultData,
-        cur[ControlStateHelperEvent.onRebuildSetStateNotify]!,
+        cur[ControlStateHelperEvent.onInitSetStateNotify]!,
       );
       dynamicUIBuilderContext.dynamicPage.setProperty("init$keyState", "ANYTHING");
     }

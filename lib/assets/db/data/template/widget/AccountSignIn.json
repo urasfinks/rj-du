@@ -30,7 +30,7 @@
       {
         "flutterType": "TextField",
         "onChangedSetStateNotify": false,
-        "onRebuildSetStateNotify": false,
+        "onInitSetStateNotify": false,
         "setState": true,
         "keyboardType": "emailAddress",
         "textCapitalization": "none",

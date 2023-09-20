@@ -1,7 +1,7 @@
 {
   "flutterType": "TextField",
   "onChangedSetStateNotify": false,
-  "onRebuildSetStateNotify": false,
+  "onInitSetStateNotify": false,
   "onRebuildClearTemporaryControllerText": true,
   "setState": true,
   "keyboardType": "text",
