@@ -18,15 +18,6 @@ class TemplateFunction {
     "contextMap": (data, arguments, ctx, debug) {
       return ctx.dynamicPage.templateByMapContext(data, arguments);
     },
-    "parentTemplate": (data, arguments, ctx, debug) {
-      return Template.mapSelector(ctx.parentTemplate, arguments);
-    },
-    /*"state": (data, arguments, ctx) {
-      // Ранее stateData.value оборачивалось через MutableMap
-      // Я убрал, так как ломалось зацикливание для FlipCard
-      Data d = ctx.dynamicPage.stateData.getInstanceData(null);
-      return Template.mapSelector(d.value, arguments);
-    },*/
     "state": (data, arguments, ctx, debug) {
       Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.removeAt(0));
       if (debug) {

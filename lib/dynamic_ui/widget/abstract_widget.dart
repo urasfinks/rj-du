@@ -31,7 +31,6 @@ abstract class AbstractWidget {
     dynamic defaultValue,
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
-    dynamicUIBuilderContext.parentTemplate = parsedJson;
     dynamic selector = key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue);
     if (selector.runtimeType.toString() == "String") {
       selector = Util.template(selector, dynamicUIBuilderContext);
