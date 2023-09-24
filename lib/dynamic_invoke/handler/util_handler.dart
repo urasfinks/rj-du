@@ -10,10 +10,12 @@ import '../dynamic_invoke.dart';
 import 'abstract_handler.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:flutter_share/flutter_share.dart';
+
 import 'package:wakelock/wakelock.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'alert_handler.dart';
 
@@ -59,7 +61,9 @@ class UtilHandler extends AbstractHandler {
         }
         return result;
       case "share":
-        FlutterShare.share(title: args["title"] ?? "Поделиться", text: args["data"]);
+        final box = dynamicUIBuilderContext.dynamicPage.context!.findRenderObject() as RenderBox?;
+        Share.share(args["data"],
+            subject: args["title"] ?? "Поделиться", sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
         break;
       case "dataSync":
         if (args["onSync"] != null) {

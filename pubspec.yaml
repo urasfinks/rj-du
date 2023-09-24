@@ -21,7 +21,6 @@ dependencies:
   intl: any
   url_launcher: ^6.1.10
   crypto: ^3.0.2
-  flutter_share: ^2.0.0
   cached_network_image: ^3.2.3
   flutter_slidable: ^2.0.0
   custom_sliding_segmented_control: ^1.7.5
@@ -42,6 +41,7 @@ dependencies:
       ref: fix_cache
       path: just_audio
   carousel_slider: ^4.2.1
+  share_plus: ^6.3.4
 
 dev_dependencies:
   flutter_test:
