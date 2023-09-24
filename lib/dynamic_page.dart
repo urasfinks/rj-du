@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/dynamic_invoke/handler/hide_handler.dart';
@@ -11,6 +13,7 @@ import 'package:rjdu/web_socket_service.dart';
 
 import 'controller_wrap.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
+import 'dynamic_ui/type_parser.dart';
 import 'store_value_notifier.dart';
 import 'dynamic_ui/dynamic_ui.dart';
 import 'navigator_app.dart';
@@ -272,16 +275,31 @@ class DynamicPage extends StatefulWidget {
 }
 
 class _DynamicPage extends State<DynamicPage> {
+  Timer? timerReload;
+
   @override
   void initState() {
     widget._setState = this;
     NavigatorApp.addPage(widget);
+    if (widget.arguments.containsKey("reloadEach")) {
+      int reloadEach = TypeParser.parseInt(widget.arguments["reloadEach"]!) ?? 30;
+      timerReload = Timer.periodic(Duration(seconds: reloadEach), (timer) {
+        widget.reload(true);
+      });
+    }
     super.initState();
   }
 
   @override
   void dispose() {
     NavigatorApp.removePage(widget);
+    try {
+      if (timerReload != null) {
+        timerReload!.cancel();
+      }
+    } catch (error, stackTrace) {
+      Util.printStackTrace("DynamicPage.dispose()", error, stackTrace);
+    }
     super.dispose();
   }
 
