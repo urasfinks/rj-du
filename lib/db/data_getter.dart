@@ -1,9 +1,11 @@
 import 'dart:convert';
+
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
 import '../data_type.dart';
+import '../storage.dart';
 import '../util.dart';
 import 'data_source.dart';
 
@@ -83,13 +85,36 @@ class DataGetter {
   }
 
   static Future<List<String>> getRemovedUuid() async {
+    // Изначально было только socket/blob/blobRSync
+    // Потом я посмотрел и подумал, что надо ещё userDataRSync
+    // Сейчас мысли такие, что надо удалять жиреннькие данные в приоритете на сервере
     List<Map<String, dynamic>> result = await DataSource().db.rawQuery(
-        "SELECT uuid_data FROM data WHERE is_remove_data = 1 AND type_data IN (?,?,?)",
-        [DataType.socket.name, DataType.blob.name, DataType.blobRSync.name]);
+        "SELECT uuid_data FROM data WHERE is_remove_data = 1 AND type_data IN (?,?,?,?)",
+        [DataType.socket.name, DataType.blob.name, DataType.blobRSync.name, DataType.userDataRSync.name]);
     List<String> ret = [];
     for (Map<String, dynamic> item in result) {
       ret.add(item["uuid_data"]);
     }
     return ret;
+  }
+
+  static void logout() async {
+    if (Storage().get("isAuth", "false") == "true"){
+      Storage().setMap({
+        "mail": "",
+        "isAuth": "false"
+      });
+      // Если не поменять uuid устройства синхронизация будет вытягивать с удалённой БД всё что было по этому uuid
+      // Без вариантов надо uuid менять
+      Storage().set("uuid", Util.uuid(), true);
+      // Аналогично надо менять и уникальный код
+      Storage().set("unique", Util.uuid(), true);
+      // Данные, которые принадлежат моей учётке и синхронизованны с сервером
+      // Ну получается, что если не синхронизованны, я не хочу брать на душу их удаление
+      // Да, они потом примажутся к другой учётке..ну что поделать...зато не удалятся
+      await DataSource().db.rawQuery(
+          "DELETE FROM data WHERE type_data IN (?,?,?) AND revision_data > 0",
+          [DataType.socket.name, DataType.blobRSync.name, DataType.userDataRSync.name]);
+    }
   }
 }

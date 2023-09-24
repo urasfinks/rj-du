@@ -1,4 +1,5 @@
 import 'package:rjdu/data_sync.dart';
+import 'package:rjdu/db/data_getter.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/navigator_app.dart';
 
@@ -23,9 +24,11 @@ class UtilHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     switch (args["case"] ?? "default") {
-      case "dynamicPageApi":
-        dynamicUIBuilderContext.dynamicPage.api(args);
+      case "logout":
+        DataGetter.logout();
         break;
+      case "dynamicPageApi":
+        return {args["case"]: dynamicUIBuilderContext.dynamicPage.api(args)};
       case "reloadAllPage":
         NavigatorApp.reloadAllPages();
         break;
@@ -97,7 +100,8 @@ class UtilHandler extends AbstractHandler {
         break;
       default:
         Util.p("SystemHandler.handle() default case args: $args");
-        break;
+        return {args["case"]: false};
     }
+    return {args["case"]: true};
   }
 }

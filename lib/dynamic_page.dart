@@ -278,7 +278,7 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  void api(Map<String, dynamic> args) {
+  dynamic api(Map<String, dynamic> args) {
     String error = "";
     switch (args["api"] ?? "default") {
       case "startReloadEach":
@@ -299,6 +299,7 @@ class DynamicPage extends StatefulWidget {
     if (error.isNotEmpty) {
       Util.printCurrentStack("DynamicPage.api() Error: $error; args: $args;");
     }
+    return null;
   }
 }
 
