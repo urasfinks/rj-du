@@ -78,22 +78,29 @@ class TemplateDirective {
       if (data == null || data == "") {
         return "неизвестно";
       }
-      int diffMs = Util.getTimestamp() - TypeParser.parseInt(data)!;
+      int curTimestampMillis = Util.getTimestampMillis();
+      int d = TypeParser.parseInt(data)!;
+      if (arguments.isNotEmpty) {
+        if (arguments[0] == "sec") {
+          d *= 1000;
+        }
+      }
+      int diffMs = curTimestampMillis - d;
       int diffDays = (diffMs / 86400000).floor();
       if (diffDays > 0) {
-        return "$diffDays д.";
+        return "$diffDaysд";
       }
       int diffHrs = ((diffMs % 86400000) / 3600000).floor();
       if (diffHrs > 0) {
-        return "$diffHrs ч.";
+        return "$diffHrsч";
       }
       int diffMins = (((diffMs % 86400000) % 3600000) / 60000).round();
       if (diffMins > 0) {
-        return "$diffMins мин.";
+        return "$diffMinsм";
       }
       int diffSeconds = (((diffMs % 86400000) % 3600000) / 1000).round();
       if (diffSeconds > 0) {
-        return "$diffSeconds сек.";
+        return "$diffSecondsс";
       }
       return "сейчас";
     },

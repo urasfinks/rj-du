@@ -65,7 +65,7 @@ class DataSync {
       if (!isRun) {
         isRun = true;
         bool openLoader = false;
-        int start = Util.getTimestamp();
+        int start = Util.getTimestampMillis();
         int allInsertion = 0;
         int firstTotalCountItem = -1;
         try {
@@ -180,11 +180,11 @@ class DataSync {
           }
           // При HotReload страница Account уже загрузится,
           // Не пугайтесь всегда будет отставание на одно значение от реальности
-          Storage().set("lastSync", "${Util.getTimestamp()}");
+          Storage().set("lastSync", "${Util.getTimestampMillis()}");
         } catch (e, stacktrace) {
           Util.printStackTrace("DataSync().sync()", e, stacktrace);
         }
-        Util.p("sync time: ${Util.getTimestamp() - start}; insertion: $allInsertion;");
+        Util.p("sync time: ${Util.getTimestampMillis() - start}; insertion: $allInsertion;");
         if (openLoader && NavigatorApp.getLast() != null) {
           DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
         }

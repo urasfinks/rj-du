@@ -135,8 +135,14 @@ class Util {
     return double.tryParse(s) != null;
   }
 
-  static int getTimestamp() {
+  static int getTimestampMillis() {
     return DateTime.now().millisecondsSinceEpoch;
+  }
+
+  static int getTimestamp() {
+    int microsecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
+    double x = microsecondsSinceEpoch / 1000;
+    return  x.toInt();
   }
 
   static Key getKey() {

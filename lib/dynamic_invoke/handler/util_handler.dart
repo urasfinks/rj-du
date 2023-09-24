@@ -52,7 +52,7 @@ class UtilHandler extends AbstractHandler {
       case "uuid":
         return {args["case"]: Util.uuid()};
       case "timestamp":
-        return {args["case"]: Util.getTimestamp()};
+        return {args["case"]: Util.getTimestampMillis()};
       case "md5":
         return {args["case"]: md5.convert(utf8.encode(args["data"])).toString()};
       case "template":
