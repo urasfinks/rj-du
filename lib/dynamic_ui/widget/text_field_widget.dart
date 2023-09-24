@@ -167,9 +167,10 @@ class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
         //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
         //А так мы просто получим перетерание на старое значение
         if (args["setState"] ?? true) {
-          if (args["key"] != null) {
+          // controller = keyState
+          if (args["controller"] != null) {
             dynamicUIBuilderContext.dynamicPage.stateData
-                .set(args["state"], args["key"], controller.text, args["notify"] ?? false);
+                .set(args["state"], args["controller"], controller.text, args["notify"] ?? false);
           } else {
             error = "key is null";
           }
