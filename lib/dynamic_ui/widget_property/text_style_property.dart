@@ -9,6 +9,9 @@ class TextStyleProperty extends AbstractWidget {
     String textTheme = getValue(parsedJson, "textTheme", "default", dynamicUIBuilderContext);
     if (textTheme == "default") {
       return TextStyle(
+        decoration: TypeParser.parseTextDecoration(
+          getValue(parsedJson, "decoration", null, dynamicUIBuilderContext),
+        ),
         color: TypeParser.parseColor(
           getValue(parsedJson, "color", null, dynamicUIBuilderContext),
         ),
