@@ -9,10 +9,14 @@ class ControllerHandler extends AbstractHandler {
     if (Util.containsKeys(args, ["controller"])) {
       String key = args["controller"];
       if (dynamicUIBuilderContext.dynamicPage.isProperty(key)) {
-        ControllerWrap tec = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, () {
+        ControllerWrap? controllerWrap = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, () {
           return null;
         });
-        tec.invoke(args, dynamicUIBuilderContext);
+        if (controllerWrap != null) {
+          controllerWrap.invoke(args, dynamicUIBuilderContext);
+        } else {
+          Util.printCurrentStack("ControllerHandler.handle() ControllerWrap is null args: $args");
+        }
       }
     } else {
       Util.printCurrentStack("ControllerHandler not contains Keys: [key] in args: $args");
