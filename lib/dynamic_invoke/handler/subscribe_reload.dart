@@ -25,6 +25,4 @@ class SubscribeReloadHandler extends AbstractHandler {
       }
     }
   }
-
-
 }
