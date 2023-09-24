@@ -48,6 +48,8 @@ class UtilHandler extends AbstractHandler {
         return {args["case"]: Util.getPlatformName()};
       case "uuid":
         return {args["case"]: Util.uuid()};
+      case "timestamp":
+        return {args["case"]: Util.getTimestamp()};
       case "md5":
         return {args["case"]: md5.convert(utf8.encode(args["data"])).toString()};
       case "template":
