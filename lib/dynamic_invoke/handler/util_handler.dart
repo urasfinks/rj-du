@@ -21,6 +21,9 @@ class UtilHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     switch (args["case"] ?? "default") {
+      case "dynamicPageApi":
+        dynamicUIBuilderContext.dynamicPage.api(args);
+        break;
       case "reloadAllPage":
         NavigatorApp.reloadAllPages();
         break;

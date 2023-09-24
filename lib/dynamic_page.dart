@@ -272,27 +272,43 @@ class DynamicPage extends StatefulWidget {
       return "DynamicPage.template() args: ${parseArguments.join(",")} context not exists";
     }
   }
+
+  void api(Map<String, dynamic> args) {
+    bool error = false;
+    switch (args["api"] ?? "default") {
+      case "startReloadEach":
+        if (args.containsKey("eachReload") && _setState != null) {
+          _setState!.startReloadEach(args["eachReload"] ?? 30);
+        } else {
+          error = true;
+        }
+        break;
+      case "stopReloadEach":
+        if (_setState != null) {
+          _setState!.stopReloadEach();
+        } else {
+          error = true;
+        }
+        break;
+    }
+    if (error) {
+      Util.printCurrentStack("DynamicPage.api() ERROR args: $args;");
+    }
+  }
 }
 
 class _DynamicPage extends State<DynamicPage> {
   Timer? timerReload;
 
-  @override
-  void initState() {
-    widget._setState = this;
-    NavigatorApp.addPage(widget);
-    if (widget.arguments.containsKey("reloadEach")) {
-      int reloadEach = TypeParser.parseInt(widget.arguments["reloadEach"]!) ?? 30;
-      timerReload = Timer.periodic(Duration(seconds: reloadEach), (timer) {
-        widget.reload(true);
-      });
-    }
-    super.initState();
+  void startReloadEach(int second) {
+    Util.p("DynamicPage.startReloadEach($second) uuidPage: ${widget.uuid}");
+    stopReloadEach();
+    timerReload = Timer.periodic(Duration(seconds: second), (timer) {
+      widget.reload(true);
+    });
   }
 
-  @override
-  void dispose() {
-    NavigatorApp.removePage(widget);
+  void stopReloadEach() {
     try {
       if (timerReload != null) {
         timerReload!.cancel();
@@ -300,6 +316,23 @@ class _DynamicPage extends State<DynamicPage> {
     } catch (error, stackTrace) {
       Util.printStackTrace("DynamicPage.dispose()", error, stackTrace);
     }
+  }
+
+  @override
+  void initState() {
+    widget._setState = this;
+    NavigatorApp.addPage(widget);
+    if (widget.arguments.containsKey("reloadEach")) {
+      int reloadEach = TypeParser.parseInt(widget.arguments["reloadEach"]!) ?? 30;
+      startReloadEach(reloadEach);
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    stopReloadEach();
+    NavigatorApp.removePage(widget);
     super.dispose();
   }
 
