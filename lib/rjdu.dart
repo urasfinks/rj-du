@@ -19,6 +19,7 @@ import 'data_sync.dart';
 import 'db/data_source.dart';
 import 'deep_link.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
+import 'dynamic_invoke/handler/hide_handler.dart';
 import 'navigator_app.dart';
 import 'storage.dart';
 import 'http_client.dart';
@@ -60,7 +61,9 @@ class RjDu {
       AudioComponent().stop(); //Лучше stop чем pause а то вдруг на другой странице тоже проигрыватель будет
       if (NavigatorApp.getLast() != null) {
         NavigatorApp.getLast()?.onActive();
+        DynamicInvoke().sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
       }
+
     });
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
       AudioComponent().stop();
