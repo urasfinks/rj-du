@@ -88,19 +88,19 @@ class TemplateDirective {
       int diffMs = curTimestampMillis - d;
       int diffDays = (diffMs / 86400000).floor();
       if (diffDays > 0) {
-        return "$diffDaysд";
+        return "$diffDaysд.";
       }
       int diffHrs = ((diffMs % 86400000) / 3600000).floor();
       if (diffHrs > 0) {
-        return "$diffHrsч";
+        return "$diffHrsч.";
       }
-      int diffMins = (((diffMs % 86400000) % 3600000) / 60000).round();
+      int diffMins = (((diffMs % 86400000) % 3600000) / 60000).floor();
       if (diffMins > 0) {
-        return "$diffMinsм";
+        return "$diffMinsмин.";
       }
-      int diffSeconds = (((diffMs % 86400000) % 3600000) / 1000).round();
+      int diffSeconds = (((diffMs % 86400000) % 3600000) / 1000).floor();
       if (diffSeconds > 0) {
-        return "$diffSecondsс";
+        return "$diffSecondsсек.";
       }
       return "сейчас";
     },
