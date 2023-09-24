@@ -76,38 +76,41 @@ class TypeParser {
 
     if (value.startsWith("schema:")) {
       if (NavigatorApp.getLast() != null) {
-        var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
-        Map<String, dynamic> schema = {
-          "background": colorScheme.background,
-          "onBackground": colorScheme.onBackground,
+        try {
+          var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
+          Map<String, dynamic> schema = {
+            "background": colorScheme.background,
+            "onBackground": colorScheme.onBackground,
 
-          //text
-          "primary": colorScheme.primary,
-          //background
-          "primaryContainer": colorScheme.primaryContainer,
-          //onBackground
-          "onPrimary": colorScheme.onPrimary,
+            //text
+            "primary": colorScheme.primary,
+            //background
+            "primaryContainer": colorScheme.primaryContainer,
+            //onBackground
+            "onPrimary": colorScheme.onPrimary,
 
-          //text
-          "secondary": colorScheme.secondary,
-          //background
-          "secondaryContainer": colorScheme.secondaryContainer,
-          //onBackground
-          "onSecondary": colorScheme.onSecondary,
+            //text
+            "secondary": colorScheme.secondary,
+            //background
+            "secondaryContainer": colorScheme.secondaryContainer,
+            //onBackground
+            "onSecondary": colorScheme.onSecondary,
 
-          "inversePrimary": colorScheme.inversePrimary,
+            "inversePrimary": colorScheme.inversePrimary,
 
-          // Other
-          "error": colorScheme.error,
-          "onError": colorScheme.onError,
-          "surface": colorScheme.surface,
-          "onSurface": colorScheme.onSurface,
-        };
-        String key = value.split(":")[1];
-        return schema[key] ?? Colors.yellow;
-      } else {
-        return Colors.greenAccent;
+            // Other
+            "error": colorScheme.error,
+            "onError": colorScheme.onError,
+            "surface": colorScheme.surface,
+            "onSurface": colorScheme.onSurface,
+          };
+          String key = value.split(":")[1];
+          return schema[key] ?? Colors.yellow;
+        } catch (error, stackTrace) {
+          Util.printStackTrace("parseColor($value)", error, stackTrace);
+        }
       }
+      return Colors.greenAccent;
     } else if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
       try {
