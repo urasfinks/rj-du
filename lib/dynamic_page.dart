@@ -178,9 +178,14 @@ class DynamicPage extends StatefulWidget {
     return properties.containsKey(key);
   }
 
-  T getPropertyFn<T>(String key, T? Function() getDefault) {
+  T? getPropertyFn<T>(String key, T? Function() getDefault) {
     if (!properties.containsKey(key)) {
-      setProperty(key, getDefault());
+      dynamic newProp = getDefault();
+      if (newProp != null) {
+        setProperty(key, newProp);
+      } else {
+        return null;
+      }
     }
     return properties[key];
   }
@@ -274,25 +279,25 @@ class DynamicPage extends StatefulWidget {
   }
 
   void api(Map<String, dynamic> args) {
-    bool error = false;
+    String error = "";
     switch (args["api"] ?? "default") {
       case "startReloadEach":
         if (args.containsKey("eachReload") && _setState != null) {
           _setState!.startReloadEach(args["eachReload"] ?? 30);
         } else {
-          error = true;
+          error = "eachReload or _setState == null";
         }
         break;
       case "stopReloadEach":
         if (_setState != null) {
           _setState!.stopReloadEach();
         } else {
-          error = true;
+          error = "state is null";
         }
         break;
     }
-    if (error) {
-      Util.printCurrentStack("DynamicPage.api() ERROR args: $args;");
+    if (error.isNotEmpty) {
+      Util.printCurrentStack("DynamicPage.api() Error: $error; args: $args;");
     }
   }
 }

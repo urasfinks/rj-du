@@ -158,6 +158,7 @@ class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
 
   @override
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    String error = "";
     switch (args["case"] ?? "default") {
       case "reset":
         controller.text = args["text"] ?? "";
@@ -166,13 +167,20 @@ class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
         //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
         //А так мы просто получим перетерание на старое значение
         if (args["setState"] ?? true) {
-          dynamicUIBuilderContext.dynamicPage.stateData
-              .set(args["state"], args["key"], controller.text, args["notify"] ?? false);
+          if (args["key"] != null) {
+            dynamicUIBuilderContext.dynamicPage.stateData
+                .set(args["state"], args["key"], controller.text, args["notify"] ?? false);
+          } else {
+            error = "key is null";
+          }
         }
         break;
       default:
         AlertHandler.alertSimple("TextEditingControllerWrap.invoke() args: $args");
         break;
+    }
+    if (error.isNotEmpty) {
+      Util.printCurrentStack("TextEditingControllerWrap.invoke() Error $error; args: $args");
     }
   }
 
