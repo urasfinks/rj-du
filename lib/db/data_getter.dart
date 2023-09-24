@@ -51,12 +51,13 @@ class DataGetter {
     return result;
   }
 
-  static void getDataJson(String uuid, Function(Map<String, dynamic>? data) callback) {
-    DataSource().db.rawQuery("SELECT * FROM data where uuid_data = ?", [uuid]).then((resultSet) {
+  static void getDataJson(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
+    //Аккуратнее поиск осуществляется ещё по parent_uuid
+    DataSource().db.rawQuery("SELECT * FROM data where uuid_data = ? or parent_uuid_data = ?", [uuid, uuid]).then((resultSet) {
       if (resultSet.isNotEmpty && resultSet.first["value_data"] != null) {
         DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first["type_data"] as String?);
         if (DataSource().isJsonDataType(dataTypeResult)) {
-          callback(json.decode(resultSet.first["value_data"] as String));
+          callback(resultSet.first["uuid_data"] as String, json.decode(resultSet.first["value_data"] as String));
         }
       }
     }).onError((error, stackTrace) {

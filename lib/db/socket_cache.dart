@@ -55,7 +55,7 @@ class SocketCache {
 
   void renderDBData(Data data) {
     removeCache(data.uuid);
-    DataGetter.getDataJson(data.uuid, (dataDB) {
+    DataGetter.getDataJson(data.uuid, (dataUuid, dataDB) {
       data.value = dataDB;
       SyncTimer(data).notify();
     });
@@ -113,9 +113,14 @@ class SyncTimer {
 
   void setDiff(Data diffData) {
     if (loadFromDb == false) {
-      DataGetter.getDataJson(data.uuid, (dataDB) {
+      // dataDiff.uuid - это всегда socketUuid
+      DataGetter.getDataJson(data.uuid, (dataUuid, dataDB) {
         loadFromDb = true;
         data.value = dataDB;
+        // Может быть наследованный сокетный кеш
+        // Сокетный кеш всегда создаётся по socketUuid, но нас он может особо не интересовать
+        // Нас интересует uuid по которому мы ждём обновления
+        data.uuid = dataUuid;
         _mergeData(diffData);
       });
     } else {
