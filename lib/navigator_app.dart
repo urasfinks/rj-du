@@ -54,6 +54,11 @@ class NavigatorApp {
     dynamicPage.destructor();
   }
 
+  static DynamicPage? getFirst([int? indexTab]) {
+    indexTab ??= selectedTab;
+    return tabNavigator.containsKey(indexTab) ? tabNavigator[indexTab]!.first : null;
+  }
+
   static DynamicPage? getLast([int? indexTab]) {
     indexTab ??= selectedTab;
     return tabNavigator.containsKey(indexTab) ? tabNavigator[indexTab]!.last : null;

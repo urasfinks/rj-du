@@ -77,7 +77,7 @@ class TypeParser {
     if (value.startsWith("schema:")) {
       if (NavigatorApp.getLast() != null) {
         try {
-          var colorScheme = Theme.of(buildContext ?? NavigatorApp.getLast()!.context!).colorScheme;
+          var colorScheme = Theme.of(buildContext ?? NavigatorApp.getFirst()!.context!).colorScheme;
           Map<String, dynamic> schema = {
             "background": colorScheme.background,
             "onBackground": colorScheme.onBackground,
