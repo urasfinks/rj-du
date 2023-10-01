@@ -45,7 +45,7 @@ class WebSocketService {
     if (_channel == null) {
       try {
         Util.p("WebSocketService._connect() start connect");
-        WebSocket.connect("${GlobalSettings().ws}/${Storage().get("uuid", "undefined")}")
+        WebSocket.connect("${GlobalSettings().ws}/socket/${Storage().get("uuid", "undefined")}")
             .timeout(const Duration(seconds: 4))
             .then((ws) {
           try {
