@@ -128,33 +128,46 @@ class DynamicPage extends StatefulWidget {
   void onActive() {
     onEvent("onActive", {});
     renderFloatingActionButton();
+    if (backgroundReload) {
+      backgroundReload = false;
+      Future.delayed(const Duration(seconds: 1), () {
+        // Пытаемся избежать markNeedsBuild
+        reload(true);
+      });
+    }
   }
+
+  bool backgroundReload = false;
 
   void reload(bool rebuild) {
     if (isDispose == false) {
-      Util.p("DynamicPage.reload() uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
-      if (rebuild) {
-        clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
-        stateData.clear();
-        if (NavigatorApp.getLast() == this) {
-          //Если перезагружается страница, на которой мы сейчас находимся
-          AudioComponent().stop();
-        }
-        isRunConstructor = false;
-        if (_setState != null) {
-          newRender = true;
-          try {
-            _setState!.setState(() {});
-          } catch (error, stackTrace) {
-            Util.printStackTrace("setState", error, stackTrace);
+      if (NavigatorApp.getLast() == this) {
+        //Если перезагружается страница, на которой мы сейчас находимся
+        AudioComponent().stop();
+        Util.p("DynamicPage.reload($rebuild) uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
+        if (rebuild) {
+          clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
+          stateData.clear();
+          isRunConstructor = false;
+          if (_setState != null) {
+            newRender = true;
+            try {
+              _setState!.setState(() {});
+            } catch (error, stackTrace) {
+              Util.printStackTrace("setState", error, stackTrace);
+            }
           }
+        } else {
+          // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
+          isRunConstructor = false;
+          // Все надежды на конструктор, что он перерисует необходимые блоки
+          // В основном, это сводится к выборке из БД и обновления состояния
+          constructor();
         }
       } else {
-        // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
-        isRunConstructor = false;
-        // Все надежды на конструктор, что он перерисует необходимые блоки
-        // В основном, это сводится к выборке из БД и обновления состояния
-        constructor();
+        Util.p(
+            "DynamicPage.reload($rebuild) BACKGROUND uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
+        backgroundReload = true;
       }
     }
   }
