@@ -201,6 +201,7 @@ class DataSource {
 
   void setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) {
     // Обновление сокетных данных не должно обновлять локальную БД
+    // diffData.uuid - это Primary uuid, если мы в режиме parent надо вытащить локальный uuid
     transaction.add("4 update socket data");
     if (notifyDynamicPage) {
       SocketCache().setDiff(diffData);
@@ -223,7 +224,7 @@ class DataSource {
       } else {
         AlertHandler.alertSimple("Данные не зафиксированы на сервере");
         Future.delayed(const Duration(seconds: 1), () {
-          SocketCache().renderDBData(data);
+          SocketCache().renderDBData(data.uuid);
         });
       }
       // Util.p(
@@ -231,7 +232,7 @@ class DataSource {
     } catch (e, stacktrace) {
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {
-        SocketCache().renderDBData(data);
+        SocketCache().renderDBData(data.uuid);
       });
       Util.printStackTrace("DataSource.sendDataSocket() data: $data", e, stacktrace);
     }

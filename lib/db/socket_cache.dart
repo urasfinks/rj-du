@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:rjdu/data_type.dart';
 import 'package:rjdu/db/data_source.dart';
 import '../multi_invoke.dart';
 import 'data.dart';
@@ -10,7 +12,7 @@ import 'data_getter.dart';
 *   Если данные пришли из API по ним надо создать накопительный кеш, что бы обновить UI
 *   Если данные пришли из синхронизации, надо немного повременить с обновлением UI (если есть накопительный кеш)
 *
-*   Накопительный кеш должен чиститься со временем
+*   Накопительный кеш должен чиститься когда приходят данные из синхронизации вступают в силу
 * */
 
 class SocketCache {
@@ -24,70 +26,74 @@ class SocketCache {
 
   SocketCache._internal();
 
-  void removeCache(String uuid) {
+  void remove(String uuid) {
     cache.remove(uuid);
   }
 
-  //Вызывается когда приходят новые сокет данные через синхронизацию
+  //Вызывается когда приходят обновление сокетных данных через синхронизацию
   void updateFromSync(Data fullData) {
+    //После синхронизации fullData.uuid будет всегда локальный
     if (fullData.value.runtimeType == String) {
       fullData.value = json.decode(fullData.value);
     }
-    if (cache.containsKey(fullData.uuid)) {
-      SyncTimer syncTimer = cache[fullData.uuid]!;
-      syncTimer.setNewData(fullData);
+    if (!cache.containsKey(fullData.uuid)) {
+      //Если нет кеша, сразу обновляем UI + в кеш ничего не заносим, так как это может породить задержки
+      SyncTimer.fromData(fullData).notify();
     } else {
-      //Без задержек в перерисовку UI
-      SyncTimer(fullData).notify();
+      //Если кеш есть, обновляем с задержкой
+      cache[fullData.uuid]!.setNewData(fullData.value);
     }
   }
 
   //Вызывается при установки новых значений в сокет данные через ApiInvoke
-  void setDiff(Data diffData) {
+  Future<void> setDiff(Data diffData) async {
+    //diffData.uuid всегда будет primary socket uuid, а нам нужен локальный
+    SyncTimer syncTimer = await SyncTimer.fromDB(diffData.uuid);
     if (diffData.value.runtimeType == String) {
       diffData.value = json.decode(diffData.value);
     }
-    if (!cache.containsKey(diffData.uuid)) {
-      cache[diffData.uuid] = SyncTimer(diffData);
+    if (!cache.containsKey(syncTimer.data.uuid)) {
+      cache[syncTimer.data.uuid] = syncTimer;
     }
-    cache[diffData.uuid]!.setDiff(diffData);
+    cache[syncTimer.data.uuid]!.setDiff(diffData.value);
   }
 
-  void renderDBData(Data data) {
-    removeCache(data.uuid);
-    DataGetter.getDataJson(data.uuid, (dataUuid, dataDB) {
-      data.value = dataDB;
-      SyncTimer(data).notify();
-    });
+  //В случае ошибок
+  void renderDBData(String uuid) async {
+    remove(uuid);
+    SyncTimer syncTimer = await SyncTimer.fromDB(uuid);
+    syncTimer.notify();
   }
 }
 
 class SyncTimer {
+  static Future<SyncTimer> fromDB(String uuid) async {
+    var completer = Completer<SyncTimer>();
+    DataGetter.getDataJson(uuid, (dataUuid, dataDB) {
+      SyncTimer syncTimer = SyncTimer();
+      syncTimer.data = Data(dataUuid, dataDB, DataType.socket, null);
+      completer.complete(syncTimer);
+    });
+    return completer.future;
+  }
+
+  static SyncTimer fromData(Data data) {
+    SyncTimer syncTimer = SyncTimer();
+    syncTimer.data = data;
+    return syncTimer;
+  }
+
   final MultiInvoke multiInvoke = MultiInvoke(2000);
   late Data data;
-  bool loadFromDb = false;
-  Data? delayData;
-
-  SyncTimer(Data diffData) {
-    data = Data(diffData.uuid, diffData.value, diffData.type, diffData.parentUuid);
-  }
 
   //Вызывается исключительно из процесса синхронизации
-  void setNewData(Data syncData) {
-    if (syncData.value.runtimeType == String) {
-      syncData.value = json.decode(syncData.value);
-    }
-    delayData = syncData;
-    delayAction();
-  }
-
-  void delayAction() {
+  void setNewData(Map<String, dynamic> syncDataValue) {
     multiInvoke.invoke(() {
-      SocketCache().removeCache(data.uuid); //Всегда сливаем кеш (решали задачу только быстрых прокликиваний)
-      if (delayData != null) {
-        data = delayData!;
-        notify();
-      }
+      data.value = syncDataValue;
+      notify();
+      // Если настал момент обновления данных через синхронизацию, зачит всё то можно было протыкано в UI
+      // Можем смело удалят времянку
+      SocketCache().remove(data.uuid);
     });
   }
 
@@ -95,36 +101,19 @@ class SyncTimer {
     DataSource().notifyBlockAsync(data, [], true);
   }
 
-  void _mergeData(Data diffData) {
-    //try {
-    if (diffData.value != null) {
+  //Это должно вызываться из ApiInvoke
+  void setDiff(Map<String, dynamic>? diffDataValue) {
+    multiInvoke.stop(); //Если пришли данные с сервера и ждут обновления, останавливаем, прийдёт новая синхронизация
+    if (diffDataValue != null) {
       Map<String, dynamic> fullData = data.value;
-      for (MapEntry<String, dynamic> item in diffData.value.entries) {
+      for (MapEntry<String, dynamic> item in diffDataValue.entries) {
         if (item.value == null) {
           fullData.remove(item.key);
         } else {
           fullData[item.key] = item.value;
         }
       }
-      delayAction(); //Смещаем по времени перерисовку, если до этого пришла синхронизация
       notify();
-    }
-  }
-
-  void setDiff(Data diffData) {
-    if (loadFromDb == false) {
-      // dataDiff.uuid - это всегда socketUuid
-      DataGetter.getDataJson(data.uuid, (dataUuid, dataDB) {
-        loadFromDb = true;
-        data.value = dataDB;
-        // Может быть наследованный сокетный кеш
-        // Сокетный кеш всегда создаётся по socketUuid, но нас он может особо не интересовать
-        // Нас интересует uuid по которому мы ждём обновления
-        data.uuid = dataUuid;
-        _mergeData(diffData);
-      });
-    } else {
-      _mergeData(diffData);
     }
   }
 }
