@@ -7,12 +7,16 @@ class MultiInvoke {
   MultiInvoke(this.delayMillis);
 
   void invoke(Function() callback) {
-    if (timer != null) {
-      timer!.cancel();
-    }
+    stop();
     timer = Timer(Duration(milliseconds: delayMillis), () {
       callback();
       timer = null;
     });
+  }
+
+  void stop() {
+    if (timer != null) {
+      timer!.cancel();
+    }
   }
 }
