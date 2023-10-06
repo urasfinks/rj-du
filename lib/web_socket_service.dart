@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cron/cron.dart';
 import 'package:rjdu/data_sync.dart';
 import 'package:rjdu/global_settings.dart';
+import 'package:rjdu/multi_invoke.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/util.dart';
 import 'package:web_socket_channel/io.dart';
@@ -42,12 +43,15 @@ class WebSocketService {
 
   WebSocketChannel? _channel;
 
+  MultiInvoke controlTimeout = MultiInvoke(4100);
+
   void _connect() {
     if (_channel == null) {
       try {
         Util.p("WebSocketService._connect() start connect");
         int timeoutMillis = 4000;
-        Future.delayed(Duration(milliseconds: timeoutMillis + 100), () {
+        controlTimeout.delayMillis = timeoutMillis + 100;
+        controlTimeout.invoke(() {
           if (_channel == null) {
             Util.p("${GlobalSettings().ws}/socket/${Storage().get("uuid", "undefined")} timeout");
             AlertHandler.alertSimple("Связь с сервером не установлена");
@@ -63,6 +67,7 @@ class WebSocketService {
             if (_channel != null) {
               _listen(_channel!);
               Util.p("WebSocketService._connect() channel.stream.listen");
+              controlTimeout.stop();
             }
           } catch (e, stacktrace) {
             _log(e, stacktrace, "_disconnect()");
