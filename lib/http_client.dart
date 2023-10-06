@@ -39,7 +39,15 @@ class HttpClient {
             }),
             408);
       },
-    );
+    ).onError((error, stackTrace) {
+      Util.printStackTrace("HttpClient._configureRequest()", error, stackTrace);
+      return http.Response(
+          json.encode({
+            "status": false,
+            "exception": ["Connection failed"]
+          }),
+          417);
+    });
   }
 
   static Map<String, String> upgradeHeadersAuthorization(Map<String, String>? headers) {

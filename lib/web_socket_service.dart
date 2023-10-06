@@ -8,6 +8,7 @@ import 'package:rjdu/util.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:io';
+import 'dynamic_invoke/handler/alert_handler.dart';
 import 'dynamic_page.dart';
 import 'storage.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -35,7 +36,7 @@ class WebSocketService {
     });
   }
 
-  List<DynamicPage> _list = [];
+  final List<DynamicPage> _list = [];
 
   WebSocketService._internal();
 
@@ -45,8 +46,15 @@ class WebSocketService {
     if (_channel == null) {
       try {
         Util.p("WebSocketService._connect() start connect");
+        int timeoutMillis = 4000;
+        Future.delayed(Duration(milliseconds: timeoutMillis + 100), () {
+          if (_channel == null) {
+            Util.p("${GlobalSettings().ws}/socket/${Storage().get("uuid", "undefined")} timeout");
+            AlertHandler.alertSimple("Связь с сервером не установлена");
+          }
+        });
         WebSocket.connect("${GlobalSettings().ws}/socket/${Storage().get("uuid", "undefined")}")
-            .timeout(const Duration(seconds: 4))
+            .timeout(Duration(milliseconds: timeoutMillis))
             .then((ws) {
           try {
             _disconnect(); //Если кто-то уже создал коннект
