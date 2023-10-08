@@ -79,7 +79,13 @@ class TemplateDirective {
         return "неизвестно";
       }
       int curTimestampMillis = Util.getTimestampMillis();
-      int d = TypeParser.parseInt(data)!;
+      int d = Util.getTimestampMillis() ~/ 1000;
+      try {
+        d = TypeParser.parseInt(data)!;
+      } catch (error, stackTrace) {
+        Util.printStackTrace("TemplateDirective.timeSoFar($data, $arguments)", error, stackTrace);
+      }
+
       if (arguments.isNotEmpty) {
         if (arguments[0] == "sec") {
           d *= 1000;
