@@ -13,7 +13,7 @@ class DeepLink {
   static void open(Uri uri) {
     List<String> listArg = [];
     listArg.addAll(uri.pathSegments);
-    //[deeplink, v1, ConnectCodeNames, code, 392496]
+    //[deeplink, v1, ConnectAlternativeWord, code, 392496]
     Map<String, dynamic> args = {};
     args["deeplink"] = listArg.removeAt(0);
     args["version"] = listArg.removeAt(0);
