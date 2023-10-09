@@ -1,5 +1,7 @@
 import '../../data_sync.dart';
+import '../../dynamic_ui/type_parser.dart';
 import '../../navigator_app.dart';
+import '../../subscribe_reload_group.dart';
 import '../../util.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -25,6 +27,19 @@ class PageReloadHandler extends AbstractHandler {
           dynamicUIBuilderContext.dynamicPage.reload(rebuild);
         };
         break;
+      case "subscribed":
+        fnReload = () {
+          Map<SubscribeReloadGroup, List<String>> mapMultiUpdate = {
+            SubscribeReloadGroup.key: [],
+            SubscribeReloadGroup.parentUuid: [],
+            SubscribeReloadGroup.uuid: [],
+          };
+          add(args, mapMultiUpdate, SubscribeReloadGroup.uuid.name);
+          add(args, mapMultiUpdate, SubscribeReloadGroup.parentUuid.name);
+          add(args, mapMultiUpdate, SubscribeReloadGroup.key.name);
+          NavigatorApp.reloadPageBySubscription(mapMultiUpdate, args["rebuild"] ?? true);
+        };
+        break;
       default:
         Util.p("PageReloadHandler WTF?");
         break;
@@ -39,6 +54,20 @@ class PageReloadHandler extends AbstractHandler {
       });
     } else {
       fnReload();
+    }
+  }
+
+  void add(Map<String, dynamic> args, Map<SubscribeReloadGroup, List<String>> mapMultiUpdate, String key) {
+    String listKeyCapitalize = "list${Util.capitalize(key)}";
+    SubscribeReloadGroup? subscribeReloadGroup = TypeParser.parseSubscribeReloadGroup(key);
+    if (subscribeReloadGroup != null) {
+      if (args.containsKey(key)) {
+        mapMultiUpdate[subscribeReloadGroup]!.add(args[key]);
+      } else if (args.containsKey(listKeyCapitalize)) {
+        for (String item in args[listKeyCapitalize]) {
+          mapMultiUpdate[subscribeReloadGroup]!.add(item);
+        }
+      }
     }
   }
 }
