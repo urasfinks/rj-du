@@ -103,7 +103,8 @@ class DataGetter {
     if (Storage().get("isAuth", "false") == "true"){
       Storage().setMap({
         "mail": "",
-        "isAuth": "false"
+        "isAuth": "false",
+        "accountName": ""
       });
       // Если не поменять uuid устройства синхронизация будет вытягивать с удалённой БД всё что было по этому uuid
       // Без вариантов надо uuid менять
