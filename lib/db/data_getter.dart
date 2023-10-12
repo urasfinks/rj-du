@@ -78,7 +78,7 @@ class DataGetter {
     if (sql.isNotEmpty) {
       DataSource().db.rawQuery(sql, []).then((resultSet) {
         Util.p("DataGetter.debug($sql)");
-        Util.p(resultSet);
+        Util.log(Util.jsonPretty(resultSet));
       }).onError((error, stackTrace) {
         Util.printStackTrace("DataGetter.debug()", error, stackTrace);
       });
