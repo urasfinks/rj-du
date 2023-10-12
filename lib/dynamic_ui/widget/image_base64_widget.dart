@@ -1,8 +1,12 @@
+import 'package:rjdu/data_type.dart';
+import 'package:rjdu/db/data_source.dart';
 import 'package:rjdu/dynamic_invoke/handler/subscribe_reload.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 
+import '../../abstract_stream.dart';
 import '../../dynamic_invoke/dynamic_invoke.dart';
 import '../../util.dart';
 import '../type_parser.dart';
@@ -10,20 +14,26 @@ import '../type_parser.dart';
 class ImageBase64Widget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return dynamicUIBuilderContext.dynamicPage.storeValueNotifier.getWidget(
-      {"src": parsedJson["src"]},
-      dynamicUIBuilderContext,
-      (context, child) {
-        if (dynamicUIBuilderContext.data.containsKey("src")) {
-          String x = dynamicUIBuilderContext.data["src"]["blobRSync"];
-          //TODO: можно загрузить в состояния страницы, что бы повторная перерисовка была без assetLoader
-          DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
-          return getMemory(x, parsedJson, dynamicUIBuilderContext);
-        } else {
-          return getAsset(parsedJson, dynamicUIBuilderContext);
+    AbstractStream abstractStream = getController(parsedJson, "ImageBase64Widget", dynamicUIBuilderContext, () {
+      return StreamControllerWrap(StreamData({"image": null}));
+    });
+    if (abstractStream.getData()["image"] == null) {
+      DataSource().get(parsedJson["src"], (uuid, data) {
+        if (data != null && data.containsKey(DataType.blobRSync.name)) {
+          abstractStream.setData({
+            "image": data[DataType.blobRSync.name],
+          });
         }
-      },
-    );
+      });
+    }
+    DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
+    return StreamWidget.getWidget(abstractStream, (snapshot) {
+      if (snapshot["image"] == null) {
+        return getAsset(parsedJson, dynamicUIBuilderContext);
+      } else {
+        return getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext);
+      }
+    });
   }
 
   getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
