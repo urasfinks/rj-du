@@ -5,17 +5,18 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:rjdu/util.dart';
 
-import '../../controller_wrap.dart';
+import '../../abstract_controller_wrap.dart';
+import '../../abstract_stream.dart';
 
 class StreamWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    StreamCustom stream = getController(parsedJson, "StreamWidget", dynamicUIBuilderContext, () {
-      StreamCustom? streamCustom;
+    AbstractStream stream = getController(parsedJson, "StreamWidget", dynamicUIBuilderContext, () {
+      AbstractStream? abstractStream;
       Map<String, dynamic> streamArgs = parsedJson["stream"] ?? {};
       switch (streamArgs["case"] ?? "default") {
         case "Periodic":
-          streamCustom = StreamPeriodic(streamArgs["data"], streamArgs["timerMillis"] ?? 1000,
+          abstractStream = StreamPeriodic(streamArgs["data"], streamArgs["timerMillis"] ?? 1000,
               (Map<String, dynamic> data, Timer timer) {
             if (!data.containsKey("count")) {
               data["count"] = -1;
@@ -29,10 +30,10 @@ class StreamWidget extends AbstractWidget {
           });
           break;
         default:
-          streamCustom = StreamData(streamArgs["data"] ?? {});
+          abstractStream = StreamData(streamArgs["data"] ?? {});
           break;
       }
-      return StreamControllerWrap(streamCustom);
+      return StreamControllerWrap(abstractStream);
     });
 
     return getWidget(stream, (data) {
@@ -44,7 +45,7 @@ class StreamWidget extends AbstractWidget {
     });
   }
 
-  static Widget getWidget(StreamCustom stream, dynamic Function(Map<String, dynamic> data) builder) {
+  static Widget getWidget(AbstractStream stream, dynamic Function(Map<String, dynamic> data) builder) {
     return StreamBuilder(
       key: Util.getKey(),
       stream: stream.getStream(),
@@ -57,7 +58,7 @@ class StreamWidget extends AbstractWidget {
   }
 }
 
-class StreamControllerWrap extends ControllerWrap<StreamCustom> {
+class StreamControllerWrap extends AbstractControllerWrap<AbstractStream> {
   StreamControllerWrap(super.controller);
 
   @override
@@ -73,26 +74,7 @@ class StreamControllerWrap extends ControllerWrap<StreamCustom> {
   }
 }
 
-abstract class StreamCustom {
-  Map<String, dynamic> data = {};
-  StreamController controller = StreamController();
-
-  Stream getStream() {
-    controller = StreamController();
-    return controller.stream;
-  }
-
-  Map<String, dynamic> getData() {
-    return data;
-  }
-
-  setData(Map<String, dynamic> newData) {
-    Util.overlay(data, newData);
-    controller.sink.add(data);
-  }
-}
-
-class StreamPeriodic extends StreamCustom {
+class StreamPeriodic extends AbstractStream {
   StreamPeriodic(
       Map<String, dynamic> defData, int milliseconds, Function(Map<String, dynamic> data, Timer timer) callback) {
     data = defData;
@@ -103,7 +85,7 @@ class StreamPeriodic extends StreamCustom {
   }
 }
 
-class StreamData extends StreamCustom {
+class StreamData extends AbstractStream {
   StreamData(Map<String, dynamic> data) {
     this.data = data;
   }

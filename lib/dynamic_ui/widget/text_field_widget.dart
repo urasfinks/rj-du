@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rjdu/util/control_state_helper.dart';
-import '../../controller_wrap.dart';
+import '../../abstract_controller_wrap.dart';
 import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
@@ -153,7 +153,7 @@ class TextFieldWidget extends AbstractWidget {
   }
 }
 
-class TextEditingControllerWrap extends ControllerWrap<TextEditingController> {
+class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingController> {
   TextEditingControllerWrap(super.controller);
 
   @override

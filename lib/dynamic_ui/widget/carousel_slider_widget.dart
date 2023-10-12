@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:rjdu/controller_wrap.dart';
+import 'package:rjdu/abstract_controller_wrap.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
@@ -144,7 +144,7 @@ class CarouselSliderWidget extends AbstractWidget {
   }
 }
 
-class CarouselControllerWrap extends ControllerWrap<CarouselController> {
+class CarouselControllerWrap extends AbstractControllerWrap<CarouselController> {
   CarouselControllerWrap(super.controller);
 
   @override

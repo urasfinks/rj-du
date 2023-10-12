@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 import 'dart:math';
 
+import '../../abstract_stream.dart';
 import '../type_parser.dart';
 
 class FlipCardWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    StreamCustom stream = getController(parsedJson, "FlipCardWidget", dynamicUIBuilderContext, () {
+    AbstractStream stream = getController(parsedJson, "FlipCardWidget", dynamicUIBuilderContext, () {
       return StreamControllerWrap(StreamData({
         "angle": 0,
         "isBack": TypeParser.parseBool(

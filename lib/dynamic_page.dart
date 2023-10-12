@@ -11,7 +11,7 @@ import 'package:rjdu/state_data.dart';
 import 'package:rjdu/util/template/Parser/template_item.dart';
 import 'package:rjdu/web_socket_service.dart';
 
-import 'controller_wrap.dart';
+import 'abstract_controller_wrap.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'dynamic_ui/type_parser.dart';
 import 'store_value_notifier.dart';
@@ -174,8 +174,8 @@ class DynamicPage extends StatefulWidget {
 
   void clearProperty() {
     for (MapEntry<String, dynamic> item in properties.entries) {
-      if (item.value is ControllerWrap) {
-        (item.value as ControllerWrap).dispose();
+      if (item.value is AbstractControllerWrap) {
+        (item.value as AbstractControllerWrap).dispose();
       }
     }
     properties.clear();

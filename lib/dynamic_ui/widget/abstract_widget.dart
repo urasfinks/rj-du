@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:rjdu/controller_wrap.dart';
+import 'package:rjdu/abstract_controller_wrap.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/state_data_iterator.dart';
 
 import '../dynamic_ui.dart';
@@ -20,9 +20,9 @@ abstract class AbstractWidget {
   }
 
   T getController<T>(Map<String, dynamic> parsedJson, String state, DynamicUIBuilderContext dynamicUIBuilderContext,
-      ControllerWrap<T> Function() getDefault) {
+      AbstractControllerWrap<T> Function() getDefault) {
     String key = parsedJson["controller"] ?? parsedJson["state"] ?? state;
-    ControllerWrap? ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, getDefault);
+    AbstractControllerWrap? ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, getDefault);
     return ctx!.getController();
   }
 

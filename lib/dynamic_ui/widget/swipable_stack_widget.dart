@@ -4,7 +4,7 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:flutter/material.dart';
 
-import '../../controller_wrap.dart';
+import '../../abstract_controller_wrap.dart';
 import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../../multi_invoke.dart';
 import '../dynamic_ui.dart';
@@ -200,7 +200,7 @@ class SwipableStackWidget extends AbstractWidget {
   }
 }
 
-class SwipableStackControllerWrap extends ControllerWrap<SwipableStackController> {
+class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackController> {
   SwipableStackControllerWrap(super.controller);
 
   @override

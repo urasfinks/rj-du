@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rjdu/controller_wrap.dart';
+import 'package:rjdu/abstract_controller_wrap.dart';
 import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
@@ -20,7 +20,7 @@ class ScrollbarWidget extends AbstractWidget {
   }
 }
 
-class ScrollControllerWrap extends ControllerWrap<ScrollController> {
+class ScrollControllerWrap extends AbstractControllerWrap<ScrollController> {
   ScrollControllerWrap(super.controller);
 
   @override
