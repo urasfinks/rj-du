@@ -8,6 +8,7 @@
     "textAlign": "${textAlign,start}",
     "style": {
       "flutterType": "TextStyle",
+      "color": "${textColor,schema:inversePrimary}",
       "fontSize": 16
     }
   }

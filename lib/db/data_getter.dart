@@ -3,11 +3,18 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
+import 'package:rjdu/dynamic_invoke/handler/page_reload_handler.dart';
 
 import '../data_type.dart';
+import '../dynamic_invoke/dynamic_invoke.dart';
+import '../dynamic_invoke/handler/alert_handler.dart';
+import '../dynamic_ui/dynamic_ui_builder_context.dart';
+import '../global_settings.dart';
 import '../storage.dart';
 import '../util.dart';
 import 'data_source.dart';
+import '../../http_client.dart';
 
 class DataGetter {
   static Future<List<Map<String, dynamic>>> getUpdatedUserData() async {
@@ -53,7 +60,9 @@ class DataGetter {
 
   static void getDataJson(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
     //Аккуратнее поиск осуществляется ещё по parent_uuid
-    DataSource().db.rawQuery("SELECT * FROM data where uuid_data = ? or parent_uuid_data = ?", [uuid, uuid]).then((resultSet) {
+    DataSource()
+        .db
+        .rawQuery("SELECT * FROM data where uuid_data = ? or parent_uuid_data = ?", [uuid, uuid]).then((resultSet) {
       if (resultSet.isNotEmpty && resultSet.first["value_data"] != null) {
         DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first["type_data"] as String?);
         if (DataSource().isJsonDataType(dataTypeResult)) {
@@ -99,13 +108,25 @@ class DataGetter {
     return ret;
   }
 
-  static void logout() async {
-    if (Storage().get("isAuth", "false") == "true"){
-      Storage().setMap({
-        "mail": "",
-        "isAuth": "false",
-        "accountName": ""
-      });
+  static void logoutWithRemove(DynamicUIBuilderContext dynamicUIBuilderContext) async {
+    Response response = await Util.asyncInvokeIsolate((args) {
+      return HttpClient.get("${args["host"]}/LogoutWithRemove", args["headers"]);
+    }, {
+      "headers": HttpClient.upgradeHeadersAuthorization({}),
+      "host": GlobalSettings().host,
+    });
+    if (response.statusCode == 200) {
+      AlertHandler.alertSimple("Данные учётной записи удалены c сервера");
+      await logout();
+      DynamicInvoke().sysInvokeType(PageReloadHandler, {"case": "current"}, dynamicUIBuilderContext);
+    } else {
+      AlertHandler.alertSimple("Ошибка синхронизации с сервером");
+    }
+  }
+
+  static Future<void> logout() async {
+    if (Storage().get("isAuth", "false") == "true") {
+      Storage().setMap({"mail": "", "isAuth": "false", "accountName": ""});
       // Если не поменять uuid устройства синхронизация будет вытягивать с удалённой БД всё что было по этому uuid
       // Без вариантов надо uuid менять
       Storage().set("uuid", Util.uuid(), true);
@@ -114,8 +135,7 @@ class DataGetter {
       // Данные, которые принадлежат моей учётке и синхронизованны с сервером
       // Ну получается, что если не синхронизованны, я не хочу брать на душу их удаление
       // Да, они потом примажутся к другой учётке..ну что поделать...зато не удалятся
-      await DataSource().db.rawQuery(
-          "DELETE FROM data WHERE type_data IN (?,?,?) AND revision_data > 0",
+      await DataSource().db.rawQuery("DELETE FROM data WHERE type_data IN (?,?,?) AND revision_data > 0",
           [DataType.socket.name, DataType.blobRSync.name, DataType.userDataRSync.name]);
     }
   }

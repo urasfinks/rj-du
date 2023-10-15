@@ -24,6 +24,9 @@ class UtilHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     switch (args["case"] ?? "default") {
+      case "logoutWithRemove":
+        DataGetter.logoutWithRemove(dynamicUIBuilderContext);
+        break;
       case "logout":
         DataGetter.logout();
         break;

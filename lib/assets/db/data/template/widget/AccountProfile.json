@@ -158,6 +158,42 @@
           }
         }
       ]
+    },
+    {
+      "flutterType": "SizedBox",
+      "height": 20
+    },
+    {
+      "ChildrenExtension": "Iterator",
+      "theme": "ButtonGroup",
+      "dataType": "list",
+      "list": [
+        {
+          "label": "Удалить аккаунта",
+          "iconSrc": "exit_to_app",
+          "iconSize": 20,
+          "iconColor": "schema:inversePrimary",
+          "textColor": "red",
+          "templateWidgetSrc": "Text",
+          "textAlign": "center",
+          "onTap": {
+            "sysInvoke": "Alert",
+            "args": {
+              "confirmRemove": true,
+              "label": "Все ваши данные будут удалены на устройстве и на сервере. Вы не сможете их восстановить.",
+              "actionLabel": "Да, удалить",
+              "backgroundColor": "schema:onBackground",
+              "onPressed": {
+                "jsInvoke": "Account.js",
+                "args": {
+                  "includeAll": true,
+                  "switch": "RemoveLogout"
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }
