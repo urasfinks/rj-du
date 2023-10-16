@@ -154,7 +154,11 @@ class DataSource {
           // Надо запустить синхронизацию
           // Что бы эта запись на сервер уползла
           transaction.add("6.1 DataSync().sync()");
-          DataSync().sync();
+          DataSync().sync().then((value) {
+            if (data.onPersist != null) {
+              Function.apply(data.onPersist!, null);
+            }
+          });
         }
       } else if (data.updateIfExist == true) {
         transaction.add("7 result not empty > update");
@@ -164,6 +168,7 @@ class DataSource {
         updateNullable(data, resultSet.first);
         update(data);
         notify = true;
+        //Сокетные данные не могут обновляться, поэтому не предполагаем вызова синхронизации
       } else {
         transaction.add("8 NOTHING!");
       }
@@ -296,7 +301,9 @@ class DataSource {
         curData.isRemove ??= 0,
       ],
     ).then((value) {
-      if (curData.onPersist != null) {
+      //Выполяем onPersist только в том случае, если это не сокетные данные
+      //В случае сокетных данных onPersist вызовется после синхронизации
+      if (curData.onPersist != null && curData.type != DataType.socket) {
         Function.apply(curData.onPersist!, null);
       }
     }).onError((error, stackTrace) {
