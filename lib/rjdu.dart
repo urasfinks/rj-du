@@ -3,7 +3,9 @@ library rjdu;
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/db/data_migration.dart';
 import 'package:rjdu/dynamic_page.dart';
@@ -11,6 +13,7 @@ import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/iterator_theme/
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
+import 'package:rjdu/theme_provider.dart';
 import 'package:rjdu/translate.dart';
 import 'package:rjdu/util.dart';
 import 'package:rjdu/web_socket_service.dart';
@@ -61,9 +64,9 @@ class RjDu {
       AudioComponent().stop(); //Лучше stop чем pause а то вдруг на другой странице тоже проигрыватель будет
       if (NavigatorApp.getLast() != null) {
         NavigatorApp.getLast()?.onActive();
-        DynamicInvoke().sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+        DynamicInvoke()
+            .sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
       }
-
     });
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {
       AudioComponent().stop();
@@ -74,13 +77,29 @@ class RjDu {
         AudioComponent().init();
       }
     });
+    androidUpdateSubAppBar();
 
     SystemNotify().subscribe(SystemNotifyEnum.changeThemeData, (state) {
+      androidUpdateSubAppBar();
       NavigatorApp.reloadAllPages();
     });
 
     if (Storage().isUpdateApplicationVersion()) {
       Storage().set("version", GlobalSettings().version);
+    }
+  }
+
+  static androidUpdateSubAppBar() {
+    if (Util.isAndroid()) {
+      var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+      ThemeData curTheme =
+          brightness == Brightness.dark ? ThemeProvider.darkThemeData() : ThemeProvider.lightThemeData();
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor:
+            HexColor.fromRGB(curTheme.bottomNavigationBarTheme.backgroundColor!.getChannel()).darkness(3),
+        systemNavigationBarIconBrightness: brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+      ));
     }
   }
 
