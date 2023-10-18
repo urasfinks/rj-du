@@ -54,12 +54,14 @@ class Iterator extends AbstractExtension {
             parsedJson[seqTemplate] ??
             parsedJson["template"]); //Шаблон можно заложить в данные
 
-        if (parsedJson.containsKey("context")) {
-          newUIElement["context"] = {
-            "key": "Iterator${counter++}",
-            "data": Util.templateArguments(Util.getMutableMap(parsedJson["context"]), dynamicUIBuilderContext)
-          };
-        }
+        //data - это пробегаемые элемент, это и есть сам контекст, зачем нужен ещё контекст контекста пока не понятно
+        // if (parsedJson.containsKey("context")) {
+        //   data.addAll(Util.getMutableMap(parsedJson["context"]));
+        // }
+        newUIElement["context"] = {
+          "key": "Iterator${counter++}",
+          "data": Util.templateArguments(data, dynamicUIBuilderContext)
+        };
 
         if (data.containsKey("uuid_data")) {
           dynamicUIBuilderContext.dynamicPage.subscribeToReload(SubscribeReloadGroup.uuid, data["uuid_data"]);
