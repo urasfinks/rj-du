@@ -1,6 +1,5 @@
 library rjdu;
 
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -28,7 +27,8 @@ import 'storage.dart';
 import 'http_client.dart';
 
 class RjDu {
-  static void init() async {
+  static init() async {
+    Util.p("RjDu.init()");
     WidgetsFlutterBinding.ensureInitialized();
     DynamicInvoke().init();
     await Storage().init();
@@ -45,7 +45,8 @@ class RjDu {
     Storage().set("lastSync", "", false);
     Storage().set("accountName", "", false);
 
-    DataSource().init();
+    //Надо ждать загрузку из assets шаблонов
+    await DataSource().init();
 
     if (GlobalSettings().debugSql.isNotEmpty) {
       // Для отладки запросов нет необходимости в загрузке всего приложения
@@ -103,7 +104,9 @@ class RjDu {
     }
   }
 
-  static Future<DynamicPage> runApp() async {
+  static runApp() async {
+    await RjDu.init();
+    Util.p("RjDu.runApp()");
     if (GlobalSettings().debugSql.isNotEmpty) {
       return DynamicPage(const {"flutterType": "SizeBox"}, DynamicPageOpenType.window);
     }

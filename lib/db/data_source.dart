@@ -73,14 +73,14 @@ class DataSource {
     Util.p("flushQueue complete: $count");
   }
 
-  void set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) {
+  set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) async {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.updateIfExist = updateIfExist;
-    setData(data);
+    await setData(data);
   }
 
-  void setData(Data data, [bool notifyDynamicPage = true]) {
+  setData(Data data, [bool notifyDynamicPage = true]) async {
     groupMultiUpdate(data);
     List<String> transaction = [];
     if (isInit) {
@@ -93,7 +93,7 @@ class DataSource {
         setDataSocket(data, transaction, notifyDynamicPage);
       } else {
         //Если beforeSync = true, попадём сюда!
-        setDataStandard(data, transaction, notifyDynamicPage);
+        await setDataStandard(data, transaction, notifyDynamicPage);
       }
     } else {
       transaction.add("10 not init");
@@ -133,18 +133,19 @@ class DataSource {
     }
   }
 
-  void setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) {
-    transaction.add("5 saveToDB");
-    db.rawQuery("SELECT * FROM data where uuid_data = ?", [data.uuid]).then((resultSet) {
+  setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) async {
+    try {
+      transaction.add("5 saveToDB");
+      dynamic resultSet = await db.rawQuery("SELECT * FROM data where uuid_data = ?", [data.uuid]);
       bool notify = false;
       if (data.isRemove == 1) {
         transaction.add("5.1 remove");
-        delete(data);
+        await delete(data);
         //notify = true; //Когда удаляются данные, нечего посылать в notifyBlockAsync, value уже пустое
         //Для фиксации изменений используйте DynamicPage._subscribedOnReload (косвенные взаимосвязи в обход Notify)
       } else if (resultSet.isEmpty) {
         transaction.add("6 result is empty > insert");
-        insert(data);
+        await insert(data);
         notify = true;
         // С сокетными данными мы пришли сюда, потому что был установлен beforeSync
         // Но данных в локальной БД нет, а на сервере данные не могут появится самостоятельно)
@@ -154,11 +155,10 @@ class DataSource {
           // Надо запустить синхронизацию
           // Что бы эта запись на сервер уползла
           transaction.add("6.1 DataSync().sync()");
-          DataSync().sync().then((value) {
-            if (data.onPersist != null) {
-              Function.apply(data.onPersist!, null);
-            }
-          });
+          await DataSync().sync();
+          if (data.onPersist != null) {
+            Function.apply(data.onPersist!, null);
+          }
         }
       } else if (data.updateIfExist == true) {
         transaction.add("7 result not empty > update");
@@ -166,7 +166,7 @@ class DataSource {
         // данные надо иногда обновлять не только потому что изменились
         // сами данные, бывает что надо бновить флаг удаления или ревизию
         updateNullable(data, resultSet.first);
-        update(data);
+        await update(data);
         notify = true;
         //Сокетные данные не могут обновляться, поэтому не предполагаем вызова синхронизации
       } else {
@@ -179,9 +179,9 @@ class DataSource {
       } else {
         printTransaction(data, transaction);
       }
-    }).onError((error, stackTrace) {
+    } catch (error, stackTrace) {
       Util.printStackTrace("setDataStandard()", error, stackTrace);
-    });
+    }
   }
 
   void notifyBlockAsync(Data data, List<String> transaction, bool notifyDynamicPage) {
@@ -215,9 +215,9 @@ class DataSource {
     printTransaction(diffData, transaction);
   }
 
-  void sendDataSocket(Data data, bool notifyDynamicPage) async {
-    Map<String, dynamic> postData = {"uuid_data": data.uuid, "data": data.value};
+  sendDataSocket(Data data, bool notifyDynamicPage) async {
     try {
+      Map<String, dynamic> postData = {"uuid_data": data.uuid, "data": data.value};
       Response response = await Util.asyncInvokeIsolate((args) {
         return HttpClient.post("${args["host"]}/SocketUpdate", args["body"], args["headers"]);
       }, {
@@ -259,59 +259,61 @@ class DataSource {
     }
   }
 
-  void update(Data curData) {
-    if (curData.onUpdateResetRevision && curData.type.name.endsWith("RSync")) {
-      curData.revision = 0;
-    }
-    String dataString = curData.value.runtimeType != String ? json.encode(curData.value) : curData.value;
-    db.rawUpdate(
-      'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
-      [
-        dataString,
-        curData.type.name,
-        curData.parentUuid,
-        curData.key,
-        curData.dateAdd,
-        curData.dateUpdate,
-        curData.revision,
-        curData.isRemove,
-        curData.uuid,
-      ],
-    ).then((value) {
+  update(Data curData) async {
+    try {
+      if (curData.onUpdateResetRevision && curData.type.name.endsWith("RSync")) {
+        curData.revision = 0;
+      }
+      String dataString = curData.value.runtimeType != String ? json.encode(curData.value) : curData.value;
+      await db.rawUpdate(
+        'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
+        [
+          dataString,
+          curData.type.name,
+          curData.parentUuid,
+          curData.key,
+          curData.dateAdd,
+          curData.dateUpdate,
+          curData.revision,
+          curData.isRemove,
+          curData.uuid,
+        ],
+      );
       if (curData.onPersist != null) {
         Function.apply(curData.onPersist!, null);
       }
-    }).onError((error, stackTrace) {
+    } catch (error, stackTrace) {
       Util.printStackTrace("DataSource.update()", error, stackTrace);
-    });
+    }
   }
 
-  void insert(Data curData) {
-    db.rawInsert(
-      'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        curData.uuid,
-        curData.value.runtimeType != String ? json.encode(curData.value) : curData.value,
-        curData.type.name,
-        curData.parentUuid,
-        curData.key,
-        curData.dateAdd ??= Util.getTimestampMillis(),
-        curData.dateUpdate,
-        curData.revision ??= 0,
-        curData.isRemove ??= 0,
-      ],
-    ).then((value) {
+  insert(Data curData) async {
+    try {
+      await db.rawInsert(
+        'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+          curData.uuid,
+          curData.value.runtimeType != String ? json.encode(curData.value) : curData.value,
+          curData.type.name,
+          curData.parentUuid,
+          curData.key,
+          curData.dateAdd ??= Util.getTimestampMillis(),
+          curData.dateUpdate,
+          curData.revision ??= 0,
+          curData.isRemove ??= 0,
+        ],
+      );
       //Выполяем onPersist только в том случае, если это не сокетные данные
       //В случае сокетных данных onPersist вызовется после синхронизации
       if (curData.onPersist != null && curData.type != DataType.socket) {
         Function.apply(curData.onPersist!, null);
       }
-    }).onError((error, stackTrace) {
+    } catch (error, stackTrace) {
       Util.printStackTrace("DataSource.insert()", error, stackTrace);
-    });
+    }
   }
 
-  void delete(Data curData) {
+  delete(Data curData) async {
     // Будучи в здравии))) Я отдаю отчёт, что удаляя записи из локальной БД может быть фон, что сервер при синхронизации
     // Постоянно будет отдавать их, так как getMaxRevisionByType будет отдавать ревизии меньшии по значению чем удаление
     // А сервер будет говорит, вот смотри тут удаление произошло
@@ -319,16 +321,17 @@ class DataSource {
     // В БД что бы не расходовать место, надо уничтожать данные, но удалять из удалённой БД мы не имеем права
     // Так как если данные были на нескольких устройств, и одно устройство используется реже, то может так получится,
     // Что если на сервере удалить данные, то на второе устройство не дойдёт ревизия удаления и у нас получится рассинхрон
-    db.rawInsert(
-      'DELETE FROM data WHERE uuid_data = ?',
-      [curData.uuid],
-    ).then((value) {
+    try {
+      await db.rawInsert(
+        'DELETE FROM data WHERE uuid_data = ?',
+        [curData.uuid],
+      );
       if (curData.onPersist != null) {
         Function.apply(curData.onPersist!, null);
       }
-    }).onError((error, stackTrace) {
+    } catch (error, stackTrace) {
       Util.printStackTrace("DataSource.insert()", error, stackTrace);
-    });
+    }
   }
 
   void notifyBlock(Data curData) {

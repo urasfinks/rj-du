@@ -142,7 +142,7 @@ class Util {
   static int getTimestamp() {
     int microsecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
     double x = microsecondsSinceEpoch / 1000;
-    return  x.toInt();
+    return x.toInt();
   }
 
   static Key getKey() {
@@ -172,18 +172,17 @@ class Util {
     return true;
   }
 
-  static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) async {
-    if (arg != null) {
-      return await compute(fn, arg);
-    }
+  static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) {
+    return compute(fn, arg);
   }
 
-  static Future<void> asyncInvoke(Function(dynamic args) fn, dynamic args) async {
-    Future<void>.delayed(Duration.zero).then((_) {
+  static asyncInvoke(Function(dynamic args) fn, dynamic args) async {
+    try {
+      await Future<void>.delayed(Duration.zero);
       fn(args);
-    }).onError((error, stackTrace) {
+    } catch (error, stackTrace) {
       Util.printStackTrace("Util.asyncInvoke()", error, stackTrace);
-    });
+    }
   }
 
   static Map<String, dynamic> getMutableMap(Map? map) {

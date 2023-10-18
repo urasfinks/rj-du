@@ -9,10 +9,6 @@ import 'data_source.dart';
 
 class DataMigration {
   init() async {
-    await migration();
-  }
-
-  migration() async {
     bool updateApplication = Storage().isUpdateApplicationVersion();
     Util.p("migration() current version: ${GlobalSettings().version}; updateApplication = $updateApplication");
     await _sqlExecute([
@@ -85,7 +81,8 @@ class DataMigration {
         String fileData = await rootBundle.loadString(pathItem);
         String fileName = pathItem.split("/").last;
         list.add(fileName);
-        DataSource().set(fileName, fileData, parseDataTypeFromDirectory(pathItem), null, null, GlobalSettings().debug);
+        await DataSource()
+            .set(fileName, fileData, parseDataTypeFromDirectory(pathItem), null, null, GlobalSettings().debug);
       }
     }
     Util.p("DataMigration.loadAssetsData($path) $list");
