@@ -30,37 +30,36 @@ class Iterator extends AbstractExtension {
         return;
       }
     }
-    bool templateDivider = parsedJson.containsKey("template_divider");
+    bool templateDivider = parsedJson.containsKey("templateDivider");
     bool add = false;
     if (listData != null) {
       List<dynamic> list = listData as List<dynamic>;
       int counter = 0;
       for (Map<String, dynamic> data in list) {
         Map<String, dynamic> newUIElement = {};
-        String seqType;
-        if (data.containsKey("customSeqType")) {
-          seqType = data["customSeqType"];
+        String seqTemplate;
+        if (data.containsKey("templateCustom")) {
+          seqTemplate = data["templateCustom"];
         } else if (list.length == 1) {
-          seqType = "template_single";
+          seqTemplate = "templateSingle";
         } else if (list.first == data) {
-          seqType = "template_first";
+          seqTemplate = "templateFirst";
         } else if (list.last == data) {
-          seqType = "template_last";
+          seqTemplate = "templateLast";
         } else {
-          seqType = "template_middle";
+          seqTemplate = "templateMiddle";
         }
-        newUIElement.addAll(data[seqType] ??
+        newUIElement.addAll(data[seqTemplate] ??
             data["template"] ??
-            parsedJson[seqType] ??
+            parsedJson[seqTemplate] ??
             parsedJson["template"]); //Шаблон можно заложить в данные
 
-        if (parsedJson.containsKey("extendDataElement")) {
-          data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
+        if (parsedJson.containsKey("context")) {
+          newUIElement["context"] = {
+            "key": "Iterator${counter++}",
+            "data": Util.templateArguments(Util.getMutableMap(parsedJson["context"]), dynamicUIBuilderContext)
+          };
         }
-        newUIElement["context"] = {
-          "key": "Iterator${counter++}",
-          "data": Util.templateArguments(data, dynamicUIBuilderContext)
-        };
 
         if (data.containsKey("uuid_data")) {
           dynamicUIBuilderContext.dynamicPage.subscribeToReload(SubscribeReloadGroup.uuid, data["uuid_data"]);
@@ -68,7 +67,7 @@ class Iterator extends AbstractExtension {
         add = true;
         result.add(newUIElement);
         if (templateDivider && list.last != data) {
-          result.add(parsedJson["template_divider"]);
+          result.add(parsedJson["templateDivider"]);
         }
       }
     }

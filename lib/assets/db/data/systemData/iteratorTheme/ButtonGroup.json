@@ -6,7 +6,7 @@
       "src"
     ]
   },
-  "template_middle": {
+  "templateMiddle": {
     "flutterType": "Material",
     "color": "${background,schema:onBackground}",
     "child": {
@@ -24,7 +24,7 @@
       }
     }
   },
-  "template_last": {
+  "templateLast": {
     "flutterType": "Material",
     "color": "${background,schema:onBackground}",
     "shape": {
@@ -50,7 +50,7 @@
       }
     }
   },
-  "template_first": {
+  "templateFirst": {
     "flutterType": "Material",
     "color": "${background,schema:onBackground}",
     "shape": {
@@ -76,7 +76,7 @@
       }
     }
   },
-  "template_single": {
+  "templateSingle": {
     "flutterType": "Material",
     "color": "${background,schema:onBackground}",
     "shape": {
@@ -102,7 +102,7 @@
       }
     }
   },
-  "template_divider":{
+  "templateDivider":{
     "flutterType": "Divider",
     "color": "schema:background",
     "height": 1

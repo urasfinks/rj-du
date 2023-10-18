@@ -15,19 +15,19 @@ abstract class AbstractTheme {
     Map<String, dynamic> result = {};
     dynamic x = getFirst();
     if (x != null) {
-      result["template_first"] = x;
+      result["templateFirst"] = x;
     }
     x = getMiddle();
     if (x != null) {
-      result["template_middle"] = x;
+      result["templateMiddle"] = x;
     }
     x = getLast();
     if (x != null) {
-      result["template_last"] = x;
+      result["templateLast"] = x;
     }
     x = getDivider();
     if (x != null) {
-      result["template_divider"] = x;
+      result["templateDivider"] = x;
     }
     x = getTemplate();
     if (x != null) {
@@ -35,7 +35,7 @@ abstract class AbstractTheme {
     }
     x = getSingle();
     if (x != null) {
-      result["template_single"] = x;
+      result["templateSingle"] = x;
     }
     return result;
   }
