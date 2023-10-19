@@ -18,6 +18,9 @@ class TemplateFunction {
     "contextMap": (data, arguments, ctx, debug) {
       return ctx.dynamicPage.templateByMapContext(data, arguments);
     },
+    "contextKey": (data, arguments, ctx, debug) {
+      return ctx.key;
+    },
     "state": (data, arguments, ctx, debug) {
       Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.removeAt(0));
       if (debug) {
