@@ -14,6 +14,9 @@ import '../type_parser.dart';
 class ImageBase64Widget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (!parsedJson.containsKey("assetLoader")) {
+      parsedJson["assetLoader"] = "packages/rjdu/lib/assets/image/transparent.png";
+    }
     AbstractStream abstractStream = getController(parsedJson, "ImageBase64Widget", dynamicUIBuilderContext, () {
       return StreamControllerWrap(StreamData({"image": null}));
     });
@@ -39,7 +42,24 @@ class ImageBase64Widget extends AbstractWidget {
   getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (parsedJson.containsKey("assetLoader")) {
       return Image(
+        key: Util.getKey(),
         image: AssetImage(parsedJson["assetLoader"]!),
+        width: TypeParser.parseDouble(
+          getValue(parsedJson, "width", null, dynamicUIBuilderContext),
+        ),
+        height: TypeParser.parseDouble(
+          getValue(parsedJson, "height", null, dynamicUIBuilderContext),
+        ),
+        fit: TypeParser.parseBoxFit(
+          getValue(parsedJson, "fit", null, dynamicUIBuilderContext),
+        ),
+        repeat: TypeParser.parseImageRepeat(
+          getValue(parsedJson, "repeat", "noRepeat", dynamicUIBuilderContext),
+        )!,
+        filterQuality: FilterQuality.high,
+        alignment: TypeParser.parseAlignment(
+          getValue(parsedJson, "alignment", "center", dynamicUIBuilderContext),
+        )!,
       );
     } else {
       return const SizedBox();
