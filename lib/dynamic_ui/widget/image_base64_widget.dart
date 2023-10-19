@@ -14,18 +14,20 @@ import '../type_parser.dart';
 class ImageBase64Widget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (!parsedJson.containsKey("assetLoader")) {
-      parsedJson["assetLoader"] = "packages/rjdu/lib/assets/image/transparent.png";
-    }
     AbstractStream abstractStream = getController(parsedJson, "ImageBase64Widget", dynamicUIBuilderContext, () {
-      return StreamControllerWrap(StreamData({"image": null}));
+      return StreamControllerWrap(StreamData({"image": null, "start": false}));
     });
-    if (abstractStream.getData()["image"] == null) {
-      DataSource().get(parsedJson["src"], (uuid, data) {
-        if (data != null && data.containsKey(DataType.blobRSync.name)) {
-          abstractStream.setData({
-            "image": data[DataType.blobRSync.name],
-          });
+    if (abstractStream.getData()["start"] == false) {
+      abstractStream.getData()["start"] = true;
+      String src = getValue(parsedJson, "src", "", dynamicUIBuilderContext);
+      DataSource().get(src, (uuid, data) {
+        for (String key in [DataType.blobRSync.name, DataType.blob.name]) {
+          if (data != null && data.containsKey(key)) {
+            abstractStream.setData({
+              "image": data[key],
+            });
+            break;
+          }
         }
       });
     }
