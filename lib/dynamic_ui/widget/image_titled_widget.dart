@@ -33,7 +33,7 @@ class ImageTitledWidget extends AbstractWidget {
                   ),
                 ),
                 padding: TypeParser.parseEdgeInsets(
-                  getValue(parsedJson, "padding", "10,0,10,10", dynamicUIBuilderContext),
+                  getValue(parsedJson, "padding", "10,0,10,5", dynamicUIBuilderContext),
                 )!,
                 child: Text(
                   label,
