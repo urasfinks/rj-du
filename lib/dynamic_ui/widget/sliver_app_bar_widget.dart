@@ -10,8 +10,7 @@ import '../type_parser.dart';
 
 class SliverAppBarWidget extends AbstractWidget {
   @override
-  get(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     return SliverAppBar(
       pinned: TypeParser.parseBool(
         getValue(parsedJson, "pinned", true, dynamicUIBuilderContext),
@@ -25,12 +24,15 @@ class SliverAppBarWidget extends AbstractWidget {
       elevation: TypeParser.parseDouble(
         getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       ),
+      leadingWidth: 0,
+      centerTitle: TypeParser.parseBool(
+        getValue(parsedJson, "centerTitle", true, dynamicUIBuilderContext),
+      )!,
       title: render(parsedJson, "title", "", dynamicUIBuilderContext),
       actions: renderList(parsedJson, "actions", dynamicUIBuilderContext),
       flexibleSpace: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-              sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
+          filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
           child: Container(
             color: Colors.transparent,
           ),
