@@ -49,10 +49,12 @@ class Iterator extends AbstractExtension {
         } else {
           seqTemplate = "templateMiddle";
         }
-        newUIElement.addAll(data[seqTemplate] ??
+        //Если не обернуть в свой объект, templateArguments применится только к первому
+        //Все остальные потеряют первичный шаблон, так как он будет уже заменён на значение
+        newUIElement.addAll(Util.getMutableMap(data[seqTemplate] ??
             data["template"] ??
             parsedJson[seqTemplate] ??
-            parsedJson["template"]); //Шаблон можно заложить в данные
+            parsedJson["template"])); //Шаблон можно заложить в данные
 
         //Расширение данных из родителя
         if (parsedJson.containsKey("extendDataElement")) {
