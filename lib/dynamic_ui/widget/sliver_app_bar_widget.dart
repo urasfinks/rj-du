@@ -24,7 +24,6 @@ class SliverAppBarWidget extends AbstractWidget {
       elevation: TypeParser.parseDouble(
         getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       ),
-      leadingWidth: 0,
       centerTitle: TypeParser.parseBool(
         getValue(parsedJson, "centerTitle", true, dynamicUIBuilderContext),
       )!,
