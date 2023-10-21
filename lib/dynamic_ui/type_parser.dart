@@ -74,12 +74,11 @@ class TypeParser {
       return null;
     }
     Color result = Colors.yellow;
-    int? alpha;
     try {
+      List<String> listDirective = [];
       if (value.contains("|")) {
-        List<String> split = value.split("|");
-        value = split[0];
-        alpha = parseInt(split[1]);
+        listDirective = value.split("|");
+        value = listDirective.removeAt(0);
       }
       if (value.startsWith("schema:")) {
         //schema:background
@@ -141,10 +140,24 @@ class TypeParser {
           result = mapColor[value]!;
         }
       }
+      for (String dir in listDirective) {
+        if (dir.startsWith("alpha(")) {
+          int? alpha = parseInt(dir.substring(6, dir.length - 1));
+          if (alpha != null) {
+            result = result.withAlpha(alpha);
+          }
+        }
+        if (dir.startsWith("opacity(")) {
+          double? opacity = parseDouble(dir.substring(8, dir.length - 1));
+          if (opacity != null) {
+            result = result.withOpacity(opacity);
+          }
+        }
+      }
     } catch (error, stackTrace) {
       Util.printStackTrace("parseColor($value)", error, stackTrace);
     }
-    return alpha != null ? result.withAlpha(alpha) : result;
+    return result;
   }
 
   static Color? _parseHexColor(String? value) {
