@@ -22,14 +22,11 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     List<Widget> list = [];
 
-    bool includeTopOffset = TypeParser.parseBool(
-      getValue(parsedJson, "includeTopOffset", true, dynamicUIBuilderContext),
-    )!;
     double extraTopOffset = TypeParser.parseDouble(
       getValue(parsedJson, "extraTopOffset", 0, dynamicUIBuilderContext),
     )!;
 
-    if (includeTopOffset) {
+    if (extraTopOffset > 0) {
       list.add(SizedBox(
         //height: GlobalSettings().appBarHeight + extraTopOffset,
         height: extraTopOffset,
@@ -107,13 +104,10 @@ class CustomScrollViewWidget extends AbstractWidget {
       }
     }
 
-    bool includeBottomOffset = TypeParser.parseBool(
-      getValue(parsedJson, "includeBottomOffset", true, dynamicUIBuilderContext),
-    )!;
     double extraBottomOffset = TypeParser.parseDouble(
       getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
     )!;
-    if (includeBottomOffset) {
+    if (extraBottomOffset > 0) {
       list.add(SizedBox(
         height: GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
       ));
