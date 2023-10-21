@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rjdu/audio_component.dart';
+import 'package:rjdu/theme_provider.dart';
 import 'package:rjdu/util.dart';
 import '../dynamic_page.dart';
 import '../navigator_app.dart';
@@ -109,6 +110,12 @@ class TypeParser {
             "onError": colorScheme.onError,
             "surface": colorScheme.surface,
             "onSurface": colorScheme.onSurface,
+
+            // Project
+            "projectPrimary": ThemeProvider.projectPrimary,
+            "projectPrimaryText": ThemeProvider.projectPrimaryText,
+            "projectSecondary": ThemeProvider.projectSecondary,
+            "projectSecondaryText": ThemeProvider.projectSecondaryText,
           };
           String key = value.split(":")[1];
           if (schema.containsKey(key)) {
@@ -121,7 +128,7 @@ class TypeParser {
         result = Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
       } else if (value.startsWith("#")) {
         //#ff0000
-        Color? tmp = _parseHexColor(value);
+        Color? tmp = parseHexColor(value);
         if (tmp != null) {
           result = tmp;
         }
@@ -160,7 +167,7 @@ class TypeParser {
     return result;
   }
 
-  static Color? _parseHexColor(String? value) {
+  static Color? parseHexColor(String? value) {
     if (value == null || value.trim() == "") {
       return null;
     }

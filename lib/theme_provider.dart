@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'dynamic_ui/type_parser.dart';
 
 class ThemeProvider {
   static int alpha = 175;
   static double blur = 15;
+
+  static Color projectPrimary = TypeParser.parseHexColor("#019ba1")!;
+  static Color projectPrimaryText = Colors.white;
+  static Color projectSecondary = TypeParser.parseHexColor("#f27f1b")!;
+  static Color projectSecondaryText = Colors.white;
 
   static Brightness deviceBrightness = Brightness.light;
 
