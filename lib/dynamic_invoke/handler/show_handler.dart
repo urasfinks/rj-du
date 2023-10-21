@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rjdu/dynamic_invoke/handler/data_source_set_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler/system_notify_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_open_handler.dart';
 import 'package:rjdu/system_notify.dart';
+import 'package:rjdu/theme_provider.dart';
 
 import '../../dynamic_ui/widget/abstract_widget.dart';
 import '../../util.dart';
@@ -68,8 +68,8 @@ class ShowHandler extends AbstractHandler {
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: "",
-            toolbarColor: Colors.blue[600],
-            toolbarWidgetColor: Colors.white,
+            toolbarColor: ThemeProvider.projectPrimary,
+            toolbarWidgetColor: ThemeProvider.projectPrimaryText,
             initAspectRatio: CropAspectRatioPreset.square,
             lockAspectRatio: true,
             hideBottomControls: true,

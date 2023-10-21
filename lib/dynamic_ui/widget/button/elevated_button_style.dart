@@ -77,7 +77,7 @@ class ElevatedButtonStyle extends AbstractButtonStyle {
         getValue(parsedJson, "elevation", 0, dynamicUIBuilderContext),
       )!,
       backgroundColor: TypeParser.parseColor(
-        getValue(parsedJson, "backgroundColor", null, dynamicUIBuilderContext),
+        getValue(parsedJson, "backgroundColor", "schema:projectPrimary", dynamicUIBuilderContext),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: TypeParser.parseBorderRadius(

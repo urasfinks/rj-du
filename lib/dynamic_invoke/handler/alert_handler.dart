@@ -59,7 +59,7 @@ class AlertHandler extends AbstractHandler {
         config["actionLabel"] = "Да";
       }
       if (!args.containsKey("actionBackgroundColor")) {
-        config["actionBackgroundColor"] = "blue.600";
+        config["actionBackgroundColor"] = "schema:projectPrimary";
       }
     }
 
