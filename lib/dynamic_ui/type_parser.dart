@@ -73,10 +73,17 @@ class TypeParser {
     if (value == null || value.trim() == "") {
       return null;
     }
-
-    if (value.startsWith("schema:")) {
-      if (NavigatorApp.getLast() != null) {
-        try {
+    Color result = Colors.yellow;
+    int? alpha;
+    try {
+      if (value.contains("|")) {
+        List<String> split = value.split("|");
+        value = split[0];
+        alpha = parseInt(split[1]);
+      }
+      if (value.startsWith("schema:")) {
+        //schema:background
+        if (NavigatorApp.getLast() != null) {
           var colorScheme = Theme.of(buildContext ?? NavigatorApp.getFirst()!.context!).colorScheme;
           Map<String, dynamic> schema = {
             "background": colorScheme.background,
@@ -105,34 +112,39 @@ class TypeParser {
             "onSurface": colorScheme.onSurface,
           };
           String key = value.split(":")[1];
-          return schema[key] ?? Colors.yellow;
-        } catch (error, stackTrace) {
-          Util.printStackTrace("parseColor($value)", error, stackTrace);
+          if (schema.containsKey(key)) {
+            result = schema[key];
+          }
         }
-      }
-      return Colors.greenAccent;
-    } else if (value.startsWith("rgba:")) {
-      List<String> l = value.split("rgba:")[1].split(",");
-      try {
-        return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
-      } catch (e) {}
-      return Colors.pink;
-    } else if (value.startsWith("#")) {
-      return _parseHexColor(value);
-    } else if (value.contains(".")) {
-      try {
+      } else if (value.startsWith("rgba:")) {
+        //rgba:255,255,255,0
+        List<String> l = value.split("rgba:")[1].split(",");
+        result = Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
+      } else if (value.startsWith("#")) {
+        //#ff0000
+        Color? tmp = _parseHexColor(value);
+        if (tmp != null) {
+          result = tmp;
+        }
+      } else if (value.contains(".")) {
+        //blue.600
         List<String> l = value.split(".");
-        MaterialColor? x = (mapColor.containsKey(l[0]) ? mapColor[l[0]] : null) as MaterialColor?;
-        if (x != null) {
-          return x[parseInt(l[1])!];
+        MaterialColor? materialColor = (mapColor.containsKey(l[0]) ? mapColor[l[0]] : null) as MaterialColor?;
+        if (materialColor != null) {
+          Color? tmp = materialColor[parseInt(l[1])!];
+          if (tmp != null) {
+            result = tmp;
+          }
         }
-      } catch (error, stackTrace) {
-        Util.printStackTrace("Util.parseColor() value: $value", error, stackTrace);
+      } else {
+        if (mapColor.containsKey(value)) {
+          result = mapColor[value]!;
+        }
       }
-      return null;
-    } else {
-      return mapColor.containsKey(value) ? mapColor[value] : null;
+    } catch (error, stackTrace) {
+      Util.printStackTrace("parseColor($value)", error, stackTrace);
     }
+    return alpha != null ? result.withAlpha(alpha) : result;
   }
 
   static Color? _parseHexColor(String? value) {
