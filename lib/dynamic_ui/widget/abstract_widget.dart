@@ -158,7 +158,7 @@ abstract class AbstractWidget {
           try {
             settings = json.decode(tmp) as Map<String, dynamic>?;
           } catch (e, stacktrace) {
-            Util.printStackTrace("AbstractWidget.clickStatic() key: $key; parsedJson: $parsedJson", e, stacktrace);
+            Util.printStackTrace("AbstractWidget.clickStatic() key: $key; parsedJson: $parsedJson; tmp: $tmp; tmpType: ${tmp.runtimeType.toString()}", e, stacktrace);
           }
         }
         if (settings != null) {
