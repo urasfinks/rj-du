@@ -7,15 +7,23 @@ import '../../util.dart';
 class SizedBoxWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return SizedBox(
-      key: Util.getKey(),
-      width: TypeParser.parseDouble(
-        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
-      ),
-      height: TypeParser.parseDouble(
-        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
-      ),
-      child: render(parsedJson, "child", null, dynamicUIBuilderContext),
-    );
+    switch (parsedJson["type"] ?? "default") {
+      case "expand":
+        return SizedBox.expand(
+          key: Util.getKey(),
+          child: render(parsedJson, "child", null, dynamicUIBuilderContext),
+        );
+      default:
+        return SizedBox(
+          key: Util.getKey(),
+          width: TypeParser.parseDouble(
+            getValue(parsedJson, "width", null, dynamicUIBuilderContext),
+          ),
+          height: TypeParser.parseDouble(
+            getValue(parsedJson, "height", null, dynamicUIBuilderContext),
+          ),
+          child: render(parsedJson, "child", null, dynamicUIBuilderContext),
+        );
+    }
   }
 }
