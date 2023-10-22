@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:rjdu/dynamic_ui/type_parser.dart';
 
 import '../../navigator_app.dart';
 import '../../system_notify.dart';
+import '../../theme_provider.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:flutter/material.dart';
@@ -50,11 +53,28 @@ class NavigatorPushHandler extends AbstractHandler {
         },
       );
     }
+    bool blur = args.containsKey("blur") && args["blur"] == true;
     showGeneralDialog(
       //Если false - содержимое dialog будет под bottomTabBar
       //Менять нельзя, потому что Navigator.pop настроен на удаление данного типа открытия через корневой контекст
       useRootNavigator: true,
       context: buildContext,
+
+      // blur background
+      barrierDismissible: blur ? true : false,
+      barrierLabel: blur ? '' : null,
+      barrierColor: blur ? Colors.black38 : const Color(0x80000000),
+      transitionBuilder: blur
+          ? (ctx, anim1, anim2, child) => BackdropFilter(
+                filter: ImageFilter.blur(
+                    sigmaX: ThemeProvider.blur * anim1.value, sigmaY: ThemeProvider.blur * anim1.value),
+                child: FadeTransition(
+                  opacity: anim1,
+                  child: child,
+                ),
+              )
+          : null,
+
       pageBuilder: (
         BuildContext context,
         Animation<double> animation,
