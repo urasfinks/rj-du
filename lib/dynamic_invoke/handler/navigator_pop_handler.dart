@@ -40,6 +40,10 @@ class NavigatorPopHandler extends AbstractHandler {
     while (count > 0) {
       DynamicPage? dynamicPage = NavigatorApp.getLast();
       if (!NavigatorApp.isLast(indexTab) && dynamicPage != null) {
+        //Если тут не сделать удалние NavigatorApp.removePage при программном закрытии списка
+        // Мы будем получть один и тотже последний DynamicPage и получим ошибку, когда dispose страницы отработает
+        // А мы заново скажем - закрывайся
+        // И в целом, это самое актуальное хранилище, надо что бы данные там обновлялись быстрее чем через dispose
         NavigatorApp.removePage(dynamicPage);
         //NavigatorApp.tab[indexTab].context - это глобально весь открытый Tab
         switch (dynamicPage.dynamicPageOpenType) {

@@ -65,8 +65,14 @@ class RjDu {
       AudioComponent().stop(); //Лучше stop чем pause а то вдруг на другой странице тоже проигрыватель будет
       if (NavigatorApp.getLast() != null) {
         NavigatorApp.getLast()?.onActive();
-        DynamicInvoke()
-            .sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+        // Проблема в таком подходе для лоадера, когда мы его закрываем - то получаем изменение viewport
+        // И оно его скрывает, а там важная информация после загрузки данных с сервера
+        // Проблема воспроизодилась на Account.json когда просто не открывался snackBar
+        // Принято решение скрывать только при переключенях табов
+        if (state == "onChangeTab") {
+          DynamicInvoke()
+              .sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+        }
       }
     });
     SystemNotify().subscribe(SystemNotifyEnum.openDynamicPage, (state) {

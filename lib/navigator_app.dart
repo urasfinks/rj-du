@@ -37,15 +37,16 @@ class NavigatorApp {
   }
 
   static void removePage(DynamicPage dynamicPage) {
+    // Эта функция может вызываться 2 раза для одной страницы
+    // #1 При закрытие через api
+    // #2 Всегда при dispose самой страницы
     if (!isLast(selectedTab)) {
       Future.delayed(const Duration(seconds: 5), () {
         // Задержка сделана для того, что бы была возможность отработать destruct js для закрытой DynamicPage
         // Если сразу удалить, то getPageByUuid вернёт null, что приведёт к невозможности запустить
         // асинхронные вызовы SysInvoke
         // Для кейса при закрытии страницы - отобразить bottomNavigationBar, так как он мог был быть скрыт
-        if (allDynamicPage.contains(dynamicPage)) {
-          allDynamicPage.remove(dynamicPage);
-        }
+        allDynamicPage.remove(dynamicPage);
       });
       if (tabNavigator.containsKey(selectedTab)) {
         tabNavigator[selectedTab]!.remove(dynamicPage);

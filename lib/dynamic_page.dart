@@ -99,8 +99,8 @@ class DynamicPage extends StatefulWidget {
     onEvent("destructor", {});
     WebSocketService().removeListener(this);
     SystemNotify().emit(SystemNotifyEnum.changeViewport, "onHistoryPop");
-    DataSource().unsubscribe(onChangeUuid);
     SystemNotify().unsubscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
+    DataSource().unsubscribe(onChangeUuid);
   }
 
   void onEvent(String key, Map<String, dynamic> args) {
@@ -351,6 +351,8 @@ class _DynamicPage extends State<DynamicPage> {
   @override
   void dispose() {
     stopReloadEach();
+    // Мы тут делаем дополниетльное удалние, если страница закрывается нативными срествами
+    // В api мы это делаем сразу же, что бы данные в NavigatorApp были актуальны
     NavigatorApp.removePage(widget);
     super.dispose();
   }
