@@ -12,7 +12,7 @@ class ThemeProvider {
 
   static Brightness deviceBrightness = Brightness.light;
 
-  static setColor(String primary, String primaryText, String secondary, String secondaryText){
+  static setColor(String primary, String primaryText, String secondary, String secondaryText) {
     projectPrimary = TypeParser.parseColor(primary) ?? Colors.blue[600]!;
     projectPrimaryText = TypeParser.parseColor(primaryText) ?? Colors.white;
     projectSecondary = TypeParser.parseColor(secondary) ?? Colors.amber;
