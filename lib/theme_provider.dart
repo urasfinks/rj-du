@@ -5,12 +5,19 @@ class ThemeProvider {
   static int alpha = 175;
   static double blur = 15;
 
-  static Color projectPrimary = TypeParser.parseHexColor("#019ba1")!;
+  static Color projectPrimary = Colors.blue[600]!;
   static Color projectPrimaryText = Colors.white;
-  static Color projectSecondary = TypeParser.parseHexColor("#f27f1b")!;
+  static Color projectSecondary = Colors.amber;
   static Color projectSecondaryText = Colors.white;
 
   static Brightness deviceBrightness = Brightness.light;
+
+  static setColor(String primary, String primaryText, String secondary, String secondaryText){
+    projectPrimary = TypeParser.parseColor(primary) ?? Colors.blue[600]!;
+    projectPrimaryText = TypeParser.parseColor(primaryText) ?? Colors.white;
+    projectSecondary = TypeParser.parseColor(secondary) ?? Colors.amber;
+    projectSecondaryText = TypeParser.parseColor(secondaryText) ?? Colors.white;
+  }
 
   static ThemeData lightThemeData() {
     Color parseColor = TypeParser.parseColor("#f2f2f2")!;
