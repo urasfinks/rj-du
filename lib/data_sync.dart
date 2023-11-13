@@ -88,7 +88,12 @@ class DataSync {
               }
             }
             counter++;
+            bool authJustNow = Storage().get("authJustNow", "false") == "true";
+            if (authJustNow) {
+              Storage().set("authJustNow", "false");
+            }
             Map<String, dynamic> postDataRequest = {
+              "authJustNow": authJustNow,
               "maxRevisionByType": maxRevisionByType,
               //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while, а то на сервере не к чему будет привязывать данные
               "userDataRSync": [],

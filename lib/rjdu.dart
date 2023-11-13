@@ -44,6 +44,7 @@ class RjDu {
     Storage().set("lastMail", "", false);
     Storage().set("lastSync", "", false);
     Storage().set("accountName", "", false);
+    Storage().set("authJustNow", "false", false); //Флаг, что только что произошла авторизация
 
     //Надо ждать загрузку из assets шаблонов
     await DataSource().init();
