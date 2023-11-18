@@ -297,7 +297,7 @@ class DataSource {
           curData.type.name,
           curData.parentUuid,
           curData.key,
-          curData.dateAdd ??= Util.getTimestampMillis(),
+          curData.dateAdd ??= Util.getTimestamp(),
           curData.dateUpdate,
           curData.revision ??= 0,
           curData.isRemove ??= 0,

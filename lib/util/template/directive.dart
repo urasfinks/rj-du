@@ -25,14 +25,22 @@ class TemplateDirective {
       if (data == null || data.toString() == "") {
         return "";
       }
-      int? x = TypeParser.parseInt(data);
-      if (x != null) {
-        /*if (data.length == 10) {
-          x *= 1000;
-        }*/
-        return DateFormat(arguments[0]).format(DateTime.fromMillisecondsSinceEpoch(x));
+      try {
+        if (arguments.isEmpty) {
+          return "TemplateDirective.timestampToDate empty argument format";
+        }
+        if (data.toString().length != 10) {
+          return "TemplateDirective.timestampToDate timestamp != 10; Data: $data; Args: $arguments";
+        }
+        int? x = TypeParser.parseInt(data);
+        if (x == null) {
+          return "TemplateDirective.timestampToDate parse int exception; Data: $data; Args: $arguments";
+        }
+        return DateFormat(arguments[0]).format(DateTime.fromMillisecondsSinceEpoch(x * 1000));
+      } catch (error, stackTrace) {
+        Util.printStackTrace("TemplateDirective.timestampToDate($data, $arguments)", error, stackTrace);
+        return "TemplateDirective.timestampToDate exception: $error; Data: $data; Args: $arguments";
       }
-      return "timestampToDate exception; Data: $data; Args: $arguments";
     },
     "partHideEmail": (data, arguments, ctx) {
       String email = data.toString();
@@ -78,33 +86,28 @@ class TemplateDirective {
       if (data == null || data == "") {
         return "неизвестно";
       }
-      int curTimestampMillis = Util.getTimestampMillis();
-      int d = Util.getTimestampMillis() ~/ 1000;
+      int curTimestamp = Util.getTimestamp();
+      int d = Util.getTimestamp();
       try {
         d = TypeParser.parseInt(data)!;
       } catch (error, stackTrace) {
         Util.printStackTrace("TemplateDirective.timeSoFar($data, $arguments)", error, stackTrace);
       }
 
-      if (arguments.isNotEmpty) {
-        if (arguments[0] == "sec") {
-          d *= 1000;
-        }
-      }
-      int diffMs = curTimestampMillis - d;
-      int diffDays = (diffMs / 86400000).floor();
+      int diffSec = curTimestamp - d;
+      int diffDays = (diffSec / 86400).floor();
       if (diffDays > 0) {
         return "$diffDaysд.";
       }
-      int diffHrs = ((diffMs % 86400000) / 3600000).floor();
+      int diffHrs = ((diffSec % 86400) / 3600).floor();
       if (diffHrs > 0) {
         return "$diffHrsч.";
       }
-      int diffMins = (((diffMs % 86400000) % 3600000) / 60000).floor();
+      int diffMins = (((diffSec % 86400) % 3600) / 60).floor();
       if (diffMins > 0) {
         return "$diffMinsмин.";
       }
-      int diffSeconds = (((diffMs % 86400000) % 3600000) / 1000).floor();
+      int diffSeconds = ((diffSec % 86400) % 3600).floor();
       if (diffSeconds > 0) {
         return "$diffSecondsсек.";
       }

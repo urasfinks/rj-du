@@ -141,8 +141,7 @@ class Util {
 
   static int getTimestamp() {
     int microsecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
-    double x = microsecondsSinceEpoch / 1000;
-    return x.toInt();
+    return microsecondsSinceEpoch ~/ 1000;
   }
 
   static Key getKey() {
