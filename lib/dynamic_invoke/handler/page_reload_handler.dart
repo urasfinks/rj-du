@@ -16,7 +16,10 @@ class PageReloadHandler extends AbstractHandler {
     dynamic fnReload;
     switch (args["case"]) {
       case "all":
-        NavigatorApp.reloadAllPages();
+        fnReload = () {
+          Util.p("PageReloadHandler.fnReload(all)");
+          NavigatorApp.reloadAllPages();
+        };
         break;
       case "byArguments":
         fnReload = () {
