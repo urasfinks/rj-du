@@ -51,6 +51,7 @@ class DynamicPage extends StatefulWidget {
   bool isDispose = false;
   int openInIndexTab = 0;
   int timeCreate = 0;
+  bool reloadOnActiveViewport = false;
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
     if (!_subscribedOnReload[group]!.contains(value)) {
@@ -128,16 +129,14 @@ class DynamicPage extends StatefulWidget {
   void onActive() {
     onEvent("onActive", {});
     renderFloatingActionButton();
-    if (backgroundReload) {
-      backgroundReload = false;
+    if (reloadOnActiveViewport) {
+      reloadOnActiveViewport = false;
       Future.delayed(const Duration(seconds: 1), () {
         // Пытаемся избежать markNeedsBuild
         reload(true);
       });
     }
   }
-
-  bool backgroundReload = false;
 
   void reload(bool rebuild) {
     if (isDispose == false) {
@@ -167,7 +166,7 @@ class DynamicPage extends StatefulWidget {
       } else {
         Util.p(
             "DynamicPage.reload($rebuild) BACKGROUND uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
-        backgroundReload = true;
+        reloadOnActiveViewport = true;
       }
     }
   }
