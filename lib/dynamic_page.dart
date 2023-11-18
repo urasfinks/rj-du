@@ -138,9 +138,11 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  void reload(bool rebuild) {
+  void reload(bool rebuild, [bool isChangeTheme = false]) {
     if (isDispose == false) {
-      if (NavigatorApp.getLast() == this) {
+      // Темы наверное часто не будут менять, но если поменяют в runTime - перегрузим всё страницы, что бы
+      // не мелькала старая тема на не активных страницах
+      if (NavigatorApp.getLast() == this || isChangeTheme) {
         //Если перезагружается страница, на которой мы сейчас находимся
         AudioComponent().stop();
         Util.p("DynamicPage.reload($rebuild) uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");

@@ -89,7 +89,7 @@ class RjDu {
 
     SystemNotify().subscribe(SystemNotifyEnum.changeThemeData, (state) {
       androidUpdateSubAppBar();
-      NavigatorApp.reloadAllPages();
+      NavigatorApp.reloadAllPages(true);
     });
 
     if (Storage().isUpdateApplicationVersion()) {

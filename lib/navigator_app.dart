@@ -99,9 +99,9 @@ class NavigatorApp {
     }
   }
 
-  static void reloadAllPages() {
+  static void reloadAllPages([bool isChangeTheme = false]) {
     for (DynamicPage dynamicPage in allDynamicPage) {
-      dynamicPage.reload(true);
+      dynamicPage.reload(true, isChangeTheme);
     }
   }
 
