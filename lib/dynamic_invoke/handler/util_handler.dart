@@ -1,7 +1,6 @@
 import 'package:rjdu/data_sync.dart';
 import 'package:rjdu/db/data_getter.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
-import 'package:rjdu/navigator_app.dart';
 
 import '../../dynamic_ui/widget/abstract_widget.dart';
 import '../../util.dart';
@@ -32,9 +31,6 @@ class UtilHandler extends AbstractHandler {
         break;
       case "dynamicPageApi":
         return {args["case"]: dynamicUIBuilderContext.dynamicPage.api(args)};
-      case "reloadAllPage":
-        NavigatorApp.reloadAllPages();
-        break;
       case "webSocketConnect":
         WebSocketService().addListener(dynamicUIBuilderContext.dynamicPage);
         break;

@@ -15,16 +15,13 @@ class PageReloadHandler extends AbstractHandler {
     bool rebuild = args["rebuild"] ?? true;
     dynamic fnReload;
     switch (args["case"]) {
+      case "all":
+        NavigatorApp.reloadAllPages();
+        break;
       case "byArguments":
         fnReload = () {
           Util.p("PageReloadHandler.fnReload(byArguments)");
           NavigatorApp.reloadPageByArguments(args["key"], args["value"], rebuild);
-        };
-        break;
-      case "current":
-        fnReload = () {
-          Util.p("PageReloadHandler.fnReload(current)");
-          dynamicUIBuilderContext.dynamicPage.reload(rebuild);
         };
         break;
       case "subscribed":
@@ -40,7 +37,12 @@ class PageReloadHandler extends AbstractHandler {
           NavigatorApp.reloadPageBySubscription(mapMultiUpdate, args["rebuild"] ?? true);
         };
         break;
+      case "current":
       default:
+        fnReload = () {
+          Util.p("PageReloadHandler.fnReload(current)");
+          dynamicUIBuilderContext.dynamicPage.reload(rebuild);
+        };
         Util.p("PageReloadHandler WTF?");
         break;
     }
