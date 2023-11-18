@@ -227,7 +227,7 @@ class DataSource {
       });
       if (response.statusCode == 200) {
       } else {
-        AlertHandler.alertSimple("Данные не зафиксированы на сервере");
+        AlertHandler.alertSimple("Данные не зафиксированы на сервере (${response.statusCode})");
         Future.delayed(const Duration(seconds: 1), () {
           SocketCache().renderDBData(data.uuid);
         });
