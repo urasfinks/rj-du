@@ -89,7 +89,8 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
   @override
   Widget build(BuildContext context) {
     GlobalSettings().appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight + 1;
-    // Ситуация: открываетчя keyboard -> reloadAllPage -> navigator_pop
+    GlobalSettings().orientation = MediaQuery.of(context).orientation.name;
+    // Ситуация: открывается keyboard -> reloadAllPage -> navigator_pop
     // В момент открытой keyboard: MediaQuery.of(context).padding.bottom = 0 а бео открытого keyboard = 34
     // Страница при перестроениении отображается не корректно
     // Пока захардкодим, посмотрим как проявляются будет
