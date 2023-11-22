@@ -11,26 +11,26 @@ class DeepLink {
   }
 
   static void open(Uri uri) {
-    List<String> listArg = [];
-    listArg.addAll(uri.pathSegments);
-    //[deeplink, v1, ConnectAlternativeWord, code, 392496]
-    Map<String, dynamic> args = {};
-    args["deeplink"] = listArg.removeAt(0);
-    args["version"] = listArg.removeAt(0);
-    args["switch"] = listArg.removeAt(0);
     try {
+      List<String> listArg = [];
+      listArg.addAll(uri.pathSegments);
+      //[deeplink, v1, ConnectAlternativeWord, code, 392496]
+      //[deeplink, v10, ConnectAlternativeWord, socketUuid, 7bc357a1-f166-4dc5-9265-f893d89be94a]
+      Map<String, dynamic> args = {};
+      args["deeplink"] = listArg.removeAt(0);
+      args["version"] = listArg.removeAt(0);
+      args["switch"] = listArg.removeAt(0);
       for (int i = 0; i < listArg.length; i += 2) {
         String key = listArg[i];
         String value = listArg[i + 1];
         args[key] = value;
       }
+      if (NavigatorApp.getLast() != null) {
+        Util.p("DeepLink $uri; args: $args");
+        DynamicInvoke().jsInvoke("DeepLink.js", args, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+      }
     } catch (e, stacktrace) {
       Util.printStackTrace("DeepLink.open()", e, stacktrace);
-      args["error"] = e.toString();
-    }
-    Util.p("DeepLink $uri; args: $args");
-    if (NavigatorApp.getLast() != null) {
-      DynamicInvoke().jsInvoke("DeepLink.js", args, NavigatorApp.getLast()!.dynamicUIBuilderContext);
     }
   }
 
