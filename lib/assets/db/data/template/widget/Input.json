@@ -4,7 +4,7 @@
   "onInitSetStateNotify": false,
   "onRebuildClearTemporaryControllerText": true,
   "setState": true,
-  "keyboardType": "text",
+  "keyboardType": "${keyboardType,text}",
   "textCapitalization": "sentences",
   "style": {
     "flutterType": "TextStyle",
