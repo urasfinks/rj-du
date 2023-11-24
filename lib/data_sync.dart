@@ -185,7 +185,7 @@ class DataSync {
           }
           // При HotReload страница Account уже загрузится,
           // Не пугайтесь всегда будет отставание на одно значение от реальности
-          Storage().set("lastSync", "${Util.getTimestampMillis()}");
+          Storage().set("lastSync", "${Util.getTimestamp()}");
         } catch (e, stacktrace) {
           Util.printStackTrace("DataSync().sync()", e, stacktrace);
         }
