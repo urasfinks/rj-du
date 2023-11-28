@@ -112,7 +112,6 @@ class CustomScrollViewWidget extends AbstractWidget {
       height: GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
     ));
 
-
     if (parsedJson.containsKey("startFill")) {
       // SliverFillRemaining
       sliverList.add(render(parsedJson, "startFill", null, dynamicUIBuilderContext));
@@ -126,9 +125,11 @@ class CustomScrollViewWidget extends AbstractWidget {
       //SliverFillRemaining
       sliverList.add(render(parsedJson, "endFill", null, dynamicUIBuilderContext));
     }
-
+    bool scroll = TypeParser.parseBool(
+      getValue(parsedJson, "scroll", true, dynamicUIBuilderContext),
+    )!;
     return CustomScrollView(
-      physics: Util.getPhysics(),
+      physics: scroll ? Util.getPhysics()! : const NeverScrollableScrollPhysics(),
       key: Util.getKey(),
       primary: TypeParser.parseBool(
         getValue(parsedJson, "primary", true, dynamicUIBuilderContext),
