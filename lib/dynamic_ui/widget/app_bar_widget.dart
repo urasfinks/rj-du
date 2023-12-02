@@ -37,9 +37,14 @@ class AppBarWidget extends AbstractWidget {
       flexibleSpace: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
-          child: Container(color: Colors.transparent,),
+          child: Container(
+            color: Colors.transparent,
+          ),
         ),
       ),
+      centerTitle: TypeParser.parseBool(
+        getValue(parsedJson, "centerTitle", true, dynamicUIBuilderContext),
+      )!,
       title: render(parsedJson, "title", "", dynamicUIBuilderContext),
       actions: renderList(parsedJson, "actions", dynamicUIBuilderContext),
       bottom: PreferredSize(
