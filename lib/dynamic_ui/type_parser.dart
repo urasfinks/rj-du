@@ -216,6 +216,9 @@ class TypeParser {
     if (value == null || value.toString().trim() == "") {
       return null;
     }
+    if (value.runtimeType == EdgeInsets) {
+      return value;
+    }
     var values = value.toString().split(",");
     if (values.length > 1) {
       return EdgeInsets.only(
