@@ -41,7 +41,7 @@ class DataMigration {
   }
 
   static Future<List<String>> loadTabData() async {
-    List<String> result = [];
+    Map<int, String> unSort = {};
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     for (String path in assets.keys) {
       final regTab = RegExp(r'/tab[0-9]+\.json$');
@@ -50,9 +50,48 @@ class DataMigration {
 
         int? index = TypeParser.parseInt(path.split("assets/db/data/systemData/tab")[1].split(".json")[0]);
         if (index != null) {
-          result.insert(index, fileData);
+          unSort[index] = fileData;
+          //result.insert(index, fileData);
         }
       }
+    }
+    List<String> result = [];
+    List<int> sortedKeys = unSort.keys.toList()..sort();
+    for (int key in sortedKeys) {
+      result.add(unSort[key]!);
+    }
+    while (result.length < 2) {
+      result.add(Util.jsonPretty(
+        {
+          "name": "main",
+          "tab": {
+            "flutterType": "BottomNavigationBarItem",
+            "icon": {"flutterType": "Icon", "src": "not_interested"},
+            "label": "???"
+          },
+          "content": {
+            "flutterType": "Scaffold",
+            "body": {
+              "flutterType": "CustomScrollView",
+              "onStateDataUpdate": true,
+              "padding": "10,20,10,0",
+              "appBar": {
+                "flutterType": "SliverAppBar",
+                "centerTitle": false,
+                "title": {
+                  "flutterType": "Text",
+                  "label": "???",
+                  "textAlign": "left",
+                  "style": {"flutterType": "TextStyle", "fontSize": 17}
+                },
+              },
+              "children": [
+                {"flutterType": "Text", "label": "DataMigration not load 2tab data"}
+              ]
+            }
+          }
+        },
+      ));
     }
     return result;
   }
