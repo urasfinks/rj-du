@@ -40,6 +40,7 @@ import 'package:rjdu/dynamic_ui/widget/material_app_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/material_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/safe_area_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.dart';
@@ -100,6 +101,7 @@ class DynamicUI {
     "MaterialApp": MaterialAppWidget().get,
     "Text": TextWidget().get,
     "Scaffold": ScaffoldWidget().get,
+    "SafeArea": SafeAreaWidget().get,
     "AppBar": AppBarWidget().get,
     "SliverAppBar": SliverAppBarWidget().get,
     "SliverFillRemaining": SliverFillRemainingWidget().get,
