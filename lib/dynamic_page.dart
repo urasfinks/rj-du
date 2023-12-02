@@ -185,6 +185,12 @@ class DynamicPage extends StatefulWidget {
   void setProperty(String key, dynamic value) {
     if (value != null) {
       properties[key] = value;
+      for (Function(String nameController, AbstractControllerWrap abstractControllerWrap) fn
+          in subscribeAddController) {
+        if (value is AbstractControllerWrap) {
+          fn(key, value);
+        }
+      }
     }
   }
 
@@ -314,6 +320,14 @@ class DynamicPage extends StatefulWidget {
       Util.printCurrentStack("DynamicPage.api() Error: $error; args: $args;");
     }
     return null;
+  }
+
+  List<Function(String nameController, AbstractControllerWrap abstractControllerWrap)> subscribeAddController = [];
+
+  void onAppendController(Function(String nameController, AbstractControllerWrap abstractControllerWrap) fn) {
+    if (!subscribeAddController.contains(fn)) {
+      subscribeAddController.add(fn);
+    }
   }
 }
 

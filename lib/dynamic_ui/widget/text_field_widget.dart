@@ -18,7 +18,7 @@ class TextFieldWidget extends AbstractWidget {
 
     TextEditingController textController =
         getController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext, () {
-      return TextEditingControllerWrap(TextEditingController(text: controlStateHelper.defaultData));
+      return TextEditingControllerWrap(TextEditingController(text: controlStateHelper.defaultData), {});
     });
 
     if (controlStateHelper.isStatus(ControlStateHelperEvent.onRebuildClearTemporaryControllerText)) {
@@ -154,7 +154,7 @@ class TextFieldWidget extends AbstractWidget {
 }
 
 class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingController> {
-  TextEditingControllerWrap(super.controller);
+  TextEditingControllerWrap(super.controller, super.stateControl);
 
   @override
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {

@@ -1,9 +1,10 @@
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
 
 abstract class AbstractControllerWrap<T> {
-  late T controller;
+  T controller;
+  Map<String, dynamic> stateControl;
 
-  AbstractControllerWrap(this.controller);
+  AbstractControllerWrap(this.controller, this.stateControl);
 
   T getController() {
     return controller;

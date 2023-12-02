@@ -29,6 +29,9 @@ class ContainerWidget extends AbstractWidget {
       color: TypeParser.parseColor(
         getValue(parsedJson, "color", null, dynamicUIBuilderContext),
       ),
+      clipBehavior: TypeParser.parseClip(
+        getValue(parsedJson, "clipBehavior", "none", dynamicUIBuilderContext),
+      )!,
       child: render(
         parsedJson,
         "child",

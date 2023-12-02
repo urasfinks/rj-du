@@ -11,7 +11,7 @@ class FlipCardWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     AbstractStream stream = getController(parsedJson, "FlipCardWidget", dynamicUIBuilderContext, () {
-      return StreamControllerWrap(StreamData({
+      StreamData streamData = StreamData({
         "angle": 0,
         "isBack": TypeParser.parseBool(
           getValue(parsedJson, "isBack", false, dynamicUIBuilderContext),
@@ -19,7 +19,8 @@ class FlipCardWidget extends AbstractWidget {
         "flip": TypeParser.parseBool(
           getValue(parsedJson, "flip", false, dynamicUIBuilderContext),
         )!
-      }));
+      });
+      return StreamControllerWrap(streamData, streamData.data);
     });
     return StreamWidget.getWidget(stream, (snapshot) {
       bool isBack = snapshot["isBack"];

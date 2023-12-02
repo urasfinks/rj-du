@@ -10,7 +10,7 @@ class ScrollbarWidget extends AbstractWidget {
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     ScrollController controller = getController(parsedJson, "ScrollBarController", dynamicUIBuilderContext, () {
-      return ScrollControllerWrap(ScrollController());
+      return ScrollControllerWrap(ScrollController(), {});
     });
     return Scrollbar(
       controller: controller,
@@ -21,7 +21,7 @@ class ScrollbarWidget extends AbstractWidget {
 }
 
 class ScrollControllerWrap extends AbstractControllerWrap<ScrollController> {
-  ScrollControllerWrap(super.controller);
+  ScrollControllerWrap(super.controller, super.stateControl);
 
   @override
   void dispose() {

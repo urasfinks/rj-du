@@ -31,7 +31,7 @@ class SwipableStackWidget extends AbstractWidget {
         "index1": 1,
         "swipedIndex": null,
         "swipedDirection": null,
-        "overlayDirection": null,
+        "overlayDirection": "null",
         "overlayOpacity": 0,
         "finish": false,
         "prc": 0,
@@ -40,7 +40,7 @@ class SwipableStackWidget extends AbstractWidget {
     );
 
     SwipableStackController controller = getController(parsedJson, "SwipableStack", dynamicUIBuilderContext, () {
-      return SwipableStackControllerWrap(SwipableStackController());
+      return SwipableStackControllerWrap(SwipableStackController(), stateControl);
     });
 
     if (parsedJson.containsKey("finish") && stateControl.containsKey("finish") && stateControl["finish"]) {
@@ -138,7 +138,7 @@ class SwipableStackWidget extends AbstractWidget {
         click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
         if (controller.currentIndex == children.length - 1) {
           if (roll) {
-            multiInvoke.invoke((){
+            multiInvoke.invoke(() {
               controller.currentIndex = rollIndex;
             });
           } else {
@@ -172,7 +172,11 @@ class SwipableStackWidget extends AbstractWidget {
       )!,
       overlayBuilder: (context, properties) {
         stateControl["overlayOpacity"] = min(properties.swipeProgress, 1.0);
-        stateControl["overlayDirection"] = properties.direction.name.toString();
+        if (stateControl["overlayOpacity"] < 0.01) {
+          stateControl["overlayDirection"] = "none";
+        } else {
+          stateControl["overlayDirection"] = properties.direction.name.toString();
+        }
         if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnOverlayBuilder.name] ?? false == true) {
           dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
         }
@@ -201,7 +205,7 @@ class SwipableStackWidget extends AbstractWidget {
 }
 
 class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackController> {
-  SwipableStackControllerWrap(super.controller);
+  SwipableStackControllerWrap(super.controller, super.stateControl);
 
   @override
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {

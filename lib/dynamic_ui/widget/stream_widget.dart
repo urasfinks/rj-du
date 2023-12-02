@@ -17,23 +17,39 @@ class StreamWidget extends AbstractWidget {
       switch (streamArgs["case"] ?? "default") {
         case "Periodic":
           abstractStream = StreamPeriodic(streamArgs["data"], streamArgs["timerMillis"] ?? 1000,
-              (Map<String, dynamic> data, Timer timer) {
-            if (!data.containsKey("count")) {
-              data["count"] = -1;
-            }
-            data["count"]++;
-            if (streamArgs.containsKey("maxCount")) {
-              if (data["count"] > streamArgs["maxCount"]) {
-                timer.cancel();
+                  (Map<String, dynamic> data, Timer timer) {
+                if (!data.containsKey("count")) {
+                  data["count"] = -1;
+                }
+                data["count"]++;
+                if (streamArgs.containsKey("maxCount")) {
+                  if (data["count"] > streamArgs["maxCount"]) {
+                    timer.cancel();
+                  }
+                }
+              });
+          break;
+        case "ControllerListener":
+          //Я пока не знаю как сделать по человечески
+          abstractStream = StreamData(streamArgs["data"] ?? {});
+          String key = getControllerKey(streamArgs, "ControllerListener");
+          if (dynamicUIBuilderContext.dynamicPage.isProperty(key)) {
+            appendListener(
+                getControllerWrap(streamArgs, "ControllerListener", dynamicUIBuilderContext)!, abstractStream);
+          } else {
+            dynamicUIBuilderContext.dynamicPage.onAppendController((String nameController,
+                AbstractControllerWrap abstractControllerWrap) {
+              if (nameController == key) {
+                appendListener(abstractControllerWrap, abstractStream!);
               }
-            }
-          });
+            });
+          }
           break;
         default:
           abstractStream = StreamData(streamArgs["data"] ?? {});
           break;
       }
-      return StreamControllerWrap(abstractStream);
+      return StreamControllerWrap(abstractStream, {});
     });
 
     return getWidget(stream, (data) {
@@ -43,6 +59,15 @@ class StreamWidget extends AbstractWidget {
       );
       return render(parsedJson, "child", const SizedBox(), newDynamicUIBuilderContext);
     });
+  }
+
+  appendListener(AbstractControllerWrap ctrlWrap, AbstractStream streamData) {
+    if (ctrlWrap.getController() is ChangeNotifier) {
+      ChangeNotifier changeNotifier = ctrlWrap.getController() as ChangeNotifier;
+      changeNotifier.addListener(() {
+        streamData.setData(ctrlWrap.stateControl);
+      });
+    }
   }
 
   static Widget getWidget(AbstractStream stream, dynamic Function(Map<String, dynamic> data) builder) {
@@ -59,7 +84,7 @@ class StreamWidget extends AbstractWidget {
 }
 
 class StreamControllerWrap extends AbstractControllerWrap<AbstractStream> {
-  StreamControllerWrap(super.controller);
+  StreamControllerWrap(super.controller, super.stateControl);
 
   @override
   void dispose() {}
@@ -75,8 +100,8 @@ class StreamControllerWrap extends AbstractControllerWrap<AbstractStream> {
 }
 
 class StreamPeriodic extends AbstractStream {
-  StreamPeriodic(
-      Map<String, dynamic> defData, int milliseconds, Function(Map<String, dynamic> data, Timer timer) callback) {
+  StreamPeriodic(Map<String, dynamic> defData, int milliseconds,
+      Function(Map<String, dynamic> data, Timer timer) callback) {
     data = defData;
     Timer.periodic(Duration(milliseconds: milliseconds), (timer) {
       callback(data, timer);

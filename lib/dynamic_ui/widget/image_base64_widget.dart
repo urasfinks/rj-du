@@ -15,7 +15,8 @@ class ImageBase64Widget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     AbstractStream abstractStream = getController(parsedJson, "ImageBase64Widget", dynamicUIBuilderContext, () {
-      return StreamControllerWrap(StreamData({"image": null, "start": false}));
+      StreamData streamData = StreamData({"image": null, "start": false});
+      return StreamControllerWrap(streamData, streamData.data);
     });
     if (abstractStream.getData()["start"] == false) {
       abstractStream.getData()["start"] = true;

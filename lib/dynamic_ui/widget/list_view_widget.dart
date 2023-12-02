@@ -15,7 +15,7 @@ class ListViewWidget extends AbstractWidget {
 
     List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
     ScrollController controller = getController(parsedJson, "ScrollBarController", dynamicUIBuilderContext, () {
-      return ScrollControllerWrap(ScrollController());
+      return ScrollControllerWrap(ScrollController(), {});
     });
     if (separated) {
       return ListView.separated(

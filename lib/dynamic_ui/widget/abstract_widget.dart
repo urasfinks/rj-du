@@ -14,24 +14,33 @@ import 'package:flutter/material.dart';
 abstract class AbstractWidget {
   dynamic get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext);
 
-  static Map<String, dynamic> getStateControl(
-      String state, DynamicUIBuilderContext dynamicUIBuilderContext, Map<String, dynamic> defaultState) {
-    return dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state, defaultState).value;
+  static Map<String, dynamic> getStateControl(String state, DynamicUIBuilderContext dynamicUIBuilderContext,
+      Map<String, dynamic> defaultState) {
+    return dynamicUIBuilderContext.dynamicPage.stateData
+        .getInstanceData(state, defaultState)
+        .value;
   }
 
   T getController<T>(Map<String, dynamic> parsedJson, String state, DynamicUIBuilderContext dynamicUIBuilderContext,
       AbstractControllerWrap<T> Function() getDefault) {
-    String key = parsedJson["controller"] ?? parsedJson["state"] ?? state;
-    AbstractControllerWrap? ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(key, getDefault);
+    AbstractControllerWrap? ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(
+        getControllerKey(parsedJson, state), getDefault);
     return ctx!.getController();
   }
 
-  static dynamic getValueStatic(
-    Map<String, dynamic> parsedJson,
-    String? key,
-    dynamic defaultValue,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  String getControllerKey(Map<String, dynamic> parsedJson, state) {
+    return parsedJson["controller"] ?? parsedJson["state"] ?? state;
+  }
+
+  AbstractControllerWrap? getControllerWrap(Map<String, dynamic> parsedJson, String state,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    return dynamicUIBuilderContext.dynamicPage.getProperty(getControllerKey(parsedJson, state), null);
+  }
+
+  static dynamic getValueStatic(Map<String, dynamic> parsedJson,
+      String? key,
+      dynamic defaultValue,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     dynamic selector = key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue);
     if (selector.runtimeType.toString() == "String") {
       selector = Util.template(selector, dynamicUIBuilderContext);
@@ -45,18 +54,17 @@ abstract class AbstractWidget {
     }
     if (resultWidget != null && resultWidget.runtimeType.toString().contains("Map<String,")) {
       Util.p(
-          "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
+          "$className.build() Return: $resultWidget; type: ${resultWidget
+              .runtimeType}; input: $parsedJson; Must be Widget");
       return Text("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;
   }
 
-  dynamic getValue(
-    Map<String, dynamic> parsedJson,
-    String? key,
-    dynamic defaultValue,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  dynamic getValue(Map<String, dynamic> parsedJson,
+      String? key,
+      dynamic defaultValue,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     try {
       if (parsedJson.containsKey(key)) {
         return getValueStatic(parsedJson, key, defaultValue, dynamicUIBuilderContext);
@@ -69,20 +77,16 @@ abstract class AbstractWidget {
     }
   }
 
-  dynamic render(
-    Map<String, dynamic> parsedJson,
-    String? key,
-    dynamic defaultValue,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  dynamic render(Map<String, dynamic> parsedJson,
+      String? key,
+      dynamic defaultValue,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     return DynamicUI.render(parsedJson, key, defaultValue, dynamicUIBuilderContext);
   }
 
-  List<Widget> renderList(
-    Map<String, dynamic> parsedJson,
-    String key,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  List<Widget> renderList(Map<String, dynamic> parsedJson,
+      String key,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     if (!parsedJson.containsKey(key)) {
       return [];
     }
@@ -99,10 +103,8 @@ abstract class AbstractWidget {
     return DynamicUI.renderList(parsedJson, key, dynamicUIBuilderContext);
   }
 
-  List updateList(
-    List list,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  List updateList(List list,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     List<dynamic> result = [];
     for (var element in list) {
       Map<String, dynamic> el = element as Map<String, dynamic>;
@@ -125,10 +127,8 @@ abstract class AbstractWidget {
     return result;
   }
 
-  static void invoke(
-    Map<String, dynamic>? settings,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  static void invoke(Map<String, dynamic>? settings,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     if (settings != null) {
       if (settings.containsKey("jsInvoke")) {
         DynamicInvoke().jsInvoke(settings["jsInvoke"], settings["args"], dynamicUIBuilderContext);
@@ -158,7 +158,9 @@ abstract class AbstractWidget {
           try {
             settings = json.decode(tmp) as Map<String, dynamic>?;
           } catch (e, stacktrace) {
-            Util.printStackTrace("AbstractWidget.clickStatic() key: $key; parsedJson: $parsedJson; tmp: $tmp; tmpType: ${tmp.runtimeType.toString()}", e, stacktrace);
+            Util.printStackTrace(
+                "AbstractWidget.clickStatic() key: $key; parsedJson: $parsedJson; tmp: $tmp; tmpType: ${tmp.runtimeType
+                    .toString()}", e, stacktrace);
           }
         }
         if (settings != null) {

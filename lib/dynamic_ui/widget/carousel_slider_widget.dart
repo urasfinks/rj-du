@@ -27,7 +27,7 @@ class CarouselSliderWidget extends AbstractWidget {
       return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
     }
     CarouselController carouselController = getController(parsedJson, "CarouselSlider", dynamicUIBuilderContext, () {
-      return CarouselControllerWrap(CarouselController());
+      return CarouselControllerWrap(CarouselController(), stateControl);
     });
 
     List children = [];
@@ -145,7 +145,7 @@ class CarouselSliderWidget extends AbstractWidget {
 }
 
 class CarouselControllerWrap extends AbstractControllerWrap<CarouselController> {
-  CarouselControllerWrap(super.controller);
+  CarouselControllerWrap(super.controller, super.stateControl);
 
   @override
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
