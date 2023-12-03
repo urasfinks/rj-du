@@ -202,7 +202,7 @@ class DynamicUI {
       dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
       if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {
         if (selector.containsKey("onStateDataUpdate")) {
-          String state = selector["state"] ?? "main";
+          String state = selector["onStateDataUpdateKey"] ?? selector["state"] ?? "main";
           String keyMapLink = "state${Util.capitalize(state)}";
           if (selector.containsKey("link")) {
             Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
