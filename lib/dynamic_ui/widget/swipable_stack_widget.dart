@@ -135,6 +135,7 @@ class SwipableStackWidget extends AbstractWidget {
       onSwipeCompleted: (index, direction) {
         stateControl["swipedIndex"] = index;
         stateControl["swipedDirection"] = direction.name.toString();
+        stateControl["overlayDirection"] = "none";
         click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
         if (controller.currentIndex == children.length - 1) {
           if (roll) {
