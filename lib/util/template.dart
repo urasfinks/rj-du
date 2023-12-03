@@ -91,6 +91,10 @@ class Template {
   static dynamic stringSelector(Map<String, dynamic> data, String path, [dynamic defaultValue]) {
     defaultValue ??= "[$path]";
     bool find = true;
+    if (path == ".") {
+      Util.log(Util.jsonPretty(data));
+      return data;
+    }
     dynamic cur = data;
     try {
       List<String> exp = path.split(".");
