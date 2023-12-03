@@ -43,6 +43,10 @@ class SwipableStackWidget extends AbstractWidget {
       return SwipableStackControllerWrap(SwipableStackController(), stateControl);
     });
 
+    double reactionOverlayOpacity = TypeParser.parseDouble(
+      getValue(parsedJson, "reactionOverlayOpacity", 0.25, dynamicUIBuilderContext),
+    )!;
+
     if (parsedJson.containsKey("finish") && stateControl.containsKey("finish") && stateControl["finish"]) {
       return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
     }
@@ -173,7 +177,7 @@ class SwipableStackWidget extends AbstractWidget {
       )!,
       overlayBuilder: (context, properties) {
         stateControl["overlayOpacity"] = min(properties.swipeProgress, 1.0);
-        if (stateControl["overlayOpacity"] < 0.01) {
+        if (stateControl["overlayOpacity"] < reactionOverlayOpacity) {
           stateControl["overlayDirection"] = "none";
         } else {
           stateControl["overlayDirection"] = properties.direction.name.toString();
