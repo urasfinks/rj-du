@@ -17,28 +17,28 @@ class StreamWidget extends AbstractWidget {
       switch (streamArgs["case"] ?? "default") {
         case "Periodic":
           abstractStream = StreamPeriodic(streamArgs["data"], streamArgs["timerMillis"] ?? 1000,
-                  (Map<String, dynamic> data, Timer timer) {
-                if (!data.containsKey("count")) {
-                  data["count"] = -1;
-                }
-                data["count"]++;
-                if (streamArgs.containsKey("maxCount")) {
-                  if (data["count"] > streamArgs["maxCount"]) {
-                    timer.cancel();
-                  }
-                }
-              });
+              (Map<String, dynamic> data, Timer timer) {
+            if (!data.containsKey("count")) {
+              data["count"] = -1;
+            }
+            data["count"]++;
+            if (streamArgs.containsKey("maxCount")) {
+              if (data["count"] > streamArgs["maxCount"]) {
+                timer.cancel();
+              }
+            }
+          });
           break;
         case "ControllerListener":
           //Я пока не знаю как сделать по человечески
           abstractStream = StreamData(streamArgs["data"] ?? {});
-          String key = getControllerKey(streamArgs, "ControllerListener");
+          String key = getControllerKey(streamArgs, "ControllerListener", dynamicUIBuilderContext);
           if (dynamicUIBuilderContext.dynamicPage.isProperty(key)) {
             appendListener(
                 getControllerWrap(streamArgs, "ControllerListener", dynamicUIBuilderContext)!, abstractStream);
           } else {
-            dynamicUIBuilderContext.dynamicPage.onAppendController((String nameController,
-                AbstractControllerWrap abstractControllerWrap) {
+            dynamicUIBuilderContext.dynamicPage
+                .onAppendController((String nameController, AbstractControllerWrap abstractControllerWrap) {
               if (nameController == key) {
                 appendListener(abstractControllerWrap, abstractStream!);
               }
@@ -100,8 +100,8 @@ class StreamControllerWrap extends AbstractControllerWrap<AbstractStream> {
 }
 
 class StreamPeriodic extends AbstractStream {
-  StreamPeriodic(Map<String, dynamic> defData, int milliseconds,
-      Function(Map<String, dynamic> data, Timer timer) callback) {
+  StreamPeriodic(
+      Map<String, dynamic> defData, int milliseconds, Function(Map<String, dynamic> data, Timer timer) callback) {
     data = defData;
     Timer.periodic(Duration(milliseconds: milliseconds), (timer) {
       callback(data, timer);
