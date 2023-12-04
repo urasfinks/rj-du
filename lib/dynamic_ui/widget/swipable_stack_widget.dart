@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
+import 'package:rjdu/util.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,9 @@ class SwipableStackWidget extends AbstractWidget {
         "overlayOpacity": 0,
         "finish": false,
         "prc": 0,
-        "prc1": 0
+        "prc1": 0,
+        "swipedHistory": {},
+        "swiped": {}
       },
     );
 
@@ -141,24 +144,32 @@ class SwipableStackWidget extends AbstractWidget {
         getValue(parsedJson, "stackClipBehaviour", "none", dynamicUIBuilderContext),
       )!,
       onSwipeCompleted: (index, direction) {
-        stateControl["swipedIndex"] = index;
-        stateControl["swipedDirection"] = direction.name.toString();
-        stateControl["overlayDirection"] = "none";
-        click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
-        if (controller.currentIndex == children.length - 1) {
-          if (roll) {
-            multiInvoke.invoke(() {
-              controller.currentIndex = rollIndex;
-            });
-          } else {
-            stateControl["finish"] = true;
-            dynamicUIBuilderContext.dynamicPage.reload(false);
-          }
-          click(parsedJson, dynamicUIBuilderContext, "onFinish");
-        }
+        try {
+          Map x = (stateControl["swipedHistory"] as Map);
+          x["i$index"] = direction.name.toString();
+          calculate(index, stateControl);
 
-        if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnSwipeCompleted.name] ?? false == true) {
-          dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
+          stateControl["swipedIndex"] = index;
+          stateControl["swipedDirection"] = direction.name.toString();
+          stateControl["overlayDirection"] = "none";
+          click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
+          if (controller.currentIndex == children.length - 1) {
+            if (roll) {
+              multiInvoke.invoke(() {
+                controller.currentIndex = rollIndex;
+              });
+            } else {
+              stateControl["finish"] = true;
+              dynamicUIBuilderContext.dynamicPage.reload(false);
+            }
+            click(parsedJson, dynamicUIBuilderContext, "onFinish");
+          }
+
+          if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnSwipeCompleted.name] ?? false == true) {
+            dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
+          }
+        } catch (error, stackTrace) {
+          Util.printStackTrace("-", error, stackTrace);
         }
       },
       onWillMoveNext: (index, direction) {
@@ -211,6 +222,28 @@ class SwipableStackWidget extends AbstractWidget {
       },
     );
   }
+
+  static void calculate(int currentIndex, Map<String, dynamic> stateControl) {
+    try {
+      Map x = stateControl["swipedHistory"] as Map;
+      Map<String, int> swipedCounter = {};
+      x.forEach((key, value) {
+        int? i = TypeParser.parseInt(key.toString().substring(1));
+        String direction = value.toString();
+        if (i != null) {
+          if (!swipedCounter.containsKey(direction)) {
+            swipedCounter[direction] = 0;
+          }
+          if (i <= currentIndex) {
+            swipedCounter[direction] = swipedCounter[direction]! + 1;
+          }
+        }
+      });
+      stateControl["swiped"] = swipedCounter;
+    } catch (error, stackTrace) {
+      Util.printStackTrace("", error, stackTrace);
+    }
+  }
 }
 
 class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackController> {
@@ -228,6 +261,7 @@ class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackCo
       case "index":
         controller.currentIndex = args["index"] ?? 0;
         stateControl["index"] = controller.currentIndex;
+        SwipableStackWidget.calculate(controller.currentIndex - 1, stateControl);
         break;
       case "next":
         switch (args["direction"] ?? "right") {
@@ -245,6 +279,7 @@ class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackCo
             break;
         }
         stateControl["index"] = controller.currentIndex;
+        SwipableStackWidget.calculate(controller.currentIndex - 1, stateControl);
         break;
       case "cancelAction":
         controller.cancelAction();
@@ -252,6 +287,7 @@ class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackCo
       case "rewind":
         controller.rewind();
         stateControl["index"] = controller.currentIndex;
+        SwipableStackWidget.calculate(controller.currentIndex - 1, stateControl);
         break;
       case "dispose":
         controller.dispose();
