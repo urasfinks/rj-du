@@ -37,6 +37,10 @@ class StateData {
         defMap[state] = {};
         defMap[state]!.addAll(def);
       }
+    } else if (def != null && def.isNotEmpty && map[state]!.value is Map && (map[state]!.value as Map).isEmpty) {
+      //Если блок Notify подписался раньше чем инициализации состояния будущего компонента,
+      // пробуем расширить при инициализации самого состояния
+      (map[state]!.value as Map).addAll(def);
     }
     return map[state]!;
   }
