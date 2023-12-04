@@ -208,9 +208,7 @@ class DynamicUI {
             Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
             mapLink[keyMapLink] = dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid;
           } else {
-            selector["link"] = {
-              keyMapLink: dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid
-            };
+            selector["link"] = {keyMapLink: dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid};
           }
           selector.remove("onStateDataUpdate");
         }
@@ -234,6 +232,9 @@ class DynamicUI {
           };
           return render(renderData, null, defaultValue, dynamicUIBuilderContext);
         } else {
+          if (selector.containsKey("templateArguments")) {
+            selector = Util.templateArguments(Util.getMutableMap(selector), dynamicUIBuilderContext);
+          }
           String flutterType = selector["flutterType"] as String;
           return ui.containsKey(flutterType)
               ? Function.apply(ui[flutterType]!, [selector, dynamicUIBuilderContext])
