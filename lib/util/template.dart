@@ -118,16 +118,16 @@ class Template {
   }
 
   static Map<String, dynamic> templateArguments(
-      Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (args.containsKey("templateArguments")) {
+      Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (parsedJson.containsKey("templateArguments")) {
       Map<String, dynamic> newArgs = {};
-      newArgs.addAll(args);
+      newArgs.addAll(parsedJson);
       for (String query in newArgs["templateArguments"]) {
         tmp(query, newArgs, dynamicUIBuilderContext);
       }
       return newArgs;
     }
-    return args;
+    return parsedJson;
   }
 
   static void tmp(String path, Map data, DynamicUIBuilderContext dynamicUIBuilderContext) {
