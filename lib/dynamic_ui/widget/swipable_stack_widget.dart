@@ -17,6 +17,7 @@ enum SwipableEvent {
   setStateOnWillMoveNext,
   setStateOnOverlayBuilder,
   setStateOnInit,
+  onControllerInvoke
 }
 
 class SwipableStackWidget extends AbstractWidget {
@@ -40,7 +41,10 @@ class SwipableStackWidget extends AbstractWidget {
     );
 
     SwipableStackController controller = getController(parsedJson, "SwipableStack", dynamicUIBuilderContext, () {
-      return SwipableStackControllerWrap(SwipableStackController(), stateControl);
+      SwipableStackControllerWrap swipableStackControllerWrap =
+          SwipableStackControllerWrap(SwipableStackController(), stateControl);
+      swipableStackControllerWrap.setStateKey(parsedJson["state"]);
+      return swipableStackControllerWrap;
     });
 
     double reactionOverlayOpacity = TypeParser.parseDouble(
@@ -212,11 +216,18 @@ class SwipableStackWidget extends AbstractWidget {
 class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackController> {
   SwipableStackControllerWrap(super.controller, super.stateControl);
 
+  String? stateKey;
+
+  void setStateKey(String stateKey) {
+    this.stateKey = stateKey;
+  }
+
   @override
   void invoke(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     switch (args["case"] ?? "default") {
       case "index":
         controller.currentIndex = args["index"] ?? 0;
+        stateControl["index"] = controller.currentIndex;
         break;
       case "next":
         switch (args["direction"] ?? "right") {
@@ -233,12 +244,14 @@ class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackCo
             controller.next(swipeDirection: SwipeDirection.down);
             break;
         }
+        stateControl["index"] = controller.currentIndex;
         break;
       case "cancelAction":
         controller.cancelAction();
         break;
       case "rewind":
         controller.rewind();
+        stateControl["index"] = controller.currentIndex;
         break;
       case "dispose":
         controller.dispose();
@@ -246,6 +259,9 @@ class SwipableStackControllerWrap extends AbstractControllerWrap<SwipableStackCo
       default:
         AlertHandler.alertSimple("SwipableStackControllerWrap.invoke() args: $args");
         break;
+    }
+    if (args["setState"] ?? args[SwipableEvent.onControllerInvoke.name] ?? false == true && stateKey != null) {
+      dynamicUIBuilderContext.dynamicPage.stateData.setMap(stateKey, stateControl);
     }
   }
 
