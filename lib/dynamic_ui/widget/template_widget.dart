@@ -5,12 +5,15 @@ import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/util.dart';
 
+import '../../util/template.dart';
+
 class TemplateWidget extends AbstractWidget {
   static Map<String, Map> template = {};
 
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> args = Util.templateArguments(Util.getMutableMap(parsedJson), dynamicUIBuilderContext);
+    Map<String, dynamic> args =
+        Util.renderTemplate(Util.getMutableMap(parsedJson), RenderTemplateType.current, dynamicUIBuilderContext);
     return render(Util.getMutableMap(template[args["src"]]), null, Text("Error render TemplateWidget: $args"),
         dynamicUIBuilderContext);
   }

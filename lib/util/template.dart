@@ -7,8 +7,8 @@ import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../util.dart';
 
 class Template {
-  static List<TemplateItem> getRegisteredListTemplateItem(
-      String template, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<TemplateItem> getRegisteredListTemplateItem(String template,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!dynamicUIBuilderContext.dynamicPage.cacheTemplate.containsKey(template)) {
       dynamicUIBuilderContext.dynamicPage.cacheTemplate[template] = NewTemplate.getParsedTemplate(template);
     }
@@ -37,10 +37,10 @@ class Template {
     if (expDirective.isNotEmpty) {
       for (String directive in expDirective) {
         for (MapEntry<
-                String,
-                dynamic Function(
-                    dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
-            in TemplateDirective.map.entries) {
+            String,
+            dynamic Function(
+                dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
+        in TemplateDirective.map.entries) {
           if (directive.startsWith("${item.key}(")) {
             // отрезаем имя директивы + скобки
             String directiveValue = directive.substring(item.key.length + 1, directive.length - 1);
@@ -117,12 +117,19 @@ class Template {
     return cur;
   }
 
-  static Map<String, dynamic> templateArguments(
-      Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (parsedJson.containsKey("templateArguments")) {
+  static Map<String, dynamic> renderTemplate(Map<String, dynamic> parsedJson, RenderTemplateType keyListQuery,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    // renderTemplate бывает:
+    //  родительский (childRenderTemplate) - это когда мы у ребёнка меняем данные из собственного контекста
+    //    надо понимать, что все заменённые данные будут использоваться в дочерних элементах как статическая информация
+    //    Если повешать на дочерний элемента Notify он при перерисовки не узнает что была замена значений
+    //  дочерний () - это замена непосредственно перед AbstractWidget.get()
+    //
+    String key = keyListQuery.getKey();
+    if (parsedJson.containsKey(key)) {
       Map<String, dynamic> newArgs = {};
       newArgs.addAll(parsedJson);
-      for (String query in newArgs["templateArguments"]) {
+      for (String query in newArgs[key]) {
         tmp(query, newArgs, dynamicUIBuilderContext);
       }
       return newArgs;
@@ -140,6 +147,23 @@ class Template {
         cur = cur[key];
       }
     }
-    curParent[exp[exp.length - 1]] = template(cur, dynamicUIBuilderContext);
+    if (cur.runtimeType == String) {
+      try {
+        curParent[exp[exp.length - 1]] = template(cur, dynamicUIBuilderContext);
+      } catch (error, stackTrace) {
+        Util.printStackTrace("Template.tmp path:$path; curParent:$curParent; cur:$cur", error, stackTrace);
+      }
+    } else {
+      Util.printCurrentStack("Template.tmp() cur must be String, real: $cur");
+    }
+  }
+}
+
+enum RenderTemplateType {
+  child,
+  current;
+
+  String getKey() {
+    return "${name}RenderTemplateList";
   }
 }

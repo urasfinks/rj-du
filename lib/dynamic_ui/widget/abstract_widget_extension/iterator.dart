@@ -1,6 +1,7 @@
 import 'package:rjdu/subscribe_reload_group.dart';
 
 import '../../../util.dart';
+import '../../../util/template.dart';
 import '../../dynamic_ui_builder_context.dart';
 import 'abstract_extension.dart';
 
@@ -49,7 +50,7 @@ class Iterator extends AbstractExtension {
         } else {
           seqTemplate = "templateMiddle";
         }
-        //Если не обернуть в свой объект, templateArguments применится только к первому
+        //Если не обернуть в свой объект, renderTemplateList применится только к первому
         //Все остальные потеряют первичный шаблон, так как он будет уже заменён на значение
         newUIElement.addAll(Util.getMutableMap(data[seqTemplate] ??
             data["template"] ??
@@ -62,7 +63,7 @@ class Iterator extends AbstractExtension {
         }
         newUIElement["context"] = {
           "key": "Iterator${counter++}",
-          "data": Util.templateArguments(data, dynamicUIBuilderContext)
+          "data": Util.renderTemplate(data, RenderTemplateType.current, dynamicUIBuilderContext)
         };
 
         if (data.containsKey("uuid_data")) {

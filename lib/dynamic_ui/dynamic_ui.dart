@@ -83,6 +83,7 @@ import 'package:rjdu/dynamic_ui/widget_property/rounded_rectangle_border_propert
 import 'package:rjdu/dynamic_ui/widget_property/text_style_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/underline_input_border_property.dart';
 import '../util.dart';
+import '../util/template.dart';
 import 'widget/slidable_widget.dart';
 
 class DynamicUI {
@@ -187,9 +188,8 @@ class DynamicUI {
       if (parsedJson.isEmpty) {
         return defaultValue;
       }
-      // Шаблонизатор аргументов должен выполнятся в родительском контексте, так как значения динамического контекста
-      // можно использовать в ручную, так они в ручную переопределяются и смысл их для шаблонизации потерян
-      parsedJson = Util.templateArguments(parsedJson, dynamicUIBuilderContext);
+      //Родительская замена значений для дочерних элеметов
+      parsedJson = Util.renderTemplate(parsedJson, RenderTemplateType.child, dynamicUIBuilderContext);
       if (parsedJson.containsKey("context")) {
         dynamicUIBuilderContext = dynamicUIBuilderContext.cloneWithNewData(
           Util.convertMap(parsedJson["context"]["data"] ?? {}),
@@ -232,8 +232,14 @@ class DynamicUI {
           };
           return render(renderData, null, defaultValue, dynamicUIBuilderContext);
         } else {
-          if (selector.containsKey("templateArguments")) {
-            selector = Util.templateArguments(Util.getMutableMap(selector), dynamicUIBuilderContext);
+          if (selector.containsKey(RenderTemplateType.current.getKey())) {
+            try {
+              selector =
+                  Util.renderTemplate(
+                      Util.getMutableMap(selector), RenderTemplateType.current, dynamicUIBuilderContext);
+            } catch (error, stackTrace) {
+              Util.printStackTrace("renderTemplate $selector", error, stackTrace);
+            }
           }
           String flutterType = selector["flutterType"] as String;
           return ui.containsKey(flutterType)

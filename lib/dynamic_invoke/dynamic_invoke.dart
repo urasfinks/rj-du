@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rjdu/dynamic_invoke/handler/audio_handler.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/storage.dart';
+import 'package:rjdu/util/template.dart';
 import '../db/data_source.dart';
 import '../dynamic_page.dart';
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
@@ -115,7 +116,8 @@ class DynamicInvoke {
       [bool jsContext = false]) {
     if (this.handler.containsKey(handler)) {
       dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
-      Map<String, dynamic> args = Util.templateArguments(Util.getMutableMap(inArgs), dynamicUIBuilderContext);
+      Map<String, dynamic> args =
+          Util.renderTemplate(Util.getMutableMap(inArgs), RenderTemplateType.current, dynamicUIBuilderContext);
       String log = "";
       if (kDebugMode && GlobalSettings().debug) {
         log = "DynamicInvoke.sysInvoke($handler, $inArgs)\ntemplate:\n";
@@ -148,7 +150,7 @@ class DynamicInvoke {
     bool includeStateData = false,
     bool includePageArgument = false,
   ]) {
-    args = Util.templateArguments(args, dynamicUIBuilderContext);
+    args = Util.renderTemplate(args, RenderTemplateType.current, dynamicUIBuilderContext);
 
     if (args.containsKey("includeAll") && args["includeAll"] == true) {
       includeStateData = true;
