@@ -20,31 +20,29 @@ class ThemeProvider {
   }
 
   static ThemeData lightThemeData() {
-    Color parseColor = TypeParser.parseColor("#f2f2f2")!;
+    //Color parseColor = TypeParser.parseColor("#f2f2f2")!;
+    Color parseColor = Colors.white;
     List<Color> cur = [
       parseColor,
-      parseColor.darkness(20),
-      parseColor.darkness(40),
+      parseColor.darkness(15),
+      parseColor.darkness(30),
     ];
     ThemeData themeData = ThemeData.light();
-    return get(cur, themeData);
+    return get(cur, themeData, false);
   }
 
   static ThemeData darkThemeData() {
     List<Color> cur = [
       Colors.black,
-      Colors.black.lightness(20),
-      Colors.black.lightness(40),
+      Colors.black.lightness(25),
+      Colors.black.lightness(50),
     ];
     ThemeData themeData = ThemeData.dark();
-    return get(cur, themeData);
+    return get(cur, themeData, true);
   }
 
-  static get(
-    List<Color> cur,
-    ThemeData themeData,
-  ) {
-    int light = 10;
+  static get(List<Color> cur, ThemeData themeData, bool dark) {
+    int light = 15;
     return themeData.copyWith(
       appBarTheme: themeData.appBarTheme.copyWith(
         elevation: 0,
@@ -53,21 +51,23 @@ class ThemeProvider {
         iconTheme: IconThemeData(color: cur[0].inverse()),
       ),
       colorScheme: themeData.colorScheme.copyWith(
+
         background: cur[0],
-        onBackground: cur[0].lightness(light),
+        onBackground: cur[0].lightness(light), //Общие правила для первго слоя, так как фон для light темы серый
+
         // text
-        primary: cur[1].inverse().darkness(light),
+        primary: cur[1].inverse(),
         // background
         primaryContainer: cur[1],
         //onBackground
-        onPrimary: cur[1].lightness(light),
+        onPrimary: dark ? cur[1].lightness(light) : cur[1].darkness(light),
 
         //text
-        secondary: cur[2].inverse().darkness(light),
+        secondary: cur[2].inverse(),
         //background
         secondaryContainer: cur[2],
         //onBackground
-        onSecondary: cur[2].lightness(light),
+        onSecondary: dark ? cur[2].lightness(light) : cur[2].darkness(light),
 
         inversePrimary: cur[0].inverse(),
       ),
@@ -87,7 +87,7 @@ class ThemeProvider {
         unselectedIconTheme: IconThemeData(color: cur[2].inverse().darkness(light)),
         backgroundColor: cur[0].lightness(light).withAlpha(alpha),
       ),
-      scaffoldBackgroundColor: cur[0],
+      scaffoldBackgroundColor: dark ? cur[0] : TypeParser.parseColor("#f2f2f2")!,
       textSelectionTheme: themeData.textSelectionTheme.copyWith(
         cursorColor: cur[0].inverse(),
       ),
