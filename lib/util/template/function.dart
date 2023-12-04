@@ -23,10 +23,11 @@ class TemplateFunction {
     },
     "state": (data, arguments, ctx, debug) {
       Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.removeAt(0));
+      dynamic result = Template.mapSelector(d.value, arguments);
       if (debug) {
-        Util.p("TemplateFunction.state() arguments: $arguments => ${Template.mapSelector(d.value, arguments)}");
+        Util.p("TemplateFunction.state() arguments: $arguments => $result");
       }
-      return Template.mapSelector(d.value, arguments);
+      return result;
     },
     "stateUuid": (data, arguments, ctx, debug) {
       Data d = ctx.dynamicPage.stateData.getInstanceData(arguments.isNotEmpty ? arguments.first : null);
@@ -52,6 +53,9 @@ class TemplateFunction {
     },
     "timestamp": (data, arguments, ctx, debug) {
       return DateTime.now().millisecondsSinceEpoch.toString();
+    },
+    "keysState": (data, arguments, ctx, debug) {
+      return ctx.dynamicPage.stateData.map.keys.join(",");
     },
     "globalSettings": (data, arguments, ctx, debug) {
       return GlobalSettings().template(arguments[0], arguments[1]);
