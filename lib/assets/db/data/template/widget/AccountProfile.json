@@ -67,7 +67,7 @@
           }
         }
       },
-      "currentRenderTemplateList": [
+      "childRenderTemplateList": [
         "context.data.data"
       ]
     },
