@@ -53,7 +53,8 @@ class ThemeProvider {
       colorScheme: themeData.colorScheme.copyWith(
 
         background: cur[0],
-        onBackground: cur[0].lightness(light), //Общие правила для первго слоя, так как фон для light темы серый
+        //Общие правила для первго слоя, так как фон для light темы серый
+        onBackground: cur[0].lightness(light),
 
         // text
         primary: cur[1].inverse(),
@@ -83,8 +84,9 @@ class ThemeProvider {
       bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
         elevation: 0,
         selectedItemColor: cur[0].inverse(),
-        selectedIconTheme: IconThemeData(color: cur[1].inverse().darkness(light)),
-        unselectedIconTheme: IconThemeData(color: cur[2].inverse().darkness(light)),
+        selectedIconTheme: IconThemeData(color: cur[0].inverse().darkness(light)),
+        unselectedIconTheme:
+            IconThemeData(color: dark ? cur[2].inverse().darkness(light) : cur[2].inverse().lightness(light)),
         backgroundColor: cur[0].lightness(light).withAlpha(alpha),
       ),
       scaffoldBackgroundColor: dark ? cur[0] : TypeParser.parseColor("#f2f2f2")!,
