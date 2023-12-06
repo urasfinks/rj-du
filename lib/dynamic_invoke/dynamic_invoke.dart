@@ -114,29 +114,33 @@ class DynamicInvoke {
 
   dynamic sysInvoke(String handler, Map<String, dynamic> inArgs, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool jsContext = false]) {
-    if (this.handler.containsKey(handler)) {
-      dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
-      Map<String, dynamic> args =
-          Util.renderTemplate(Util.getMutableMap(inArgs), RenderTemplateType.current, dynamicUIBuilderContext);
-      String log = "";
-      if (kDebugMode && GlobalSettings().debug) {
-        log = "DynamicInvoke.sysInvoke($handler, $inArgs)\ntemplate:\n";
-        log += "${Util.jsonPretty(args)}\n";
-        if (jsContext) {
-          log += "from JsInvoke\n";
+    try {
+      if (this.handler.containsKey(handler)) {
+        dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
+        Map<String, dynamic> args =
+            Util.renderTemplate(Util.getMutableMap(inArgs), RenderTemplateType.current, dynamicUIBuilderContext);
+        String log = "";
+        if (kDebugMode && GlobalSettings().debug) {
+          log = "DynamicInvoke.sysInvoke($handler, $inArgs)\ntemplate:\n";
+          log += "${Util.jsonPretty(args)}\n";
+          if (jsContext) {
+            log += "from JsInvoke\n";
+          }
         }
-      }
-      dynamic result = Function.apply(this.handler[handler]!, [args, dynamicUIBuilderContext]);
-      if (kDebugMode && GlobalSettings().debug) {
-        if (args.containsKey("printResult")) {
-          Util.log("$log => $result");
+        dynamic result = Function.apply(this.handler[handler]!, [args, dynamicUIBuilderContext]);
+        if (kDebugMode && GlobalSettings().debug) {
+          if (args.containsKey("printResult")) {
+            Util.log("$log => $result");
+          }
         }
+        if (result != null) {
+          return result;
+        }
+      } else {
+        Util.p("DynamicInvoke.call() handler[$handler] undefined");
       }
-      if (result != null) {
-        return result;
-      }
-    } else {
-      Util.p("DynamicInvoke.call() handler[$handler] undefined");
+    } catch (error, stackTrace) {
+      Util.printStackTrace("DynamicInvoke.sysInvoke($handler, $inArgs, $jsContext)", error, stackTrace);
     }
     return null;
   }
