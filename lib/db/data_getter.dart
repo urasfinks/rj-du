@@ -65,7 +65,7 @@ class DataGetter {
         .rawQuery("SELECT * FROM data where uuid_data = ? or parent_uuid_data = ?", [uuid, uuid]).then((resultSet) {
       if (resultSet.isNotEmpty && resultSet.first["value_data"] != null) {
         DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first["type_data"] as String?);
-        if (DataSource().isJsonDataType(dataTypeResult)) {
+        if (dataTypeResult.isJson()) {
           callback(resultSet.first["uuid_data"] as String, json.decode(resultSet.first["value_data"] as String));
         }
       }

@@ -10,5 +10,9 @@ enum DataType {
   js,
   any,
   blobRSync, //Base64 large object Remote Synchronization
-  blob
+  blob;
+
+  bool isJson() {
+    return ![js, any, blob, blobRSync].contains(this);
+  }
 }

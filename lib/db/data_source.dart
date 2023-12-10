@@ -48,13 +48,6 @@ class DataSource {
     }
   }
 
-  bool isJsonDataType(DataType? dataType) {
-    if (dataType == null) {
-      return false;
-    }
-    return !notJsonList.contains(dataType);
-  }
-
   void flushQueue() {
     var count = 0;
     if (isInit) {
@@ -336,7 +329,7 @@ class DataSource {
 
   void notifyBlock(Data curData) {
     Map<String, dynamic> runtimeData = {};
-    if (curData.value.runtimeType == String && isJsonDataType(curData.type)) {
+    if (curData.value.runtimeType == String && curData.type.isJson()) {
       runtimeData = json.decode(curData.value);
     } else if (curData.value.runtimeType != String) {
       if (curData.value.runtimeType.toString().contains("Map<dynamic, dynamic>")) {
@@ -366,7 +359,7 @@ class DataSource {
       db.rawQuery("SELECT * FROM data where uuid_data = ?", [uuid]).then((resultSet) {
         if (resultSet.isNotEmpty && resultSet.first["value_data"] != null) {
           DataType dataTypeResult = Util.dataTypeValueOf(resultSet.first["type_data"] as String?);
-          if (isJsonDataType(dataTypeResult)) {
+          if (dataTypeResult.isJson()) {
             //handler(await Util.asyncInvokeIsolate((arg) => json.decode(arg), resultSet.first["value_data"]));
             handler(resultSet.first["uuid_data"] as String, json.decode(resultSet.first["value_data"] as String));
           } else {

@@ -14,7 +14,7 @@ class DbQueryHandler extends AbstractHandler {
         for (Map<String, Object?> item in value) {
           Map<String, dynamic> newItem = Util.getMutableMap(item);
           if (newItem["value_data"] != null) {
-            if (DataSource().isJsonDataType(Util.dataTypeValueOf(newItem["type_data"] as String))) {
+            if (Util.dataTypeValueOf(newItem["type_data"] as String).isJson()) {
               newItem["value_data"] = json.decode(item["value_data"] as String);
             }
           }
