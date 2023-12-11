@@ -24,6 +24,9 @@ class DataSourceSetHandler extends AbstractHandler {
       if (args.containsKey("updateIfExist")) {
         data.updateIfExist = args["updateIfExist"];
       }
+      if (args.containsKey("onUpdateOverlayJsonValue")) {
+        data.onUpdateOverlayJsonValue = args["onUpdateOverlayJsonValue"];
+      }
       data.key = args["key"];
       if (args["onPersist"] != null) {
         data.onPersist = () {

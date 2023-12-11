@@ -159,6 +159,7 @@ class DataSource {
         // данные надо иногда обновлять не только потому что изменились
         // сами данные, бывает что надо бновить флаг удаления или ревизию
         updateNullable(data, resultSet.first);
+        updateOverlayJsonValue(data, resultSet.first);
         await update(data);
         notify = true;
         //Сокетные данные не могут обновляться, поэтому не предполагаем вызова синхронизации
@@ -249,6 +250,27 @@ class DataSource {
       curData.dateUpdate ??= dbResult["date_update_data"];
       curData.revision ??= dbResult["revision_data"];
       curData.isRemove ??= dbResult["is_remove_data"];
+    }
+  }
+
+  void updateOverlayJsonValue(Data curData, dynamic dbResult) {
+    if (curData.onUpdateOverlayJsonValue && curData.type.isJson()) {
+      Map<String, dynamic> curDataValueMap = {};
+      if (curData.value != null) {
+        if (curData.value.runtimeType == String) {
+          curDataValueMap = json.decode(curData.value);
+        } else {
+          curDataValueMap = curData.value;
+        }
+      }
+      Map<String, dynamic> dbDataValueMap = {};
+      if (dbResult != null &&
+          dbResult.containsKey("value_data") &&
+          dbResult["value_data"] != null &&
+          dbResult["value_data"].runtimeType == String) {
+        dbDataValueMap = json.decode(dbResult["value_data"]);
+      }
+      curData.value = Util.overlay(dbDataValueMap, curDataValueMap);
     }
   }
 

@@ -19,16 +19,18 @@ class Data {
   // локальной БД
   bool onUpdateOverlayNullField = true;
 
+  // При установленном флаге будет merge с прекрытием данных из БД, данными, которые прийдут на обновление
+  // БД: {"a": "b", "c": "d"} Пришло {"c": "d2", "e": "f"} В результате: {"a": "b", "c": "d2", "e": "f"}
+  bool onUpdateOverlayJsonValue = false;
+
   // При SetDataSource с флагом true будем занулять номер ревизии
-  // Это сделано, что бы когда мы в приложении будем обновлять данные они
-  // уходили в синхронизацию с сервером
-  // А когда данные прилетают с сервера на синхронизации мы наоборот
-  // Отклчаем занулениии ревизии
+  // Это сделано, что бы когда мы в приложении будем обновлять данные - что бы они уходили в синхронизацию с сервером
+  // А когда данные прилетают с сервера на синхронизации мы наоборот - Отклчаем занулениии ревизии
   bool onUpdateResetRevision = true;
 
   // Пока применяется в совокупности с socket данным
   // Если данные до синхронизации (false) - мы будем тут же их отправлять на сервер, то есть вызывать синхронизацию
-  // Если данные после синхронизации (true) - мы схлопнем последовательные тронзакции и единожны обновим UI через notify
+  // Если данные после синхронизации (true) - мы схлопнем последовательные транзакции и единожны обновим UI через notify
   bool beforeSync = false;
 
   // Вывод отлаточной информации как прошёл DataSource.setData
@@ -49,6 +51,6 @@ class Data {
 
   @override
   String toString() {
-    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, onPersist: $onPersist}';
+    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, onPersist: $onPersist, isStateData: $isStateData}';
   }
 }
