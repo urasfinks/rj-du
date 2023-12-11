@@ -27,7 +27,12 @@ class DataSourceSetHandler extends AbstractHandler {
       if (args.containsKey("onUpdateOverlayJsonValue")) {
         data.onUpdateOverlayJsonValue = args["onUpdateOverlayJsonValue"];
       }
-      data.key = args["key"];
+      if (args.containsKey("key")) {
+        data.key = args["key"];
+      }
+      if (args.containsKey("meta")) {
+        data.meta = args["meta"];
+      }
       if (args["onPersist"] != null) {
         data.onPersist = () {
           AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onPersist");
@@ -92,7 +97,9 @@ class DataSourceSetHandler2 extends AbstractHandler {
     if (args.containsKey("updateIfExist")) {
       data.updateIfExist = args["updateIfExist"];
     }
-    data.key = args["key"];
+    if (args.containsKey("key")) {
+      data.key = args["key"];
+    }
     if (args["onPersist"] != null) {
       data.onPersist = () {
         AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onPersist");

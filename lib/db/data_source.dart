@@ -66,9 +66,10 @@ class DataSource {
     Util.p("flushQueue complete: $count");
   }
 
-  set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true]) async {
+  set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
+    data.meta = meta;
     data.updateIfExist = updateIfExist;
     await setData(data);
   }
@@ -246,6 +247,7 @@ class DataSource {
       curData.value ??= dbResult["value_data"];
       curData.parentUuid ??= dbResult["parent_uuid_data"];
       curData.key ??= dbResult["key_data"];
+      curData.meta ??= dbResult["meta_data"];
       curData.dateAdd ??= dbResult["date_add_data"];
       curData.dateUpdate ??= dbResult["date_update_data"];
       curData.revision ??= dbResult["revision_data"];
@@ -281,12 +283,13 @@ class DataSource {
       }
       String dataString = curData.value.runtimeType != String ? json.encode(curData.value) : curData.value;
       await db.rawUpdate(
-        'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
+        'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, meta_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
         [
           dataString,
           curData.type.name,
           curData.parentUuid,
           curData.key,
+          curData.meta,
           curData.dateAdd,
           curData.dateUpdate,
           curData.revision,
@@ -305,13 +308,14 @@ class DataSource {
   insert(Data curData) async {
     try {
       await db.rawInsert(
-        'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, meta_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           curData.uuid,
           curData.value.runtimeType != String ? json.encode(curData.value) : curData.value,
           curData.type.name,
           curData.parentUuid,
           curData.key,
+          curData.meta,
           curData.dateAdd ??= Util.getTimestamp(),
           curData.dateUpdate,
           curData.revision ??= 0,

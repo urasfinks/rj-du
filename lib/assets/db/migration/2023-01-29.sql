@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "data" (
     type_data TEXT,
     parent_uuid_data TEXT,
     key_data TEXT,
+    meta_data TEXT,
     date_add_data NUMERIC,
     date_update_data NUMERIC,
     revision_data INTEGER DEFAULT (0),

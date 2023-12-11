@@ -217,6 +217,7 @@ class DataSync {
       dataObject.dateAdd = curData["date_add"];
       dataObject.dateUpdate = curData["date_update"];
       dataObject.key = curData["key"];
+      dataObject.meta = curData["meta"];
       dataObject.revision = curData["revision"];
       dataObject.onUpdateResetRevision = false;
       dataObject.beforeSync = true;
