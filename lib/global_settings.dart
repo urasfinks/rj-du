@@ -9,12 +9,14 @@ class GlobalSettings {
   List<String> debugSql = [
     //"update data set is_remove_data = 1 where key_data = 'new_game' and is_remove_data = 0",
     //"SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 GROUP BY type_data",
-    //"SELECT * from data where key_data = 'Game'"
-    //"SELECT uuid_data from data where uuid_data = 'account'"
+    //"SELECT * from data where uuid_data = '604d1253-fc69-4e26-bc82-e4ad6f2a3702.mp3'"
+    //"SELECT * from data where uuid_data = 'LessState-tst1'"
+    //"SELECT * from data where key_data = 'SerialState' or key_data = 'LessState'"
     //"delete from data where key_data = 'Game'"
+    //"update data set meta_data = 'hello', revision_data = 0 where uuid_data = 'LessState-tst1'"
   ];
   //String version = "v${Util.getTimestamp()}";
-  String version = "v10";
+  String version = "v11";
   bool clearStorageOnUpdateVersion = false;
   String host = "https://e-humidor.ru:8453";
   String ws = "https://e-humidor.ru:8453";
