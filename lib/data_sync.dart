@@ -179,7 +179,7 @@ class DataSync {
             } else {
               //Сервер какой-то не очень отзывчивый на 200 код) Остановим долбление
               Util.p(
-                  "DataSync.sync() Error! Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
+                  "DataSync.sync() Error! Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}; Request: ${Util.jsonPretty(postDataRequest)}");
               break;
             }
           }
