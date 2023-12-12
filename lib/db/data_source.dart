@@ -66,7 +66,8 @@ class DataSource {
     Util.p("flushQueue complete: $count");
   }
 
-  set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
+  set(String uuid, dynamic value, DataType type,
+      [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.meta = meta;
@@ -360,7 +361,7 @@ class DataSource {
     } else if (curData.value.runtimeType != String) {
       if (curData.value.runtimeType.toString().contains("Map<dynamic, dynamic>")) {
         runtimeData = Util.getMutableMap(curData.value);
-      } else {
+      } else if (curData.value != null) {
         runtimeData = curData.value;
       }
     } else {
