@@ -10,7 +10,11 @@ class DbQueryHandler extends AbstractHandler {
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ["sql", "args"])) {
       DataSource().db.rawQuery(args["sql"], args["args"]).then((value) {
-        doPostBack(args, dynamicUIBuilderContext, "fetchDb", updateResult(value));
+        try {
+          doPostBack(args, dynamicUIBuilderContext, "fetchDb", updateResult(value));
+        } catch (error, stackTrace) {
+          Util.printStackTrace("DbQueryHandler.handle() args: $args; value: $value", error, stackTrace);
+        }
       }).onError((error, stackTrace) {
         Util.printStackTrace("DbQueryHandler.handle()", error, stackTrace);
       });
@@ -34,7 +38,7 @@ class DbQueryHandler extends AbstractHandler {
     List<Map<String, Object?>> newList = [];
     for (Map<String, Object?> item in resultList) {
       Map<String, dynamic> newItem = Util.getMutableMap(item);
-      if (newItem["value_data"] != null) {
+      if (newItem["value_data"] != null && newItem["type_data"] != null) {
         if (Util.dataTypeValueOf(newItem["type_data"] as String).isJson()) {
           newItem["value_data"] = json.decode(item["value_data"] as String);
         }
