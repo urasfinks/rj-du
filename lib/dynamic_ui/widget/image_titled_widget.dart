@@ -14,30 +14,30 @@ class ImageTitledWidget extends AbstractWidget {
     double fontSize = TypeParser.parseDouble(
       getValue(parsedJson, "fontSize", 15, dynamicUIBuilderContext),
     )!;
-    dynamic extraElement = const SizedBox();
+    dynamic childElement = const SizedBox();
     // Условия получились конечно не очень привычные и не очень красивые
     // Я испытывал проблемы с динамическим шаблоном, когда extra всегда заполнено из контекста
     // Можно лишь управлять содержимым extra вот так и пришлось выкручиваться
-    parsedJson["extra"] = getValue(parsedJson, "extra", "", dynamicUIBuilderContext);
-    if (parsedJson.containsKey("extra") && parsedJson["extra"].toString() != "") {
-      extraElement = render(parsedJson, parsedJson["extra"], const SizedBox(), dynamicUIBuilderContext);
+    parsedJson["childKey"] = getValue(parsedJson, "childKey", "", dynamicUIBuilderContext);
+    if (parsedJson.containsKey("childKey") && parsedJson["childKey"].toString() != "") {
+      childElement = render(parsedJson, parsedJson["childKey"], const SizedBox(), dynamicUIBuilderContext);
     }
     parsedJson["onTap"] = getValue(parsedJson, "onTap", "", dynamicUIBuilderContext);
     if (parsedJson.containsKey("onTap") && parsedJson["onTap"].toString() != "") {
-      extraElement = Positioned.fill(
+      childElement = Positioned.fill(
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
               click(parsedJson, dynamicUIBuilderContext, "onTap");
             },
-            child: extraElement,
+            child: childElement,
           ),
         ),
       );
     } else {
-      extraElement = Positioned.fill(
-        child: extraElement,
+      childElement = Positioned.fill(
+        child: childElement,
       );
     }
     return ClipRRect(
@@ -70,7 +70,7 @@ class ImageTitledWidget extends AbstractWidget {
               ),
             ),
           ),
-          extraElement
+          childElement
         ],
       ),
     );
