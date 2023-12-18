@@ -160,7 +160,7 @@ abstract class AbstractWidget {
       Future(() {
         Map<String, dynamic>? settings;
         dynamic tmp = getValueStatic(parsedJson, key, null, dynamicUIBuilderContext);
-        if (tmp == null) {
+        if (tmp == null || tmp == "") {
           return null;
         }
         if (tmp.runtimeType.toString().contains("Map")) {
