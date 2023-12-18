@@ -51,7 +51,7 @@ class ThemeProvider {
         iconTheme: IconThemeData(color: cur[0].inverse()),
       ),
       colorScheme: themeData.colorScheme.copyWith(
-
+        inversePrimary: cur[0].inverse(),
         background: cur[0],
         //Общие правила для первго слоя, так как фон для light темы серый
         onBackground: cur[0].lightness(light),
@@ -69,8 +69,6 @@ class ThemeProvider {
         secondaryContainer: cur[2],
         //onBackground
         onSecondary: dark ? cur[2].lightness(light) : cur[2].darkness(light),
-
-        inversePrimary: cur[0].inverse(),
       ),
       floatingActionButtonTheme: themeData.floatingActionButtonTheme.copyWith(
         backgroundColor: cur[0].lightness(light),
