@@ -8,6 +8,12 @@ import '../type_parser.dart';
 class LinearProgressIndicatorWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    double value = TypeParser.parseDouble(
+      getValue(parsedJson, "value", 0.0, dynamicUIBuilderContext),
+    )!;
+    if (parsedJson.containsKey("valueIsPercent") && parsedJson["valueIsPercent"] == true) {
+      value = value / 100;
+    }
     return LinearProgressIndicator(
       key: Util.getKey(),
       backgroundColor: TypeParser.parseColor(
@@ -21,9 +27,7 @@ class LinearProgressIndicatorWidget extends AbstractWidget {
       ),
       semanticsLabel: getValue(parsedJson, "semanticsLabel", null, dynamicUIBuilderContext),
       semanticsValue: getValue(parsedJson, "semanticsValue", null, dynamicUIBuilderContext),
-      value: TypeParser.parseDouble(
-        getValue(parsedJson, "value", null, dynamicUIBuilderContext),
-      ),
+      value: value,
     );
   }
 }
