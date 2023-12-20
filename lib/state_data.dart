@@ -84,6 +84,7 @@ class StateData {
       }
     }
     if (change) {
+      Util.p("StateData.setMap(state:$state, state: $state; data: ${data.value}, notify: $notifyDynamicPage)");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
