@@ -9,6 +9,9 @@ class DbQueryHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ["sql", "args"])) {
+      if (args.containsKey("debug")) {
+        Util.p("DbQueryHandler().handle($args)");
+      }
       DataSource().db.rawQuery(args["sql"], args["args"]).then((value) {
         try {
           doPostBack(args, dynamicUIBuilderContext, "fetchDb", updateResult(value));
@@ -19,6 +22,9 @@ class DbQueryHandler extends AbstractHandler {
         Util.printStackTrace("DbQueryHandler.handle()", error, stackTrace);
       });
     } else if (Util.containsKeys(args, ["multiple"])) {
+      if (args.containsKey("debug")) {
+        Util.p("DbQueryHandler().handle($args)");
+      }
       multiple(args, dynamicUIBuilderContext);
     } else {
       Util.p("SetStateDataHandler not contains Keys: [sql, args | multiple] in args: $args");
