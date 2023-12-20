@@ -1,3 +1,4 @@
+import 'package:rjdu/dynamic_ui/type_parser.dart';
 import 'package:rjdu/subscribe_reload_group.dart';
 
 import '../../../util.dart';
@@ -65,6 +66,12 @@ class Iterator extends AbstractExtension {
           "key": "Iterator${counter++}",
           "data": Util.renderTemplate(data, RenderTemplateType.current, dynamicUIBuilderContext)
         };
+        if (newUIElement["context"]["data"].containsKey("visibility")) {
+          bool visibility = TypeParser.parseBool(newUIElement["context"]["data"]["visibility"]) ?? true;
+          if (visibility == false) {
+            continue;
+          }
+        }
 
         if (data.containsKey("uuid_data")) {
           dynamicUIBuilderContext.dynamicPage.subscribeToReload(SubscribeReloadGroup.uuid, data["uuid_data"]);
