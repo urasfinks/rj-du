@@ -4,7 +4,6 @@ import 'package:cron/cron.dart';
 import 'package:http/http.dart';
 import 'package:rjdu/dynamic_invoke/handler/controller_handler.dart';
 import 'package:rjdu/dynamic_invoke/handler_custom/custom_loader_close_handler.dart';
-import 'package:rjdu/multi_invoke.dart';
 import 'package:rjdu/navigator_app.dart';
 import 'package:rjdu/storage.dart';
 import 'data_type.dart';
@@ -18,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'util.dart';
 import 'db/data.dart';
 import 'db/data_getter.dart';
+import "dart:collection";
 
 /*
 * Если у данных ревизия = 0 - это значит, что данные не синхронизованны с внешней БД
@@ -33,9 +33,19 @@ import 'db/data_getter.dart';
 * Для сокетных данных - сервер является мастер системой. На локали ревизии для сокетных данных не обновляются
 * */
 
+class TaskSync {
+  Function(int count)? callback;
+  List<String> lazy = [];
+
+  TaskSync(List<String>? lazy, this.callback) {
+    if (lazy != null && lazy.isNotEmpty) {
+      this.lazy.addAll(lazy);
+    }
+  }
+}
+
 class DataSync {
   static final DataSync _singleton = DataSync._internal();
-  final MultiInvoke multiInvoke = MultiInvoke(1000);
 
   factory DataSync() {
     return _singleton;
@@ -45,9 +55,14 @@ class DataSync {
 
   Cron? cron;
   bool appIsActive = true;
-  bool isRun = false;
+  final Queue<TaskSync> taskQueue = Queue<TaskSync>();
+  String? lastTemplate;
 
   void restart(String template) async {
+    if (lastTemplate == template) {
+      return;
+    }
+    lastTemplate = template;
     try {
       if (cron != null) {
         await cron!.close();
@@ -60,153 +75,196 @@ class DataSync {
     }
   }
 
-  Future<void> sync() async {
-    if (appIsActive) {
-      if (!isRun) {
-        isRun = true;
-        bool openLoader = false;
-        int start = Util.getTimestampMillis();
-        int allInsertion = 0;
-        int firstTotalCountItem = -1;
-        try {
-          int counter = 0;
-          Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
-          while (true) {
-            // Сервер выдаёт пачки по 100kb
-            // на LTE выдавать пачки большего размера не целесообразно
-            // Лучше мельче нарезать, чем пропихивать 5mb одной пачкой
-            if (counter > 1000) {
-              //Default = 20
-              Util.p("DataSync.handler() break infinity while");
-              break;
-            }
-            if (counter > 2) {
-              if (!openLoader && NavigatorApp.getLast() != null) {
-                DynamicInvoke()
-                    .sysInvokeType(CustomLoaderOpenHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
-                openLoader = true;
-              }
-            }
-            counter++;
-            bool authJustNow = Storage().get("authJustNow", "false") == "true";
-            if (authJustNow) {
-              Storage().set("authJustNow", "false");
-            }
-            Map<String, dynamic> postDataRequest = {
-              "authJustNow": authJustNow,
-              "maxRevisionByType": maxRevisionByType,
-              //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while, а то на сервере не к чему будет привязывать данные
-              "userDataRSync": [],
-              "blobRSync": [],
-              "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные,
-                  // все остальные итерации нужны для дозагрузки данных, которые переваливают
-                  // за 1000 ревизий на сервере или превышают 100kb
-                  counter == 1 ? await DataGetter.getAddSocketData() : []
-            };
-            // Сокеты работают без авторизации, значит и блок removed выходит за рамки авторизации, так как удалять можно
-            // все персональные данные socket, userDataRSync, blobRSync
-            List<String> removed = await DataGetter.getRemovedUuid();
-            if (removed.isNotEmpty) {
-              postDataRequest["removed"] = removed;
-            }
-            // Если человек авторизован + это первая итерация
-            if (Storage().get("isAuth", "false") == "true" && counter == 1) {
-              postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
-              postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
-            }
-            // Util.p("sync request");
-            // Util.p(Util.jsonPretty(postDataRequest));
-            Response response = await Util.asyncInvokeIsolate((args) {
-              return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
-            }, {
-              "headers": HttpClient.upgradeHeadersAuthorization({}),
-              "body": postDataRequest,
-              "host": GlobalSettings().host,
-            });
-            // Util.p(
-            //     "DataSync.sync() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
-            if (response.statusCode == 200) {
-              int insertion = 0;
-              Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
-              if (parseJson["status"] == true) {
-                if (firstTotalCountItem == -1) {
-                  firstTotalCountItem = parseJson["data"]["totalCountItem"];
-                }
-                int curTotalCountItem = parseJson["data"]["totalCountItem"];
-                if (openLoader) {
-                  DynamicInvoke().sysInvokeType(
-                    ControllerHandler,
-                    {
-                      "controller": "loader",
-                      "data": {"prc": ((firstTotalCountItem - curTotalCountItem) * 100 / firstTotalCountItem).ceil()}
-                    },
-                    NavigatorApp.getLast()!.dynamicUIBuilderContext,
-                  );
-                }
-                if (parseJson["data"]["upgrade"] != null) {
-                  for (MapEntry<String, dynamic> item in parseJson["data"]["upgrade"].entries) {
-                    DataType dataType = Util.dataTypeValueOf(item.key);
-                    for (Map<String, dynamic> curData in item.value) {
-                      Data? updData = upgradeData(curData, dataType, maxRevisionByType);
-                      if (updData != null) {
-                        insertion++;
-                        allInsertion++;
-                      }
-                    }
-                  }
-                }
-                // Если ревизия на сервере меньше чем на устройстве будет возвращён блок serverNeedUpgrade
-                if (parseJson["data"]["serverNeedUpgrade"] != null) {
-                  for (MapEntry<String, dynamic> item in parseJson["data"]["serverNeedUpgrade"].entries) {
-                    DataType dataType = Util.dataTypeValueOf(item.key);
-                    Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
-                    // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
-                    // Грубо говоря - это восстановление данных на сервере
-                    // Конечно вероятность такого мала, но на всякий случай, если сервер когда-нибудь невозвратимо утухнет
-                    DataGetter.resetRevision(
-                      dataType,
-                      item.value,
-                      maxRevisionByType[dataType.name]!,
-                    );
-                  }
-                }
-              }
-              if (insertion == 0) {
-                //Подумал, что слишком много запросов на синхронизацию
-                //Если не было инсертов, нет смысла более опрашивать сервер на предмет новых ревизий
-                break;
-              }
-            } else {
-              //Сервер какой-то не очень отзывчивый на 200 код) Остановим долбление
-              Util.p(
-                  "DataSync.sync() Error! Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}; Request: ${Util.jsonPretty(postDataRequest)}");
-              break;
-            }
+  void openLoader() {
+    if (NavigatorApp.getLast() != null) {
+      DynamicInvoke().sysInvokeType(CustomLoaderOpenHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+    }
+  }
+
+  bool getAuthJustNow() {
+    bool authJustNow = Storage().get("authJustNow", "false") == "true";
+    if (authJustNow) {
+      Storage().set("authJustNow", "false");
+    }
+    return authJustNow;
+  }
+
+  void updateLoaderStatus(Map<String, dynamic> parseJson, int firstTotalCountItem) {
+    try {
+      int curTotalCountItem = parseJson["data"]["totalCountItem"];
+      DynamicInvoke().sysInvokeType(
+        ControllerHandler,
+        {
+          "controller": "loader",
+          "data": {"prc": ((firstTotalCountItem - curTotalCountItem) * 100 / firstTotalCountItem).ceil()}
+        },
+        NavigatorApp.getLast()!.dynamicUIBuilderContext,
+      );
+    } catch (error, stackTrace) {
+      Util.printStackTrace("DataSync.updateLoaderStatus()", error, stackTrace);
+    }
+  }
+
+  int parseUpgradeData(Map<String, dynamic> parseJson, Map<String, int> maxRevisionByType) {
+    int countUpgrade = 0;
+    if (parseJson["data"]["upgrade"] != null) {
+      for (MapEntry<String, dynamic> item in parseJson["data"]["upgrade"].entries) {
+        DataType dataType = Util.dataTypeValueOf(item.key);
+        for (Map<String, dynamic> curData in item.value) {
+          Data? updData = upgradeData(curData, dataType, maxRevisionByType);
+          if (updData != null) {
+            countUpgrade++;
           }
-          // При HotReload страница Account уже загрузится,
-          // Не пугайтесь всегда будет отставание на одно значение от реальности
-          Storage().set("lastSync", "${Util.getTimestamp()}");
-        } catch (e, stacktrace) {
-          Util.printStackTrace("DataSync().sync()", e, stacktrace);
         }
-        Util.p("sync time: ${Util.getTimestampMillis() - start}; insertion: $allInsertion;");
-        if (openLoader && NavigatorApp.getLast() != null) {
-          DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
-        }
-        isRun = false;
-      } else {
-        // История: 3 последовательных оповещения через сокет, что надо обновить
-        // 1 запускает синхронизацию, 2 последних заходим сюда, в итоге последний апдейт не синхронизован
-        // Потому что там процесс синхронизации успел зацепить с сервера 2 обновления, а третий не попал в временой диапозон
-        // Но и тут мы обновление не дали сделать, так как уже был процесс синхронизации
-        // Просераем в итоге данные, поэтому пост обновление делаем
-        multiInvoke.invoke(() {
-          Util.p("Run delay sync()");
-          sync();
-        });
-        Util.p("Sync Already, start delay");
       }
     }
+    return countUpgrade;
+  }
+
+  void parseResetData(Map<String, dynamic> parseJson, Map<String, int> maxRevisionByType) {
+    // Если ревизия на сервере меньше чем на устройстве будет возвращён блок serverNeedUpgrade
+    if (parseJson["data"]["serverNeedUpgrade"] != null) {
+      for (MapEntry<String, dynamic> item in parseJson["data"]["serverNeedUpgrade"].entries) {
+        DataType dataType = Util.dataTypeValueOf(item.key);
+        Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
+        // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
+        // Грубо говоря - это восстановление данных на сервере
+        // Конечно вероятность такого мала, но на всякий случай, если сервер когда-нибудь невозвратимо утухнет
+        DataGetter.resetRevision(
+          dataType,
+          item.value,
+          maxRevisionByType[dataType.name]!,
+        );
+      }
+    }
+  }
+
+  Future<int> sync([List<String>? lazy]) async {
+    // История: 3 последовательных оповещения через сокет, что надо обновить
+    // 1 запускает синхронизацию, 2 последних заходим сюда, в итоге последний апдейт не синхронизован
+    // Потому что там процесс синхронизации успел зацепить с сервера 2 обновления, а третий не попал в временой диапозон
+    // Но и тут мы обновление не дали сделать, так как уже был процесс синхронизации
+    // Просераем в итоге данные, поэтому пост обновление делаем
+
+    Completer<int> completer = Completer();
+    taskQueue.add(TaskSync(lazy, (int value) {
+      completer.complete(value);
+    }));
+    taskLoop();
+    return completer.future;
+  }
+
+  bool isRun = false;
+
+  Future<void> taskLoop() async {
+    if (!isRun) {
+      isRun = true;
+      while (taskQueue.isNotEmpty && appIsActive) {
+        TaskSync task = taskQueue.removeFirst();
+        int count = await _syncNative(task);
+        if (task.callback != null) {
+          task.callback!(count);
+        }
+      }
+      isRun = false;
+    }
+  }
+
+  Future<int> _syncNative(TaskSync taskSync) async {
+    int sumUpgrade = 0;
+    bool flagOpenLoader = false;
+    int firstTotalCountItem = -1;
+    int start = Util.getTimestampMillis();
+    int countRequest = 1;
+    try {
+      Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
+      while (true) {
+        // Сервер выдаёт пачки по 100kb
+        // на LTE выдавать пачки большего размера не целесообразно
+        // Лучше мельче нарезать, чем пропихивать 5mb одной пачкой
+        if (countRequest > 100) {
+          Util.p("DataSync.handler() break infinity while");
+          break;
+        }
+        // тут именно больше 2, так как если были обновления, синхронизация будет делать 2 запроса и будет
+        // всплывать лоадер, а это просто проверка
+        if (countRequest > 2 && !flagOpenLoader) {
+          openLoader();
+          flagOpenLoader = true;
+        }
+
+        // Сокеты работают без авторизации, значит и блок removed выходит за рамки авторизации, так как удалять можно
+        // все персональные данные [socket, userDataRSync, blobRSync]
+        List<String> removed = await DataGetter.getRemovedUuid();
+
+        Map<String, dynamic> postDataRequest = {
+          "authJustNow": getAuthJustNow(),
+          "maxRevisionByType": maxRevisionByType,
+          "userDataRSync": [],
+          "blobRSync": [],
+          "socket": //Только на первой итерации цикла мы посылаем не синхронизованные данные,
+              // все остальные итерации нужны для дозагрузки данных, которые переваливают
+              // за 1000 ревизий на сервере или превышают 100kb
+              countRequest == 1 ? await DataGetter.getAddSocketData() : [],
+          "lazy": taskSync.lazy,
+          "removed": removed.isNotEmpty ? removed : []
+        };
+
+        //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while,
+        // а то на сервере не к чему будет привязывать данные
+        if (Storage().get("isAuth", "false") == "true" && countRequest == 1) {
+          postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
+          postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
+        }
+        Response response = await Util.asyncInvokeIsolate((args) {
+          return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
+        }, {
+          "headers": HttpClient.upgradeHeadersAuthorization({}),
+          "body": postDataRequest,
+          "host": GlobalSettings().host,
+        });
+        if (response.statusCode == 200) {
+          int countUpgrade = 0;
+          Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
+          if (parseJson["status"] == true) {
+            if (firstTotalCountItem == -1) {
+              firstTotalCountItem = parseJson["data"]["totalCountItem"];
+            }
+            if (flagOpenLoader) {
+              updateLoaderStatus(parseJson, firstTotalCountItem);
+            }
+            countUpgrade = parseUpgradeData(parseJson, maxRevisionByType);
+            sumUpgrade += countUpgrade;
+            parseResetData(parseJson, maxRevisionByType);
+          }
+          //Если не было инсертов, нет смысла более опрашивать сервер на предмет новых ревизий
+          if (countUpgrade < 1) {
+            break;
+          }
+        } else {
+          Util.p("DataSync.sync() Error");
+          Util.log(Util.jsonPretty({
+            "responseCode": response.statusCode,
+            "responseBody": response.body,
+            "responseHeader": response.headers,
+            "request": postDataRequest
+          }));
+          //Серверу плохо, остановим долбление
+          break;
+        }
+        countRequest++;
+      }
+      // При HotReload страница Account уже загрузится,
+      // Не пугайтесь всегда будет отставание на одно значение от реальности
+      Storage().set("lastSync", "${Util.getTimestamp()}");
+    } catch (e, stacktrace) {
+      Util.printStackTrace("DataSync().sync()", e, stacktrace);
+    }
+    Util.p("sync time: ${Util.getTimestampMillis() - start}; sumUpgrade: $sumUpgrade; countRequest: $countRequest");
+    if (flagOpenLoader && NavigatorApp.getLast() != null) {
+      DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+    }
+    return sumUpgrade;
   }
 
   Data? upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {
