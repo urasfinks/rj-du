@@ -185,10 +185,10 @@ class SwipableStackWidget extends AbstractWidget {
         return true;
       },
       horizontalSwipeThreshold: TypeParser.parseDouble(
-        getValue(parsedJson, "horizontalSwipeThreshold", 0.7, dynamicUIBuilderContext),
+        getValue(parsedJson, "horizontalSwipeThreshold", 0.32, dynamicUIBuilderContext),
       )!,
       verticalSwipeThreshold: TypeParser.parseDouble(
-        getValue(parsedJson, "verticalSwipeThreshold", 0.7, dynamicUIBuilderContext),
+        getValue(parsedJson, "verticalSwipeThreshold", 0.32, dynamicUIBuilderContext),
       )!,
       overlayBuilder: (context, properties) {
         stateControl["overlayOpacity"] = min(properties.swipeProgress, 1.0);
