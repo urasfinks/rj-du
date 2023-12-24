@@ -76,9 +76,9 @@ class DataSource {
   }
 
   setData(Data data, [bool notifyDynamicPage = true]) async {
-    groupMultiUpdate(data);
     List<String> transaction = [];
     if (isInit) {
+      groupMultiUpdate(data);
       transaction.add("1 is init");
       if (data.type == DataType.virtual) {
         //Состояние страницы (для виртуалок beforeSync не актуален)
@@ -107,12 +107,18 @@ class DataSource {
 
   void groupMultiUpdate(Data data) {
     //Группируем множественные обновления по подписке для единоразового обновления
-    mapMultiUpdate[SubscribeReloadGroup.uuid]!.add(data.uuid);
+    if (!mapMultiUpdate[SubscribeReloadGroup.uuid]!.contains(data.uuid)) {
+      mapMultiUpdate[SubscribeReloadGroup.uuid]!.add(data.uuid);
+    }
     if (data.parentUuid != null) {
-      mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.add(data.parentUuid!);
+      if (!mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.contains(data.parentUuid!)) {
+        mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.add(data.parentUuid!);
+      }
     }
     if (data.key != null) {
-      mapMultiUpdate[SubscribeReloadGroup.key]!.add(data.key!);
+      if (!mapMultiUpdate[SubscribeReloadGroup.key]!.contains(data.key!)) {
+        mapMultiUpdate[SubscribeReloadGroup.key]!.add(data.key!);
+      }
     }
     multiInvoke.invoke(() {
       NavigatorApp.reloadPageBySubscription(mapMultiUpdate, true);
