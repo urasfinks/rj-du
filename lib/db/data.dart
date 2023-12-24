@@ -11,6 +11,7 @@ class Data {
   int? dateUpdate;
   int? revision;
   int? isRemove;
+  String? lazySync;
 
   // Если данные по uuid уже есть в БД то при SetDataSource -
   // данные будет обновлены в локальной БД

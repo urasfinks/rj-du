@@ -290,7 +290,7 @@ class DataSource {
       }
       String dataString = curData.value.runtimeType != String ? json.encode(curData.value) : curData.value;
       await db.rawUpdate(
-        'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, meta_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ? WHERE uuid_data = ?',
+        'UPDATE data SET value_data = ?, type_data = ?, parent_uuid_data = ?, key_data = ?, meta_data = ?, date_add_data = ?, date_update_data = ?, revision_data = ?, is_remove_data = ?, lazy_sync_data = ? WHERE uuid_data = ?',
         [
           dataString,
           curData.type.name,
@@ -301,6 +301,7 @@ class DataSource {
           curData.dateUpdate,
           curData.revision,
           curData.isRemove,
+          curData.lazySync,
           curData.uuid,
         ],
       );
@@ -315,7 +316,7 @@ class DataSource {
   insert(Data curData) async {
     try {
       await db.rawInsert(
-        'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, meta_data, date_add_data, date_update_data, revision_data, is_remove_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, meta_data, date_add_data, date_update_data, revision_data, is_remove_data, lazy_sync_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           curData.uuid,
           curData.value.runtimeType != String ? json.encode(curData.value) : curData.value,
@@ -327,6 +328,7 @@ class DataSource {
           curData.dateUpdate,
           curData.revision ??= 0,
           curData.isRemove ??= 0,
+          curData.lazySync
         ],
       );
       //Выполяем onPersist только в том случае, если это не сокетные данные

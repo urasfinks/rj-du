@@ -40,10 +40,22 @@ class DataGetter {
         [dataType.name, fromRevision, toRevision]);
   }
 
-  static Future<Map<String, int>> getMaxRevisionByType() async {
+  static Future<Map<String, int>> getMaxRevisionByType(List<String>? lazy) async {
     Map<String, int> result = {};
-    var resultSet = await DataSource().db.rawQuery(
-        "SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 GROUP BY type_data", []);
+    List<Map<String, Object?>> resultSet = [];
+    if (lazy != null && lazy.isNotEmpty) {
+      List<String> stateList = [];
+      for (String _ in lazy) {
+        stateList.add("?");
+      }
+      String sql =
+          "SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 AND lazy_sync_data IN (${stateList.join(',')}) GROUP BY type_data";
+      resultSet = await DataSource().db.rawQuery(sql, lazy);
+    } else {
+      resultSet = await DataSource().db.rawQuery(
+          "SELECT type_data, max(revision_data) as max FROM data WHERE is_remove_data = 0 AND lazy_sync_data IS NULL GROUP BY type_data",
+          []);
+    }
     for (Map<String, dynamic> item in resultSet) {
       result[item["type_data"]] = item["max"];
     }

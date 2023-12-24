@@ -15,4 +15,8 @@ enum DataType {
   bool isJson() {
     return ![js, any, blob, blobRSync].contains(this);
   }
+
+  bool isUserData(){
+    return [userDataRSync, socket, blobRSync].contains(this);
+  }
 }

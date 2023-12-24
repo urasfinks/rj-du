@@ -253,4 +253,8 @@ class Util {
       label: ":::PrintCurrentStack::: $label",
     );
   }
+
+  static List<String>? castListDynamicToString(dynamic list) {
+    return (list as List)?.map((item) => item as String)?.toList();
+  }
 }

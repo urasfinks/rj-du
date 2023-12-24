@@ -12,6 +12,7 @@ import 'package:rjdu/util/template/Parser/template_item.dart';
 import 'package:rjdu/web_socket_service.dart';
 
 import 'abstract_controller_wrap.dart';
+import 'data_sync.dart';
 import 'dynamic_invoke/dynamic_invoke.dart';
 import 'dynamic_ui/type_parser.dart';
 import 'store_value_notifier.dart';
@@ -52,6 +53,7 @@ class DynamicPage extends StatefulWidget {
   int openInIndexTab = 0;
   int timeCreate = 0;
   bool reloadOnActiveViewport = false;
+  bool reloadBackground = false;
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
     if (!_subscribedOnReload[group]!.contains(value)) {
@@ -142,7 +144,7 @@ class DynamicPage extends StatefulWidget {
     if (isDispose == false) {
       // Темы наверное часто не будут менять, но если поменяют в runTime - перегрузим всё страницы, что бы
       // не мелькала старая тема на не активных страницах
-      if (NavigatorApp.getLast() == this || isChangeTheme) {
+      if (NavigatorApp.getLast() == this || isChangeTheme || reloadBackground) {
         //Если перезагружается страница, на которой мы сейчас находимся
         AudioComponent().stop();
         Util.p("DynamicPage.reload($rebuild) uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
@@ -376,6 +378,16 @@ class _DynamicPage extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.arguments.containsKey("lazySync")) {
+      DataSync().sync(Util.castListDynamicToString(widget.arguments["lazySync"])).then((value) {
+        if (value > 0) {
+          widget.reload(true);
+        }
+      });
+    }
+    if (widget.arguments.containsKey("reloadBackground")) {
+      widget.reloadBackground = true;
+    }
     widget.context = context;
     if (widget.newRender) {
       widget.constructor();

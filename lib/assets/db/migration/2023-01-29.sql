@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS "data" (
     date_add_data NUMERIC,
     date_update_data NUMERIC,
     revision_data INTEGER DEFAULT (0),
-    is_remove_data INTEGER DEFAULT (0)
+    is_remove_data INTEGER DEFAULT (0),
+    lazy_sync_data TEXT
 );
 CREATE UNIQUE INDEX IF NOT EXISTS uuid_data_IDX ON "data" (uuid_data);
 CREATE INDEX IF NOT EXISTS key_data_IDX ON "data" (key_data);

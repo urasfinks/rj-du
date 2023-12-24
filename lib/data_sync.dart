@@ -126,15 +126,19 @@ class DataSync {
     if (parseJson["data"]["serverNeedUpgrade"] != null) {
       for (MapEntry<String, dynamic> item in parseJson["data"]["serverNeedUpgrade"].entries) {
         DataType dataType = Util.dataTypeValueOf(item.key);
-        Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
-        // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
-        // Грубо говоря - это восстановление данных на сервере
-        // Конечно вероятность такого мала, но на всякий случай, если сервер когда-нибудь невозвратимо утухнет
-        DataGetter.resetRevision(
-          dataType,
-          item.value,
-          maxRevisionByType[dataType.name]!,
-        );
+        if (dataType.isUserData()) {
+          Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
+          // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
+          // Грубо говоря - это восстановление данных на сервере
+          // Конечно вероятность такого мала, но на всякий случай, если сервер когда-нибудь невозвратимо утухнет
+          DataGetter.resetRevision(
+            dataType,
+            item.value,
+            maxRevisionByType[dataType.name]!,
+          );
+        } else {
+          Util.p("(NOT USER DATA)!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
+        }
       }
     }
   }
@@ -177,7 +181,7 @@ class DataSync {
     int start = Util.getTimestampMillis();
     int countRequest = 1;
     try {
-      Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType();
+      Map<String, int> maxRevisionByType = await DataGetter.getMaxRevisionByType(taskSync.lazy);
       while (true) {
         // Сервер выдаёт пачки по 100kb
         // на LTE выдавать пачки большего размера не целесообразно
@@ -216,6 +220,7 @@ class DataSync {
           postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
           postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
         }
+        //Util.log(Util.jsonPretty(postDataRequest));
         Response response = await Util.asyncInvokeIsolate((args) {
           return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
         }, {
@@ -282,6 +287,7 @@ class DataSync {
       dataObject.onUpdateOverlayNullField = true;
       dataObject.isRemove = curData["is_remove"];
       dataObject.parentUuid = curData["parent_uuid"];
+      dataObject.lazySync = curData["lazy_sync"];
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
