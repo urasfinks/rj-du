@@ -51,8 +51,7 @@ class PageReloadHandler extends AbstractHandler {
     }
     bool sync = args.containsKey("sync") && args["sync"] == true;
     if (sync) {
-      Future<void> sync2 = DataSync().sync();
-      sync2.then((_) {
+      DataSync().sync().then((_) {
         fnReload();
       }).onError((error, stackTrace) {
         Util.printStackTrace("PageReloadHandler.handle()", error, stackTrace);
