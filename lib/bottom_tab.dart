@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:rjdu/dynamic_invoke/handler/navigator_pop_handler.dart';
+import 'package:rjdu/dynamic_invoke/handler/navigator_pop_handler.dart' as nph;
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/multi_invoke.dart';
 import 'package:rjdu/theme_provider.dart';
@@ -144,7 +144,7 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
                   int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
                   if (nowTimeClick - lastTimeClick < 200) {
                     DynamicInvoke().sysInvokeType(
-                      NavigatorPopHandler,
+                      nph.NavigatorPopHandler,
                       {"tab": index, "toBegin": true},
                       widget.dynamicUIBuilderContext,
                     );

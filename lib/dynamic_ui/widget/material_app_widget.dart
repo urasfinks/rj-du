@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rjdu/navigator_app.dart';
 import '../../dynamic_invoke/dynamic_invoke.dart';
-import '../../dynamic_invoke/handler/navigator_pop_handler.dart';
+import '../../dynamic_invoke/handler/navigator_pop_handler.dart' as nph;
 import '../../global_settings.dart';
 import '../../system_notify.dart';
 import '../dynamic_ui_builder_context.dart';
@@ -26,17 +26,16 @@ class MaterialAppWidget extends AbstractWidget {
           theme: ThemeProvider.lightThemeData(),
           darkTheme: ThemeProvider.darkThemeData(),
           themeMode: ThemeMode.system,
-          home: WillPopScope(
-            onWillPop: () async {
-              bool result = NavigatorApp.isLast();
+          home: PopScope(
+            canPop: false,
+            onPopInvoked: (_) async {
               if (NavigatorApp.getLast() != null) {
                 DynamicInvoke().sysInvokeType(
-                  NavigatorPopHandler,
+                  nph.NavigatorPopHandler,
                   {},
                   NavigatorApp.getLast()!.dynamicUIBuilderContext,
                 );
               }
-              return result;
             },
             child: BottomTab(dynamicUIBuilderContext),
           ),
