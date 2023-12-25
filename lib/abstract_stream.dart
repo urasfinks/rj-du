@@ -4,11 +4,15 @@ import 'package:rjdu/util.dart';
 
 abstract class AbstractStream {
   Map<String, dynamic> data = {};
-  StreamController controller = StreamController();
+  final StreamController _controller = StreamController();
+  late final Stream stream;
+
+  AbstractStream() {
+    stream = _controller.stream.asBroadcastStream();
+  }
 
   Stream getStream() {
-    controller = StreamController();
-    return controller.stream;
+    return stream;
   }
 
   Map<String, dynamic> getData() {
@@ -17,6 +21,6 @@ abstract class AbstractStream {
 
   setData(Map<String, dynamic> newData) {
     Util.overlay(data, newData);
-    controller.sink.add(data);
+    _controller.add(data);
   }
 }

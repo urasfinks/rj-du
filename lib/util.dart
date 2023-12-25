@@ -216,7 +216,7 @@ class Util {
   }
 
   static Map<String, dynamic> overlay(Map<String, dynamic> defObject, Map<String, dynamic>? overlayObject) {
-    if (overlayObject == null || overlayObject.isEmpty) {
+    if (overlayObject == null || overlayObject.isEmpty || identical(defObject, overlayObject)) {
       return defObject;
     }
     for (MapEntry<String, dynamic> item in overlayObject.entries) {

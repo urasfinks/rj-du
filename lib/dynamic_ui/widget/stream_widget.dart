@@ -75,7 +75,7 @@ class StreamWidget extends AbstractWidget {
       key: Util.getKey(),
       stream: stream.getStream(),
       builder: (BuildContext buildContext, AsyncSnapshot asyncSnapshot) {
-        Map<String, dynamic> snapshot = asyncSnapshot.data ?? {};
+        Map<String, dynamic> snapshot = (asyncSnapshot.hasData) ? asyncSnapshot.data : {};
         return builder(snapshot);
       },
       initialData: stream.getData(),
@@ -101,11 +101,14 @@ class StreamControllerWrap extends AbstractControllerWrap<AbstractStream> {
 
 class StreamPeriodic extends AbstractStream {
   StreamPeriodic(
-      Map<String, dynamic> defData, int milliseconds, Function(Map<String, dynamic> data, Timer timer) callback) {
-    data = defData;
+    Map<String, dynamic> defData,
+    int milliseconds,
+    Function(Map<String, dynamic> data, Timer timer) callback,
+  ) {
+    data.addAll(defData);
     Timer.periodic(Duration(milliseconds: milliseconds), (timer) {
       callback(data, timer);
-      controller.sink.add(data);
+      setData(data);
     });
   }
 }
