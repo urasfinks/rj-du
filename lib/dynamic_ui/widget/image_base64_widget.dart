@@ -31,8 +31,8 @@ class ImageBase64Widget extends AbstractWidget {
           }
         }
       });
+      DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": src}, dynamicUIBuilderContext);
     }
-    DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": parsedJson["src"]}, dynamicUIBuilderContext);
     return StreamWidget.getWidget(abstractStream, (snapshot) {
       if (snapshot["image"] == null) {
         return getAsset(parsedJson, dynamicUIBuilderContext);
