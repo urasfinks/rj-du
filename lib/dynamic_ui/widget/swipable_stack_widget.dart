@@ -152,6 +152,7 @@ class SwipableStackWidget extends AbstractWidget {
           stateControl["swipedIndex"] = index;
           stateControl["swipedDirection"] = direction.name.toString();
           stateControl["overlayDirection"] = "none";
+          stateControl["overlayOpacity"] = 0;
           click(parsedJson, dynamicUIBuilderContext, "onSwipeCompleted");
           if (controller.currentIndex == children.length - 1) {
             if (roll) {
@@ -193,6 +194,7 @@ class SwipableStackWidget extends AbstractWidget {
       overlayBuilder: (context, properties) {
         stateControl["overlayOpacity"] = min(properties.swipeProgress, 1.0);
         if (stateControl["overlayOpacity"] < reactionOverlayOpacity) {
+          stateControl["overlayOpacity"] = 0;
           stateControl["overlayDirection"] = "none";
         } else {
           stateControl["overlayDirection"] = properties.direction.name.toString();
