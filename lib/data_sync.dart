@@ -149,13 +149,20 @@ class DataSync {
     // Потому что там процесс синхронизации успел зацепить с сервера 2 обновления, а третий не попал в временой диапозон
     // Но и тут мы обновление не дали сделать, так как уже был процесс синхронизации
     // Просераем в итоге данные, поэтому пост обновление делаем
-
-    Completer<int> completer = Completer();
-    taskQueue.add(TaskSync(lazy, (int value) {
-      completer.complete(value);
-    }));
-    taskLoop();
-    return completer.future;
+    if (taskQueue.length > 5) {
+      //Такой кейс: небыло интернета - очередь накопилась и смысла никакого в 1000 синхронизациях нет, когда интернет появился
+      taskLoop();
+      return Future.delayed(const Duration(seconds: 1), () {
+        return 0;
+      });
+    } else {
+      Completer<int> completer = Completer();
+      taskQueue.add(TaskSync(lazy, (int value) {
+        completer.complete(value);
+      }));
+      taskLoop();
+      return completer.future;
+    }
   }
 
   bool isRun = false;
