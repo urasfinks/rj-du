@@ -206,7 +206,7 @@ class AudioComponentContext {
   }
 
   void streamNotify(Map<String, dynamic> map) {
-    _streamData!.setData(map);
+    _streamData.setData(map);
   }
 
   Stream getStream() {
