@@ -117,41 +117,46 @@ class BottomTabState extends State<BottomTab> with WidgetsBindingObserver, Ticke
         widget.dynamicUIBuilderContext,
       ),
       floatingActionButtonLocation: GlobalSettings().floatingActionButtonLocation,
-      bottomNavigationBar: Visibility(
-        visible: GlobalSettings().bottomNavigationBar,
-        child: ClipRRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: TypeParser.parseColor("schema:secondary", context)!
-                        .withOpacity(GlobalSettings().barSeparatorOpacity / 2),
-                    width: 1.0,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent
+        ), // sets the inactive color of the `BottomNavigationBar`
+        child: Visibility(
+          visible: GlobalSettings().bottomNavigationBar,
+          child: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: ThemeProvider.blur, sigmaY: ThemeProvider.blur),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: TypeParser.parseColor("schema:secondary", context)!
+                          .withOpacity(GlobalSettings().barSeparatorOpacity / 2),
+                      width: 1.0,
+                    ),
                   ),
                 ),
-              ),
-              child: BottomNavigationBar(
-                elevation: 0,
-                showSelectedLabels: false,
-                //Убираем подпись к выбранному табу
-                showUnselectedLabels: false,
-                //Убираем подписи к невыбранным табам
-                items: getTabList(),
-                currentIndex: NavigatorApp.selectedTab,
-                onTap: (index) {
-                  int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
-                  if (nowTimeClick - lastTimeClick < 200) {
-                    DynamicInvoke().sysInvokeType(
-                      nph.NavigatorPopHandler,
-                      {"tab": index, "toBegin": true},
-                      widget.dynamicUIBuilderContext,
-                    );
-                  }
-                  lastTimeClick = nowTimeClick;
-                  selectTab(index);
-                },
+                child: BottomNavigationBar(
+                  elevation: 0,
+                  showSelectedLabels: false,
+                  //Убираем подпись к выбранному табу
+                  showUnselectedLabels: false,
+                  //Убираем подписи к невыбранным табам
+                  items: getTabList(),
+                  currentIndex: NavigatorApp.selectedTab,
+                  onTap: (index) {
+                    int nowTimeClick = DateTime.now().millisecondsSinceEpoch;
+                    if (nowTimeClick - lastTimeClick < 200) {
+                      DynamicInvoke().sysInvokeType(
+                        nph.NavigatorPopHandler,
+                        {"tab": index, "toBegin": true},
+                        widget.dynamicUIBuilderContext,
+                      );
+                    }
+                    lastTimeClick = nowTimeClick;
+                    selectTab(index);
+                  },
+                ),
               ),
             ),
           ),
