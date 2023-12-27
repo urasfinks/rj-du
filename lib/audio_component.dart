@@ -17,16 +17,23 @@ class AudioComponent {
 
   AudioComponent._internal();
 
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer? audioPlayer;
   AudioComponentContext? audioComponentContext;
 
   init() async {
     Util.p("AudioComponent.init()");
-    await audioPlayer.stop();
-    await audioPlayer.dispose();
+    if (audioPlayer != null) {
+      await audioPlayer!.stop();
+      await audioPlayer!.dispose();
+    }
 
     audioPlayer = AudioPlayer();
-    audioPlayer.playerStateStream.listen((event) {
+    if (audioComponentContext != null) {
+      audioPlayer!.setAudioSource(audioComponentContext!.byteSource!);
+    } else {
+      Util.printCurrentStack("audioPlayer is null");
+    }
+    audioPlayer!.playerStateStream.listen((event) {
       if (audioComponentContext != null) {
         PlayerState st = event;
         Map<String, dynamic> data = {
@@ -41,7 +48,7 @@ class AudioComponent {
         audioComponentContext!.streamNotify(data);
       }
     });
-    audioPlayer.bufferedPositionStream.listen((event) {
+    audioPlayer!.bufferedPositionStream.listen((event) {
       if (audioComponentContext != null) {
         audioComponentContext!.streamNotify({
           "caller": "bufferedPosition",
@@ -49,7 +56,7 @@ class AudioComponent {
         });
       }
     });
-    audioPlayer.durationStream.listen((event) {
+    audioPlayer!.durationStream.listen((event) {
       Duration? ev = event;
       if (audioComponentContext != null && ev != null) {
         audioComponentContext!.streamNotify({
@@ -59,7 +66,7 @@ class AudioComponent {
         });
       }
     });
-    audioPlayer.positionStream.listen((event) {
+    audioPlayer!.positionStream.listen((event) {
       Duration ev = event;
       if (audioComponentContext != null) {
         double prc = 0;
@@ -77,40 +84,54 @@ class AudioComponent {
   }
 
   void play(AudioComponentContext audioComponentContext) {
-    audioPlayer.stop();
-    if (this.audioComponentContext != null) {
-      this.audioComponentContext!.stop();
-    }
-    if (audioComponentContext.byteSource != null) {
-      this.audioComponentContext = audioComponentContext;
-      this.audioComponentContext!.loading();
-      audioPlayer.setAudioSource(audioComponentContext.byteSource!).then((value) {
-        this.audioComponentContext!.play();
-        audioPlayer.play();
-      }).onError((error, stackTrace) {
-        Util.printStackTrace("AudioComponent.play()", error, stackTrace);
-        this.audioComponentContext!.error(error.toString());
-      });
+    if (audioPlayer != null) {
+      audioPlayer!.stop();
+      if (this.audioComponentContext != null) {
+        this.audioComponentContext!.stop();
+      }
+      if (audioComponentContext.byteSource != null) {
+        this.audioComponentContext = audioComponentContext;
+        this.audioComponentContext!.loading();
+        audioPlayer!.setAudioSource(audioComponentContext.byteSource!).then((value) {
+          this.audioComponentContext!.play();
+          audioPlayer!.play();
+        }).onError((error, stackTrace) {
+          Util.printStackTrace("AudioComponent.play()", error, stackTrace);
+          this.audioComponentContext!.error(error.toString());
+        });
+      } else {
+        this.audioComponentContext!.error("Файл не загружен");
+      }
     } else {
-      this.audioComponentContext!.error("Файл не загружен");
+      Util.printCurrentStack("audioPlayer is null");
     }
   }
 
   void pause() {
-    if (audioComponentContext != null) {
+    if (audioComponentContext != null && audioPlayer != null) {
       audioComponentContext!.pause();
-      audioPlayer.pause();
+      audioPlayer!.pause();
+    } else {
+      Util.printCurrentStack("audioPlayer || audioComponentContext is null");
     }
   }
 
   void resume(AudioComponentContext audioComponentContext) {
     this.audioComponentContext = audioComponentContext;
     this.audioComponentContext!.resume();
-    audioPlayer.play();
+    if (audioPlayer != null) {
+      audioPlayer!.play();
+    } else {
+      Util.printCurrentStack("audioPlayer is null");
+    }
   }
 
   void stop() {
-    audioPlayer.stop();
+    if (audioPlayer != null) {
+      audioPlayer!.stop();
+    } else {
+      Util.printCurrentStack("audioPlayer is null");
+    }
     if (audioComponentContext != null) {
       audioComponentContext!.stop();
     }
@@ -119,14 +140,13 @@ class AudioComponent {
 
 class AudioComponentContext {
   late Map<String, dynamic> dataState;
-  StreamData? _streamData;
+  late StreamData _streamData;
   ByteSource? byteSource;
   bool autoPlayOnLoad = false;
 
   Function(AudioComponentContext audioComponentContext)? onLoadBytesCallback;
 
-  AudioComponentContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext,
-      [this.onLoadBytesCallback]) {
+  AudioComponentContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, [this.onLoadBytesCallback]) {
     dataState = AbstractWidget.getStateControl(args["key"] ?? "Audio", dynamicUIBuilderContext, {
       "state": AudioComponentContextState.loading.name,
       "playerState": "init",
@@ -180,20 +200,17 @@ class AudioComponentContext {
           break;
       }
     } catch (e, stacktrace) {
-      Util.printStackTrace(
-          "AudioComponentContext ars: $args; onLoadBytesCallback: $onLoadBytesCallback", e, stacktrace);
+      Util.printStackTrace("AudioComponentContext ars: $args; onLoadBytesCallback: $onLoadBytesCallback", e, stacktrace);
     }
+    _streamData = StreamData(dataState);
   }
 
   void streamNotify(Map<String, dynamic> map) {
-    if (_streamData != null) {
-      _streamData!.setData(map);
-    }
+    _streamData!.setData(map);
   }
 
   Stream getStream() {
-    _streamData = StreamData(dataState);
-    return _streamData!.getStream();
+    return _streamData.getStream();
   }
 
   void play() {
