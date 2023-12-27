@@ -53,12 +53,13 @@ class ImageTitledWidget extends AbstractWidget {
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color.fromARGB(200, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
+                  stops: [0.45, 1],
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                 ),
               ),
               padding: TypeParser.parseEdgeInsets(
-                getValue(parsedJson, "padding", "10,0,10,5", dynamicUIBuilderContext),
+                getValue(parsedJson, "padding", "10,10,10,5", dynamicUIBuilderContext),
               )!,
               child: Text(
                 label,
