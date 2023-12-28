@@ -49,6 +49,7 @@ import 'package:rjdu/dynamic_ui/widget/sliver_fill_remaining_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/state_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/stream_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/swipable_stack_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/switch_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/text_field_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/visibility_widget.dart';
@@ -160,6 +161,7 @@ class DynamicUI {
     "Stream": StreamWidget().get,
     "CarouselSlider": CarouselSliderWidget().get,
     "ImageTitled": ImageTitledWidget().get,
+    "Switch": SwitchWidget().get,
 
     //Property
     "TextStyle": TextStyleProperty().get,
