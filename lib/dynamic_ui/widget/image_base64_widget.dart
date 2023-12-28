@@ -33,19 +33,20 @@ class ImageBase64Widget extends AbstractWidget {
       });
       DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": src}, dynamicUIBuilderContext);
     }
+    Key xKey = Util.getKey();
     return StreamWidget.getWidget(abstractStream, (snapshot) {
       if (snapshot["image"] == null) {
-        return getAsset(parsedJson, dynamicUIBuilderContext);
+        return getAsset(parsedJson, dynamicUIBuilderContext, xKey);
       } else {
-        return getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext);
+        return getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, xKey);
       }
     });
   }
 
-  getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, Key xKey) {
     if (parsedJson.containsKey("assetLoader")) {
       return Image(
-        key: Util.getKey(),
+        key: xKey,
         image: AssetImage(parsedJson["assetLoader"]!),
         width: TypeParser.parseDouble(
           getValue(parsedJson, "width", null, dynamicUIBuilderContext),
@@ -69,10 +70,10 @@ class ImageBase64Widget extends AbstractWidget {
     }
   }
 
-  getMemory(String imageData, Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  getMemory(String imageData, Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, Key xKey) {
     return Image.memory(
       Util.base64Decode(imageData),
-      key: Util.getKey(),
+      key: xKey,
       width: TypeParser.parseDouble(
         getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
