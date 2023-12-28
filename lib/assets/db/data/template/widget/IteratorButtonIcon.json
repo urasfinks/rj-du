@@ -11,6 +11,7 @@
           "label": "${label}",
           "style": {
             "flutterType": "TextStyle",
+            "color": "${textColor,schema:inversePrimary}",
             "fontSize": 16
           }
         }
