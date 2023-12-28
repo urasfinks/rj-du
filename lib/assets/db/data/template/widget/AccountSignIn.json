@@ -1,6 +1,6 @@
 {
   "flutterType": "Container",
-  "color": "schema:background",
+  "color": "transparent",
   "child": {
     "flutterType": "Column",
     "mainAxisSize": "min",
