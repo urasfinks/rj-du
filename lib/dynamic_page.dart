@@ -146,7 +146,9 @@ class DynamicPage extends StatefulWidget {
       // не мелькала старая тема на не активных страницах
       if (NavigatorApp.getLast() == this || isChangeTheme || reloadBackground) {
         //Если перезагружается страница, на которой мы сейчас находимся
-        AudioComponent().stop();
+        if (NavigatorApp.getLast() == this) {
+          AudioComponent().stop();
+        }
         Util.p("DynamicPage.reload($rebuild) uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
         if (rebuild) {
           clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы

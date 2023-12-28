@@ -30,8 +30,6 @@ class AudioComponent {
     audioPlayer = AudioPlayer();
     if (audioComponentContext != null) {
       audioPlayer!.setAudioSource(audioComponentContext!.byteSource!);
-    } else {
-      Util.printCurrentStack("audioPlayer is null");
     }
     audioPlayer!.playerStateStream.listen((event) {
       if (audioComponentContext != null) {
