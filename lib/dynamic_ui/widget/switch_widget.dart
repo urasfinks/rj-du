@@ -92,6 +92,7 @@ class SwitchWidget extends AbstractWidget {
             if (personalMaterialState.containsKey(MaterialState.disabled)) {
               return personalMaterialState[MaterialState.disabled];
             }
+            return null;
           },
         );
       }
@@ -122,6 +123,7 @@ class SwitchWidget extends AbstractWidget {
             if (personalMaterialState.containsKey(MaterialState.disabled)) {
               return personalMaterialState[MaterialState.disabled];
             }
+            return null;
           },
         );
       }
