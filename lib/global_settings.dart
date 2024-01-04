@@ -5,7 +5,7 @@ import 'package:rjdu/util.dart';
 //# 16.09.2023 v10 - были исправления API сервера на синхронизацию
 
 class GlobalSettings {
-  bool debug = true;
+  bool debug = false;
   List<String> debugSql = [
     //"update data set is_remove_data = 1 where key_data = 'new_game' and is_remove_data = 0",
     //"SELECT type_data, max(revision_data) as max FRO:M data WHERE is_remove_data = 0 GROUP BY type_data",
