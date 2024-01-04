@@ -40,6 +40,9 @@ class ImageTitledWidget extends AbstractWidget {
         child: childElement,
       );
     }
+    bool textGradient = TypeParser.parseBool(
+      getValue(parsedJson, "textGradient", true, dynamicUIBuilderContext),
+    )!;
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
       child: Stack(
@@ -50,16 +53,18 @@ class ImageTitledWidget extends AbstractWidget {
             left: 0.0,
             right: 0.0,
             child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color.fromARGB(200, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
-                  stops: [0.45, 1],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ),
-              ),
+              decoration: textGradient
+                  ? const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color.fromARGB(180, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
+                        stops: [0.35, 1],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    )
+                  : null,
               padding: TypeParser.parseEdgeInsets(
-                getValue(parsedJson, "padding", "10,10,10,5", dynamicUIBuilderContext),
+                getValue(parsedJson, "padding", "10,20,10,5", dynamicUIBuilderContext),
               )!,
               child: Text(
                 label,
