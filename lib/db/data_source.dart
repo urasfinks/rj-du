@@ -106,26 +106,28 @@ class DataSource {
   };
 
   void groupMultiUpdate(Data data) {
-    //Группируем множественные обновления по подписке для единоразового обновления
-    if (!mapMultiUpdate[SubscribeReloadGroup.uuid]!.contains(data.uuid)) {
-      mapMultiUpdate[SubscribeReloadGroup.uuid]!.add(data.uuid);
-    }
-    if (data.parentUuid != null) {
-      if (!mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.contains(data.parentUuid!)) {
-        mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.add(data.parentUuid!);
+    if (data.notify) {
+      //Группируем множественные обновления по подписке для единоразового обновления
+      if (!mapMultiUpdate[SubscribeReloadGroup.uuid]!.contains(data.uuid)) {
+        mapMultiUpdate[SubscribeReloadGroup.uuid]!.add(data.uuid);
       }
-    }
-    if (data.key != null) {
-      if (!mapMultiUpdate[SubscribeReloadGroup.key]!.contains(data.key!)) {
-        mapMultiUpdate[SubscribeReloadGroup.key]!.add(data.key!);
+      if (data.parentUuid != null) {
+        if (!mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.contains(data.parentUuid!)) {
+          mapMultiUpdate[SubscribeReloadGroup.parentUuid]!.add(data.parentUuid!);
+        }
       }
-    }
-    multiInvoke.invoke(() {
-      NavigatorApp.reloadPageBySubscription(mapMultiUpdate, true);
-      for (MapEntry<SubscribeReloadGroup, List<String>> item in mapMultiUpdate.entries) {
-        item.value.clear();
+      if (data.key != null) {
+        if (!mapMultiUpdate[SubscribeReloadGroup.key]!.contains(data.key!)) {
+          mapMultiUpdate[SubscribeReloadGroup.key]!.add(data.key!);
+        }
       }
-    });
+      multiInvoke.invoke(() {
+        NavigatorApp.reloadPageBySubscription(mapMultiUpdate, true);
+        for (MapEntry<SubscribeReloadGroup, List<String>> item in mapMultiUpdate.entries) {
+          item.value.clear();
+        }
+      });
+    }
   }
 
   void printTransaction(Data data, List<String> transaction) {
