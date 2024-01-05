@@ -31,7 +31,7 @@ class NavigatorPopHandler extends AbstractHandler {
         dynamicPage.stateData.setMap(data["state"], data["map"]);
       }
       if (args.containsKey("reloadParent")) {
-        dynamicPage.reload(args["rebuild"] ?? true);
+        dynamicPage.reload(args["rebuild"] ?? true, "NavigatorPopHandler._pop()._updateLast()");
       }
     }
   }

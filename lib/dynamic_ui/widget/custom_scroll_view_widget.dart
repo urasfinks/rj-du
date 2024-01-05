@@ -59,7 +59,7 @@ class CustomScrollViewWidget extends AbstractWidget {
               // Вижу что в последний раз удалили чистый reload и добавили без обновления состояний
               // Сейчас такая ситуация для TextField есть установленная data -> нажимаю [x] -> pullToRefresh
               // Данные больше не восстанавливатся, считаю это не хорошо
-              dynamicUIBuilderContext.dynamicPage.reload(parsedJson["rebuild"] ?? true);
+              dynamicUIBuilderContext.dynamicPage.reload(parsedJson["rebuild"] ?? true, "pullToRefresh");
             });
           },
         ),

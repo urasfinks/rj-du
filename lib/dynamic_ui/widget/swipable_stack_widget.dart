@@ -161,7 +161,7 @@ class SwipableStackWidget extends AbstractWidget {
               });
             } else {
               stateControl["finish"] = true;
-              dynamicUIBuilderContext.dynamicPage.reload(false);
+              dynamicUIBuilderContext.dynamicPage.reload(false, "SwipableStackWidget.onFinish()");
             }
             click(parsedJson, dynamicUIBuilderContext, "onFinish");
           }

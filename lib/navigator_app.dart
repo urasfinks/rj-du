@@ -95,13 +95,13 @@ class NavigatorApp {
       Util.p("NavigatorApp.reloadPageBySubscription() $map");
     }
     for (DynamicPage dynamicPage in listPageToReload) {
-      dynamicPage.reload(rebuild);
+      dynamicPage.reload(rebuild, "reloadPageBySubscription($map)");
     }
   }
 
   static void reloadAllPages([bool isChangeTheme = false]) {
     for (DynamicPage dynamicPage in allDynamicPage) {
-      dynamicPage.reload(true, isChangeTheme);
+      dynamicPage.reload(true, "reloadAllPages", isChangeTheme);
     }
   }
 
@@ -110,7 +110,7 @@ class NavigatorApp {
       if (dynamicPage.isDispose == false &&
           dynamicPage.arguments.containsKey(key) &&
           dynamicPage.arguments[key] == value) {
-        dynamicPage.reload(rebuild);
+        dynamicPage.reload(rebuild, "reloadPageByArguments($key, $value)");
       }
     }
   }

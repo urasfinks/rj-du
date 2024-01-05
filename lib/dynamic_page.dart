@@ -42,6 +42,7 @@ class DynamicPage extends StatefulWidget {
 
   final String uuid = Util.uuid();
   bool isRunConstructor = false;
+  String saveLastCauseRebuild = "";
 
   final Map<SubscribeReloadGroup, List<String>> _subscribedOnReload = {
     SubscribeReloadGroup.uuid: [],
@@ -135,12 +136,12 @@ class DynamicPage extends StatefulWidget {
       reloadOnActiveViewport = false;
       Future.delayed(const Duration(seconds: 1), () {
         // Пытаемся избежать markNeedsBuild
-        reload(true);
+        reload(true, "DynamicPage.reloadOnActiveViewport($saveLastCauseRebuild)");
       });
     }
   }
 
-  void reload(bool rebuild, [bool isChangeTheme = false]) {
+  void reload(bool rebuild, String cause, [bool isChangeTheme = false]) {
     if (isDispose == false) {
       // Темы наверное часто не будут менять, но если поменяют в runTime - перегрузим всё страницы, что бы
       // не мелькала старая тема на не активных страницах
@@ -149,7 +150,8 @@ class DynamicPage extends StatefulWidget {
         if (NavigatorApp.getLast() == this) {
           AudioComponent().stop();
         }
-        Util.p("DynamicPage.reload($rebuild) uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
+        Util.p(
+            "DynamicPage.reload($rebuild) cause: $cause;  uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
         if (rebuild) {
           clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
           stateData.clear();
@@ -170,6 +172,7 @@ class DynamicPage extends StatefulWidget {
           constructor();
         }
       } else {
+        saveLastCauseRebuild = cause;
         Util.p(
             "DynamicPage.reload($rebuild) BACKGROUND uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
         reloadOnActiveViewport = true;
@@ -267,7 +270,7 @@ class DynamicPage extends StatefulWidget {
   void _updateStoreValueNotifierNative(String uuid, Map<String, dynamic> data) {
     storeValueNotifier.updateValueNotifier(uuid, data);
     if (checkSubscriptionOnReload(SubscribeReloadGroup.uuid, uuid)) {
-      reload(false);
+      reload(false, "ValueNotifier($uuid)");
     }
   }
 
@@ -342,7 +345,7 @@ class _DynamicPage extends State<DynamicPage> {
     Util.p("DynamicPage.startReloadEach($second) uuidPage: ${widget.uuid}");
     stopReloadEach();
     timerReload = Timer.periodic(Duration(seconds: second), (timer) {
-      widget.reload(true);
+      widget.reload(true, "TimePeriodic($second)");
     });
   }
 
@@ -383,7 +386,7 @@ class _DynamicPage extends State<DynamicPage> {
     if (widget.arguments.containsKey("lazySync")) {
       DataSync().sync(Util.castListDynamicToString(widget.arguments["lazySync"])).then((value) {
         if (value > 0) {
-          widget.reload(true);
+          widget.reload(true, "lazySync complete");
         }
       });
     }

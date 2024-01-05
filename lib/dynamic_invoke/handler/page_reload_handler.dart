@@ -44,7 +44,7 @@ class PageReloadHandler extends AbstractHandler {
       default:
         fnReload = () {
           Util.p("PageReloadHandler.fnReload(current)");
-          dynamicUIBuilderContext.dynamicPage.reload(rebuild);
+          dynamicUIBuilderContext.dynamicPage.reload(rebuild, "PageReloadHandler($args)");
         };
         Util.p("PageReloadHandler WTF?");
         break;
