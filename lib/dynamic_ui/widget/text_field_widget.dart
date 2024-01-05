@@ -15,15 +15,14 @@ class TextFieldWidget extends AbstractWidget {
     String type = getValue(parsedJson, "keyboardType", "text", dynamicUIBuilderContext);
 
     ControlStateHelper controlStateHelper = ControlStateHelper(parsedJson, dynamicUIBuilderContext);
+    if (controlStateHelper.isStatus(ControlStateHelperEvent.onRebuildClearTemporaryControllerText)) {
+      clearController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext);
+    }
 
     TextEditingController textController =
         getController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext, () {
       return TextEditingControllerWrap(TextEditingController(text: controlStateHelper.defaultData), {});
     });
-
-    if (controlStateHelper.isStatus(ControlStateHelperEvent.onRebuildClearTemporaryControllerText)) {
-      textController.text = controlStateHelper.defaultData;
-    }
 
     if (textController.text.isNotEmpty) {
       textController.selection = TextSelection.fromPosition(TextPosition(offset: textController.text.length));

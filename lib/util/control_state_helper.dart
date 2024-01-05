@@ -46,8 +46,6 @@ class ControlStateHelper {
     return cur[controlStateHelperEvent]!;
   }
 
-  init(ControlStateHelperEvent controlStateHelperEvent) {}
-
   onChange(dynamic value, [ControlStateHelperEvent isSet = ControlStateHelperEvent.onChangeSetState]) {
     if (cur[isSet]!) {
       dynamicUIBuilderContext.dynamicPage.stateData
