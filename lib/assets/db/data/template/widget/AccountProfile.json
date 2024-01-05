@@ -1,6 +1,5 @@
 {
   "flutterType": "Column",
-  "onStateDataUpdate": true,
   "crossAxisAlignment": "start",
   "children": [
     {
@@ -56,6 +55,7 @@
         "key": "InputName",
         "data": {
           "data": "${state(main,account.name,)}",
+          "state": "inputSpaceState",
           "key": "name",
           "placeholder": "Имя",
           "onSubmit": {
