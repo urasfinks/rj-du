@@ -44,6 +44,9 @@ class Data {
   //Признак, что эти данные относятся к состоянию страницы
   bool isStateData = false;
 
+  //Флаг обновления только ревизии на сервере, к таким данным не будет примеяться notify
+  bool syncRevision = false;
+
   Data(
     this.uuid,
     this.value,
@@ -53,6 +56,6 @@ class Data {
 
   @override
   String toString() {
-    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, meta: $meta, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, onPersist: $onPersist, isStateData: $isStateData}';
+    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, meta: $meta, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, onPersist: $onPersist, isStateData: $isStateData; syncRevision: $syncRevision;}';
   }
 }

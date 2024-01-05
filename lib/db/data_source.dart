@@ -363,28 +363,30 @@ class DataSource {
   }
 
   void notifyBlock(Data curData) {
-    Map<String, dynamic> runtimeData = {};
-    if (curData.value.runtimeType == String && curData.type.isJson()) {
-      runtimeData = json.decode(curData.value);
-    } else if (curData.value.runtimeType != String) {
-      if (curData.value.runtimeType.toString().contains("Map<dynamic, dynamic>")) {
-        runtimeData = Util.getMutableMap(curData.value);
-      } else if (curData.value != null) {
-        runtimeData = curData.value;
+    if (!curData.syncRevision) {
+      Map<String, dynamic> runtimeData = {};
+      if (curData.value.runtimeType == String && curData.type.isJson()) {
+        runtimeData = json.decode(curData.value);
+      } else if (curData.value.runtimeType != String) {
+        if (curData.value.runtimeType.toString().contains("Map<dynamic, dynamic>")) {
+          runtimeData = Util.getMutableMap(curData.value);
+        } else if (curData.value != null) {
+          runtimeData = curData.value;
+        }
+      } else {
+        runtimeData = {curData.type.name: curData.value};
       }
-    } else {
-      runtimeData = {curData.type.name: curData.value};
-    }
-    // Оповещение для перестройки страниц ранее было только для json форматов
-    // Сейчас я обновляю аватар с типом blobRSync и мне как бы надо получить уведомление, что аватар был заменён
-    // Пока закоментирую проверку на json тип, не знаю для чего он тут
-    //if (isJsonDataType(curData.type)) {
-    NavigatorApp.updatePageNotifier(curData.uuid, runtimeData);
-    //}
-    //Оповещение программных компонентов, кто подписался на onChange
-    if (listener.containsKey(curData.uuid)) {
-      for (Function(String uuid, Map<String, dynamic>? data) callback in listener[curData.uuid]!) {
-        callback(curData.uuid, runtimeData);
+      // Оповещение для перестройки страниц ранее было только для json форматов
+      // Сейчас я обновляю аватар с типом blobRSync и мне как бы надо получить уведомление, что аватар был заменён
+      // Пока закоментирую проверку на json тип, не знаю для чего он тут
+      //if (isJsonDataType(curData.type)) {
+      NavigatorApp.updatePageNotifier(curData.uuid, runtimeData);
+      //}
+      //Оповещение программных компонентов, кто подписался на onChange
+      if (listener.containsKey(curData.uuid)) {
+        for (Function(String uuid, Map<String, dynamic>? data) callback in listener[curData.uuid]!) {
+          callback(curData.uuid, runtimeData);
+        }
       }
     }
   }
