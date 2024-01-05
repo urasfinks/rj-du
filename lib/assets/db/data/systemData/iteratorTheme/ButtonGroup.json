@@ -104,7 +104,7 @@
   },
   "templateDivider":{
     "flutterType": "Divider",
-    "color": "schema:background",
+    "color": "transparent",
     "height": 1
   }
 }
