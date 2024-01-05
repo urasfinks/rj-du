@@ -33,6 +33,9 @@ class DataSourceSetHandler extends AbstractHandler {
       if (args.containsKey("meta")) {
         data.meta = args["meta"];
       }
+      if (args.containsKey("notify")) {
+        data.notify = args["notify"];
+      }
       if (args["onPersist"] != null) {
         data.onPersist = () {
           AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onPersist");

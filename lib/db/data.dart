@@ -45,7 +45,7 @@ class Data {
   bool isStateData = false;
 
   //Флаг обновления только ревизии на сервере, к таким данным не будет примеяться notify
-  bool syncRevision = false;
+  bool notify = true;
 
   Data(
     this.uuid,
@@ -56,6 +56,6 @@ class Data {
 
   @override
   String toString() {
-    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, meta: $meta, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, onPersist: $onPersist, isStateData: $isStateData; syncRevision: $syncRevision;}';
+    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, meta: $meta, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, onPersist: $onPersist, isStateData: $isStateData; notify: $notify;}';
   }
 }

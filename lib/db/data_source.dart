@@ -363,7 +363,7 @@ class DataSource {
   }
 
   void notifyBlock(Data curData) {
-    if (!curData.syncRevision) {
+    if (curData.notify) {
       Map<String, dynamic> runtimeData = {};
       if (curData.value.runtimeType == String && curData.type.isJson()) {
         runtimeData = json.decode(curData.value);

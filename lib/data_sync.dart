@@ -295,7 +295,9 @@ class DataSync {
       dataObject.isRemove = curData["is_remove"];
       dataObject.parentUuid = curData["parent_uuid"];
       dataObject.lazySync = curData["lazy_sync"];
-      dataObject.syncRevision = curData["sync_revision"];
+      if (curData.containsKey("sync_revision") && curData["sync_revision"] == true) {
+        dataObject.notify = false;
+      }
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
       maxRevisionByType[dataType.name] = dataObject.revision!;
