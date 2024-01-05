@@ -34,22 +34,26 @@ class TextFieldWidget extends AbstractWidget {
       listInputFormatters.add(FilteringTextInputFormatter.allow(RegExp("^[a-z0-9_-]{3,16}\$")));
     }
 
+    bool hideKeyboardOnEditingComplete = TypeParser.parseBool(
+      getValue(parsedJson, "hideKeyboardOnEditingComplete", true, dynamicUIBuilderContext),
+    )!;
+
     return TextField(
       key: Util.getKey(),
       focusNode:
           dynamicUIBuilderContext.dynamicPage.getProperty("${controlStateHelper.keyState}_FocusNode", FocusNode()),
-      onSubmitted: (_) {
-        if (parsedJson["hideKeyboardOnSubmitted"] ?? true == true) {
-          FocusManager.instance.primaryFocus?.unfocus();
-        }
+      onSubmitted: (value) {
+        //В документации написано, что эта штука должна скрывать клавиатуру по умолчанию
+        // if (parsedJson["hideKeyboardOnSubmitted"] ?? true == true) {
+        //   FocusManager.instance.primaryFocus?.unfocus();
+        // }
+        controlStateHelper.onChange(value);
         click(parsedJson, dynamicUIBuilderContext, "onSubmitted");
       },
-      onEditingComplete: () {
-        if (parsedJson["hideKeyboardOnEditingComplete"] ?? false == true) {
-          FocusManager.instance.primaryFocus?.unfocus();
-        }
-        click(parsedJson, dynamicUIBuilderContext, "onEditingComplete");
-      },
+      //А наличие вот этой штуки не должно скрывать
+      onEditingComplete: !hideKeyboardOnEditingComplete
+          ? () {}
+          : null,
       inputFormatters: listInputFormatters,
       textCapitalization: TypeParser.parseTextCapitalization(
         getValue(parsedJson, "textCapitalization", "sentences", dynamicUIBuilderContext),
