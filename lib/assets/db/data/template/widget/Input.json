@@ -3,7 +3,12 @@
   "onChangedSetStateNotify": false,
   "onInitSetStateNotify": false,
   "onRebuildClearTemporaryControllerText": true,
+  "hideKeyboardOnEditingComplete": true,
   "setState": true,
+  "state": "${state,main}",
+  "currentRenderTemplateList": [
+    "state"
+  ],
   "keyboardType": "${keyboardType,text}",
   "textCapitalization": "sentences",
   "style": {
