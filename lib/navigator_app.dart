@@ -60,6 +60,15 @@ class NavigatorApp {
     return tabNavigator.containsKey(indexTab) ? tabNavigator[indexTab]!.first : null;
   }
 
+  static bool isFirstPageInTab(DynamicPage dynamicPage) {
+    for (MapEntry<int, List<DynamicPage>> item in tabNavigator.entries) {
+      if (item.value.first == dynamicPage) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   static DynamicPage? getLast([int? indexTab]) {
     indexTab ??= selectedTab;
     return tabNavigator.containsKey(indexTab) ? tabNavigator[indexTab]!.last : null;
