@@ -114,11 +114,11 @@ class DataMigration {
   Future<void> loadAssetsData(String path) async {
     Map assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     List<String> list = [];
-
     for (String pathItem in assets.keys) {
       if (pathItem.startsWith(path)) {
+        DataType dataType = parseDataTypeFromDirectory(pathItem);
         String fileData = await rootBundle.loadString(pathItem);
-        String fileName = pathItem.split("/").last;
+        String fileName = pathItem.split("/${dataType.name}/").last;
         list.add(fileName);
         await DataSource()
             .set(fileName, fileData, parseDataTypeFromDirectory(pathItem), null, null, GlobalSettings().debug);
