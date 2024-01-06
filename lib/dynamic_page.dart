@@ -385,7 +385,7 @@ class _DynamicPage extends State<DynamicPage> {
   Widget build(BuildContext context) {
     if (widget.arguments.containsKey("lazySync")) {
       DataSync().sync(Util.castListDynamicToString(widget.arguments["lazySync"])).then((value) {
-        if (value > 0) {
+        if (value.countUpgrade > 0) {
           widget.reload(true, "lazySync complete");
         }
       });
