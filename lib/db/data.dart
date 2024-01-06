@@ -38,9 +38,6 @@ class Data {
   // Вывод отлаточной информации как прошёл DataSource.setData
   bool debugTransaction = false;
 
-  // Функция выполнится когда данные будут закомичены в локальной БД
-  Function? onPersist;
-
   //Признак, что эти данные относятся к состоянию страницы
   bool isStateData = false;
 
@@ -56,6 +53,6 @@ class Data {
 
   @override
   String toString() {
-    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, meta: $meta, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, onPersist: $onPersist, isStateData: $isStateData; notify: $notify;}';
+    return 'Data{uuid: $uuid, parentUuid: $parentUuid, value: $value :: ${value.runtimeType}, type: $type, key: $key, meta: $meta, dateAdd: $dateAdd, dateUpdate: $dateUpdate, revision: $revision, isRemove: $isRemove, updateIfExist: $updateIfExist, onUpdateOverlayNullField: $onUpdateOverlayNullField, onUpdateOverlayJsonValue: $onUpdateOverlayJsonValue, onUpdateResetRevision: $onUpdateResetRevision, beforeSync: $beforeSync, debugTransaction: $debugTransaction, isStateData: $isStateData; notify: $notify;}';
   }
 }

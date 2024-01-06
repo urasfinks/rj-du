@@ -71,8 +71,14 @@ class UtilHandler extends AbstractHandler {
         break;
       case "dataSync":
         if (args["onSync"] != null) {
-          DataSync().sync().then((_) {
-            AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onSync");
+          DataSync().sync().then((syncResult) {
+            if (syncResult.isSuccess()) {
+              AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onSync");
+            } else {
+              if (args["onSyncError"] != null) {
+                AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onSyncError");
+              }
+            }
           }).onError((error, stackTrace) {
             Util.printStackTrace("DataSyncHandler.handler()", error, stackTrace);
           });

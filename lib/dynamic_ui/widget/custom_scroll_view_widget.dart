@@ -51,16 +51,16 @@ class CustomScrollViewWidget extends AbstractWidget {
           refreshTriggerPullDistance: 125,
           refreshIndicatorExtent: 125,
           onRefresh: () async {
-            await DataSync().sync();
-            //Для того, что бы не было дёрганий перезагрузки страницы, даём свернуться pullToRefresh
-            await Future.delayed(const Duration(milliseconds: 250), () {
-              //dynamicUIBuilderContext.dynamicPage.reload();
-              //dynamicUIBuilderContext.dynamicPage.reloadWithoutSetState();
-              // Вижу что в последний раз удалили чистый reload и добавили без обновления состояний
-              // Сейчас такая ситуация для TextField есть установленная data -> нажимаю [x] -> pullToRefresh
-              // Данные больше не восстанавливатся, считаю это не хорошо
-              dynamicUIBuilderContext.dynamicPage.reload(parsedJson["rebuild"] ?? true, "pullToRefresh");
-            });
+            SyncResult syncResult = await DataSync().sync();
+            if (syncResult.isSuccess()) {
+              //Для того, что бы не было дёрганий перезагрузки страницы, даём свернуться pullToRefresh
+              await Future.delayed(const Duration(milliseconds: 250), () {
+                // Вижу что в последний раз удалили чистый reload и добавили без обновления состояний
+                // Сейчас такая ситуация для TextField есть установленная data -> нажимаю [x] -> pullToRefresh
+                // Данные больше не восстанавливатся, считаю это не хорошо
+                dynamicUIBuilderContext.dynamicPage.reload(parsedJson["rebuild"] ?? true, "pullToRefresh");
+              });
+            }
           },
         ),
       );

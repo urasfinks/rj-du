@@ -33,8 +33,30 @@ import "dart:collection";
 * Для сокетных данных - сервер является мастер системой. На локали ревизии для сокетных данных не обновляются
 * */
 
+class SyncResult {
+  int countUpgrade;
+  bool _error = false;
+  String? cause;
+
+  SyncResult(this.countUpgrade);
+
+  setError(String cause) {
+    this.cause = cause;
+    _error = true;
+  }
+
+  bool isSuccess() {
+    return !_error;
+  }
+
+  @override
+  String toString() {
+    return 'SyncResult{countUpgrade: $countUpgrade, _error: $_error, cause: $cause}';
+  }
+}
+
 class TaskSync {
-  Function(int count)? callback;
+  Function(SyncResult syncResult)? callback;
   List<String> lazy = [];
 
   TaskSync(List<String>? lazy, this.callback) {
@@ -143,22 +165,24 @@ class DataSync {
     }
   }
 
-  Future<int> sync([List<String>? lazy]) async {
-    // История: 3 последовательных оповещения через сокет, что надо обновить
-    // 1 запускает синхронизацию, 2 последних заходим сюда, в итоге последний апдейт не синхронизован
-    // Потому что там процесс синхронизации успел зацепить с сервера 2 обновления, а третий не попал в временой диапозон
-    // Но и тут мы обновление не дали сделать, так как уже был процесс синхронизации
-    // Просераем в итоге данные, поэтому пост обновление делаем
+  Future<SyncResult> sync([List<String>? lazy]) async {
     if (taskQueue.length > 5) {
-      //Такой кейс: небыло интернета - очередь накопилась и смысла никакого в 1000 синхронизациях нет, когда интернет появился
+      //Такой кейс: небыло интернета - очередь накопилась и смысла никакого в 1000 синхронизациях нет
+      // когда интернет появился мы начали шмалять запросы из очереди)
       taskLoop();
       return Future.delayed(const Duration(seconds: 1), () {
-        return 0;
+        SyncResult syncResult = SyncResult(0);
+        syncResult.setError("taskQueue overflow");
+        return syncResult;
       });
     } else {
-      Completer<int> completer = Completer();
-      taskQueue.add(TaskSync(lazy, (int value) {
-        completer.complete(value);
+      // Если нет интернета мы синхронизации будем завершать 0 return in Future
+      // То есть отсутствие интернета или недоступность сервера не будет накапливать очередь
+      // timeout по умолчанию 3 секунды, после этого 0 return in Future
+      //TODO: проверить реально ли отсутствие интернета не накапливает очередь, очень странно откуда появился taskQueue.length > 5
+      Completer<SyncResult> completer = Completer();
+      taskQueue.add(TaskSync(lazy, (SyncResult syncResult) {
+        completer.complete(syncResult);
       }));
       taskLoop();
       return completer.future;
@@ -172,16 +196,17 @@ class DataSync {
       isRun = true;
       while (taskQueue.isNotEmpty && appIsActive) {
         TaskSync task = taskQueue.removeFirst();
-        int count = await _syncNative(task);
+        SyncResult syncResult = await _syncNative(task);
         if (task.callback != null) {
-          task.callback!(count);
+          task.callback!(syncResult);
         }
       }
       isRun = false;
     }
   }
 
-  Future<int> _syncNative(TaskSync taskSync) async {
+  Future<SyncResult> _syncNative(TaskSync taskSync) async {
+    SyncResult syncResult = SyncResult(0);
     int sumUpgrade = 0;
     bool flagOpenLoader = false;
     int firstTotalCountItem = -1;
@@ -254,6 +279,7 @@ class DataSync {
             break;
           }
         } else {
+          syncResult.setError("Сервер вернул ошибку: ${response.statusCode}");
           Util.p("DataSync.sync() Error");
           Util.log(Util.jsonPretty({
             "responseCode": response.statusCode,
@@ -270,13 +296,15 @@ class DataSync {
       // Не пугайтесь всегда будет отставание на одно значение от реальности
       Storage().set("lastSync", "${Util.getTimestamp()}");
     } catch (e, stacktrace) {
+      syncResult.setError(e.toString());
       Util.printStackTrace("DataSync().sync()", e, stacktrace);
     }
     Util.p("sync time: ${Util.getTimestampMillis() - start}; sumUpgrade: $sumUpgrade; countRequest: $countRequest");
     if (flagOpenLoader && NavigatorApp.getLast() != null) {
       DynamicInvoke().sysInvokeType(CustomLoaderCloseHandler, {}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
     }
-    return sumUpgrade;
+    syncResult.countUpgrade = sumUpgrade;
+    return syncResult;
   }
 
   Data? upgradeData(Map<String, dynamic> curData, DataType dataType, Map<String, int> maxRevisionByType) {

@@ -75,26 +75,35 @@ class DataSource {
     await setData(data);
   }
 
-  setData(Data data, [bool notifyDynamicPage = true]) async {
-    List<String> transaction = [];
-    if (isInit) {
-      groupMultiUpdate(data);
-      transaction.add("1 is init");
-      if (data.type == DataType.virtual) {
-        //Состояние страницы (для виртуалок beforeSync не актуален)
-        setDataVirtual(data, transaction, notifyDynamicPage);
-      } else if (data.type == DataType.socket && data.beforeSync == false) {
-        // Отправим сокетные данные на сервере
-        setDataSocket(data, transaction, notifyDynamicPage);
+  Future<bool> setData(Data data, [bool notifyDynamicPage = true]) async {
+    bool result = true;
+    try {
+      List<String> transaction = [];
+      if (isInit) {
+        groupMultiUpdate(data);
+        transaction.add("1 is init");
+        if (data.type == DataType.virtual) {
+          //Состояние страницы (для виртуалок beforeSync не актуален)
+          setDataVirtual(data, transaction, notifyDynamicPage);
+        } else if (data.type == DataType.socket && data.beforeSync == false) {
+          // Отправим сокетные данные на сервере
+          // Так как транзация разорванная onPersist может лишь сказать о том, что данные мы доставили до сервера
+          // Данные залитают в БД после стягивания их через синхронизацию, которая вызывается у всех сокет потребителей
+          result = await setDataSocket(data, transaction, notifyDynamicPage);
+        } else {
+          //Если DataType.socket и beforeSync = true, попадём сюда! это ХАК для сокетных данных
+          result = await setDataStandard(data, transaction, notifyDynamicPage);
+        }
       } else {
-        //Если beforeSync = true, попадём сюда!
-        await setDataStandard(data, transaction, notifyDynamicPage);
+        transaction.add("10 not init");
+        list.add(data);
+        printTransaction(data, transaction);
       }
-    } else {
-      transaction.add("10 not init");
-      list.add(data);
-      printTransaction(data, transaction);
+    } catch (error, stackTrace) {
+      result = false;
+      Util.printStackTrace("DataSource.setData() $data", error, stackTrace);
     }
+    return result;
   }
 
   final MultiInvoke multiInvoke = MultiInvoke(1000);
@@ -136,31 +145,32 @@ class DataSource {
     }
   }
 
-  setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) async {
+  Future<bool> setDataStandard(Data data, List<String> transaction, bool notifyDynamicPage) async {
+    bool result = true;
     try {
       transaction.add("5 saveToDB");
       dynamic resultSet = await db.rawQuery("SELECT * FROM data where uuid_data = ?", [data.uuid]);
       bool notify = false;
       if (data.isRemove == 1) {
         transaction.add("5.1 remove");
-        await delete(data);
+        result = await delete(data);
         //notify = true; //Когда удаляются данные, нечего посылать в notifyBlockAsync, value уже пустое
         //Для фиксации изменений используйте DynamicPage._subscribedOnReload (косвенные взаимосвязи в обход Notify)
       } else if (resultSet.isEmpty) {
         transaction.add("6 result is empty > insert");
-        await insert(data);
+        result = await insert(data);
         notify = true;
-        // С сокетными данными мы пришли сюда, потому что был установлен beforeSync
+        // С сокетными данными мы пришли сюда, потому что был установлен beforeSync=true
         // Но данных в локальной БД нет, а на сервере данные не могут появится самостоятельно)
         // Следоватлеьно у нас ни что иное как инсерт, и в случаи сокета - мы должны его пролить в удалённую БД
-        if (data.type == DataType.socket) {
+        if (data.type == DataType.socket && (data.revision == null || data.revision == 0)) {
           // После того как мы вставили сокетные данные
           // Надо запустить синхронизацию
           // Что бы эта запись на сервер уползла
           transaction.add("6.1 DataSync().sync()");
-          await DataSync().sync();
-          if (data.onPersist != null) {
-            Function.apply(data.onPersist!, null);
+          SyncResult syncResult = await DataSync().sync();
+          if (!syncResult.isSuccess()) {
+            result = false;
           }
         }
       } else if (data.updateIfExist == true) {
@@ -170,7 +180,7 @@ class DataSource {
         // сами данные, бывает что надо бновить флаг удаления или ревизию
         updateNullable(data, resultSet.first);
         updateOverlayJsonValue(data, resultSet.first);
-        await update(data);
+        result = await update(data);
         notify = true;
         //Сокетные данные не могут обновляться, поэтому не предполагаем вызова синхронизации
       } else {
@@ -184,8 +194,10 @@ class DataSource {
         printTransaction(data, transaction);
       }
     } catch (error, stackTrace) {
+      result = false;
       Util.printStackTrace("setDataStandard()", error, stackTrace);
     }
+    return result;
   }
 
   void notifyBlockAsync(Data data, List<String> transaction, bool notifyDynamicPage) {
@@ -208,18 +220,26 @@ class DataSource {
     notifyBlockAsync(data, transaction, notifyDynamicPage);
   }
 
-  void setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) {
-    // Обновление сокетных данных не должно обновлять локальную БД
-    // diffData.uuid - это Primary uuid, если мы в режиме parent надо вытащить локальный uuid
-    transaction.add("4 update socket data");
-    if (notifyDynamicPage) {
-      SocketCache().setDiff(diffData);
+  Future<bool> setDataSocket(Data diffData, List<String> transaction, bool notifyDynamicPage) async {
+    bool result = true;
+    try {
+      // Обновление сокетных данных не должно обновлять локальную БД
+      // diffData.uuid - это Primary uuid, если мы в режиме parent надо вытащить локальный uuid
+      transaction.add("4 update socket data");
+      if (notifyDynamicPage) {
+        SocketCache().setDiff(diffData);
+      }
+      result = await sendDataSocket(diffData, notifyDynamicPage);
+      printTransaction(diffData, transaction);
+    } catch (error, stackTrace) {
+      result = false;
+      Util.printStackTrace("DataSource.setDataSocket() diffData: $diffData", error, stackTrace);
     }
-    sendDataSocket(diffData, notifyDynamicPage);
-    printTransaction(diffData, transaction);
+    return result;
   }
 
-  sendDataSocket(Data data, bool notifyDynamicPage) async {
+  Future<bool> sendDataSocket(Data data, bool notifyDynamicPage) async {
+    bool result = true;
     try {
       Map<String, dynamic> postData = {"uuid_data": data.uuid, "data": data.value};
       Response response = await Util.asyncInvokeIsolate((args) {
@@ -231,6 +251,7 @@ class DataSource {
       });
       if (response.statusCode == 200) {
       } else {
+        result = false;
         AlertHandler.alertSimple("Данные не зафиксированы на сервере (${response.statusCode})");
         Future.delayed(const Duration(seconds: 1), () {
           SocketCache().renderDBData(data.uuid);
@@ -239,16 +260,17 @@ class DataSource {
       // Util.p(
       //     "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
     } catch (e, stacktrace) {
+      result = false;
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {
         SocketCache().renderDBData(data.uuid);
       });
       Util.printStackTrace("DataSource.sendDataSocket() data: $data", e, stacktrace);
     }
-
     // тут не будем вызывать синхронизацию данных,
     // так как событие на синхронизацию должно прийти по сокету
     // После http запроса
+    return result;
   }
 
   void updateNullable(Data curData, dynamic dbResult) {
@@ -285,7 +307,7 @@ class DataSource {
     }
   }
 
-  update(Data curData) async {
+  Future<bool> update(Data curData) async {
     try {
       if (curData.onUpdateResetRevision && curData.type.name.endsWith("RSync")) {
         curData.revision = 0;
@@ -307,15 +329,14 @@ class DataSource {
           curData.uuid,
         ],
       );
-      if (curData.onPersist != null) {
-        Function.apply(curData.onPersist!, null);
-      }
     } catch (error, stackTrace) {
       Util.printStackTrace("DataSource.update()", error, stackTrace);
+      return false;
     }
+    return true;
   }
 
-  insert(Data curData) async {
+  Future<bool> insert(Data curData) async {
     try {
       await db.rawInsert(
         'INSERT INTO data (uuid_data, value_data, type_data, parent_uuid_data, key_data, meta_data, date_add_data, date_update_data, revision_data, is_remove_data, lazy_sync_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -333,17 +354,14 @@ class DataSource {
           curData.lazySync
         ],
       );
-      //Выполяем onPersist только в том случае, если это не сокетные данные
-      //В случае сокетных данных onPersist вызовется после синхронизации
-      if (curData.onPersist != null && curData.type != DataType.socket) {
-        Function.apply(curData.onPersist!, null);
-      }
     } catch (error, stackTrace) {
       Util.printStackTrace("DataSource.insert()", error, stackTrace);
+      return false;
     }
+    return true;
   }
 
-  delete(Data curData) async {
+  Future<bool> delete(Data curData) async {
     // Будучи в здравии))) Я отдаю отчёт, что удаляя записи из локальной БД может быть фон, что сервер при синхронизации
     // Постоянно будет отдавать их, так как getMaxRevisionByType будет отдавать ревизии меньшии по значению чем удаление
     // А сервер будет говорит, вот смотри тут удаление произошло
@@ -356,12 +374,11 @@ class DataSource {
         'DELETE FROM data WHERE uuid_data = ?',
         [curData.uuid],
       );
-      if (curData.onPersist != null) {
-        Function.apply(curData.onPersist!, null);
-      }
     } catch (error, stackTrace) {
       Util.printStackTrace("DataSource.insert()", error, stackTrace);
+      return false;
     }
+    return true;
   }
 
   void notifyBlock(Data curData) {
