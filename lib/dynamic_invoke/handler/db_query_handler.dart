@@ -8,13 +8,20 @@ import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 class DbQueryHandler extends AbstractHandler {
   @override
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    bool debug = false;
+    if (args.containsKey("debug")) {
+      debug = args["debug"];
+    }
     if (Util.containsKeys(args, ["sql", "args"])) {
-      if (args.containsKey("debug")) {
+      if (debug) {
         Util.p("DbQueryHandler().handle($args)");
       }
       DataSource().db.rawQuery(args["sql"], args["args"]).then((value) {
+        if (debug) {
+          Util.p("RESULT rawQuery: $value");
+        }
         try {
-          doPostBack(args, dynamicUIBuilderContext, "fetchDb", updateResult(value));
+          doPostBack(args, dynamicUIBuilderContext, "fetchDb", updateResult(value), debug);
         } catch (error, stackTrace) {
           Util.printStackTrace("DbQueryHandler.handle() args: $args; value: $value", error, stackTrace);
         }
@@ -22,22 +29,22 @@ class DbQueryHandler extends AbstractHandler {
         Util.printStackTrace("DbQueryHandler.handle()", error, stackTrace);
       });
     } else if (Util.containsKeys(args, ["multiple"])) {
-      if (args.containsKey("debug")) {
+      if (debug) {
         Util.p("DbQueryHandler().handle($args)");
       }
-      multiple(args, dynamicUIBuilderContext);
+      multiple(args, dynamicUIBuilderContext, debug);
     } else {
       Util.p("SetStateDataHandler not contains Keys: [sql, args | multiple] in args: $args");
     }
   }
 
-  void multiple(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) async {
+  void multiple(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, bool debug) async {
     List<dynamic> resultSelect = [];
     for (Map<String, dynamic> queryObject in args["multiple"]) {
       List<Map<String, dynamic>> res = await DataSource().db.rawQuery(queryObject["sql"], queryObject["args"]);
       resultSelect.add(updateResult(res));
     }
-    doPostBack(args, dynamicUIBuilderContext, "fetchDb", resultSelect);
+    doPostBack(args, dynamicUIBuilderContext, "fetchDb", resultSelect, debug);
   }
 
   List<Map<String, Object?>> updateResult(List<Map<String, Object?>> resultList) {
@@ -55,7 +62,12 @@ class DbQueryHandler extends AbstractHandler {
   }
 
   void doPostBack(
-      Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, String key, dynamic resultSelect) {
+    Map<String, dynamic> args,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+    String key,
+    dynamic resultSelect,
+    bool debug,
+  ) {
     if (args.containsKey("setState")) {
       dynamicUIBuilderContext.dynamicPage.stateData.set(null, args["stateKey"], resultSelect);
     }
@@ -65,6 +77,9 @@ class DbQueryHandler extends AbstractHandler {
         onFetch["args"] = {};
       }
       args["onFetch"]["args"]["fetchDb"] = resultSelect;
+      if (debug) {
+        Util.p("clickStatic: args: ${Util.jsonPretty(args)}");
+      }
       AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onFetch");
     }
   }
