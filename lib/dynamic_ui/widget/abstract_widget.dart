@@ -168,7 +168,7 @@ abstract class AbstractWidget {
   }
 
   static void clickStatic(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,
-      [String key = "onPressed"]) {
+      [String key = "onPressed", Map<String, dynamic>? extendArgs]) {
     if (parsedJson.containsKey(key)) {
       Future(() {
         Map<String, dynamic>? settings;
@@ -189,7 +189,16 @@ abstract class AbstractWidget {
           }
         }
         if (settings != null) {
-          invoke(settings, dynamicUIBuilderContext);
+          if (extendArgs != null) {
+            Map<String, dynamic> newSettings = Util.getMutableMap(settings);
+            if (!newSettings.containsKey("args")) {
+              newSettings["args"] = {};
+            }
+            Util.merge(newSettings["args"], extendArgs);
+            invoke(newSettings, dynamicUIBuilderContext);
+          } else {
+            invoke(settings, dynamicUIBuilderContext);
+          }
         }
         return null;
       }).then((result) {}).catchError((error, stacktrace) {

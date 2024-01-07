@@ -73,14 +73,15 @@ class DynamicPage extends StatefulWidget {
     Data state = stateData.getInstanceData(null);
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
     timeCreate = DateTime.now().millisecondsSinceEpoch;
+    constructor("init");
     Util.p("CreateInstance DynamicPage uuidPage: $uuid; uuidState: ${state.uuid}; args: $arguments");
   }
 
-  void constructor() {
+  void constructor(String cause) {
     if (!isRunConstructor) {
       isRunConstructor = true;
       if (arguments.containsKey("constructor") && arguments["constructor"].isNotEmpty) {
-        AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "constructor");
+        AbstractWidget.clickStatic(arguments, dynamicUIBuilderContext, "constructor", {"cause": cause});
       }
       if (arguments.containsKey("subscribeToRefresh")) {
         DynamicInvoke().sysInvokeType(SubscribeReloadHandler, arguments["subscribeToRefresh"], dynamicUIBuilderContext);
@@ -126,6 +127,7 @@ class DynamicPage extends StatefulWidget {
   }
 
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {
+    Util.printCurrentStack("onChangeUuid $uuid");
     onEvent("onChangeUuid", {"uuid": uuid, "data": data});
   }
 
@@ -152,24 +154,19 @@ class DynamicPage extends StatefulWidget {
         }
         Util.p(
             "DynamicPage.reload($rebuild) cause: $cause;  uuidPage: $uuid; subscription: $_subscribedOnReload; $arguments");
+        isRunConstructor = false;
+        constructor(cause);
         if (rebuild) {
           clearProperty(); //Что бы стереть TextFieldController при перезагрузке страницы
           stateData.clear();
-          isRunConstructor = false;
+          newRender = true;
           if (_setState != null) {
-            newRender = true;
             try {
               _setState!.setState(() {});
             } catch (error, stackTrace) {
               Util.printStackTrace("setState", error, stackTrace);
             }
           }
-        } else {
-          // Это относится к лояльной перезагрузке, когда клиент мог что-то вводить в формы и тут пришло обновление
-          isRunConstructor = false;
-          // Все надежды на конструктор, что он перерисует необходимые блоки
-          // В основном, это сводится к выборке из БД и обновления состояния
-          constructor();
         }
       } else {
         saveLastCauseRebuild = cause;
@@ -395,7 +392,6 @@ class _DynamicPage extends State<DynamicPage> {
     }
     widget.context = context;
     if (widget.newRender) {
-      widget.constructor();
       resultWidget = DynamicUI.render(widget.arguments, null, const SizedBox(), widget.dynamicUIBuilderContext);
       if (resultWidget == null || resultWidget.runtimeType.toString().contains("Map<String,")) {
         return Text("DynamicPage.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
