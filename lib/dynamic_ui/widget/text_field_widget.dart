@@ -37,7 +37,6 @@ class TextFieldWidget extends AbstractWidget {
     bool hideKeyboardOnEditingComplete = TypeParser.parseBool(
       getValue(parsedJson, "hideKeyboardOnEditingComplete", true, dynamicUIBuilderContext),
     )!;
-
     return TextField(
       key: Util.getKey(),
       focusNode:
@@ -51,9 +50,7 @@ class TextFieldWidget extends AbstractWidget {
         click(parsedJson, dynamicUIBuilderContext, "onSubmitted");
       },
       //А наличие вот этой штуки не должно скрывать
-      onEditingComplete: !hideKeyboardOnEditingComplete
-          ? () {}
-          : null,
+      onEditingComplete: !hideKeyboardOnEditingComplete ? () {} : null,
       inputFormatters: listInputFormatters,
       textCapitalization: TypeParser.parseTextCapitalization(
         getValue(parsedJson, "textCapitalization", "sentences", dynamicUIBuilderContext),
@@ -165,6 +162,14 @@ class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingContro
     switch (args["case"] ?? "default") {
       case "reset":
         controller.text = args["text"] ?? "";
+        try {
+          FocusNode focusNode =
+              dynamicUIBuilderContext.dynamicPage.getProperty("${args["controller"]}_FocusNode", FocusNode());
+          focusNode.requestFocus();
+        } catch (error, stackTrace) {
+          Util.printStackTrace("TextEditingControllerWrap.reset()::requestFocus", error, stackTrace);
+        }
+        //controller.
         //Сброс состояния контролера не должен перезагружать страницу
         //Перерисовка при включенном onRebuildClearTemporaryControllerText и setState перезапишет состояние
         //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
