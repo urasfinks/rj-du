@@ -127,7 +127,6 @@ class DynamicPage extends StatefulWidget {
   }
 
   void onChangeUuid(String uuid, Map<String, dynamic>? data) {
-    Util.printCurrentStack("onChangeUuid $uuid");
     onEvent("onChangeUuid", {"uuid": uuid, "data": data});
   }
 
