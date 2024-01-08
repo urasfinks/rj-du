@@ -103,7 +103,6 @@ class DataMigration {
       final regTab = RegExp("$mask[a-zA-Z0-9]+\.json\$");
       if (path.startsWith("${preFolder}assets/db/data/$folder/") && regTab.hasMatch(path)) {
         String fileData = await rootBundle.loadString(path);
-
         String index = path.split("${preFolder}assets/db/data/$folder/$mask")[1].split(".json")[0];
         result[index] = fileData;
       }
