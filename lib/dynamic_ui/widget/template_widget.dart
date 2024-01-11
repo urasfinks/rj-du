@@ -1,21 +1,20 @@
 import 'dart:convert';
 
+import 'package:rjdu/dynamic_ui/dynamic_ui.dart';
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/util.dart';
-
-import '../../util/template.dart';
 
 class TemplateWidget extends AbstractWidget {
   static Map<String, Map> template = {};
 
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    Map<String, dynamic> args =
-        Util.renderTemplate(Util.getMutableMap(parsedJson), RenderTemplateType.current, dynamicUIBuilderContext);
-    return render(Util.getMutableMap(template[args["src"]]), null, Text("Error render TemplateWidget: $args"),
-        dynamicUIBuilderContext);
+    String src = getValue(parsedJson, "src", "", dynamicUIBuilderContext);
+    Map<String, dynamic> templateMap = Util.getMutableMap(template[src]);
+    dynamicUIBuilderContext = DynamicUI.changeContext(parsedJson, dynamicUIBuilderContext);
+    return render(templateMap, null, Text("Error render TemplateWidget: $parsedJson"), dynamicUIBuilderContext);
   }
 
   static void load(Map<String, String> map, String extra) {

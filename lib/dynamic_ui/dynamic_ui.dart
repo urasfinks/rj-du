@@ -42,6 +42,7 @@ import 'package:rjdu/dynamic_ui/widget/material_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/safe_area_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
+import 'package:rjdu/dynamic_ui/widget/select_sheet.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sliver_app_bar_widget.dart';
@@ -178,7 +179,20 @@ class DynamicUI {
     "ImageNetworkCachedProvider": ImageNetworkCachedProviderProperty().get,
     "BoxConstraints": BoxConstraintsProperty().get,
     "Border": BorderProperty().get,
+
+    //Custom
+    "SelectSheet": SelectSheet().get
   };
+
+  static DynamicUIBuilderContext changeContext(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext){
+    if (parsedJson.containsKey("context")) {
+      return dynamicUIBuilderContext.cloneWithNewData(
+        Util.convertMap(parsedJson["context"]["data"] ?? {}),
+        parsedJson["context"]["key"],
+      );
+    }
+    return dynamicUIBuilderContext;
+  }
 
   static dynamic render(
     Map<String, dynamic> parsedJson,
@@ -192,12 +206,7 @@ class DynamicUI {
       }
       //Родительская замена значений для дочерних элеметов
       parsedJson = Util.renderTemplate(parsedJson, RenderTemplateType.child, dynamicUIBuilderContext);
-      if (parsedJson.containsKey("context")) {
-        dynamicUIBuilderContext = dynamicUIBuilderContext.cloneWithNewData(
-          Util.convertMap(parsedJson["context"]["data"] ?? {}),
-          parsedJson["context"]["key"],
-        );
-      }
+      dynamicUIBuilderContext = changeContext(parsedJson, dynamicUIBuilderContext);
       if (parsedJson.containsKey("debug")) {
         Util.p("DEBUG RENDER (${dynamicUIBuilderContext.linkedNotify}): $parsedJson");
       }
