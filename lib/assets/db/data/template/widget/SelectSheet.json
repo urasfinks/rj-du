@@ -1,0 +1,13 @@
+{
+  "flutterType": "Container",
+  "padding": "10,5,10,5",
+  "decoration": {
+    "flutterType": "BoxDecoration",
+    "color": "schema:onBackground",
+    "borderRadius": 9
+  },
+  "child": {
+    "flutterType": "Text",
+    "label": "Hello"
+  }
+}

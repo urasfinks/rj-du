@@ -16,7 +16,9 @@
     "fontSize": 17
   },
   "onSubmitted": "${onSubmit|jsonEncode()}",
+  "onChanged": "${onChanged|jsonEncode()}",
   "name": "${key}",
+  "controller": "${key}",
   "data": "${data,}",
   "decoration": {
     "flutterType": "InputDecoration",

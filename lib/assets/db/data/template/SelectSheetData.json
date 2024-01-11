@@ -1,0 +1,101 @@
+{
+  "flutterType": "Scaffold",
+  "backgroundColor": "schema:background",
+  "body": {
+    "flutterType": "Column",
+    "children": [
+      {
+        "flutterType": "Padding",
+        "padding": "20",
+        "child": {
+          "flutterType": "Template",
+          "src": "Input",
+          "context": {
+            "key": "SelectSheetDataContext",
+            "data": {
+              "data": "",
+              "state": "SelectSheetDataState",
+              "key": "SelectSheetDataKey",
+              "placeholder": "Anything",
+              "onSubmit": {
+                "jsInvoke": "SelectSheetData.js",
+                "args": {
+                  "includeAll": true,
+                  "switch": "onSubmit"
+                }
+              },
+              "onChanged": {
+                "jsInvoke": "SelectSheetData.js",
+                "args": {
+                  "includeAll": true,
+                  "switch": "find"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "flutterType": "Expanded",
+        "child": {
+          "flutterType": "CustomScrollView",
+          "onStateDataUpdate": true,
+          "padding": "20,0,20,20",
+          "children": [
+            {
+              "ChildrenExtension": "Iterator",
+              "dataType": "state",
+              "key": "listItem",
+              "theme": "ButtonGroup",
+              "extendDataElement": {
+                "onTap": {
+                  "jsInvoke": "SelectSheetData.js",
+                  "args": {
+                    "includeAll": true,
+                    "selectedIndex": 1,
+                    "switch": "onSelect"
+                  }
+                }
+              },
+              "ifDataEmpty": {
+                "flutterType": "Column",
+                "crossAxisAlignment": "start",
+                "children": [
+                  {
+                    "flutterType": "Text",
+                    "label": "Ничего не нашлось :(\nДобавить новую группу \"${state(SelectSheetDataState,SelectSheetDataKey)}\" ?"
+                  },
+                  {
+                    "flutterType": "SizedBox",
+                    "height": 20
+                  },
+                  {
+                    "flutterType": "Button",
+                    "height": 44,
+                    "backgroundColor": "schema:projectPrimary",
+                    "onPressed": {
+                      "jsInvoke": "SelectSheetData.js",
+                      "args": {
+                        "includeAll": true,
+                        "switch": "onCreateNew"
+                      }
+                    },
+                    "child": {
+                      "flutterType": "Text",
+                      "label": "Добавить группу",
+                      "style": {
+                        "flutterType": "TextStyle",
+                        "fontSize": 14,
+                        "color": "schema:inversePrimary"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
