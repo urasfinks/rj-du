@@ -17,6 +17,7 @@
   },
   "onSubmitted": "${onSubmit|jsonEncode()}",
   "name": "${key}",
+  "controller": "${key}",
   "data": "${data,}",
   "decoration": {
     "flutterType": "InputDecoration",
