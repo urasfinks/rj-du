@@ -23,19 +23,20 @@ class NavigatorPushHandler extends AbstractHandler {
 
     switch (dynamicPageOpenType) {
       case DynamicPageOpenType.bottomSheet:
-        bottomSheet(buildContext, raw, args);
+        bottomSheet(buildContext, raw, args, dynamicUIBuilderContext);
         break;
       case DynamicPageOpenType.dialog:
-        dialog(buildContext, raw, args);
+        dialog(buildContext, raw, args, dynamicUIBuilderContext);
         break;
       default:
-        window(buildContext, raw, args);
+        window(buildContext, raw, args, dynamicUIBuilderContext);
         break;
     }
     SystemNotify().emit(SystemNotifyEnum.openDynamicPage, dynamicPageOpenType.name);
   }
 
-  void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> args) {
+  void dialog(
+      BuildContext buildContext, bool raw, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       args.addAll(
         {
@@ -84,10 +85,11 @@ class NavigatorPushHandler extends AbstractHandler {
         NavigatorApp.addNavigatorPage(dynamicPage);
         return dynamicPage;
       },
-    );
+    ).then((value) => callback(value, dynamicUIBuilderContext));
   }
 
-  void bottomSheet(BuildContext buildContext, bool raw, Map<String, dynamic> args) {
+  void bottomSheet(
+      BuildContext buildContext, bool raw, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       args.addAll(
         {
@@ -147,10 +149,11 @@ class NavigatorPushHandler extends AbstractHandler {
           );
         }
       },
-    );
+    ).then((value) => callback(value, dynamicUIBuilderContext));
   }
 
-  void window(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage) {
+  void window(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       dataPage.addAll(
         {
@@ -185,6 +188,12 @@ class NavigatorPushHandler extends AbstractHandler {
           return dynamicPage;
         },
       ),
-    );
+    ).then((value) => callback(value, dynamicUIBuilderContext));
+  }
+
+  void callback(dynamic callbackArgs, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    if (callbackArgs.runtimeType.toString().contains("Map<")) {
+      print("callback: $callbackArgs");
+    }
   }
 }

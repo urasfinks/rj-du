@@ -14,16 +14,16 @@ class CustomLoaderCloseHandler extends AbstractHandler {
         int delay = args.containsKey("delay") ? args["delay"] : 0;
         if (delay > 0) {
           Future.delayed(Duration(milliseconds: delay), () {
-            pop(dynamicPage);
+            pop(dynamicPage, args);
           });
         } else {
-          pop(dynamicPage);
+          pop(dynamicPage, args);
         }
       }
     }
   }
 
-  void pop(DynamicPage dynamicPage) {
+  void pop(DynamicPage dynamicPage, Map<String, dynamic> args) {
     if (!NavigatorApp.isLast()) {
       //Если тут не сделать удалние NavigatorApp.removePage при программном закрытии списка
       // Мы будем получть один и тотже последний DynamicPage и получим ошибку, когда dispose страницы отработает
@@ -33,11 +33,11 @@ class CustomLoaderCloseHandler extends AbstractHandler {
       switch (dynamicPage.dynamicPageOpenType) {
         case DynamicPageOpenType.dialog:
         case DynamicPageOpenType.bottomSheet:
-          Navigator.of(dynamicPage.context!, rootNavigator: true).pop();
+          Navigator.of(dynamicPage.context!, rootNavigator: true).pop(args);
           break;
         case DynamicPageOpenType.window:
         default:
-          Navigator.pop(dynamicPage.context!);
+          Navigator.pop(dynamicPage.context!, args);
           break;
       }
     }
