@@ -169,18 +169,12 @@ class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingContro
         } catch (error, stackTrace) {
           Util.printStackTrace("TextEditingControllerWrap.reset()::requestFocus", error, stackTrace);
         }
-        //controller.
-        //Сброс состояния контролера не должен перезагружать страницу
-        //Перерисовка при включенном onRebuildClearTemporaryControllerText и setState перезапишет состояние
-        //Цель зануления скорее всего, что бы записать новое значение, не держа backspace
-        //А так мы просто получим перетерание на старое значение
         if (args["setState"] ?? true) {
-          // controller = keyState
-          if (args["controller"] != null) {
+          if (args["stateKey"] != null) {
             dynamicUIBuilderContext.dynamicPage.stateData
-                .set(args["state"], args["controller"], controller.text, args["notify"] ?? false);
+                .set(args["state"], args["stateKey"], controller.text, args["notify"] ?? false);
           } else {
-            error = "key is null";
+            error = "stateKey is null";
           }
         }
         break;

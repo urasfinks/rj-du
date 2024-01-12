@@ -152,7 +152,6 @@ class Template {
         dynamic lastKey = exp[exp.length - 1];
         if (curParent.runtimeType == List) {
           lastKey = int.parse(lastKey);
-          print("!!! $lastKey ($cur) => ${template(cur, dynamicUIBuilderContext, true, true)}");
         }
         curParent[lastKey] = template(cur, dynamicUIBuilderContext);
       } catch (error, stackTrace) {

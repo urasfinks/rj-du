@@ -50,14 +50,18 @@
             "args": {
               "controller": "${key}",
               "case": "reset",
-              "setState": false
+              "setState": true,
+              "state": "${state,main}",
+              "stateKey": "${key}"
             }
           },
-          "${onReset|jsonEncode(),}"
+          "${onReset|jsonEncode()}"
         ]
       },
       "currentRenderTemplateList": [
         "onPressed.list.0.args.controller",
+        "onPressed.list.0.args.state",
+        "onPressed.list.0.args.stateKey",
         "onPressed.list.1"
       ]
     },
