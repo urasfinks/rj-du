@@ -105,6 +105,12 @@ class TextFieldWidget extends AbstractWidget {
       onChanged: (value) {
         controlStateHelper.onChange(value);
       },
+      onTapOutside: (event){
+        FocusScopeNode currentFocus = FocusScope.of(dynamicUIBuilderContext.dynamicPage.context!);
+        if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+      },
       onTap: () async {
         if (type == "datetime") {
           DateTime? pickedDate = await showDatePicker(
