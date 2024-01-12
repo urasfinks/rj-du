@@ -81,7 +81,7 @@ class ElevatedButtonStyle extends AbstractButtonStyle {
       ),
       shape: RoundedRectangleBorder(
         borderRadius: TypeParser.parseBorderRadius(
-          getValue(parsedJson, "borderRadius", 4, dynamicUIBuilderContext),
+          getValue(parsedJson, "borderRadius", 50, dynamicUIBuilderContext),
         )!,
       ),
       padding: TypeParser.parseEdgeInsets(
