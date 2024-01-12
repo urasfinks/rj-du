@@ -7,8 +7,7 @@ import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../util.dart';
 
 class Template {
-  static List<TemplateItem> getRegisteredListTemplateItem(String template,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<TemplateItem> getRegisteredListTemplateItem(String template, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!dynamicUIBuilderContext.dynamicPage.cacheTemplate.containsKey(template)) {
       dynamicUIBuilderContext.dynamicPage.cacheTemplate[template] = NewTemplate.getParsedTemplate(template);
     }
@@ -36,11 +35,9 @@ class Template {
     dynamic value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext, debug);
     if (expDirective.isNotEmpty) {
       for (String directive in expDirective) {
-        for (MapEntry<
-            String,
-            dynamic Function(
-                dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
-        in TemplateDirective.map.entries) {
+        for (MapEntry<String,
+                dynamic Function(dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
+            in TemplateDirective.map.entries) {
           if (directive.startsWith("${item.key}(")) {
             // отрезаем имя директивы + скобки
             String directiveValue = directive.substring(item.key.length + 1, directive.length - 1);
@@ -60,8 +57,8 @@ class Template {
     }
     for (MapEntry<
         String,
-        dynamic Function(Map<String, dynamic> data, List<String> arguments,
-            DynamicUIBuilderContext dynamicUIBuilderContext, bool debug)> item in TemplateFunction.map.entries) {
+        dynamic Function(Map<String, dynamic> data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext,
+            bool debug)> item in TemplateFunction.map.entries) {
       if (query.startsWith("${item.key}(")) {
         List<String> arguments = parseArguments(query.substring(item.key.length + 1, query.length - 1));
         return item.value(dynamicUIBuilderContext.data, arguments, dynamicUIBuilderContext, debug);
@@ -107,8 +104,7 @@ class Template {
         }
       }
     } catch (e, stacktrace) {
-      Util.printStackTrace(
-          "Template.stringSelector() path: $path; defaultValue: $defaultValue; data: $data", e, stacktrace);
+      Util.printStackTrace("Template.stringSelector() path: $path; defaultValue: $defaultValue; data: $data", e, stacktrace);
       find = false;
     }
     if (!find) {
@@ -117,8 +113,8 @@ class Template {
     return cur;
   }
 
-  static Map<String, dynamic> renderTemplate(Map<String, dynamic> parsedJson, RenderTemplateType type,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static Map<String, dynamic> renderTemplate(
+      Map<String, dynamic> parsedJson, RenderTemplateType type, DynamicUIBuilderContext dynamicUIBuilderContext) {
     // renderTemplate бывает:
     //  родительский (childRenderTemplate) - это когда мы у ребёнка меняем данные из собственного контекста
     //    надо понимать, что все заменённые данные будут использоваться в дочерних элементах как статическая информация
@@ -142,14 +138,23 @@ class Template {
     dynamic cur = data;
     dynamic curParent = data;
     for (String key in exp) {
-      if (cur != null && cur[key] != null) {
+      dynamic curKey = key;
+      if (cur.runtimeType == List) {
+        curKey = int.parse(key);
+      }
+      if (cur != null && cur[curKey] != null) {
         curParent = cur;
-        cur = cur[key];
+        cur = cur[curKey];
       }
     }
     if (cur.runtimeType == String) {
       try {
-        curParent[exp[exp.length - 1]] = template(cur, dynamicUIBuilderContext);
+        dynamic lastKey = exp[exp.length - 1];
+        if (curParent.runtimeType == List) {
+          lastKey = int.parse(lastKey);
+          print("!!! $lastKey ($cur) => ${template(cur, dynamicUIBuilderContext, true, true)}");
+        }
+        curParent[lastKey] = template(cur, dynamicUIBuilderContext);
       } catch (error, stackTrace) {
         Util.printStackTrace("Template.tmp path:$path; curParent:$curParent; cur:$cur", error, stackTrace);
       }
