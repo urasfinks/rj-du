@@ -44,15 +44,21 @@
         "size": 18
       },
       "onPressed": {
-        "sysInvoke": "Controller",
-        "args": {
-          "controller": "${key}",
-          "case": "reset",
-          "setState": false
-        }
+        "list": [
+          {
+            "sysInvoke": "Controller",
+            "args": {
+              "controller": "${key}",
+              "case": "reset",
+              "setState": false
+            }
+          },
+          "${onReset|jsonEncode(),}"
+        ]
       },
       "currentRenderTemplateList": [
-        "onPressed.args.controller"
+        "onPressed.list.0.args.controller",
+        "onPressed.list.1"
       ]
     },
     "enabledBorder": {

@@ -16,7 +16,7 @@
               "data": "",
               "state": "SelectSheetDataState",
               "key": "SelectSheetDataKey",
-              "placeholder": "Anything",
+              "placeholder": "${pageArgs(placeholder,)}",
               "onSubmit": {
                 "jsInvoke": "SelectSheetData.js",
                 "args": {
@@ -30,9 +30,19 @@
                   "includeAll": true,
                   "switch": "find"
                 }
+              },
+              "onReset": {
+                "jsInvoke": "SelectSheetData.js",
+                "args": {
+                  "includeAll": true,
+                  "switch": "find"
+                }
               }
             }
-          }
+          },
+          "currentRenderTemplateList": [
+            "context.data.placeholder"
+          ]
         }
       },
       {
@@ -48,6 +58,7 @@
               "key": "listItem",
               "theme": "ButtonGroup",
               "extendDataElement": {
+                "templateWidgetSrc": "IteratorButton",
                 "onTap": {
                   "jsInvoke": "SelectSheetData.js",
                   "args": {
