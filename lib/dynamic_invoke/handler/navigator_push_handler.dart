@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:rjdu/dynamic_ui/type_parser.dart';
 
+import '../../dynamic_ui/widget/abstract_widget.dart';
 import '../../navigator_app.dart';
 import '../../system_notify.dart';
 import '../../theme_provider.dart';
+import '../../util.dart';
 import 'abstract_handler.dart';
 import '../../dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +15,11 @@ import '../../dynamic_page.dart';
 class NavigatorPushHandler extends AbstractHandler {
   @override
   dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    DynamicPageOpenType dynamicPageOpenType =
-        TypeParser.parseDynamicPageOpenType(args["type"]) ?? DynamicPageOpenType.window;
+    DynamicPageOpenType dynamicPageOpenType = TypeParser.parseDynamicPageOpenType(args["type"]) ?? DynamicPageOpenType.window;
 
     bool raw = args.containsKey("raw") && args["raw"] == true;
-    BuildContext buildContext = args.containsKey("tab")
-        ? NavigatorApp.tab[args["tab"]].context
-        : NavigatorApp.tab[NavigatorApp.selectedTab].context;
+    BuildContext buildContext =
+        args.containsKey("tab") ? NavigatorApp.tab[args["tab"]].context : NavigatorApp.tab[NavigatorApp.selectedTab].context;
 
     switch (dynamicPageOpenType) {
       case DynamicPageOpenType.bottomSheet:
@@ -35,8 +35,7 @@ class NavigatorPushHandler extends AbstractHandler {
     SystemNotify().emit(SystemNotifyEnum.openDynamicPage, dynamicPageOpenType.name);
   }
 
-  void dialog(
-      BuildContext buildContext, bool raw, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       args.addAll(
         {
@@ -67,8 +66,7 @@ class NavigatorPushHandler extends AbstractHandler {
       barrierColor: blur ? Colors.black38 : const Color(0x80000000),
       transitionBuilder: blur
           ? (ctx, anim1, anim2, child) => BackdropFilter(
-                filter: ImageFilter.blur(
-                    sigmaX: ThemeProvider.blur * anim1.value, sigmaY: ThemeProvider.blur * anim1.value),
+                filter: ImageFilter.blur(sigmaX: ThemeProvider.blur * anim1.value, sigmaY: ThemeProvider.blur * anim1.value),
                 child: FadeTransition(
                   opacity: anim1,
                   child: child,
@@ -85,7 +83,7 @@ class NavigatorPushHandler extends AbstractHandler {
         NavigatorApp.addNavigatorPage(dynamicPage);
         return dynamicPage;
       },
-    ).then((value) => callback(value, dynamicUIBuilderContext));
+    ).then((value) => onPop(value, dynamicUIBuilderContext));
   }
 
   void bottomSheet(
@@ -149,11 +147,11 @@ class NavigatorPushHandler extends AbstractHandler {
           );
         }
       },
-    ).then((value) => callback(value, dynamicUIBuilderContext));
+    ).then((value) => onPop(value, dynamicUIBuilderContext));
   }
 
-  void window(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void window(
+      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       dataPage.addAll(
         {
@@ -188,12 +186,16 @@ class NavigatorPushHandler extends AbstractHandler {
           return dynamicPage;
         },
       ),
-    ).then((value) => callback(value, dynamicUIBuilderContext));
+    ).then((value) => onPop(value, dynamicUIBuilderContext));
   }
 
-  void callback(dynamic callbackArgs, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void onPop(dynamic callbackArgs, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    Util.p("NavigatorPushHandler.onPop($callbackArgs)");
     if (callbackArgs.runtimeType.toString().contains("Map<")) {
-      print("callback: $callbackArgs");
+      Map<String, dynamic> args = Util.convertMap(callbackArgs as Map);
+      if (args.isNotEmpty && args.containsKey("onPop")) {
+        AbstractWidget.clickStatic(args, dynamicUIBuilderContext, "onPop");
+      }
     }
   }
 }
