@@ -46,8 +46,7 @@ abstract class AbstractWidget {
 
   AbstractControllerWrap? getControllerWrap(
       Map<String, dynamic> parsedJson, String state, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return dynamicUIBuilderContext.dynamicPage
-        .getProperty(getControllerKey(parsedJson, state, dynamicUIBuilderContext), null);
+    return dynamicUIBuilderContext.dynamicPage.getProperty(getControllerKey(parsedJson, state, dynamicUIBuilderContext), null);
   }
 
   static dynamic getValueStatic(
@@ -68,8 +67,7 @@ abstract class AbstractWidget {
       return Text("$className.build() Return: $resultWidget; Must be Widget");
     }
     if (resultWidget != null && resultWidget.runtimeType.toString().contains("Map<String,")) {
-      Util.p(
-          "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
+      Util.p("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
       return Text("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;
@@ -161,7 +159,11 @@ abstract class AbstractWidget {
       } else if (settings.containsKey("list")) {
         List<dynamic> list = settings["list"];
         for (dynamic data in list) {
-          invoke(data, dynamicUIBuilderContext);
+          if (data.runtimeType.toString().contains("Map")) {
+            invoke(data, dynamicUIBuilderContext);
+          } else {
+            invoke(json.decode(data), dynamicUIBuilderContext);
+          }
         }
       }
     }
@@ -209,8 +211,7 @@ abstract class AbstractWidget {
     }
   }
 
-  void click(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,
-      [String key = "onPressed"]) {
+  void click(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, [String key = "onPressed"]) {
     clickStatic(parsedJson, dynamicUIBuilderContext, key);
   }
 }
