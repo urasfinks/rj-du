@@ -52,9 +52,12 @@
                   "jsInvoke": "SelectSheetData.js",
                   "args": {
                     "includeAll": true,
-                    "selectedIndex": 1,
+                    "selectedIndex": "${iteratorIndex}",
                     "switch": "onSelect"
-                  }
+                  },
+                  "currentRenderTemplateList": [
+                    "args.selectedIndex"
+                  ]
                 }
               },
               "ifDataEmpty": {
