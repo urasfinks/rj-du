@@ -72,8 +72,39 @@
                 }
               },
               "ifDataEmpty": {
-                "flutterType": "Text",
-                "label": "Ничего не нашлось :("
+                "flutterType": "Column",
+                "crossAxisAlignment": "start",
+                "children": [
+                  {
+                    "flutterType": "Text",
+                    "label": "Ничего не нашлось :(\nДобавить новую группу \"${state(SelectSheetDataState,SelectSheetDataKey)}\" ?"
+                  },
+                  {
+                    "flutterType": "SizedBox",
+                    "height": 20
+                  },
+                  {
+                    "flutterType": "Button",
+                    "height": 44,
+                    "backgroundColor": "schema:projectPrimary",
+                    "onPressed": {
+                      "jsInvoke": "SelectSheetData.js",
+                      "args": {
+                        "includeAll": true,
+                        "switch": "onCreateNew"
+                      }
+                    },
+                    "child": {
+                      "flutterType": "Text",
+                      "label": "Добавить группу",
+                      "style": {
+                        "flutterType": "TextStyle",
+                        "fontSize": 14,
+                        "color": "schema:inversePrimary"
+                      }
+                    }
+                  }
+                ]
               }
             }
           ]

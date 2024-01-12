@@ -1,13 +1,43 @@
 {
   "flutterType": "Container",
-  "padding": "10,5,10,5",
+  "height": 44,
+  "width": "infinity",
   "decoration": {
     "flutterType": "BoxDecoration",
     "color": "schema:onBackground",
     "borderRadius": 9
   },
   "child": {
-    "flutterType": "Text",
-    "label": "Hello"
+    "flutterType": "Center",
+    "child": {
+      "flutterType": "Row",
+      "children": [
+        {
+          "flutterType": "SizedBox",
+          "width": 15
+        },
+        {
+          "flutterType": "Expanded",
+          "child": {
+            "flutterType": "Text",
+            "label": "${label}",
+            "style": {
+              "flutterType": "TextStyle",
+              "fontSize": 17
+            }
+          }
+        },
+        {
+          "flutterType": "Icon",
+          "src": "keyboard_arrow_down",
+          "size": 22,
+          "color": "schema:secondary"
+        },
+        {
+          "flutterType": "SizedBox",
+          "width": 15
+        }
+      ]
+    }
   }
 }

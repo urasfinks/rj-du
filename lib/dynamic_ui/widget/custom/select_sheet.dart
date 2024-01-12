@@ -8,6 +8,7 @@ class SelectSheet extends AbstractWidget {
     String onPopJs = parsedJson["onPopJs"];
     String onPopSwitch = parsedJson["onPopSwitch"] ?? "onPop";
     String placeholder = parsedJson["placeholder"] ?? "Найти";
+    bool extend = parsedJson["extend"] ?? false;
     return render({
       "flutterType": "InkWell",
       "onTap": {
@@ -16,7 +17,7 @@ class SelectSheet extends AbstractWidget {
           "type": "bottomSheet",
           "height": 360,
           "link": {
-            "template": "SelectSheetData.json",
+            "template": extend ? "SelectSheetDataExtend.json" : "SelectSheetData.json",
           },
           "placeholder": placeholder,
           "onPop": {
@@ -36,7 +37,16 @@ class SelectSheet extends AbstractWidget {
           }
         }
       },
-      "child": {"flutterType": "Template", "src": "SelectSheet"}
+      "child": {
+        "flutterType": "Template",
+        "src": "SelectSheet",
+        "context": {
+          "key": "SelectSheetGlobal",
+          "data": {
+            "label": "prev"
+          }
+        }
+      }
     }, null, const Text("Error SelectSheet"), dynamicUIBuilderContext);
   }
 }
