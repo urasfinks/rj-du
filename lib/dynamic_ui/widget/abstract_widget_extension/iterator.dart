@@ -17,13 +17,12 @@ class Iterator extends AbstractExtension {
     dynamic listData;
     switch (dataType) {
       case "state":
-        listData = dynamicUIBuilderContext.dynamicPage.stateData.get(parsedJson["state"], parsedJson["key"], []);
+        listData = dynamicUIBuilderContext.dynamicPage.stateData.get(parsedJson["state"], parsedJson["key"], null);
         break;
       case "list":
-        listData = parsedJson["list"] ?? [];
+        listData = parsedJson["list"];
         break;
     }
-
     if (parsedJson.containsKey("theme")) {
       if (theme.containsKey(parsedJson["theme"])) {
         parsedJson.addAll(theme[parsedJson["theme"]]!);
@@ -62,8 +61,9 @@ class Iterator extends AbstractExtension {
         if (parsedJson.containsKey("extendDataElement")) {
           data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
         }
+        data["iteratorIndex"] = counter;
         newUIElement["context"] = {
-          "key": "Iterator${counter++}",
+          "key": "Iterator$counter",
           "data": Util.renderTemplate(data, RenderTemplateType.current, dynamicUIBuilderContext)
         };
         if (newUIElement["context"]["data"].containsKey("visibility")) {
@@ -81,11 +81,14 @@ class Iterator extends AbstractExtension {
         if (templateDivider && list.last != data) {
           result.add(parsedJson["templateDivider"]);
         }
+        counter++;
       }
     }
-    //Если небыло ничего добавлено в результирующий список, добавим предустановленный ifDataEmpty если есть
-    if (!add && parsedJson.containsKey("ifDataEmpty")) {
-      result.add(parsedJson["ifDataEmpty"]);
+    // Если небыло ничего добавлено в результирующий список, добавим предустановленный ifDataEmpty если есть
+    // Для того, что бы отоброзить пустой блок, надо что бы listData хотябы существовало, что бы можно было сказать
+    // что данные пустые, иначе при инициализации будут моргания
+    if (!add && parsedJson.containsKey("ifDataEmpty") && listData != null) {
+        result.add(parsedJson["ifDataEmpty"]);
     }
   }
 }

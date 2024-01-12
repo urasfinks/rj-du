@@ -117,7 +117,7 @@ class Template {
     return cur;
   }
 
-  static Map<String, dynamic> renderTemplate(Map<String, dynamic> parsedJson, RenderTemplateType keyListQuery,
+  static Map<String, dynamic> renderTemplate(Map<String, dynamic> parsedJson, RenderTemplateType type,
       DynamicUIBuilderContext dynamicUIBuilderContext) {
     // renderTemplate бывает:
     //  родительский (childRenderTemplate) - это когда мы у ребёнка меняем данные из собственного контекста
@@ -125,7 +125,7 @@ class Template {
     //    Если повешать на дочерний элемента Notify он при перерисовки не узнает что была замена значений
     //  дочерний () - это замена непосредственно перед AbstractWidget.get()
     //
-    String key = keyListQuery.getKey();
+    String key = type.getKey();
     if (parsedJson.containsKey(key)) {
       Map<String, dynamic> newArgs = {};
       newArgs.addAll(parsedJson);
