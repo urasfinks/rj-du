@@ -5,23 +5,16 @@ import '../../type_parser.dart';
 import 'abstract_button_style.dart';
 
 class OutlinedButtonStyle extends AbstractButtonStyle {
-  OutlinedButtonStyle(
-      super.dynamicUIBuilderContext, super.abstractWidget, super.parsedJson);
+  OutlinedButtonStyle(super.dynamicUIBuilderContext, super.abstractWidget, super.parsedJson);
 
   @override
   ButtonStyle getStadiumBorder() {
-    //------------------------
     return OutlinedButton.styleFrom(
-      minimumSize: TypeParser.parseSize(
-          getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
-      maximumSize: TypeParser.parseSize(
-          getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
-      fixedSize: TypeParser.parseSize(
-          getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
-      textStyle: abstractWidget.render(
-          parsedJson, "textStyle", null, dynamicUIBuilderContext),
-      side: abstractWidget.render(
-          parsedJson, "side", null, dynamicUIBuilderContext),
+      minimumSize: TypeParser.parseSize(getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
+      maximumSize: TypeParser.parseSize(getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
+      fixedSize: TypeParser.parseSize(getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
+      textStyle: abstractWidget.render(parsedJson, "textStyle", null, dynamicUIBuilderContext),
+      side: abstractWidget.render(parsedJson, "side", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignmentDirectional(
         getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
@@ -49,18 +42,12 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
 
   @override
   ButtonStyle getRoundedRectangleBorder() {
-    //------------------
     return OutlinedButton.styleFrom(
-      minimumSize: TypeParser.parseSize(
-          getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
-      maximumSize: TypeParser.parseSize(
-          getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
-      fixedSize: TypeParser.parseSize(
-          getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
-      textStyle: abstractWidget.render(
-          parsedJson, "textStyle", null, dynamicUIBuilderContext),
-      side: abstractWidget.render(
-          parsedJson, "side", null, dynamicUIBuilderContext),
+      minimumSize: TypeParser.parseSize(getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
+      maximumSize: TypeParser.parseSize(getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
+      fixedSize: TypeParser.parseSize(getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
+      textStyle: abstractWidget.render(parsedJson, "textStyle", null, dynamicUIBuilderContext),
+      side: abstractWidget.render(parsedJson, "side", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignmentDirectional(
         getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
@@ -92,18 +79,12 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
 
   @override
   ButtonStyle getCircleBorder() {
-    //------------------------
     return OutlinedButton.styleFrom(
-      minimumSize: TypeParser.parseSize(
-          getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
-      maximumSize: TypeParser.parseSize(
-          getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
-      fixedSize: TypeParser.parseSize(
-          getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
-      textStyle: abstractWidget.render(
-          parsedJson, "textStyle", null, dynamicUIBuilderContext),
-      side: abstractWidget.render(
-          parsedJson, "side", null, dynamicUIBuilderContext),
+      minimumSize: TypeParser.parseSize(getValue(parsedJson, "minimumSize", null, dynamicUIBuilderContext)),
+      maximumSize: TypeParser.parseSize(getValue(parsedJson, "maximumSize", null, dynamicUIBuilderContext)),
+      fixedSize: TypeParser.parseSize(getValue(parsedJson, "fixedSize", null, dynamicUIBuilderContext)),
+      textStyle: abstractWidget.render(parsedJson, "textStyle", null, dynamicUIBuilderContext),
+      side: abstractWidget.render(parsedJson, "side", null, dynamicUIBuilderContext),
       alignment: TypeParser.parseAlignmentDirectional(
         getValue(parsedJson, "alignment", null, dynamicUIBuilderContext),
       ),
@@ -136,8 +117,7 @@ class OutlinedButtonStyle extends AbstractButtonStyle {
       onPressed: () {
         abstractWidget.click(parsedJson, dynamicUIBuilderContext);
       },
-      child: abstractWidget.render(
-          parsedJson, "child", null, dynamicUIBuilderContext),
+      child: abstractWidget.render(parsedJson, "child", null, dynamicUIBuilderContext),
       style: resultButtonStyle,
     );
   }
