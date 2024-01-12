@@ -42,7 +42,7 @@ import 'package:rjdu/dynamic_ui/widget/material_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/raw_material_button_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/safe_area_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/segment_control_widget.dart';
-import 'package:rjdu/dynamic_ui/widget/select_sheet.dart';
+import 'package:rjdu/dynamic_ui/widget/custom/select_sheet.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_app_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sized_box_bottom_navigation_bar_widget.dart';
 import 'package:rjdu/dynamic_ui/widget/sliver_app_bar_widget.dart';
