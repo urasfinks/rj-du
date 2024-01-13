@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 class SelectSheet extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String onPopJs = parsedJson["onPopJs"];
-    String onPopSwitch = parsedJson["onPopSwitch"] ?? "onPop";
     String placeholder = parsedJson["placeholder"] ?? "Найти";
     bool extend = parsedJson["extend"] ?? false;
+    String stateKey = parsedJson["stateKey"];
+    String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
+    String state = parsedJson["state"] ?? "main";
+    int? selectedIndex = parsedJson["selectedIndex"];
+    dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey,
+        selectedIndex == null ? {"label": defaultPlaceholder} : parsedJson["children"][selectedIndex], false);
     return render({
       "flutterType": "InkWell",
       "onTap": {
@@ -21,11 +25,8 @@ class SelectSheet extends AbstractWidget {
           },
           "placeholder": placeholder,
           "onPop": {
-            "jsInvoke": onPopJs,
-            "args": {
-              "includeAll": true,
-              "switch": onPopSwitch,
-            }
+            "jsInvoke": "SelectSheetData.js",
+            "args": {"includeAll": true, "switch": "onFinish", "state": state, "stateKey": stateKey}
           },
           "constructor": {
             "jsInvoke": "SelectSheetData.js",
@@ -38,13 +39,19 @@ class SelectSheet extends AbstractWidget {
         }
       },
       "child": {
-        "flutterType": "Template",
-        "src": "SelectSheet",
-        "context": {
-          "key": "SelectSheetGlobal",
-          "data": {
-            "label": "prev"
-          }
+        "flutterType": "Container",
+        "onStateDataUpdate": true,
+        "onStateDataUpdateKey": state,
+        "child": {
+          "flutterType": "Template",
+          "src": "SelectSheet",
+          "context": {
+            "key": "SelectSheet_${state}_$stateKey",
+            "data": {
+              "label": "\${state($state,$stateKey.label)}",
+            }
+          },
+          "currentRenderTemplateList": ["context.data.label"]
         }
       }
     }, null, const Text("Error SelectSheet"), dynamicUIBuilderContext);

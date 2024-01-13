@@ -184,7 +184,8 @@ class DynamicUI {
     "SelectSheet": SelectSheet().get
   };
 
-  static DynamicUIBuilderContext changeContext(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext){
+  static DynamicUIBuilderContext changeContext(Map<String, dynamic> parsedJson,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (parsedJson.containsKey("context")) {
       return dynamicUIBuilderContext.cloneWithNewData(
         Util.convertMap(parsedJson["context"]["data"] ?? {}),
@@ -194,12 +195,10 @@ class DynamicUI {
     return dynamicUIBuilderContext;
   }
 
-  static dynamic render(
-    Map<String, dynamic> parsedJson,
-    String? key,
-    dynamic defaultValue,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
+  static dynamic render(Map<String, dynamic> parsedJson,
+      String? key,
+      dynamic defaultValue,
+      DynamicUIBuilderContext dynamicUIBuilderContext,) {
     try {
       if (parsedJson.isEmpty) {
         return defaultValue;
@@ -217,9 +216,13 @@ class DynamicUI {
           String keyMapLink = "state${Util.capitalize(state)}";
           if (selector.containsKey("link")) {
             Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
-            mapLink[keyMapLink] = dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid;
+            mapLink[keyMapLink] = dynamicUIBuilderContext.dynamicPage.stateData
+                .getInstanceData(state)
+                .uuid;
           } else {
-            selector["link"] = {keyMapLink: dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid};
+            selector["link"] = {keyMapLink: dynamicUIBuilderContext.dynamicPage.stateData
+                .getInstanceData(state)
+                .uuid};
           }
           selector.remove("onStateDataUpdate");
         }
@@ -233,7 +236,7 @@ class DynamicUI {
           cloneTemplate.remove("context");
 
           Map<String, dynamic> contextData =
-              selector.containsKey("context") ? selector["context"] : {"key": "DynamicUITransform", "data": {}};
+          selector.containsKey("context") ? selector["context"] : {"key": "DynamicUITransform", "data": {}};
           contextData["data"]["template"] = cloneTemplate;
 
           Map<String, dynamic> renderData = {
@@ -265,8 +268,8 @@ class DynamicUI {
     }
   }
 
-  static List<Widget> renderList(
-      Map<String, dynamic> parsedJson, String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<Widget> renderList(Map<String, dynamic> parsedJson, String key,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     List<Widget> resultList = [];
     List list = parsedJson[key] ?? [];
     if (list.runtimeType.toString().contains("List")) {
