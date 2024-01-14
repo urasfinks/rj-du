@@ -30,7 +30,7 @@ class GlobalSettings {
   double barSeparatorOpacity = 0.04;
   bool bottomNavigationBar = true;
   FloatingActionButtonLocation floatingActionButtonLocation = FloatingActionButtonLocation.endFloat;
-  List<String> jsImportList = [];
+  List<String> jsImportList = ["SelectSheetData.js"];
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 
