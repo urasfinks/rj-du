@@ -432,6 +432,16 @@ class DataSource {
     }
   }
 
+  void subscribeUniqueContent(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
+    dynamic saveData;
+    subscribe(uuid, (uuid, data) {
+      if (saveData.toString() != data.toString()) {
+        saveData = data;
+        callback(uuid, data);
+      }
+    });
+  }
+
   void subscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
     get(uuid, callback);
     if (!listener.containsKey(uuid)) {

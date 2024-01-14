@@ -25,13 +25,12 @@ class SelectSheet extends AbstractWidget {
           },
           "placeholder": placeholder,
           "onPop": {
-            "jsInvoke": "SelectSheetData.js",
-            "args": {"includeAll": true, "switch": "onFinish", "state": state, "stateKey": stateKey}
+            "jsRouter": "SelectSheetData.js",
+            "args": {"switch": "onFinish", "state": state, "stateKey": stateKey}
           },
           "constructor": {
-            "jsInvoke": "SelectSheetData.js",
+            "jsRouter": "SelectSheetData.js",
             "args": {
-              "includeAll": true,
               "switch": "constructor",
               "listItem": parsedJson["children"],
             }

@@ -95,11 +95,39 @@ class DynamicInvoke {
         }
       });
     }
-    DataSource().subscribe("global.js", (uuid, data) {
+
+    DataSource().subscribeUniqueContent("global.js", (uuid, data) {
       if (data != null && data.containsKey("js")) {
-        javascriptRuntime?.evaluate(data["js"]);
+        safeEval("${data["js"]}\nbridge.debug = ${GlobalSettings().debug ? 'true' : 'false'};", uuid);
+        loadJsImportList();
       }
     });
+  }
+
+  void safeEval(String jsCode, String scriptUuid) {
+    Util.p("js import $scriptUuid");
+    String js = """
+          try {
+            if(bridge != undefined){
+              bridge.scriptUuid = '$scriptUuid';
+              bridge.args = {"switch":"runtime"};
+            }
+            $jsCode
+          } catch(e) {
+            console.log('JavaScript init($scriptUuid) exception: ' + e);
+          }
+        """;
+    javascriptRuntime?.evaluate(js);
+  }
+
+  void loadJsImportList() {
+    for (String uuid in GlobalSettings().jsImportList) {
+      DataSource().subscribeUniqueContent(uuid, (uuid, data) {
+        if (data != null && data.containsKey("js")) {
+          safeEval(data["js"], uuid);
+        }
+      });
+    }
   }
 
   DynamicUIBuilderContext changeContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
@@ -147,6 +175,22 @@ class DynamicInvoke {
     return null;
   }
 
+  void jsRouter(String uuid, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    args = Util.renderTemplate(args, RenderTemplateType.current, dynamicUIBuilderContext);
+    dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
+    _eval2(
+        "Router:$uuid",
+        "bridge.runRouterMap('$uuid');",
+        {
+          "args": args,
+          "context": dynamicUIBuilderContext.data,
+          "contextMap": dynamicUIBuilderContext.dynamicPage.getContextMap(),
+          "state": dynamicUIBuilderContext.dynamicPage.stateData.getAllData(),
+          "pageArgs": dynamicUIBuilderContext.dynamicPage.arguments
+        },
+        dynamicUIBuilderContext);
+  }
+
   void jsInvoke(
     String uuid,
     Map<String, dynamic> args,
@@ -181,17 +225,15 @@ class DynamicInvoke {
     dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
     DataSource().get(uuid, (uuid, data) {
       if (data != null && data.containsKey(DataType.js.name)) {
-        bool pretty = true;
+        bool pretty = false;
         _eval(
           uuid,
-          dynamicUIBuilderContext.dynamicPage.uuid,
           data[DataType.js.name],
           Util.jsonEncode(args, pretty),
           includeContext ? Util.jsonEncode(dynamicUIBuilderContext.data, pretty) : "",
           includeContextMap ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.getContextMap(), pretty) : "",
           includeStateData ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.stateData.getAllData(), pretty) : "",
           includePageArgument ? Util.jsonEncode(dynamicUIBuilderContext.dynamicPage.arguments, pretty) : "",
-          NavigatorApp.getLast() == dynamicUIBuilderContext.dynamicPage,
           dynamicUIBuilderContext,
         );
       } else {
@@ -200,8 +242,8 @@ class DynamicInvoke {
     });
   }
 
-  String? _eval(String scriptUuid, String pageUuid, String js, String args, String context, String contextMap,
-      String state, String pageArgs, bool pageActive, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  String? _eval(String scriptUuid, String js, String args, String context, String contextMap, String state,
+      String pageArgs, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
     }
@@ -219,12 +261,11 @@ class DynamicInvoke {
     }
     String jsInit = """
         bridge.clearAll();
-        bridge.pageUuid = '$pageUuid';
-        bridge.debug = ${GlobalSettings().debug ? 'true' : 'false'};
+        bridge.pageUuid = '${dynamicUIBuilderContext.dynamicPage.uuid}';
         bridge.unique = '${Storage().get("unique", "")}';
         bridge.scriptUuid = '$scriptUuid';
         bridge.orientation = '${GlobalSettings().orientation}';
-        bridge.pageActive = ${pageActive ? "true" : "false"};
+        bridge.pageActive = ${dynamicUIBuilderContext.dynamicPage == NavigatorApp.getLast() ? "true" : "false"};
 //--------------------------------------------------------
 $args
 //--------------------------------------------------------
@@ -244,7 +285,30 @@ $pageArgs
         $jsInit
         $js
       } catch(e) {
-        bridge.log('JavaScript exception: ' + e);        
+        bridge.log('JavaScript v1 exception: ' + e);        
+      }
+    """;
+    return javascriptRuntime!.evaluate(tryBlock).stringResult;
+  }
+
+  String? _eval2(String scriptUuid, String jsCode, Map<String, dynamic> bridgeContext,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
+    String bridgeInit = """
+        bridge.clearAll();
+        bridge.pageUuid = '${dynamicUIBuilderContext.dynamicPage.uuid}';
+        bridge.unique = '${Storage().get("unique", "")}';
+        bridge.scriptUuid = '$scriptUuid';
+        bridge.orientation = '${GlobalSettings().orientation}';
+        bridge.pageActive = ${dynamicUIBuilderContext.dynamicPage == NavigatorApp.getLast() ? "true" : "false"};
+        bridge.setContext(${Util.jsonEncode(bridgeContext, true)});
+    """;
+
+    String tryBlock = """
+      try {
+        $bridgeInit
+        $jsCode
+      } catch(e) {
+        bridge.log('JavaScript v2 exception: ' + e);        
       }
     """;
     return javascriptRuntime!.evaluate(tryBlock).stringResult;

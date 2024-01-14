@@ -152,7 +152,9 @@ abstract class AbstractWidget {
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
     if (settings != null) {
-      if (settings.containsKey("jsInvoke")) {
+      if (settings.containsKey("jsRouter")) {
+        DynamicInvoke().jsRouter(settings["jsRouter"], settings["args"], dynamicUIBuilderContext);
+      } else if (settings.containsKey("jsInvoke")) {
         DynamicInvoke().jsInvoke(settings["jsInvoke"], settings["args"], dynamicUIBuilderContext);
       } else if (settings.containsKey("sysInvoke")) {
         DynamicInvoke().sysInvoke(settings["sysInvoke"], settings["args"] ?? {}, dynamicUIBuilderContext);

@@ -18,23 +18,20 @@
               "key": "SelectSheetDataKey",
               "placeholder": "${pageArgs(placeholder,)}",
               "onSubmit": {
-                "jsInvoke": "SelectSheetData.js",
+                "jsRouter": "SelectSheetData.js",
                 "args": {
-                  "includeAll": true,
                   "switch": "onSubmit"
                 }
               },
               "onChanged": {
-                "jsInvoke": "SelectSheetData.js",
+                "jsRouter": "SelectSheetData.js",
                 "args": {
-                  "includeAll": true,
                   "switch": "find"
                 }
               },
               "onReset": {
-                "jsInvoke": "SelectSheetData.js",
+                "jsRouter": "SelectSheetData.js",
                 "args": {
-                  "includeAll": true,
                   "switch": "find"
                 }
               }
@@ -60,9 +57,8 @@
               "extendDataElement": {
                 "templateWidgetSrc": "IteratorButton",
                 "onTap": {
-                  "jsInvoke": "SelectSheetData.js",
+                  "jsRouter": "SelectSheetData.js",
                   "args": {
-                    "includeAll": true,
                     "selectedIndex": "${iteratorIndex}",
                     "switch": "onSelect"
                   },
@@ -88,9 +84,8 @@
                     "height": 44,
                     "backgroundColor": "schema:projectPrimary",
                     "onPressed": {
-                      "jsInvoke": "SelectSheetData.js",
+                      "jsRouter": "SelectSheetData.js",
                       "args": {
-                        "includeAll": true,
                         "switch": "onCreateNew"
                       }
                     },
