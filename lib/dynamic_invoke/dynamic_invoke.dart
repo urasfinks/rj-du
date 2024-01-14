@@ -83,6 +83,8 @@ class DynamicInvoke {
           dynamic result;
           if (pageByUuid != null) {
             result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
+          } else {
+            Util.printCurrentStack("DynamicInvoke.onMessage() DynamicPage($pageByUuid) not found in Navigator");
           }
           if (result == null) {
             return null;

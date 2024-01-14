@@ -64,6 +64,13 @@ class DynamicPage extends StatefulWidget {
   }
 
   DynamicPage(Map<String, dynamic> parseJson, this.dynamicPageOpenType, {super.key}) {
+    // Перенёс добавдение старницы в навигацию сюда, так как случались проблемы, когда конструктор
+    // отрабатывал быстрее чем страница была добавлена в навигацию
+    // а js вызывал SetStateData который получает NavigatorApp.getPageByUuid(pageUuid), а там пустота
+    // Я подозреваю что преждевременно добавление может вызвать ряд проблем, из-за того,
+    // что реально рендеринг не произошёл а мы допустим начнём принудительно перезагружать а там нет _setState
+    // надо тестировать! В том месте где раньше добавлялась страница в навигацию пока просто закомментировал
+    NavigatorApp.addPage(this);
     arguments = Util.getMutableMap(parseJson);
     dynamicUIBuilderContext = DynamicUIBuilderContext(this, "root");
     dynamicUIBuilderContext.isRoot = true;
@@ -358,7 +365,8 @@ class _DynamicPage extends State<DynamicPage> {
   @override
   void initState() {
     widget._setState = this;
-    NavigatorApp.addPage(widget);
+    //Случился момент когда конструктор сработал быстрее чем страница добавилась в навигацию
+    //NavigatorApp.addPage(widget);
     if (widget.arguments.containsKey("reloadEach")) {
       int reloadEach = TypeParser.parseInt(widget.arguments["reloadEach"]!) ?? 30;
       startReloadEach(reloadEach);
