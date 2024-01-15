@@ -14,13 +14,13 @@ import '../type_parser.dart';
 class ImageWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    String src = getValue(parsedJson, "src", "", dynamicUIBuilderContext);
     AbstractStream abstractStream = getController(parsedJson, "ImageWidget", dynamicUIBuilderContext, () {
-      StreamData streamData = StreamData({"image": null, "start": false});
+      StreamData streamData = StreamData({"image": null, "start": false, "src": src});
       return StreamControllerWrap(streamData, streamData.data);
     });
     if (abstractStream.getData()["start"] == false) {
       abstractStream.getData()["start"] = true;
-      String src = getValue(parsedJson, "src", "", dynamicUIBuilderContext);
       DataSource().get(src, (uuid, data) {
         for (String key in [DataType.blobRSync.name, DataType.blob.name]) {
           if (data != null && data.containsKey(key)) {
@@ -44,16 +44,20 @@ class ImageWidget extends AbstractWidget {
         child = const SizedBox();
       }
       return AnimatedOpacity(
-        opacity: 0.0 ,
+        opacity: 1.0,
         duration: const Duration(milliseconds: 1000),
         child: child,
       );
     });
   }
 
-  getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, Key xKey) {
+  getAsset(
+    Map<String, dynamic> parsedJson,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+    Key keyWidget,
+  ) {
     return Image(
-      key: xKey,
+      key: keyWidget,
       image: AssetImage(parsedJson["assetLoader"]!),
       width: TypeParser.parseDouble(
         getValue(parsedJson, "width", null, dynamicUIBuilderContext),
@@ -74,10 +78,15 @@ class ImageWidget extends AbstractWidget {
     );
   }
 
-  getMemory(String imageData, Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, Key xKey) {
+  getMemory(
+    String imageData,
+    Map<String, dynamic> parsedJson,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+    Key keyWidget,
+  ) {
     return Image.memory(
       Util.base64Decode(imageData),
-      key: xKey,
+      key: keyWidget,
       width: TypeParser.parseDouble(
         getValue(parsedJson, "width", null, dynamicUIBuilderContext),
       ),
