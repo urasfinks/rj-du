@@ -158,7 +158,7 @@ class DynamicUI {
     "SwipableStack": SwipableStackWidget().get,
     "FlipCard": FlipCardWidget().get,
     "LinearProgressIndicator": LinearProgressIndicatorWidget().get,
-    "ImageBase64": ImageBase64Widget().get,
+    "Image": ImageWidget().get,
     "Stream": StreamWidget().get,
     "CarouselSlider": CarouselSliderWidget().get,
     "ImageTitled": ImageTitledWidget().get,

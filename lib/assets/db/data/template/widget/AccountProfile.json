@@ -36,7 +36,7 @@
             "flutterType": "ClipRRect",
             "borderRadius": 100,
             "child": {
-              "flutterType": "ImageBase64",
+              "flutterType": "Image",
               "src": "avatar",
               "assetLoader": "packages/rjdu/lib/assets/image/no-avatar.jpg"
             }

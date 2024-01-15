@@ -11,10 +11,10 @@ import '../../dynamic_invoke/dynamic_invoke.dart';
 import '../../util.dart';
 import '../type_parser.dart';
 
-class ImageBase64Widget extends AbstractWidget {
+class ImageWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    AbstractStream abstractStream = getController(parsedJson, "ImageBase64Widget", dynamicUIBuilderContext, () {
+    AbstractStream abstractStream = getController(parsedJson, "ImageWidget", dynamicUIBuilderContext, () {
       StreamData streamData = StreamData({"image": null, "start": false});
       return StreamControllerWrap(streamData, streamData.data);
     });
@@ -33,41 +33,39 @@ class ImageBase64Widget extends AbstractWidget {
       });
       DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": src}, dynamicUIBuilderContext);
     }
-    Key xKey = Util.getKey();
+    Key keyWidget = Util.getKey();
     return StreamWidget.getWidget(abstractStream, (snapshot) {
-      if (snapshot["image"] == null) {
-        return getAsset(parsedJson, dynamicUIBuilderContext, xKey);
+      if (parsedJson.containsKey("assetLoader")) {
+        return getAsset(parsedJson, dynamicUIBuilderContext, keyWidget);
+      } else if (snapshot["image"] != null) {
+        return getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, keyWidget);
       } else {
-        return getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, xKey);
+        return const SizedBox();
       }
     });
   }
 
   getAsset(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, Key xKey) {
-    if (parsedJson.containsKey("assetLoader")) {
-      return Image(
-        key: xKey,
-        image: AssetImage(parsedJson["assetLoader"]!),
-        width: TypeParser.parseDouble(
-          getValue(parsedJson, "width", null, dynamicUIBuilderContext),
-        ),
-        height: TypeParser.parseDouble(
-          getValue(parsedJson, "height", null, dynamicUIBuilderContext),
-        ),
-        fit: TypeParser.parseBoxFit(
-          getValue(parsedJson, "fit", null, dynamicUIBuilderContext),
-        ),
-        repeat: TypeParser.parseImageRepeat(
-          getValue(parsedJson, "repeat", "noRepeat", dynamicUIBuilderContext),
-        )!,
-        filterQuality: FilterQuality.high,
-        alignment: TypeParser.parseAlignment(
-          getValue(parsedJson, "alignment", "center", dynamicUIBuilderContext),
-        )!,
-      );
-    } else {
-      return const SizedBox();
-    }
+    return Image(
+      key: xKey,
+      image: AssetImage(parsedJson["assetLoader"]!),
+      width: TypeParser.parseDouble(
+        getValue(parsedJson, "width", null, dynamicUIBuilderContext),
+      ),
+      height: TypeParser.parseDouble(
+        getValue(parsedJson, "height", null, dynamicUIBuilderContext),
+      ),
+      fit: TypeParser.parseBoxFit(
+        getValue(parsedJson, "fit", null, dynamicUIBuilderContext),
+      ),
+      repeat: TypeParser.parseImageRepeat(
+        getValue(parsedJson, "repeat", "noRepeat", dynamicUIBuilderContext),
+      )!,
+      filterQuality: FilterQuality.high,
+      alignment: TypeParser.parseAlignment(
+        getValue(parsedJson, "alignment", "center", dynamicUIBuilderContext),
+      )!,
+    );
   }
 
   getMemory(String imageData, Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, Key xKey) {
