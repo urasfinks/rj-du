@@ -35,13 +35,19 @@ class ImageWidget extends AbstractWidget {
     }
     Key keyWidget = Util.getKey();
     return StreamWidget.getWidget(abstractStream, (snapshot) {
+      dynamic child;
       if (parsedJson.containsKey("assetLoader")) {
-        return getAsset(parsedJson, dynamicUIBuilderContext, keyWidget);
+        child = getAsset(parsedJson, dynamicUIBuilderContext, keyWidget);
       } else if (snapshot["image"] != null) {
-        return getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, keyWidget);
+        child = getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, keyWidget);
       } else {
-        return const SizedBox();
+        child = const SizedBox();
       }
+      return AnimatedOpacity(
+        opacity: 0.0 ,
+        duration: const Duration(milliseconds: 1000),
+        child: child,
+      );
     });
   }
 
