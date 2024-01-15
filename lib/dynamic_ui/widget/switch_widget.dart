@@ -11,7 +11,7 @@ import '../type_parser.dart';
 class SwitchWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    AbstractStream abstractStream = getController(parsedJson, "ImageBase64Widget", dynamicUIBuilderContext, () {
+    AbstractStream abstractStream = getController(parsedJson, "SwitchWidget", dynamicUIBuilderContext, () {
       StreamData streamData = StreamData({
         "value": TypeParser.parseBool(
               getValue(parsedJson, "value", true, dynamicUIBuilderContext),
