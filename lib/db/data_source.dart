@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/data_sync.dart';
 import 'package:rjdu/db/socket_cache.dart';
 import 'package:rjdu/dynamic_invoke/handler/alert_handler.dart';
@@ -11,10 +12,10 @@ import '../../http_client.dart';
 import '../global_settings.dart';
 import '../multi_invoke.dart';
 import '../navigator_app.dart';
+import '../storage.dart';
 import '../subscribe_reload_group.dart';
 import '../util.dart';
 import 'data_getter.dart';
-import 'data_migration.dart';
 import 'getter_task.dart';
 import 'data.dart';
 
@@ -32,18 +33,47 @@ class DataSource {
   List<DataType> notJsonList = [DataType.js, DataType.any, DataType.blob, DataType.blobRSync];
   late Database db;
   Map<String, List<Function(String uuid, Map<String, dynamic>? data)>> listener = {};
-  DataMigration dataMigration = DataMigration();
 
   init() async {
-    Util.p("DataSource.init()");
+    Util.p("DataSource.init() ${GlobalSettings().version}; updateApplication = ${Storage().isUpdateApplicationVersion()}");
     final directory = await getApplicationDocumentsDirectory();
     db = await openDatabase("${directory.path}/mister-craft-1.sqlite3", version: 1);
-    await dataMigration.init();
+    if (Storage().isUpdateApplicationVersion()) {
+      await _sqlExecute([
+        "db/drop/2023-01-31.sql",
+        "db/migration/2023-01-29.sql",
+      ]);
+      Util.p("Migration complete");
+    }
     isInit = true;
+    for (AssetsDataItem assetsDataItem in AssetsData().list) {
+      await DataSource().set(assetsDataItem.name, assetsDataItem.data, assetsDataItem.type, null, null, GlobalSettings().debug);
+    }
+    Util.p("DataSource().set() ${AssetsData().list.length} assets");
     flushQueue();
     if (GlobalSettings().debug && GlobalSettings().debugSql.isNotEmpty) {
       for (String sql in GlobalSettings().debugSql) {
         DataGetter.debug(sql);
+      }
+    }
+  }
+
+  Future<void> _sqlExecute(List<String> files) async {
+    for (String file in files) {
+      if (file.trim() == "") {
+        continue;
+      }
+      Util.p("Migration: $file");
+      String migration = await AssetsData().getFileContent("packages/rjdu/lib/assets/$file");
+      //sqflite не умеет выполнять скрипт из нескольких запросов (как не странно)
+      List<String> split = migration.split(";");
+      for (String query in split) {
+        query = query.trim();
+        if (query.isNotEmpty) {
+          DataSource().db.execute(query).onError((error, stackTrace) {
+            Util.printStackTrace("DataMigration._sqlExecute()", error, stackTrace);
+          });
+        }
       }
     }
   }
@@ -66,8 +96,7 @@ class DataSource {
     Util.p("flushQueue complete: $count");
   }
 
-  set(String uuid, dynamic value, DataType type,
-      [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
+  set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.meta = meta;
@@ -432,18 +461,19 @@ class DataSource {
     }
   }
 
-  void subscribeUniqueContent(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
-    dynamic saveData;
+  void subscribeUniqueContent(String uuid, Function(String uuid, Map<String, dynamic>? data) callback, [bool initGet = true, dynamic lastContent]) {
     subscribe(uuid, (uuid, data) {
-      if (saveData.toString() != data.toString()) {
-        saveData = data;
+      if (lastContent.toString() != data.toString()) {
+        lastContent = data;
         callback(uuid, data);
       }
-    });
+    }, initGet);
   }
 
-  void subscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback) {
-    get(uuid, callback);
+  void subscribe(String uuid, Function(String uuid, Map<String, dynamic>? data) callback, [bool initGet = true]) {
+    if (initGet) {
+      get(uuid, callback);
+    }
     if (!listener.containsKey(uuid)) {
       listener[uuid] = [];
     }

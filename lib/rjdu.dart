@@ -5,11 +5,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/audio_component.dart';
-import 'package:rjdu/db/data_migration.dart';
 import 'package:rjdu/dynamic_page.dart';
-import 'package:rjdu/dynamic_ui/widget/abstract_widget_extension/iterator_theme/iterator_theme_loader.dart';
-import 'package:rjdu/dynamic_ui/widget/template_widget.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/theme_provider.dart';
@@ -30,9 +28,12 @@ class RjDu {
   static init() async {
     Util.p("RjDu.init()");
     WidgetsFlutterBinding.ensureInitialized();
-    DynamicInvoke().init();
-    await Storage().init();
-    GlobalSettings().init();
+    androidUpdateSubAppBar(); //Нет зависимостей
+    GlobalSettings().init(); //Нет зависимостей
+    await Storage().init(); //Нет зависимостей
+    await AssetsData().init(); //Нет зависимостей
+    DynamicInvoke().init(); //Псевдо зависимость от DataSource - хочу вынести loadAsset что бы развязать
+
     AudioComponent().init();
 
     Storage().set("uuid", Util.uuid(), false);
@@ -71,8 +72,7 @@ class RjDu {
         // Проблема воспроизодилась на Account.json когда просто не открывался snackBar
         // Принято решение скрывать только при переключенях табов
         if (state == "onChangeTab") {
-          DynamicInvoke()
-              .sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+          DynamicInvoke().sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
         }
       }
     });
@@ -85,7 +85,6 @@ class RjDu {
         AudioComponent().init();
       }
     });
-    androidUpdateSubAppBar();
 
     SystemNotify().subscribe(SystemNotifyEnum.changeThemeData, (state) {
       androidUpdateSubAppBar();
@@ -100,12 +99,10 @@ class RjDu {
   static androidUpdateSubAppBar() {
     if (Util.isAndroid()) {
       var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
-      ThemeData curTheme =
-          brightness == Brightness.dark ? ThemeProvider.darkThemeData() : ThemeProvider.lightThemeData();
+      ThemeData curTheme = brightness == Brightness.dark ? ThemeProvider.darkThemeData() : ThemeProvider.lightThemeData();
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor:
-            HexColor.fromRGB(curTheme.bottomNavigationBarTheme.backgroundColor!.getChannel()).darkness(3),
+        systemNavigationBarColor: HexColor.fromRGB(curTheme.bottomNavigationBarTheme.backgroundColor!.getChannel()).darkness(3),
         systemNavigationBarIconBrightness: brightness == Brightness.dark ? Brightness.light : Brightness.dark,
       ));
     }
@@ -117,20 +114,12 @@ class RjDu {
     if (GlobalSettings().debugSql.isNotEmpty) {
       return DynamicPage(const {"flutterType": "SizeBox"}, DynamicPageOpenType.window);
     }
-    List<String> loadTabData = await DataMigration.loadTabData();
+    List<String> loadTabData = await AssetsData().loadTabData();
     for (String tabData in loadTabData) {
       NavigatorApp.tab.add(
         BottomTabItem(json.decode(tabData)),
       );
     }
-    //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
-    IteratorThemeLoader.load(
-        await DataMigration.loadAssetByMask("systemData/iteratorTheme", "", "packages/rjdu/lib/"), "rjdu");
-    TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", "", "packages/rjdu/lib/"), "rjdu");
-
-    IteratorThemeLoader.load(
-        await DataMigration.loadAssetByMask("systemData/iteratorTheme", "IteratorTheme"), "project");
-    TemplateWidget.load(await DataMigration.loadAssetByMask("template/widget", ""), "project");
 
     return DynamicPage(const {
       "flutterType": "Notify",

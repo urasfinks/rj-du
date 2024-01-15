@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/foundation.dart';
+import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/dynamic_invoke/handler/audio_handler.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/storage.dart';
@@ -95,13 +96,26 @@ class DynamicInvoke {
         }
       });
     }
-
-    DataSource().subscribeUniqueContent("global.js", (uuid, data) {
-      if (data != null && data.containsKey("js")) {
-        safeEval("${data["js"]}\nbridge.debug = ${GlobalSettings().debug ? 'true' : 'false'};", uuid);
-        loadJsImportList();
+    //Global.js нельзя перекатывать, так как собьются все регистрации RouterMap
+    // Поэтому DataSource().subscribeUniqueContent не про него
+    for (AssetsDataItem assetsDataItem in AssetsData().list) {
+      if (assetsDataItem.name == "global.js") {
+        safeEval("${assetsDataItem.data}\nbridge.debug = ${GlobalSettings().debug ? 'true' : 'false'};", "global.js");
       }
-    });
+    }
+    for (AssetsDataItem assetsDataItem in AssetsData().list) {
+      if (assetsDataItem.type == DataType.js && assetsDataItem.name.endsWith(".ai.js")) {
+        safeEval(assetsDataItem.data, assetsDataItem.name);
+        DataSource().subscribeUniqueContent(assetsDataItem.name, (uuid, data) {
+          // Сомнительная конечно штука, сравнивать с первоисточником
+          // Какие подводные камни - пришла ревизия и поняли, что она не очень, пробуем откатить на первичное значение
+          // А откат не произойд]т
+          if (data != null && data.containsKey("js") && data["js"] != assetsDataItem.data) {
+            safeEval(data["js"], uuid);
+          }
+        }, false, assetsDataItem.data);
+      }
+    }
   }
 
   void safeEval(String jsCode, String scriptUuid) {
@@ -118,16 +132,6 @@ class DynamicInvoke {
           }
         """;
     javascriptRuntime?.evaluate(js);
-  }
-
-  void loadJsImportList() {
-    for (String uuid in GlobalSettings().jsImportList) {
-      DataSource().subscribeUniqueContent(uuid, (uuid, data) {
-        if (data != null && data.containsKey("js")) {
-          safeEval(data["js"], uuid);
-        }
-      });
-    }
   }
 
   DynamicUIBuilderContext changeContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
@@ -242,8 +246,8 @@ class DynamicInvoke {
     });
   }
 
-  String? _eval(String scriptUuid, String js, String args, String context, String contextMap, String state,
-      String pageArgs, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  String? _eval(String scriptUuid, String js, String args, String context, String contextMap, String state, String pageArgs,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
     }
@@ -291,8 +295,8 @@ $pageArgs
     return javascriptRuntime!.evaluate(tryBlock).stringResult;
   }
 
-  String? _eval2(String scriptUuid, String jsCode, Map<String, dynamic> bridgeContext,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  String? _eval2(
+      String scriptUuid, String jsCode, Map<String, dynamic> bridgeContext, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String bridgeInit = """
         bridge.clearAll();
         bridge.pageUuid = '${dynamicUIBuilderContext.dynamicPage.uuid}';
