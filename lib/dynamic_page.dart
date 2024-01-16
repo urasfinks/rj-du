@@ -52,7 +52,6 @@ class DynamicPage extends StatefulWidget {
   _DynamicPage? _setState;
   bool isDispose = false;
   int openInIndexTab = 0;
-  int timeCreate = 0;
   bool reloadOnActiveViewport = false;
   bool reloadBackground = false;
 
@@ -79,7 +78,6 @@ class DynamicPage extends StatefulWidget {
     // не успел инициализироваться
     Data state = stateData.getInstanceData(null);
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
-    timeCreate = DateTime.now().millisecondsSinceEpoch;
     constructor("init");
     Util.p("CreateInstance DynamicPage uuidPage: $uuid; uuidState: ${state.uuid}; args: $arguments");
   }
@@ -270,22 +268,10 @@ class DynamicPage extends StatefulWidget {
   @override
   State<DynamicPage> createState() => _DynamicPage();
 
-  void _updateStoreValueNotifierNative(String uuid, Map<String, dynamic> data) {
+  void updateStoreValueNotifier(String uuid, Map<String, dynamic> data) {
     storeValueNotifier.updateValueNotifier(uuid, data);
     if (checkSubscriptionOnReload(SubscribeReloadGroup.uuid, uuid)) {
       reload(false, "ValueNotifier($uuid)");
-    }
-  }
-
-  void updateStoreValueNotifier(String uuid, Map<String, dynamic> data) {
-    int timeOffset = DateTime.now().millisecondsSinceEpoch - timeCreate;
-    int timeAnimationOpenWindow = 200;
-    if (timeOffset >= timeAnimationOpenWindow) {
-      _updateStoreValueNotifierNative(uuid, data);
-    } else {
-      Future.delayed(Duration(milliseconds: timeAnimationOpenWindow - timeOffset), () {
-        _updateStoreValueNotifierNative(uuid, data);
-      });
     }
   }
 
