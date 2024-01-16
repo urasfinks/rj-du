@@ -19,6 +19,10 @@ abstract class AbstractStream {
     return data;
   }
 
+  setDataWithoutNotify(Map<String, dynamic> newData) {
+    Util.overlay(data, newData);
+  }
+
   setData(Map<String, dynamic> newData) {
     Util.overlay(data, newData);
     _controller.add(data);

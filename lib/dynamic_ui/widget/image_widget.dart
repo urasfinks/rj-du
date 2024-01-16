@@ -16,7 +16,7 @@ class ImageWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String src = getValue(parsedJson, "src", "", dynamicUIBuilderContext);
     AbstractStream abstractStream = getController(parsedJson, "ImageWidget", dynamicUIBuilderContext, () {
-      StreamData streamData = StreamData({"image": null, "start": false, "src": src});
+      StreamData streamData = StreamData({"image": null, "start": false, "src": src, "startOpacity": 0.0});
       return StreamControllerWrap(streamData, streamData.data);
     });
     if (abstractStream.getData()["start"] == false) {
@@ -34,20 +34,29 @@ class ImageWidget extends AbstractWidget {
       DynamicInvoke().sysInvokeType(SubscribeReloadHandler, {"uuid": src}, dynamicUIBuilderContext);
     }
     Key keyWidget = Util.getKey();
+    Key keyAnimation = Util.getKey();
     return StreamWidget.getWidget(abstractStream, (snapshot) {
-      dynamic child;
-      if (parsedJson.containsKey("assetLoader")) {
-        child = getAsset(parsedJson, dynamicUIBuilderContext, keyWidget);
-      } else if (snapshot["image"] != null) {
-        child = getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, keyWidget);
-      } else {
-        child = const SizedBox();
+      dynamic imageWidget = const SizedBox();
+      if (snapshot["image"] != null) {
+        imageWidget = getMemory(snapshot["image"], parsedJson, dynamicUIBuilderContext, keyWidget);
+      } else if (parsedJson.containsKey("assetLoader")) {
+        imageWidget = getAsset(parsedJson, dynamicUIBuilderContext, keyWidget);
       }
-      return AnimatedOpacity(
-        opacity: 1.0,
-        duration: const Duration(milliseconds: 1000),
-        child: child,
-      );
+      if (parsedJson.containsKey("animation") && parsedJson["animation"] == true) {
+        return TweenAnimationBuilder<double>(
+            key: keyAnimation,
+            tween: Tween<double>(begin: abstractStream.getData()["startOpacity"], end: 1.0),
+            curve: Curves.ease,
+            duration: Duration(milliseconds: parsedJson["animationDuration"] ?? 250),
+            builder: (BuildContext context, double opacity, Widget? child) {
+              abstractStream.setDataWithoutNotify({
+                "startOpacity": opacity,
+              });
+              return Opacity(opacity: opacity, child: imageWidget);
+            });
+      } else {
+        return imageWidget;
+      }
     });
   }
 
