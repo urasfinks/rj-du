@@ -1,5 +1,4 @@
 import '../../util.dart';
-import '../dynamic_ui.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
@@ -26,7 +25,7 @@ class InkWidget extends AbstractWidget{
       child: render(
         parsedJson,
         "child",
-        DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
+        const SizedBox(),
         dynamicUIBuilderContext,
       ),
     );

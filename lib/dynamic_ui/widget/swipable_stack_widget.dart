@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import '../../abstract_controller_wrap.dart';
 import '../../dynamic_invoke/handler/alert_handler.dart';
 import '../../multi_invoke.dart';
-import '../dynamic_ui.dart';
 import '../type_parser.dart';
 import 'abstract_widget.dart';
 
@@ -205,7 +204,7 @@ class SwipableStackWidget extends AbstractWidget {
         return render(
           parsedJson,
           "overlay",
-          DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
+          const SizedBox(),
           dynamicUIBuilderContext,
         );
       },

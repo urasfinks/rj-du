@@ -1,6 +1,5 @@
 import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 
-import '../dynamic_ui.dart';
 import 'abstract_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ class StateWidget extends AbstractWidget {
     return render(
       data,
       null,
-      DynamicUI.ui["SizedBox"]!(parsedJson, dynamicUIBuilderContext),
+      const SizedBox(),
       dynamicUIBuilderContext,
     );
   }
