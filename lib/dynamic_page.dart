@@ -269,6 +269,9 @@ class DynamicPage extends StatefulWidget {
   State<DynamicPage> createState() => _DynamicPage();
 
   void updateStoreValueNotifier(String uuid, Map<String, dynamic> data) {
+    // Раньше тут была задежка, что бы оповещение перерисовывало страницу после того, как пройдёт анимация открытия
+    // В итоге это приводило к морганию картинок, причём картинки выезжали уже отрисованные
+    // А потом происходила перезагрузка страницы и картинки моргали
     storeValueNotifier.updateValueNotifier(uuid, data);
     if (checkSubscriptionOnReload(SubscribeReloadGroup.uuid, uuid)) {
       reload(false, "ValueNotifier($uuid)");
