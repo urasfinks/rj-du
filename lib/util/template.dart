@@ -89,7 +89,6 @@ class Template {
     defaultValue ??= "[$path]";
     bool find = true;
     if (path == ".") {
-      Util.log(Util.jsonPretty(data));
       return data;
     }
     dynamic cur = data;
