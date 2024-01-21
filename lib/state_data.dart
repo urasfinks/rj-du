@@ -73,7 +73,7 @@ class StateData {
     if (data.value[key] == null || data.value[key].toString() != value.toString()) {
       data.value[key] = value;
       Util.p(
-          "StateData.set() state:$state; key:$key; value: $value; last_value: ${data.value[key]}; notify: $notifyDynamicPage;");
+          "StateData.set() state:$state; key:$key; value: $value; notify: $notifyDynamicPage;");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
@@ -97,7 +97,7 @@ class StateData {
       }
     }
     if (change) {
-      Util.p("StateData.setMap() state:$state; state: $state; data: ${data.value}; notify: $notifyDynamicPage;");
+      Util.p("StateData.setMap() state:$state; map: $map; notify: $notifyDynamicPage;");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
