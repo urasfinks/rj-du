@@ -7,7 +7,7 @@
       "child": {
         "flutterType": "InkWell",
         "onTap": {
-          "jsInvoke": "Account.js",
+          "jsRouter": "Account.ai.js",
           "args": {
             "includeAll": true,
             "method": "showGallery"
@@ -59,7 +59,7 @@
           "key": "name",
           "placeholder": "Имя",
           "onSubmit": {
-            "jsInvoke": "Account.js",
+            "jsRouter": "Account.ai.js",
             "args": {
               "includeAll": true,
               "method": "setNewName"
@@ -148,7 +148,7 @@
               "actionLabel": "Выйти",
               "backgroundColor": "schema:onBackground",
               "onPressed": {
-                "jsInvoke": "Account.js",
+                "jsRouter": "Account.ai.js",
                 "args": {
                   "includeAll": true,
                   "method": "Logout"
@@ -184,7 +184,7 @@
               "actionLabel": "Да, удалить",
               "backgroundColor": "schema:onBackground",
               "onPressed": {
-                "jsInvoke": "Account.js",
+                "jsRouter": "Account.ai.js",
                 "args": {
                   "includeAll": true,
                   "method": "RemoveLogout"

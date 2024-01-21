@@ -39,7 +39,7 @@
           "fontSize": 17
         },
         "onSubmitted": {
-          "jsInvoke": "Account.js",
+          "jsRouter": "Account.ai.js",
           "args": {
             "includeStateData": true,
             "method": "GetCode"
@@ -106,7 +106,7 @@
         "flutterType": "Button",
         "backgroundColor": "blue",
         "onPressed": {
-          "jsInvoke": "Account.js",
+          "jsRouter": "Account.ai.js",
           "args": {
             "includeAll": true,
             "method": "GetCode"

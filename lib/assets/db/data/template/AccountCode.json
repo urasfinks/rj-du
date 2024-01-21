@@ -81,7 +81,7 @@
         "flutterType": "Button",
         "backgroundColor": "blue",
         "onPressed": {
-          "jsInvoke": "Account.js",
+          "jsRouter": "Account.ai.js",
           "args": {
             "includeStateData": true,
             "includePageArgument": true,
