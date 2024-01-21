@@ -248,7 +248,12 @@ class DataSync {
 
         //Добавляем только в том случаи если пользователь авторизовался и это перввая итерация while,
         // а то на сервере не к чему будет привязывать данные
-        if (Storage().get("isAuth", "false") == "true" && countRequest == 1) {
+        // + это не проверка ленивых данных (словил ошибку из-за этого) данные начинают отправлятся
+        // которые не прошли синхронизацию, и приходят обновления ревизии по ним,
+        // что приводит к syncResult.countUpgrade > 0 ,
+        // а это вызывает перезагрузку DynamicPage widget.reload(true, "lazySync complete");
+        // А по факту все ленивые данные не нуждались в синхронизации и перезагрузка страницы была ложной
+        if (Storage().get("isAuth", "false") == "true" && countRequest == 1 && taskSync.lazy.isEmpty) {
           postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
           postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
         }
@@ -263,6 +268,7 @@ class DataSync {
         if (response.statusCode == 200) {
           int countUpgrade = 0;
           Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
+          //Util.log(parseJson);
           if (parseJson["status"] == true) {
             if (firstTotalCountItem == -1) {
               firstTotalCountItem = parseJson["data"]["totalCountItem"];
