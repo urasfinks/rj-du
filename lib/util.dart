@@ -46,7 +46,7 @@ class Util {
   }
 
   static void log(dynamic mes) {
-    developer.log("[${DateTime.now()}] ${mes.toString()}");
+    developer.log("[${DateTime.now()}] $mes");
   }
 
   static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
