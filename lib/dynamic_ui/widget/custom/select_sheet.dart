@@ -11,7 +11,7 @@ class SelectSheet extends AbstractWidget {
     String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
     String state = parsedJson["state"] ?? "main";
     int? selectedIndex = parsedJson["selectedIndex"];
-    if (!dynamicUIBuilderContext.dynamicPage.stateData.contains(state)) {
+    if (!dynamicUIBuilderContext.dynamicPage.stateData.contains(state, stateKey)) {
       dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey,
           selectedIndex == null ? {"label": defaultPlaceholder} : parsedJson["children"][selectedIndex], false);
     }

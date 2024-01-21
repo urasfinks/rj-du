@@ -54,9 +54,15 @@ class StateData {
     return false;
   }
 
-  bool contains(String? state) {
+  bool contains(String? state, String key) {
     state ??= "main";
-    return map.containsKey(state);
+    if (map.containsKey(state)) {
+      Data data = getInstanceData(state);
+      if (data.value != null && data.value is Map && (data.value as Map).containsKey(key)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   set(String? state, String key, dynamic value, [bool notifyDynamicPage = true]) {
