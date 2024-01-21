@@ -42,7 +42,7 @@
           "jsInvoke": "Account.js",
           "args": {
             "includeStateData": true,
-            "switch": "GetCode"
+            "method": "GetCode"
           }
         },
         "name": "EmailValue",
@@ -109,7 +109,7 @@
           "jsInvoke": "Account.js",
           "args": {
             "includeAll": true,
-            "switch": "GetCode"
+            "method": "GetCode"
           }
         },
         "child": {

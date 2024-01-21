@@ -85,7 +85,7 @@
           "args": {
             "includeStateData": true,
             "includePageArgument": true,
-            "switch": "RequestConfirmCode"
+            "method": "RequestConfirmCode"
           }
         },
         "child": {

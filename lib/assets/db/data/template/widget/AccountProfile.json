@@ -10,7 +10,7 @@
           "jsInvoke": "Account.js",
           "args": {
             "includeAll": true,
-            "switch": "showGallery"
+            "method": "showGallery"
           }
         },
         "customBorder": {
@@ -62,7 +62,7 @@
             "jsInvoke": "Account.js",
             "args": {
               "includeAll": true,
-              "switch": "setNewName"
+              "method": "setNewName"
             }
           }
         }
@@ -151,7 +151,7 @@
                 "jsInvoke": "Account.js",
                 "args": {
                   "includeAll": true,
-                  "switch": "Logout"
+                  "method": "Logout"
                 }
               }
             }
@@ -187,7 +187,7 @@
                 "jsInvoke": "Account.js",
                 "args": {
                   "includeAll": true,
-                  "switch": "RemoveLogout"
+                  "method": "RemoveLogout"
                 }
               }
             }

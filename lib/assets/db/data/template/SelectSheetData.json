@@ -16,7 +16,7 @@
             "jsRouter": "SelectSheetData.ai.js",
             "args": {
               "selectedIndex": "${iteratorIndex}",
-              "switch": "onSelect"
+              "method": "onSelect"
             },
             "currentRenderTemplateList": [
               "args.selectedIndex"

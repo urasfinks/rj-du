@@ -20,19 +20,19 @@
               "onSubmit": {
                 "jsRouter": "SelectSheetData.ai.js",
                 "args": {
-                  "switch": "onSubmit"
+                  "method": "onSubmit"
                 }
               },
               "onChanged": {
                 "jsRouter": "SelectSheetData.ai.js",
                 "args": {
-                  "switch": "find"
+                  "method": "find"
                 }
               },
               "onReset": {
                 "jsRouter": "SelectSheetData.ai.js",
                 "args": {
-                  "switch": "find"
+                  "method": "find"
                 }
               }
             }
@@ -60,7 +60,7 @@
                   "jsRouter": "SelectSheetData.ai.js",
                   "args": {
                     "selectedIndex": "${iteratorIndex}",
-                    "switch": "onSelect"
+                    "method": "onSelect"
                   },
                   "currentRenderTemplateList": [
                     "args.selectedIndex"
@@ -86,7 +86,7 @@
                     "onPressed": {
                       "jsRouter": "SelectSheetData.ai.js",
                       "args": {
-                        "switch": "onCreateNew"
+                        "method": "onCreateNew"
                       }
                     },
                     "child": {

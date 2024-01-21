@@ -19,7 +19,7 @@ class DeepLink {
       Map<String, dynamic> args = {};
       args["deeplink"] = listArg.removeAt(0);
       args["version"] = listArg.removeAt(0);
-      args["switch"] = listArg.removeAt(0);
+      args["method"] = listArg.removeAt(0);
       for (int i = 0; i < listArg.length; i += 2) {
         String key = listArg[i];
         String value = listArg[i + 1];

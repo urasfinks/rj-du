@@ -122,7 +122,7 @@ class DynamicInvoke {
           try {
             if(bridge != undefined){
               bridge.scriptUuid = '$scriptUuid';
-              bridge.args = {"switch":"runtime"};
+              bridge.args = {"method":"runtime"};
             }
             $jsCode
           } catch(e) {
