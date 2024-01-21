@@ -49,9 +49,13 @@ class Util {
     developer.log("[${DateTime.now()}] ${mes.toString()}");
   }
 
-  static void p(dynamic mes) {
+  static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
     if (kDebugMode && GlobalSettings().debug) {
-      print("[${DateTime.now()}] $mes");
+      if (stack) {
+        printCurrentStack("[${DateTime.now()}] $mes", maxFrames, false);
+      } else {
+        print("[${DateTime.now()}] $mes");
+      }
     }
   }
 
@@ -245,12 +249,12 @@ class Util {
     }
   }
 
-  static void printCurrentStack(String label) {
+  static void printCurrentStack(String label, [int maxFrames = 50, extraLabel = true]) {
     debugPrintStack(
       stackTrace: StackTrace.current,
-      maxFrames: 50,
+      maxFrames: maxFrames,
       //label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
-      label: ":::PrintCurrentStack::: $label",
+      label: extraLabel ? ":::PrintCurrentStack::: $label" : label,
     );
   }
 
