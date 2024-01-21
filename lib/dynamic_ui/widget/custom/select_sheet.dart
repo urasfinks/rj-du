@@ -6,13 +6,24 @@ class SelectSheet extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String placeholder = parsedJson["placeholder"] ?? "Найти";
-    bool extend = parsedJson["extend"] ?? false;
+
     String stateKey = parsedJson["stateKey"];
     String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
     String state = parsedJson["state"] ?? "main";
     int? selectedIndex = parsedJson["selectedIndex"];
-    dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey,
-        selectedIndex == null ? {"label": defaultPlaceholder} : parsedJson["children"][selectedIndex], false);
+    if (!dynamicUIBuilderContext.dynamicPage.stateData.contains(state)) {
+      dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey,
+          selectedIndex == null ? {"label": defaultPlaceholder} : parsedJson["children"][selectedIndex], false);
+    }
+    //Если кол-во элементов больше текущего значения, автоматически будет выбран шаблон с поисковиком
+    int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 4;
+
+    String curTemplate = "SelectSheetData.json";
+    if (parsedJson["extend"] ?? false) {
+      curTemplate = "SelectSheetDataSearchExtend.json";
+    } else if (parsedJson["children"].length >= minCountItemForSearch) {
+      curTemplate = "SelectSheetDataSearch.json";
+    }
     return render({
       "flutterType": "InkWell",
       "onTap": {
@@ -21,7 +32,7 @@ class SelectSheet extends AbstractWidget {
           "type": "bottomSheet",
           "height": 360,
           "link": {
-            "template": extend ? "SelectSheetDataExtend.json" : "SelectSheetData.json",
+            "template": curTemplate,
           },
           "placeholder": placeholder,
           "onPop": {

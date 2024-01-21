@@ -1,0 +1,80 @@
+{
+  "flutterType": "Container",
+  "child": {
+    "flutterType": "Column",
+    "mainAxisSize": "max",
+    "children": [
+      {
+        "flutterType": "Padding",
+        "padding": "20",
+        "child": {
+          "flutterType": "Template",
+          "src": "Input",
+          "context": {
+            "key": "SelectSheetDataContext",
+            "data": {
+              "data": "",
+              "state": "SelectSheetDataState",
+              "key": "SelectSheetDataKey",
+              "placeholder": "${pageArgs(placeholder,)}",
+              "onSubmit": {
+                "jsRouter": "SelectSheetData.ai.js",
+                "args": {
+                  "switch": "onSubmit"
+                }
+              },
+              "onChanged": {
+                "jsRouter": "SelectSheetData.ai.js",
+                "args": {
+                  "switch": "find"
+                }
+              },
+              "onReset": {
+                "jsRouter": "SelectSheetData.ai.js",
+                "args": {
+                  "switch": "find"
+                }
+              }
+            }
+          },
+          "currentRenderTemplateList": [
+            "context.data.placeholder"
+          ]
+        }
+      },
+      {
+        "flutterType": "Expanded",
+        "child": {
+          "flutterType": "CustomScrollView",
+          "onStateDataUpdate": true,
+          "padding": "20,0,20,20",
+          "children": [
+            {
+              "ChildrenExtension": "Iterator",
+              "dataType": "state",
+              "key": "listItem",
+              "theme": "ButtonGroup",
+              "extendDataElement": {
+                "templateWidgetSrc": "IteratorButton",
+                "onTap": {
+                  "jsRouter": "SelectSheetData.ai.js",
+                  "args": {
+                    "selectedIndex": "${iteratorIndex}",
+                    "switch": "onSelect"
+                  },
+                  "currentRenderTemplateList": [
+                    "args.selectedIndex"
+                  ]
+                }
+              },
+              "ifDataEmpty": {
+                "flutterType": "Text",
+                "label": "Ничего не нашлось :("
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
