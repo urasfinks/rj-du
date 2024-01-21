@@ -103,14 +103,12 @@ class DynamicInvoke {
         safeEval("${assetsDataItem.data}\nbridge.debug = ${GlobalSettings().debug ? 'true' : 'false'};", "global.js");
       }
     }
-    for (AssetsDataItem assetsDataItem in AssetsData().list) {
+    for (AssetsDataItem assetsDataItem in AssetsData().getJsAutoImportSorted()) {
       if (assetsDataItem.type == DataType.js && assetsDataItem.name.endsWith(".ai.js")) {
         safeEval(assetsDataItem.data, assetsDataItem.name);
         DataSource().subscribeUniqueContent(assetsDataItem.name, (uuid, data) {
-          // Сомнительная конечно штука, сравнивать с первоисточником
-          // Какие подводные камни - пришла ревизия и поняли, что она не очень, пробуем откатить на первичное значение
-          // А откат не произойд]т
           if (data != null && data.containsKey("js") && data["js"] != assetsDataItem.data) {
+            assetsDataItem.data = data["js"]; //Что бы не было проблем
             safeEval(data["js"], uuid);
           }
         }, false, assetsDataItem.data);

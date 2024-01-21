@@ -24,6 +24,7 @@ class AssetsData {
     assets = json.decode(await rootBundle.loadString("AssetManifest.json"));
     await loadAssetsData("packages/rjdu/lib/assets/db/data/");
     await loadAssetsData("assets/db/data/");
+    getJsAutoImportSorted();
 
     //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
     Map<String, String> rjduIteratorTheme = await loadAssetByMask("systemData/iteratorTheme", "", "packages/rjdu/lib/");
@@ -46,6 +47,41 @@ class AssetsData {
       }
     }
     Util.p("AssetsData.loadAssetsData($path) $list");
+  }
+
+  List<AssetsDataItem> getJsAutoImportSorted() {
+    List<AssetsDataItem> result = [];
+    List<String>? seqAiJson;
+    for (AssetsDataItem assetsDataItem in list) {
+      if (assetsDataItem.name == "seq.ai.json") {
+        seqAiJson = Util.castListDynamicToString(json.decode(assetsDataItem.data));
+        break;
+      }
+    }
+    if (seqAiJson != null && seqAiJson.isNotEmpty) {
+      for (String seqAiName in seqAiJson) {
+        for (AssetsDataItem assetsDataItem in list) {
+          if (assetsDataItem.name == seqAiName && assetsDataItem.type == DataType.js) {
+            result.add(assetsDataItem);
+            break;
+          }
+        }
+      }
+      for (AssetsDataItem assetsDataItem in list) {
+        if (!seqAiJson.contains(assetsDataItem.name) &&
+            assetsDataItem.name.endsWith("ai.js") &&
+            assetsDataItem.type == DataType.js) {
+          result.add(assetsDataItem);
+        }
+      }
+    } else {
+      for (AssetsDataItem assetsDataItem in list) {
+        if (assetsDataItem.name.endsWith("ai.js") && assetsDataItem.type == DataType.js) {
+          result.add(assetsDataItem);
+        }
+      }
+    }
+    return result;
   }
 
   Future<Map<String, String>> loadAssetByMask(String folder, String mask, [String preFolder = ""]) async {
