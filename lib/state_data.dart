@@ -54,13 +54,20 @@ class StateData {
     return false;
   }
 
-  void set(String? state, String key, dynamic value, [bool notifyDynamicPage = true]) {
+  bool contains(String? state) {
+    state ??= "main";
+    return map.containsKey(state);
+  }
+
+  set(String? state, String key, dynamic value, [bool notifyDynamicPage = true]) {
     state ??= "main";
     Data data = getInstanceData(state);
 
-    if (data.value[key] == null || data.value[key] != value) {
+    //Если не привести к toString - в случае объектов ссылки будут разные и всегда объекты будут разные
+    if (data.value[key] == null || data.value[key].toString() != value.toString()) {
       data.value[key] = value;
-      Util.p("StateData.set(state:$state, key:$key, value: $value, notify: $notifyDynamicPage)");
+      Util.p(
+          "StateData.set() state:$state; key:$key; value: $value; last_value: ${data.value[key]}; notify: $notifyDynamicPage;");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
@@ -84,7 +91,7 @@ class StateData {
       }
     }
     if (change) {
-      Util.p("StateData.setMap(state:$state, state: $state; data: ${data.value}, notify: $notifyDynamicPage)");
+      Util.p("StateData.setMap() state:$state; state: $state; data: ${data.value}; notify: $notifyDynamicPage;");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
