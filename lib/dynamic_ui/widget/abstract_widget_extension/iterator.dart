@@ -37,6 +37,11 @@ class Iterator extends AbstractExtension {
       List<dynamic> list = listData as List<dynamic>;
       int counter = 0;
       for (Map<String, dynamic> data in list) {
+        //Расширение данных из родителя
+        if (parsedJson.containsKey("extendDataElement")) {
+          data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
+        }
+
         Map<String, dynamic> newUIElement = {};
         String seqTemplate;
         if (data.containsKey("templateCustom")) {
@@ -52,32 +57,30 @@ class Iterator extends AbstractExtension {
         }
         //Если не обернуть в свой объект, renderTemplateList применится только к первому
         //Все остальные потеряют первичный шаблон, так как он будет уже заменён на значение
-        newUIElement.addAll(Util.getMutableMap(data[seqTemplate] ??
-            data["template"] ??
-            parsedJson[seqTemplate] ??
-            parsedJson["template"])); //Шаблон можно заложить в данные
+        Map<String, dynamic>? templateElement =
+            data[seqTemplate] ?? data["template"] ?? parsedJson[seqTemplate] ?? parsedJson["template"];
 
-        //Расширение данных из родителя
-        if (parsedJson.containsKey("extendDataElement")) {
-          data.addAll(Util.getMutableMap(parsedJson["extendDataElement"]));
-        }
         data["iteratorIndex"] = counter;
-        newUIElement["context"] = {
-          "key": "Iterator$counter",
-          "data": Util.renderTemplate(data, RenderTemplateType.current, dynamicUIBuilderContext)
-        };
-        if (newUIElement["context"]["data"].containsKey("visibility")) {
-          bool visibility = TypeParser.parseBool(newUIElement["context"]["data"]["visibility"]) ?? true;
-          if (visibility == false) {
-            continue;
+        if (templateElement != null) {
+          newUIElement.addAll(Util.getMutableMap(templateElement)); //Шаблон можно заложить в данные
+          newUIElement["context"] = {
+            "key": "Iterator$counter",
+            "data": Util.renderTemplate(data, RenderTemplateType.current, dynamicUIBuilderContext)
+          };
+          if (newUIElement["context"]["data"].containsKey("visibility")) {
+            bool visibility = TypeParser.parseBool(newUIElement["context"]["data"]["visibility"]) ?? true;
+            if (visibility == false) {
+              continue;
+            }
           }
+          result.add(newUIElement);
+        } else {
+          result.add(data);
         }
-
         if (data.containsKey("uuid_data")) {
           dynamicUIBuilderContext.dynamicPage.subscribeToReload(SubscribeReloadGroup.uuid, data["uuid_data"]);
         }
         add = true;
-        result.add(newUIElement);
         if (templateDivider && list.last != data) {
           result.add(parsedJson["templateDivider"]);
         }
@@ -88,7 +91,7 @@ class Iterator extends AbstractExtension {
     // Для того, что бы отоброзить пустой блок, надо что бы listData хотябы существовало, что бы можно было сказать
     // что данные пустые, иначе при инициализации будут моргания
     if (!add && parsedJson.containsKey("ifDataEmpty") && listData != null) {
-        result.add(parsedJson["ifDataEmpty"]);
+      result.add(parsedJson["ifDataEmpty"]);
     }
   }
 }

@@ -11,9 +11,15 @@ class SelectSheet extends AbstractWidget {
     String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
     String state = parsedJson["state"] ?? "main";
     int? selectedIndex = parsedJson["selectedIndex"];
+    List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
+    Map<String, dynamic> selectedObject = {
+      "label": defaultPlaceholder,
+    };
     if (!dynamicUIBuilderContext.dynamicPage.stateData.contains(state, stateKey)) {
-      dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey,
-          selectedIndex == null ? {"label": defaultPlaceholder} : parsedJson["children"][selectedIndex], false);
+      if (selectedIndex != null && children.length > selectedIndex) {
+        selectedObject = children[selectedIndex];
+      }
+      dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey, selectedObject, false);
     }
     //Если кол-во элементов больше текущего значения, автоматически будет выбран шаблон с поисковиком
     int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 4;
@@ -21,7 +27,7 @@ class SelectSheet extends AbstractWidget {
     String curTemplate = "SelectSheetData.json";
     if (parsedJson["extend"] ?? false) {
       curTemplate = "SelectSheetDataSearchExtend.json";
-    } else if (parsedJson["children"].length >= minCountItemForSearch) {
+    } else if (children.length >= minCountItemForSearch) {
       curTemplate = "SelectSheetDataSearch.json";
     }
     return render({
@@ -43,15 +49,15 @@ class SelectSheet extends AbstractWidget {
             "jsRouter": "SelectSheetData.ai.js",
             "args": {
               "method": "constructor",
-              "listItem": parsedJson["children"],
+              "listItem": children,
             }
           }
         }
       },
       "child": {
         "flutterType": "Container",
-        "onStateDataUpdate": true,
-        "onStateDataUpdateKey": state,
+        //"onStateDataUpdate": true,
+        //"onStateDataUpdateKey": state,
         "child": {
           "flutterType": "Template",
           "src": "SelectSheet",
