@@ -182,7 +182,7 @@ class DynamicInvoke {
     dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
     _eval2(
         "Router:$uuid",
-        "bridge.runRouterMap('$uuid');",
+        "bridge.runRouter('$uuid');",
         {
           "args": args,
           "context": dynamicUIBuilderContext.data,
