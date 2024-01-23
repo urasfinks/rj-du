@@ -91,7 +91,7 @@
                     },
                     "child": {
                       "flutterType": "Text",
-                      "label": "Добавить группу",
+                      "label": "Добавить",
                       "style": {
                         "flutterType": "TextStyle",
                         "fontSize": 14,

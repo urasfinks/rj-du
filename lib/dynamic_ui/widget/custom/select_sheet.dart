@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 class SelectSheet extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    String placeholder = parsedJson["placeholder"] ?? "Найти";
-
+    bool extend = parsedJson["extend"] ?? false;
     String stateKey = parsedJson["stateKey"];
-    String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
     String state = parsedJson["state"] ?? "main";
     int? selectedIndex = parsedJson["selectedIndex"];
-    List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
+    List children = updateList(parsedJson["children"] ?? [], dynamicUIBuilderContext);
+    String placeholder = parsedJson["placeholder"] ?? "Найти";
+    if (children.isEmpty && extend) {
+      placeholder = parsedJson["placeholderAdd"] ?? "Новое наименование";
+    }
+    String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
     Map<String, dynamic> selectedObject = {
       "label": defaultPlaceholder,
     };
@@ -25,7 +28,7 @@ class SelectSheet extends AbstractWidget {
     int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 7;
 
     String curTemplate = "SelectSheetData.json";
-    if (parsedJson["extend"] ?? false) {
+    if (extend) {
       curTemplate = "SelectSheetDataSearchExtend.json";
     } else if (children.length >= minCountItemForSearch) {
       curTemplate = "SelectSheetDataSearch.json";
