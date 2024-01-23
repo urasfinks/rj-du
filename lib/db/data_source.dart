@@ -35,7 +35,8 @@ class DataSource {
   Map<String, List<Function(String uuid, Map<String, dynamic>? data)>> listener = {};
 
   init() async {
-    Util.p("DataSource.init() ${GlobalSettings().version}; updateApplication = ${Storage().isUpdateApplicationVersion()}");
+    Util.p(
+        "DataSource.init() ${GlobalSettings().version}; updateApplication = ${Storage().isUpdateApplicationVersion()}");
     final directory = await getApplicationDocumentsDirectory();
     db = await openDatabase("${directory.path}/mister-craft-1.sqlite3", version: 1);
     if (Storage().isUpdateApplicationVersion()) {
@@ -47,7 +48,14 @@ class DataSource {
     }
     isInit = true;
     for (AssetsDataItem assetsDataItem in AssetsData().list) {
-      await DataSource().set(assetsDataItem.name, assetsDataItem.data, assetsDataItem.type, null, null, GlobalSettings().debug);
+      await DataSource().set(
+        assetsDataItem.name,
+        assetsDataItem.data,
+        assetsDataItem.type,
+        null,
+        null,
+        GlobalSettings().debug,
+      );
     }
     Util.p("DataSource().set() ${AssetsData().list.length} assets");
     flushQueue();
@@ -96,7 +104,8 @@ class DataSource {
     Util.p("flushQueue complete: $count");
   }
 
-  set(String uuid, dynamic value, DataType type, [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
+  set(String uuid, dynamic value, DataType type,
+      [String? key, String? parent, bool updateIfExist = true, String? meta]) async {
     Data data = Data(uuid, value, type, parent);
     data.key = key;
     data.meta = meta;
@@ -461,7 +470,8 @@ class DataSource {
     }
   }
 
-  void subscribeUniqueContent(String uuid, Function(String uuid, Map<String, dynamic>? data) callback, [bool initGet = true, dynamic lastContent]) {
+  void subscribeUniqueContent(String uuid, Function(String uuid, Map<String, dynamic>? data) callback,
+      [bool initGet = true, dynamic lastContent]) {
     subscribe(uuid, (uuid, data) {
       if (lastContent.toString() != data.toString()) {
         lastContent = data;
