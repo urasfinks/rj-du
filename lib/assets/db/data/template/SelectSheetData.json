@@ -3,7 +3,7 @@
   "padding": 20,
   "child": {
     "flutterType": "CustomScrollView",
-    "onStateDataUpdate": true,
+    "isOpacityBottomNavigationBar": false,
     "children": [
       {
         "ChildrenExtension": "Iterator",
