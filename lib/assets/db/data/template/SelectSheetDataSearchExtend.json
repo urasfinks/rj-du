@@ -73,7 +73,7 @@
                 "children": [
                   {
                     "flutterType": "Text",
-                    "label": "Ничего не нашлось :(\nДобавить новую группу \"${state(SelectSheetDataState,SelectSheetDataKey)}\" ?"
+                    "label": "Ничего не нашлось :(\nДобавить \"${state(SelectSheetDataState,SelectSheetDataKey)}\" ?"
                   },
                   {
                     "flutterType": "SizedBox",
