@@ -107,10 +107,15 @@ class CustomScrollViewWidget extends AbstractWidget {
     double extraBottomOffset = TypeParser.parseDouble(
       getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
     )!;
-    //Всегда добавляем с низу дополнительный блок из-за того, что прозрачный bottomBar
-    list.add(SizedBox(
-      height: GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
-    ));
+    bool isOpacityBottomNavigationBar = TypeParser.parseBool(
+      getValue(parsedJson, "isOpacityBottomNavigationBar", true, dynamicUIBuilderContext),
+    )!;
+    if (isOpacityBottomNavigationBar) {
+      //Всегда добавляем с низу дополнительный блок из-за того, что прозрачный bottomBar
+      list.add(SizedBox(
+        height: GlobalSettings().bottomNavigationBarHeight + extraBottomOffset,
+      ));
+    }
 
     if (parsedJson.containsKey("startFill")) {
       // SliverFillRemaining
