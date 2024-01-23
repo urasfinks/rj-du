@@ -22,7 +22,7 @@ class SelectSheet extends AbstractWidget {
       dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey, selectedObject, false);
     }
     //Если кол-во элементов больше текущего значения, автоматически будет выбран шаблон с поисковиком
-    int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 4;
+    int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 7;
 
     String curTemplate = "SelectSheetData.json";
     if (parsedJson["extend"] ?? false) {
