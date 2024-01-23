@@ -47,17 +47,20 @@ class DataSource {
       Util.p("Migration complete");
     }
     isInit = true;
-    for (AssetsDataItem assetsDataItem in AssetsData().list) {
-      await DataSource().set(
-        assetsDataItem.name,
-        assetsDataItem.data,
-        assetsDataItem.type,
-        null,
-        null,
-        GlobalSettings().debug,
-      );
+    //Если обновилось приложение или мы в режиме отладки - синхронизируем содержимое assets в локальной БД
+    if (Storage().isUpdateApplicationVersion() || GlobalSettings().debug) {
+      for (AssetsDataItem assetsDataItem in AssetsData().list) {
+        await DataSource().set(
+          assetsDataItem.name,
+          assetsDataItem.data,
+          assetsDataItem.type,
+          null,
+          null,
+          true,
+        );
+      }
+      Util.p("DataSource().set() ${AssetsData().list.length} assets");
     }
-    Util.p("DataSource().set() ${AssetsData().list.length} assets");
     flushQueue();
     if (GlobalSettings().debug && GlobalSettings().debugSql.isNotEmpty) {
       for (String sql in GlobalSettings().debugSql) {
