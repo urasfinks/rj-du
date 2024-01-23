@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/util.dart';
 
-//# 16.09.2023 v10 - были исправления API сервера на синхронизацию
+// 16.09.2023 v10 - Исправления API сервера на синхронизацию
+// 23.01.2024 v15  Миграция Flutter 3.16 -> 3.18 (+jsRouter)
 
 class GlobalSettings {
-  bool debug = true;
+  bool debug = false;
   List<String> debugSql = [
     //"update data set is_remove_data = 1 where key_data = 'new_game' and is_remove_data = 0",
     //"SELECT type_data, max(revision_data) as max FRO:M data WHERE is_remove_data = 0 GROUP BY type_data",
@@ -19,10 +20,10 @@ class GlobalSettings {
     //"select uuid_data, revision_data, lazy_sync_data from data where type_data = 'blob'"
   ];
   //String version = "v${Util.getTimestamp()}";
-  String version = "v14";
+  String version = "v15";
   bool clearStorageOnUpdateVersion = false;
-  String host = "https://e-humidor.ru:8453";
-  String ws = "https://e-humidor.ru:8453";
+  String host = "";
+  String ws = "";
   double appBarHeight = 56.0;
   double bottomNavigationBarHeight = 56.0;
   String orientation = ""; //landscape/portrait
