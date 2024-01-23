@@ -34,9 +34,11 @@ class InkWellWidget extends AbstractWidget {
       onTap: () {
         click(parsedJson, dynamicUIBuilderContext, "onTap");
       },
-      onLongPress: () {
-        click(parsedJson, dynamicUIBuilderContext, "onLongPress");
-      },
+      onLongPress: parsedJson.containsKey("onLongPress")
+          ? () {
+              click(parsedJson, dynamicUIBuilderContext, "onLongPress");
+            }
+          : null,
     );
   }
 }
