@@ -84,6 +84,7 @@ import 'package:rjdu/dynamic_ui/widget_property/outline_input_border_property.da
 import 'package:rjdu/dynamic_ui/widget_property/rounded_rectangle_border_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/text_style_property.dart';
 import 'package:rjdu/dynamic_ui/widget_property/underline_input_border_property.dart';
+import 'package:rjdu/util/reference.dart';
 import '../util.dart';
 import '../util/template.dart';
 import 'widget/slidable_widget.dart';
@@ -184,8 +185,7 @@ class DynamicUI {
     "SelectSheet": SelectSheet().get
   };
 
-  static DynamicUIBuilderContext changeContext(Map<String, dynamic> parsedJson,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static DynamicUIBuilderContext changeContext(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (parsedJson.containsKey("context")) {
       return dynamicUIBuilderContext.cloneWithNewData(
         Util.convertMap(parsedJson["context"]["data"] ?? {}),
@@ -195,10 +195,12 @@ class DynamicUI {
     return dynamicUIBuilderContext;
   }
 
-  static dynamic render(Map<String, dynamic> parsedJson,
-      String? key,
-      dynamic defaultValue,
-      DynamicUIBuilderContext dynamicUIBuilderContext,) {
+  static dynamic render(
+    Map<String, dynamic> parsedJson,
+    String? key,
+    dynamic defaultValue,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+  ) {
     try {
       if (parsedJson.isEmpty) {
         return defaultValue;
@@ -216,16 +218,13 @@ class DynamicUI {
           String keyMapLink = "state${Util.capitalize(state)}";
           if (selector.containsKey("link")) {
             Map<String, dynamic> mapLink = selector["link"] as Map<String, dynamic>;
-            mapLink[keyMapLink] = dynamicUIBuilderContext.dynamicPage.stateData
-                .getInstanceData(state)
-                .uuid;
+            mapLink[keyMapLink] = dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid;
           } else {
-            selector["link"] = {keyMapLink: dynamicUIBuilderContext.dynamicPage.stateData
-                .getInstanceData(state)
-                .uuid};
+            selector["link"] = {keyMapLink: dynamicUIBuilderContext.dynamicPage.stateData.getInstanceData(state).uuid};
           }
           selector.remove("onStateDataUpdate");
         }
+        Reference.replaceReferenceList(selector, dynamicUIBuilderContext);
 
         if (selector["flutterType"] != "Notify" && selector.containsKey("link")) {
           // Selector это наш шаблон, но мы хотим сделать его зависимым от link данных в DataSource
@@ -236,7 +235,7 @@ class DynamicUI {
           cloneTemplate.remove("context");
 
           Map<String, dynamic> contextData =
-          selector.containsKey("context") ? selector["context"] : {"key": "DynamicUITransform", "data": {}};
+              selector.containsKey("context") ? selector["context"] : {"key": "DynamicUITransform", "data": {}};
           contextData["data"]["template"] = cloneTemplate;
 
           Map<String, dynamic> renderData = {
@@ -248,9 +247,7 @@ class DynamicUI {
         } else {
           if (selector.containsKey(RenderTemplateType.current.getKey())) {
             try {
-              selector =
-                  Util.renderTemplate(
-                      Util.getMutableMap(selector), RenderTemplateType.current, dynamicUIBuilderContext);
+              selector = Util.renderTemplate(Util.getMutableMap(selector), RenderTemplateType.current, dynamicUIBuilderContext);
             } catch (error, stackTrace) {
               Util.printStackTrace("renderTemplate $selector", error, stackTrace);
             }
@@ -268,8 +265,7 @@ class DynamicUI {
     }
   }
 
-  static List<Widget> renderList(Map<String, dynamic> parsedJson, String key,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<Widget> renderList(Map<String, dynamic> parsedJson, String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     List<Widget> resultList = [];
     List list = parsedJson[key] ?? [];
     if (list.runtimeType.toString().contains("List")) {
