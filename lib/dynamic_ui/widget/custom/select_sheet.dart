@@ -8,8 +8,19 @@ class SelectSheet extends AbstractWidget {
     bool extend = parsedJson["extend"] ?? false;
     String stateKey = parsedJson["stateKey"];
     String state = parsedJson["state"] ?? "main";
-    int? selectedIndex = parsedJson["selectedIndex"];
+
     List children = updateList(parsedJson["children"] ?? [], dynamicUIBuilderContext);
+    int? selectedIndex = parsedJson["selectedIndex"];
+    if (selectedIndex == null && parsedJson.containsKey("selectedLabel")) {
+      String selectedLabel = parsedJson["selectedLabel"];
+      for (int i = 0; i < children.length; i++) {
+        if (children[i]["label"] == selectedLabel) {
+          selectedIndex = i;
+          break;
+        }
+      }
+      selectedIndex ??= 0;
+    }
     String placeholder = parsedJson["placeholder"] ?? "Найти";
     if (children.isEmpty && extend) {
       placeholder = parsedJson["placeholderAdd"] ?? "Новое наименование";
