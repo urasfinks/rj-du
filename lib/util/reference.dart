@@ -1,3 +1,4 @@
+import '../db/data.dart';
 import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../util.dart';
 
@@ -9,6 +10,28 @@ class Reference {
       Selector? selector = Util.getSelector(arguments["selector"], ctx.dynamicPage.arguments, ctx);
       if (selector != null) {
         return selector.ref;
+      }
+    },
+    "state": (data, arguments, ctx, debug) {
+      Data d = ctx.dynamicPage.stateData.getInstanceData(arguments["state"]);
+      Selector? selector = Util.getSelector(arguments["selector"], d.value, ctx);
+      if (selector != null) {
+        return selector.ref;
+      }
+    },
+    "context": (data, arguments, ctx, debug) {
+      Selector? selector = Util.getSelector(arguments["selector"], ctx.data, ctx);
+      if (selector != null) {
+        return selector.ref;
+      }
+    },
+    "contextMap": (data, arguments, ctx, debug) {
+      if (ctx.dynamicPage.contextMap.containsKey(arguments["contextKey"])) {
+        DynamicUIBuilderContext dynamicUIBuilderContext = ctx.dynamicPage.contextMap[arguments["contextKey"]]!;
+        Selector? selector = Util.getSelector(arguments["selector"], dynamicUIBuilderContext.data, ctx);
+        if (selector != null) {
+          return selector.ref;
+        }
       }
     },
   };
