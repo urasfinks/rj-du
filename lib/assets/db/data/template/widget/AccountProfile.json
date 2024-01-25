@@ -67,7 +67,7 @@
           }
         }
       },
-      "childRenderTemplateList": [
+      "compileTemplateList": [
         "context.data.data"
       ]
     },
@@ -95,7 +95,7 @@
           "iconSrc": "mail_outline",
           "iconSize": 20,
           "templateWidgetSrc": "Text",
-          "currentRenderTemplateList": [
+          "compileTemplateList": [
             "label"
           ]
         },
@@ -103,7 +103,7 @@
           "label": "Всего загружено",
           "labelStatistic": "${state(main,countAllData)}",
           "templateWidgetSrc": "TextStatistic",
-          "currentRenderTemplateList": [
+          "compileTemplateList": [
             "labelStatistic"
           ]
         },
@@ -111,7 +111,7 @@
           "label": "Личная информация",
           "labelStatistic": "${state(main,countPersonData)}/${state(main,countNotSyncData)}",
           "templateWidgetSrc": "TextStatistic",
-          "currentRenderTemplateList": [
+          "compileTemplateList": [
             "labelStatistic"
           ]
         },
@@ -119,7 +119,7 @@
           "label": "Последняя синхронизация",
           "labelStatistic": "${storage(lastSync,0)|timeSoFar(dd.MM.yyyy HH:mm:ss)}",
           "templateWidgetSrc": "TextStatistic",
-          "currentRenderTemplateList": [
+          "compileTemplateList": [
             "labelStatistic"
           ]
         }

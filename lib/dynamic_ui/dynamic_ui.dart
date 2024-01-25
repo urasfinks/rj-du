@@ -205,14 +205,16 @@ class DynamicUI {
       if (parsedJson.isEmpty) {
         return defaultValue;
       }
-      //Родительская замена значений для дочерних элеметов
-      parsedJson = Util.renderTemplate(parsedJson, RenderTemplateType.child, dynamicUIBuilderContext);
       dynamicUIBuilderContext = changeContext(parsedJson, dynamicUIBuilderContext);
       if (parsedJson.containsKey("debug")) {
         Util.p("DEBUG RENDER (${dynamicUIBuilderContext.linkedNotify}): $parsedJson");
       }
       dynamic selector = (key == null ? parsedJson : ((parsedJson.containsKey(key)) ? parsedJson[key] : defaultValue));
       if (selector.runtimeType.toString().contains("Map<String,") && selector.containsKey("flutterType")) {
+        selector = Util.getMutableMap(selector);
+        Reference.compileReferenceList(selector, dynamicUIBuilderContext);
+        Template.compileTemplateList(selector, dynamicUIBuilderContext);
+
         if (selector.containsKey("onStateDataUpdate")) {
           String state = selector["onStateDataUpdateKey"] ?? selector["state"] ?? "main";
           String keyMapLink = "state${Util.capitalize(state)}";
@@ -224,7 +226,7 @@ class DynamicUI {
           }
           selector.remove("onStateDataUpdate");
         }
-        Reference.replaceReferenceList(selector, dynamicUIBuilderContext);
+
 
         if (selector["flutterType"] != "Notify" && selector.containsKey("link")) {
           // Selector это наш шаблон, но мы хотим сделать его зависимым от link данных в DataSource
@@ -245,13 +247,6 @@ class DynamicUI {
           };
           return render(renderData, null, defaultValue, dynamicUIBuilderContext);
         } else {
-          if (selector.containsKey(RenderTemplateType.current.getKey())) {
-            try {
-              selector = Util.renderTemplate(Util.getMutableMap(selector), RenderTemplateType.current, dynamicUIBuilderContext);
-            } catch (error, stackTrace) {
-              Util.printStackTrace("renderTemplate $selector", error, stackTrace);
-            }
-          }
           String flutterType = selector["flutterType"] as String;
           return ui.containsKey(flutterType)
               ? Function.apply(ui[flutterType]!, [selector, dynamicUIBuilderContext])

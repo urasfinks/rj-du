@@ -2,7 +2,7 @@
   "template": {
     "flutterType": "Template",
     "src": "${templateWidgetSrc}",
-    "currentRenderTemplateList": [
+    "compileTemplateList": [
       "src"
     ]
   },
@@ -12,13 +12,13 @@
     "child": {
       "flutterType": "InkWell",
       "onTap": "${onTap|jsonEncode()}",
-      "currentRenderTemplateList": [
+      "compileTemplateList": [
         "onTap"
       ],
       "child": {
         "flutterType": "Template",
         "src": "${templateWidgetSrc}",
-        "currentRenderTemplateList": [
+        "compileTemplateList": [
           "src"
         ]
       }
@@ -38,13 +38,13 @@
         "borderRadius": "0,0,10,10"
       },
       "onTap": "${onTap|jsonEncode()}",
-      "currentRenderTemplateList": [
+      "compileTemplateList": [
         "onTap"
       ],
       "child": {
         "flutterType": "Template",
         "src": "${templateWidgetSrc}",
-        "currentRenderTemplateList": [
+        "compileTemplateList": [
           "src"
         ]
       }
@@ -64,13 +64,13 @@
         "borderRadius": "10,10,0,0"
       },
       "onTap": "${onTap|jsonEncode()}",
-      "currentRenderTemplateList": [
+      "compileTemplateList": [
         "onTap"
       ],
       "child": {
         "flutterType": "Template",
         "src": "${templateWidgetSrc}",
-        "currentRenderTemplateList": [
+        "compileTemplateList": [
           "src"
         ]
       }
@@ -90,13 +90,13 @@
         "borderRadius": "10,10,10,10"
       },
       "onTap": "${onTap|jsonEncode()}",
-      "currentRenderTemplateList": [
+      "compileTemplateList": [
         "onTap"
       ],
       "child": {
         "flutterType": "Template",
         "src": "${templateWidgetSrc}",
-        "currentRenderTemplateList": [
+        "compileTemplateList": [
           "src"
         ]
       }

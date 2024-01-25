@@ -144,16 +144,17 @@ class DynamicInvoke {
     return sysInvoke(handler.toString().replaceAll("Handler", ""), inArgs, dynamicUIBuilderContext);
   }
 
-  dynamic sysInvoke(String handler, Map<String, dynamic> inArgs, DynamicUIBuilderContext dynamicUIBuilderContext,
+  dynamic sysInvoke(String handler, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool jsContext = false]) {
     try {
       if (this.handler.containsKey(handler)) {
-        dynamicUIBuilderContext = changeContext(inArgs, dynamicUIBuilderContext);
-        Map<String, dynamic> args =
-            Util.renderTemplate(Util.getMutableMap(inArgs), RenderTemplateType.current, dynamicUIBuilderContext);
+        args = Util.getMutableMap(args);
+        Template.compileTemplateList(args, dynamicUIBuilderContext);
+        dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
+
         String log = "";
         if (kDebugMode && GlobalSettings().debug) {
-          log = "DynamicInvoke.sysInvoke($handler, $inArgs)\ntemplate:\n";
+          log = "DynamicInvoke.sysInvoke($handler, $args)\ntemplate:\n";
           log += "${Util.jsonPretty(args)}\n";
           if (jsContext) {
             log += "from JsInvoke\n";
@@ -172,13 +173,14 @@ class DynamicInvoke {
         Util.p("DynamicInvoke.call() handler[$handler] undefined");
       }
     } catch (error, stackTrace) {
-      Util.printStackTrace("DynamicInvoke.sysInvoke($handler, $inArgs, $jsContext)", error, stackTrace);
+      Util.printStackTrace("DynamicInvoke.sysInvoke($handler, $args, $jsContext)", error, stackTrace);
     }
     return null;
   }
 
   void jsRouter(String uuid, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    args = Util.renderTemplate(args, RenderTemplateType.current, dynamicUIBuilderContext);
+    args = Util.getMutableMap(args);
+    Template.compileTemplateList(args, dynamicUIBuilderContext);
     dynamicUIBuilderContext = changeContext(args, dynamicUIBuilderContext);
     _eval2(
         "Router:$uuid",
@@ -202,7 +204,8 @@ class DynamicInvoke {
     bool includeStateData = false,
     bool includePageArgument = false,
   ]) {
-    args = Util.renderTemplate(args, RenderTemplateType.current, dynamicUIBuilderContext);
+    args = Util.getMutableMap(args);
+    Template.compileTemplateList(args, dynamicUIBuilderContext);
 
     if (args.containsKey("includeAll") && args["includeAll"] == true) {
       includeStateData = true;

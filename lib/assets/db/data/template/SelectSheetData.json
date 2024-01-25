@@ -18,7 +18,7 @@
               "selectedIndex": "${iteratorIndex}",
               "method": "onSelect"
             },
-            "currentRenderTemplateList": [
+            "compileTemplateList": [
               "args.selectedIndex"
             ]
           }

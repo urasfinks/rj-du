@@ -6,7 +6,7 @@
   "hideKeyboardOnEditingComplete": true,
   "setState": true,
   "state": "${state,main}",
-  "currentRenderTemplateList": [
+  "compileTemplateList": [
     "state"
   ],
   "keyboardType": "${keyboardType,text}",
@@ -58,7 +58,7 @@
           "${onReset|jsonEncode()}"
         ]
       },
-      "currentRenderTemplateList": [
+      "compileTemplateList": [
         "onPressed.list.0.args.controller",
         "onPressed.list.0.args.state",
         "onPressed.list.0.args.stateKey",

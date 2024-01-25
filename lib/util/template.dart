@@ -112,61 +112,19 @@ class Template {
     return cur;
   }
 
-  static Map<String, dynamic> renderTemplate(
-      Map<String, dynamic> parsedJson, RenderTemplateType type, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    // renderTemplate бывает:
-    //  родительский (childRenderTemplate) - это когда мы у ребёнка меняем данные из собственного контекста
-    //    надо понимать, что все заменённые данные будут использоваться в дочерних элементах как статическая информация
-    //    Если повешать на дочерний элемента Notify он при перерисовки не узнает что была замена значений
-    //  дочерний () - это замена непосредственно перед AbstractWidget.get()
-    //
-    String key = type.getKey();
+  static void compileTemplateList(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    String key = "compileTemplateList";
     if (parsedJson.containsKey(key)) {
-      Map<String, dynamic> newArgs = {};
-      newArgs.addAll(parsedJson);
-      for (String query in newArgs[key]) {
-        tmp(query, newArgs, dynamicUIBuilderContext);
-      }
-      return newArgs;
-    }
-    return parsedJson;
-  }
-
-  static void tmp(String path, Map data, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    List<String> exp = path.split(".");
-    dynamic cur = data;
-    dynamic curParent = data;
-    for (String key in exp) {
-      dynamic curKey = key;
-      if (cur.runtimeType == List) {
-        curKey = int.parse(key);
-      }
-      if (cur != null && cur[curKey] != null) {
-        curParent = cur;
-        cur = cur[curKey];
-      }
-    }
-    if (cur.runtimeType == String) {
-      try {
-        dynamic lastKey = exp[exp.length - 1];
-        if (curParent.runtimeType == List) {
-          lastKey = int.parse(lastKey);
+      for (String query in parsedJson[key]) {
+        Selector? selector = Util.getSelector(query, parsedJson, dynamicUIBuilderContext);
+        if (selector != null) {
+          if (selector.ref.runtimeType == String) {
+            selector.set(template(selector.ref, dynamicUIBuilderContext));
+          } else {
+            Util.printCurrentStack("Template.compileTemplateList() ref must be String, real: ${selector.ref}");
+          }
         }
-        curParent[lastKey] = template(cur, dynamicUIBuilderContext);
-      } catch (error, stackTrace) {
-        Util.printStackTrace("Template.tmp path:$path; curParent:$curParent; cur:$cur", error, stackTrace);
       }
-    } else {
-      Util.printCurrentStack("Template.tmp() cur must be String, real: $cur");
     }
-  }
-}
-
-enum RenderTemplateType {
-  child,
-  current;
-
-  String getKey() {
-    return "${name}RenderTemplateList";
   }
 }

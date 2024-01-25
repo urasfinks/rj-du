@@ -37,14 +37,6 @@ class Util {
     return Template.template(template, dynamicUIBuilderContext, autoEscape, debug);
   }
 
-  static Map<String, dynamic> renderTemplate(
-    Map<String, dynamic> args,
-    RenderTemplateType renderTemplateType,
-    DynamicUIBuilderContext dynamicUIBuilderContext,
-  ) {
-    return Template.renderTemplate(args, renderTemplateType, dynamicUIBuilderContext);
-  }
-
   static void log(dynamic mes) {
     developer.log("[${DateTime.now()}] $mes");
   }
@@ -260,5 +252,46 @@ class Util {
 
   static List<String>? castListDynamicToString(dynamic list) {
     return (list as List)?.map((item) => item as String)?.toList();
+  }
+
+  static Selector? getSelector(String path, Map data, DynamicUIBuilderContext dynamicUIBuilderContext) {
+    List<String> exp = path.split(".");
+    Selector selector = Selector();
+    selector.ref = data;
+    selector.parent = data;
+    for (String key in exp) {
+      dynamic curKey = key;
+      if (selector.ref.runtimeType == List) {
+        curKey = int.parse(key);
+      }
+      if (selector.ref != null && selector.ref[curKey] != null) {
+        selector.parent = selector.ref;
+        selector.ref = selector.ref[curKey];
+      }
+    }
+    try {
+      selector.key = exp[exp.length - 1];
+      if (selector.parent.runtimeType == List) {
+        selector.key = int.parse(selector.key);
+      }
+      return selector;
+    } catch (error, stackTrace) {
+      Util.printStackTrace("Reference.get exp: $exp; selectorReference: $selector;", error, stackTrace);
+    }
+  }
+}
+
+class Selector {
+  dynamic parent;
+  dynamic key;
+  dynamic ref;
+
+  set(dynamic value) {
+    parent[key] = value;
+  }
+
+  @override
+  String toString() {
+    return 'Selector{parent: $parent, key: $key, ref: $ref}';
   }
 }

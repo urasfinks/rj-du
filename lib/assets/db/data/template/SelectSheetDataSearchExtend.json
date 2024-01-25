@@ -37,7 +37,7 @@
               }
             }
           },
-          "currentRenderTemplateList": [
+          "compileTemplateList": [
             "context.data.placeholder"
           ]
         }
@@ -63,7 +63,7 @@
                     "selectedIndex": "${iteratorIndex}",
                     "method": "onSelect"
                   },
-                  "currentRenderTemplateList": [
+                  "compileTemplateList": [
                     "args.selectedIndex"
                   ]
                 }

@@ -11,8 +11,7 @@ class Iterator extends AbstractExtension {
     //"ButtonGroup": ButtonGroup().getTheme()
   };
 
-  static void extend(
-      Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
+  static void extend(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
     String dataType = parsedJson["dataType"];
     dynamic listData;
     switch (dataType) {
@@ -55,17 +54,19 @@ class Iterator extends AbstractExtension {
         } else {
           seqTemplate = "templateMiddle";
         }
-        //Если не обернуть в свой объект, renderTemplateList применится только к первому
-        //Все остальные потеряют первичный шаблон, так как он будет уже заменён на значение
+
         Map<String, dynamic>? templateElement =
             data[seqTemplate] ?? data["template"] ?? parsedJson[seqTemplate] ?? parsedJson["template"];
 
         data["iteratorIndex"] = counter;
         if (templateElement != null) {
+          //Если не обернуть в свой объект, compileTemplateList применится только к первому
+          //Все остальные потеряют первичный шаблон, так как он будет уже заменён на значение
           newUIElement.addAll(Util.getMutableMap(templateElement)); //Шаблон можно заложить в данные
+          Template.compileTemplateList(data, dynamicUIBuilderContext);
           newUIElement["context"] = {
             "key": "Iterator$counter",
-            "data": Util.renderTemplate(data, RenderTemplateType.current, dynamicUIBuilderContext)
+            "data": data,
           };
           if (newUIElement["context"]["data"].containsKey("visibility")) {
             bool visibility = TypeParser.parseBool(newUIElement["context"]["data"]["visibility"]) ?? true;

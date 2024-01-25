@@ -81,7 +81,7 @@ class SelectSheet extends AbstractWidget {
               "label": "\${state($state,$stateKey.label)}",
             }
           },
-          "currentRenderTemplateList": ["context.data.label"]
+          "compileTemplateList": ["context.data.label"]
         }
       }
     }, null, const Text("Error SelectSheet"), dynamicUIBuilderContext);
