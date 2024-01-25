@@ -278,6 +278,7 @@ class Util {
     } catch (error, stackTrace) {
       Util.printStackTrace("Reference.get exp: $exp; selectorReference: $selector;", error, stackTrace);
     }
+    return null;
   }
 }
 
