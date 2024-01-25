@@ -23,8 +23,8 @@ class Reference {
   }
 
   static void compileReferenceList(dynamic selector, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (selector.containsKey("replaceReferenceList")) {
-      for (String path in selector["replaceReferenceList"]) {
+    if (selector.containsKey("compileReferenceList")) {
+      for (String path in selector["compileReferenceList"]) {
         Selector? selectorReference = Util.getSelector(path, selector, dynamicUIBuilderContext);
         Reference.replace(selectorReference, selector, dynamicUIBuilderContext);
       }
