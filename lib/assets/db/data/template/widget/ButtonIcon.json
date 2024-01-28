@@ -1,0 +1,29 @@
+{
+  "flutterType": "Button",
+  "height": 44,
+  "backgroundColor": "${backgroundColor,blue}",
+  "onPressed": "${onPressed|jsonEncode()}",
+  "child": {
+    "flutterType": "Row",
+    "children": [
+      {
+        "flutterType": "Expanded",
+        "child": {
+          "flutterType": "Text",
+          "label": "${label}",
+          "style": {
+            "flutterType": "TextStyle",
+            "color": "${textColor,schema:inversePrimary}",
+            "fontSize": 16
+          }
+        }
+      },
+      {
+        "flutterType": "Icon",
+        "src": "${iconSrc,arrow_forward_ios_sharp}",
+        "size": "${iconSize,17}",
+        "color": "${iconColor,schema:inversePrimary}"
+      }
+    ]
+  }
+}
