@@ -22,7 +22,7 @@
   "data": "${data,}",
   "decoration": {
     "flutterType": "InputDecoration",
-    "hintText": "${placeholder}",
+    "hintText": "${placeholder,}",
     "contentPadding": "15,0,15,0",
     "filled": true,
     "fillColor": "schema:onBackground",
