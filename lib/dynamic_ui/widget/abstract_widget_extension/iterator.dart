@@ -11,7 +11,8 @@ class Iterator extends AbstractExtension {
     //"ButtonGroup": ButtonGroup().getTheme()
   };
 
-  static void extend(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
+  static void extend(
+      Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, List<dynamic> result) {
     String dataType = parsedJson["dataType"];
     dynamic listData;
     switch (dataType) {
@@ -55,19 +56,28 @@ class Iterator extends AbstractExtension {
           seqTemplate = "templateMiddle";
         }
 
+        data["iteratorIndex"] = counter;
+        if (data.containsKey("dataContext")) {
+          Template.compileTemplateList(data, dynamicUIBuilderContext.cloneWithNewData(data, "IteratorDataContext"));
+        } else {
+          Template.compileTemplateList(data, dynamicUIBuilderContext);
+        }
+
         Map<String, dynamic>? templateElement =
             data[seqTemplate] ?? data["template"] ?? parsedJson[seqTemplate] ?? parsedJson["template"];
 
-        data["iteratorIndex"] = counter;
         if (templateElement != null) {
           //Если не обернуть в свой объект, compileTemplateList применится только к первому
           //Все остальные потеряют первичный шаблон, так как он будет уже заменён на значение
           newUIElement.addAll(Util.getMutableMap(templateElement)); //Шаблон можно заложить в данные
-          Template.compileTemplateList(data, dynamicUIBuilderContext);
-          newUIElement["context"] = {
-            "key": "Iterator$counter",
-            "data": data,
-          };
+
+          if (!newUIElement.containsKey("context")) {
+            //Бывает такое, что шаблон уже предусматривает контекст
+            newUIElement["context"] = {
+              "key": "Iterator$counter",
+              "data": data,
+            };
+          }
           if (newUIElement["context"]["data"].containsKey("visibility")) {
             bool visibility = TypeParser.parseBool(newUIElement["context"]["data"]["visibility"]) ?? true;
             if (visibility == false) {
