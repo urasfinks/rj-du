@@ -57,7 +57,12 @@ class SelectSheet extends AbstractWidget {
           "placeholder": placeholder,
           "onPop": {
             "jsRouter": "SelectSheetData.ai.js",
-            "args": {"method": "onFinish", "state": state, "stateKey": stateKey}
+            "args": {
+              "method": "onFinish",
+              "state": state,
+              "stateKey": stateKey,
+              "onNew": parsedJson["onNew"]
+            }
           },
           "constructor": {
             "jsRouter": "SelectSheetData.ai.js",
