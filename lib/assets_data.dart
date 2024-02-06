@@ -29,12 +29,12 @@ class AssetsData {
     //Сначала packages/rjdu/lib/, что бы можно было перекрыть проектными файлами
     Map<String, String> rjduIteratorTheme = await loadAssetByMask("systemData/iteratorTheme", "", "packages/rjdu/lib/");
     IteratorThemeLoader.load(rjduIteratorTheme, "rjdu");
-    Map<String, String> rjduWidget = await loadAssetByMask("template/widget", "", "packages/rjdu/lib/");
+    Map<String, String> rjduWidget = await loadAssetByMask("template/TemplateWidget", "", "packages/rjdu/lib/");
     TemplateWidget.load(rjduWidget, "rjdu");
 
     Map<String, String> projectIteratorTheme = await loadAssetByMask("systemData/iteratorTheme", "IteratorTheme");
     IteratorThemeLoader.load(projectIteratorTheme, "project");
-    Map<String, String> projectWidget = await loadAssetByMask("template/widget", "");
+    Map<String, String> projectWidget = await loadAssetByMask("template/TemplateWidget", "");
     TemplateWidget.load(projectWidget, "project");
   }
 
@@ -43,6 +43,7 @@ class AssetsData {
       if (pathItem.startsWith(path)) {
         DataType dataType = parseDataTypeFromDirectory(pathItem);
         String fileName = pathItem.split("/${dataType.name}/").last;
+        //print("fName: $fileName; type: ${dataType.name}; $pathItem");
         list.add(AssetsDataItem(fileName, dataType, await getFileContent(pathItem)));
       }
     }

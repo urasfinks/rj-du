@@ -59,7 +59,7 @@ flutter:
     - lib/assets/db/migration/
     - lib/assets/db/data/js/
     - lib/assets/db/data/template/
-    - lib/assets/db/data/template/widget/
+    - lib/assets/db/data/template/TemplateWidget/
     - lib/assets/db/data/systemData/
     - lib/assets/db/data/systemData/iteratorTheme/
     - lib/assets/image/
