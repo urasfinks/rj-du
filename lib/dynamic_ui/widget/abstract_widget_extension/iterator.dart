@@ -23,11 +23,12 @@ class Iterator extends AbstractExtension {
         listData = parsedJson["list"];
         break;
     }
+    Template.compileTemplateList(parsedJson, dynamicUIBuilderContext);
     if (parsedJson.containsKey("theme")) {
       if (theme.containsKey(parsedJson["theme"])) {
         parsedJson.addAll(theme[parsedJson["theme"]]!);
       } else {
-        result.add({"flutterType": "Text", "label": "Theme [${parsedJson["theme"]}] is not defined"});
+        result.add({"flutterType": "Text", "label": "Theme \"${parsedJson["theme"]}\" is not defined"});
         return;
       }
     }
