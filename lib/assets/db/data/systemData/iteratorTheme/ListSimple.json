@@ -1,4 +1,6 @@
 {
-  "flutterType": "Text",
-  "label": "ListItem"
+  "template": {
+    "flutterType": "Text",
+    "label": "ListItem"
+  }
 }
