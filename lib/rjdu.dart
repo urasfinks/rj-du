@@ -121,15 +121,6 @@ class RjDu {
       );
     }
 
-    return DynamicPage(const {
-      "flutterType": "Notify",
-      "link": {},
-      "context": {
-        "key": "runApp",
-        "data": {
-          "template": {"flutterType": "MaterialApp"}
-        }
-      }
-    }, DynamicPageOpenType.window);
+    return DynamicPage(const {"flutterType": "MaterialApp"}, DynamicPageOpenType.window);
   }
 }
