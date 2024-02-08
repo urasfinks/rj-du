@@ -1,6 +1,6 @@
 {
   "template": {
     "flutterType": "Text",
-    "label": "ListItem"
+    "label": "${label}"
   }
 }
