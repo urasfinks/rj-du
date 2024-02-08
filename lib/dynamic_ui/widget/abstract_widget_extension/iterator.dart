@@ -35,9 +35,7 @@ class Iterator extends AbstractExtension {
     bool templateDivider = parsedJson.containsKey("templateDivider");
     bool add = false;
     if (listData != null) {
-      //TODO: Что-то не так с расширением extendDataElement - остаются поля в state
-      List<dynamic> list = List<dynamic>.from(listData);
-      //List<dynamic> list = listData as List<dynamic>;
+      List<dynamic> list = Util.getMutableList(listData);
       int counter = 0;
       for (Map<String, dynamic> data in list) {
         //Расширение данных из родителя

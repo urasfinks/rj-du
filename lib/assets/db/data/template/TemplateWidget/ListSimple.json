@@ -1,0 +1,66 @@
+{
+  "flutterType": "Slidable",
+  "children": [
+    {
+      "flutterType": "SizedBox",
+      "width": 100,
+      "child": {
+        "flutterType": "Row",
+        "mainAxisAlignment": "center",
+        "children": [
+          {
+            "flutterType": "RawMaterialButton",
+            "fillColor": "red",
+            "padding": 10,
+            "onPressed": {
+              "jsRouter": "ListItem.ai.js",
+              "args": {
+                "removeIndex": "${iteratorIndex}",
+                "method": "remove"
+              }
+            },
+            "child": {
+              "flutterType": "Icon",
+              "src": "delete_outline",
+              "color": "white",
+              "size": 20
+            },
+            "compileTemplateList": [
+              "onPressed.args.removeIndex"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "child": {
+    "flutterType": "Margin",
+    "margin": "17,13,17,13",
+    "child": {
+      "flutterType": "Row",
+      "children": [
+        {
+          "flutterType": "Expanded",
+          "child": {
+            "flutterType": "Text",
+            "label": "${label}",
+            "style": {
+              "flutterType": "TextStyle",
+              "fontSize": 16
+            }
+          }
+        },
+        {
+          "flutterType": "SizedBox",
+          "width": 7
+        },
+        {
+          "flutterType": "Icon",
+          "src": "${iconSrc,edit}",
+          "size": "${iconSize,17}",
+          "color": "${iconColor,schema:secondary}"
+        }
+      ]
+    }
+  }
+}

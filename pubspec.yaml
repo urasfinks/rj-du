@@ -60,7 +60,7 @@ flutter:
     - lib/assets/db/data/js/
     - lib/assets/db/data/template/
     - lib/assets/db/data/template/TemplateWidget/
-    - lib/assets/db/data/template/list/
+    - lib/assets/db/data/template/editListItem/
     - lib/assets/db/data/systemData/
     - lib/assets/db/data/systemData/iteratorTheme/
     - lib/assets/image/

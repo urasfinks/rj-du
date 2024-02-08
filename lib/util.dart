@@ -183,6 +183,10 @@ class Util {
     }
   }
 
+  static List<dynamic> getMutableList(List? list) {
+    return list == null ? [] : json.decode(json.encode(list));
+  }
+
   static Map<String, dynamic> getMutableMap(Map? map) {
     return map == null ? {} : json.decode(json.encode(map));
   }
