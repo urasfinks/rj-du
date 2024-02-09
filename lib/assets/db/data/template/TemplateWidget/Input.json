@@ -6,6 +6,7 @@
   "hideKeyboardOnEditingComplete": true,
   "setState": true,
   "state": "${state,main}",
+  "autofocus": "${autofocus,false}",
   "compileTemplateList": [
     "state"
   ],
