@@ -50,7 +50,7 @@ class ControlStateHelper {
     if (cur[isSet]!) {
       dynamicUIBuilderContext.dynamicPage.stateData
           .set(parsedJson["state"], keyState, value, cur[ControlStateHelperEvent.onChangedSetStateNotify]!);
-      AbstractWidget.clickStatic(parsedJson, dynamicUIBuilderContext, "onChanged");
+      AbstractWidget.clickStatic(parsedJson, dynamicUIBuilderContext, "onChanged", {"value": value});
     }
   }
 }
