@@ -133,8 +133,12 @@ class DynamicInvoke {
   }
 
   DynamicUIBuilderContext changeContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    if (args.containsKey("changeContext") && args["changeContext"] == "lastPage" && NavigatorApp.getLast() != null) {
-      dynamicUIBuilderContext = NavigatorApp.getLast()!.dynamicUIBuilderContext;
+    if (args.containsKey("changeContext")) {
+      if (args["changeContext"] == "lastPage" && NavigatorApp.getLast() != null) {
+        dynamicUIBuilderContext = NavigatorApp.getLast()!.dynamicUIBuilderContext;
+      } else {
+        dynamicUIBuilderContext = NavigatorApp.getPageByUuid(args["changeContext"])!.dynamicUIBuilderContext;
+      }
     }
     return dynamicUIBuilderContext;
   }
@@ -247,8 +251,8 @@ class DynamicInvoke {
     });
   }
 
-  String? _eval(String scriptUuid, String js, String args, String context, String contextMap, String state, String pageArgs,
-      DynamicUIBuilderContext dynamicUIBuilderContext) {
+  String? _eval(String scriptUuid, String js, String args, String context, String contextMap, String state,
+      String pageArgs, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (args.isNotEmpty) {
       args = "bridge.args = $args;";
     }
@@ -296,8 +300,8 @@ $pageArgs
     return javascriptRuntime!.evaluate(tryBlock).stringResult;
   }
 
-  String? _eval2(
-      String scriptUuid, String jsCode, Map<String, dynamic> bridgeContext, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  String? _eval2(String scriptUuid, String jsCode, Map<String, dynamic> bridgeContext,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     String bridgeInit = """
         bridge.clearAll();
         bridge.pageUuid = '${dynamicUIBuilderContext.dynamicPage.uuid}';
