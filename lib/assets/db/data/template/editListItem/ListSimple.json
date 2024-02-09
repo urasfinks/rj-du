@@ -11,11 +11,27 @@
           "key": "Item",
           "data": {
             "data": "${pageArgs(selected.label,)}",
-            "key": "label"
+            "key": "label",
+            "autofocus": true,
+            "onChanged": {
+              "jsRouter": "ListItem.ai.js",
+              "args": {
+                "changeContext": "${pageArgs(parentPageUuid,)}",
+                "indexItem": "${pageArgs(indexItem,)}",
+                "fieldKey": "label",
+                "method": "changeField"
+              }
+            },
+            "onSubmit": {
+              "sysInvoke": "NavigatorPop",
+              "args": {}
+            }
           }
         },
         "compileTemplateList": [
-          "context.data.data"
+          "context.data.data",
+          "context.data.onChanged.args.changeContext",
+          "context.data.onChanged.args.indexItem"
         ]
       }
     ]
