@@ -1,4 +1,23 @@
 {
-  "flutterType": "Text",
-  "label": "EditItem"
+  "flutterType": "Padding",
+  "padding": 20,
+  "child": {
+    "flutterType": "Column",
+    "children": [
+      {
+        "flutterType": "Template",
+        "src": "Input",
+        "context": {
+          "key": "Item",
+          "data": {
+            "data": "${pageArgs(selected.label,)}",
+            "key": "label"
+          }
+        },
+        "compileTemplateList": [
+          "context.data.data"
+        ]
+      }
+    ]
+  }
 }
