@@ -10,6 +10,8 @@
   "compileTemplateList": [
     "state"
   ],
+  "minLines": "${minLines,1}",
+  "maxLines": "${maxLines,1}",
   "keyboardType": "${keyboardType,text}",
   "textCapitalization": "sentences",
   "style": {

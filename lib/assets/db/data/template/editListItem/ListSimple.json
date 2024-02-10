@@ -13,6 +13,9 @@
             "data": "${pageArgs(selected.label,)}",
             "key": "label",
             "autofocus": true,
+            "minLines": 1,
+            "maxLines": 3,
+            "keyboardType": "multiline",
             "onChanged": {
               "jsRouter": "ListItem.ai.js",
               "args": {
