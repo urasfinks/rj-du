@@ -1,0 +1,48 @@
+{
+  "reloadBackground": true,
+  "flutterType": "Scaffold",
+  "body": {
+    "flutterType": "CustomScrollView",
+    "onStateDataUpdate": true,
+    "padding": "10,20,10,0",
+    "appBar": {
+      "flutterType": "SliverAppBar",
+      "title": {
+        "flutterType": "Text",
+        "label": "${state(main,title,)}",
+        "style": {
+          "flutterType": "TextStyle",
+          "fontSize": 17
+        }
+      }
+    },
+    "children": [
+      {
+        "ChildrenExtension": "Iterator",
+        "dataType": "state",
+        "key": "listItem",
+        "theme": "ButtonGroup",
+        "extendDataElement": {
+          "templateWidgetSrc": "${state(main,theme,ListSimple)}"
+        },
+        "compileTemplateList": [
+          "extendDataElement.templateWidgetSrc"
+        ]
+      }
+    ]
+  },
+  "pageArgumentsOverlay": {
+    "constructor": {
+      "jsRouter": "ListItem.ai.js",
+      "args": {
+        "method": "constructor"
+      }
+    },
+    "onActive": {
+      "jsRouter": "ListItem.ai.js",
+      "args": {
+        "method": "constructor"
+      }
+    }
+  }
+}
