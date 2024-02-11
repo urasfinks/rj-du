@@ -314,6 +314,9 @@ class DynamicPage extends StatefulWidget {
           error = "state is null";
         }
         break;
+      case "resetState":
+        stateData.resetState(args["state"]);
+        break;
     }
     if (error.isNotEmpty) {
       Util.printCurrentStack("DynamicPage.api() Error: $error; args: $args;");
