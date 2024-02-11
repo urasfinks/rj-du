@@ -5,6 +5,8 @@ class ThemeProvider {
   static int alpha = 175;
   static double blur = 15;
 
+  static Brightness? brightness;
+
   static Color projectPrimary = Colors.blue[600]!;
   static Color projectPrimaryText = Colors.white;
   static Color projectSecondary = Colors.amber;
@@ -19,26 +21,31 @@ class ThemeProvider {
     projectSecondaryText = TypeParser.parseColor(secondaryText) ?? Colors.white;
   }
 
-  static ThemeData lightThemeData() {
-    //Color parseColor = TypeParser.parseColor("#f2f2f2")!;
-    Color parseColor = Colors.white;
-    List<Color> cur = [
-      parseColor,
-      parseColor.darkness(15),
-      parseColor.darkness(30),
-    ];
-    ThemeData themeData = ThemeData.light();
-    return get(cur, themeData, false);
-  }
-
-  static ThemeData darkThemeData() {
-    List<Color> cur = [
+  static Map<Brightness, List<Color>> mapColor = {
+    Brightness.dark: [
       Colors.black,
       Colors.black.lightness(25),
       Colors.black.lightness(50),
-    ];
+    ],
+    Brightness.light: [
+      Colors.white,
+      Colors.white.darkness(15),
+      Colors.white.darkness(30),
+    ]
+  };
+
+  static ThemeData lightThemeData() {
+    ThemeData themeData = ThemeData.light();
+    return get(mapColor[Brightness.light]!, themeData, false);
+  }
+
+  static Color getThemeColor() {
+    return mapColor[brightness]!.first;
+  }
+
+  static ThemeData darkThemeData() {
     ThemeData themeData = ThemeData.dark();
-    return get(cur, themeData, true);
+    return get(mapColor[Brightness.dark]!, themeData, true);
   }
 
   static get(List<Color> cur, ThemeData themeData, bool dark) {

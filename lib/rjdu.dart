@@ -3,7 +3,6 @@ library rjdu;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/audio_component.dart';
@@ -72,7 +71,8 @@ class RjDu {
         // Проблема воспроизодилась на Account.json когда просто не открывался snackBar
         // Принято решение скрывать только при переключенях табов
         if (state == "onChangeTab") {
-          DynamicInvoke().sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
+          DynamicInvoke()
+              .sysInvokeType(HideHandler, {"case": "snackBar"}, NavigatorApp.getLast()!.dynamicUIBuilderContext);
         }
       }
     });
@@ -86,7 +86,10 @@ class RjDu {
       }
     });
 
+    ThemeProvider.brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
     SystemNotify().subscribe(SystemNotifyEnum.changeThemeData, (state) {
+      ThemeProvider.brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
       androidUpdateSubAppBar();
       NavigatorApp.reloadAllPages(true);
     });
@@ -98,12 +101,14 @@ class RjDu {
 
   static androidUpdateSubAppBar() {
     if (Util.isAndroid()) {
-      var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
-      ThemeData curTheme = brightness == Brightness.dark ? ThemeProvider.darkThemeData() : ThemeProvider.lightThemeData();
+      ThemeData curTheme =
+          ThemeProvider.brightness == Brightness.dark ? ThemeProvider.darkThemeData() : ThemeProvider.lightThemeData();
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: HexColor.fromRGB(curTheme.bottomNavigationBarTheme.backgroundColor!.getChannel()).darkness(3),
-        systemNavigationBarIconBrightness: brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor:
+            HexColor.fromRGB(curTheme.bottomNavigationBarTheme.backgroundColor!.getChannel()).darkness(3),
+        systemNavigationBarIconBrightness:
+            ThemeProvider.brightness == Brightness.dark ? Brightness.light : Brightness.dark,
       ));
     }
   }
