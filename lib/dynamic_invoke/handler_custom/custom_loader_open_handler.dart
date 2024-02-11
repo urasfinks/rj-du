@@ -11,6 +11,7 @@ class CustomLoaderOpenHandler extends AbstractHandler {
         {
           "name": "CustomLoader",
           "type": "dialog",
+          "barrierColorOpacity": 0.4,
           "link": {
             "template": "_Loader.json_this_is_not_exist",
           },

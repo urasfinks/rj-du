@@ -65,11 +65,11 @@ class NavigatorPushHandler extends AbstractHandler {
       }
     }
 
-    double blurOpacity = 0.8;
-    if (args.containsKey("blurOpacity")) {
-      double? tmp = TypeParser.parseDouble(args["blurOpacity"]);
+    double barrierColorOpacity = 0.8;
+    if (args.containsKey("barrierColorOpacity")) {
+      double? tmp = TypeParser.parseDouble(args["barrierColorOpacity"]);
       if (tmp != null) {
-        blurOpacity = tmp;
+        barrierColorOpacity = tmp;
       }
     }
 
@@ -82,7 +82,7 @@ class NavigatorPushHandler extends AbstractHandler {
       // blur background
       barrierDismissible: blur ? true : false,
       barrierLabel: blur ? '' : null,
-      barrierColor: blur ? ThemeProvider.getThemeColor().withOpacity(blurOpacity) : ThemeProvider.getThemeColor(),
+      barrierColor: ThemeProvider.getThemeColor().withOpacity(barrierColorOpacity),
       transitionBuilder: blur
           ? (ctx, anim1, anim2, child) => BackdropFilter(
                 filter: ImageFilter.blur(
