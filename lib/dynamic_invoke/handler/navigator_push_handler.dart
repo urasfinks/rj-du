@@ -15,11 +15,13 @@ import '../../dynamic_page.dart';
 class NavigatorPushHandler extends AbstractHandler {
   @override
   dynamic handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    DynamicPageOpenType dynamicPageOpenType = TypeParser.parseDynamicPageOpenType(args["type"]) ?? DynamicPageOpenType.window;
+    DynamicPageOpenType dynamicPageOpenType =
+        TypeParser.parseDynamicPageOpenType(args["type"]) ?? DynamicPageOpenType.window;
 
     bool raw = args.containsKey("raw") && args["raw"] == true;
-    BuildContext buildContext =
-        args.containsKey("tab") ? NavigatorApp.tab[args["tab"]].context : NavigatorApp.tab[NavigatorApp.selectedTab].context;
+    BuildContext buildContext = args.containsKey("tab")
+        ? NavigatorApp.tab[args["tab"]].context
+        : NavigatorApp.tab[NavigatorApp.selectedTab].context;
 
     switch (dynamicPageOpenType) {
       case DynamicPageOpenType.bottomSheet:
@@ -35,7 +37,8 @@ class NavigatorPushHandler extends AbstractHandler {
     SystemNotify().emit(SystemNotifyEnum.openDynamicPage, dynamicPageOpenType.name);
   }
 
-  void dialog(BuildContext buildContext, bool raw, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void dialog(
+      BuildContext buildContext, bool raw, Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       args.addAll(
         {
@@ -54,6 +57,22 @@ class NavigatorPushHandler extends AbstractHandler {
       );
     }
     bool blur = args.containsKey("blur") && args["blur"] == true;
+    double blurValue = ThemeProvider.blur;
+    if (args.containsKey("blurValue")) {
+      double? tmp = TypeParser.parseDouble(args["blurValue"]);
+      if (tmp != null) {
+        blurValue = tmp;
+      }
+    }
+
+    double blurOpacity = 0.8;
+    if (args.containsKey("blurOpacity")) {
+      double? tmp = TypeParser.parseDouble(args["blurOpacity"]);
+      if (tmp != null) {
+        blurOpacity = tmp;
+      }
+    }
+
     showGeneralDialog(
       //Если false - содержимое dialog будет под bottomTabBar
       //Менять нельзя, потому что Navigator.pop настроен на удаление данного типа открытия через корневой контекст
@@ -63,10 +82,11 @@ class NavigatorPushHandler extends AbstractHandler {
       // blur background
       barrierDismissible: blur ? true : false,
       barrierLabel: blur ? '' : null,
-      barrierColor: blur ? Colors.black38 : const Color(0x80000000),
+      barrierColor: blur ? ThemeProvider.getThemeColor().withOpacity(blurOpacity) : ThemeProvider.getThemeColor(),
       transitionBuilder: blur
           ? (ctx, anim1, anim2, child) => BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: ThemeProvider.blur * anim1.value, sigmaY: ThemeProvider.blur * anim1.value),
+                filter: ImageFilter.blur(
+                    sigmaX: blurValue * anim1.value, sigmaY: blurValue * anim1.value),
                 child: FadeTransition(
                   opacity: anim1,
                   child: child,
@@ -150,8 +170,8 @@ class NavigatorPushHandler extends AbstractHandler {
     ).then((value) => onPop(value, dynamicUIBuilderContext));
   }
 
-  void window(
-      BuildContext buildContext, bool raw, Map<String, dynamic> dataPage, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  void window(BuildContext buildContext, bool raw, Map<String, dynamic> dataPage,
+      DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!raw) {
       dataPage.addAll(
         {
