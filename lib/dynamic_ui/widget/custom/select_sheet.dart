@@ -65,6 +65,7 @@ class SelectSheetWidget extends AbstractWidget {
               "state": state,
               "stateKey": stateKey,
               "onNew": parsedJson["onNew"],
+              "onChange": parsedJson["onChange"],
             }
           },
           "constructor": {
