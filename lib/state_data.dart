@@ -65,20 +65,23 @@ class StateData {
     return false;
   }
 
-  set(String? state, String key, dynamic value, [bool notifyDynamicPage = true]) {
+  set(String? state, String key, dynamic value, [bool notifyDynamicPage = true, String cause = ""]) {
     state ??= "main";
     Data data = getInstanceData(state);
 
     //Если не привести к toString - в случае объектов ссылки будут разные и всегда объекты будут разные
     if (data.value[key] == null || data.value[key].toString() != value.toString()) {
-      data.value[key] = value;
-      Util.p(
-          "StateData.set() state:$state; key:$key; value: $value; notify: $notifyDynamicPage;");
+      if (value != null) {
+        data.value[key] = value;
+      } else {
+        data.value.removeWhere((key1, value) => key1 == key);
+      }
+      Util.p("StateData.set($cause) state:$state; key:$key; value: $value; notify: $notifyDynamicPage;");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
 
-  void setMap(String? state, Map<String, dynamic> map, [bool notifyDynamicPage = true]) {
+  void setMap(String? state, Map<String, dynamic> map, [bool notifyDynamicPage = true, String cause = ""]) {
     state ??= "main";
     Data data = getInstanceData(state);
     bool change = false;
@@ -91,13 +94,17 @@ class StateData {
     } else {
       for (MapEntry<String, dynamic> item in map.entries) {
         if (data.value[item.key] != item.value) {
-          data.value[item.key] = item.value;
+          if (item.value != null) {
+            data.value[item.key] = item.value;
+          } else {
+            data.value.removeWhere((key, value) => key == item.key);
+          }
           change = true;
         }
       }
     }
     if (change) {
-      Util.p("StateData.setMap() state:$state; map: $map; notify: $notifyDynamicPage;");
+      Util.p("StateData.setMap($cause) state:$state; map: $map; notify: $notifyDynamicPage;");
       DataSource().setData(data, notifyDynamicPage);
     }
   }
@@ -116,6 +123,12 @@ class StateData {
       } else {
         return defaultValue;
       }
+    }
+  }
+
+  void resetState(String state) {
+    if (map.containsKey(state)) {
+      map.removeWhere((key, value) => key == state);
     }
   }
 

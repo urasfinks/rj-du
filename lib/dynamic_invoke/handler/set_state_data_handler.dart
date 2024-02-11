@@ -7,10 +7,11 @@ class SetStateDataHandler extends AbstractHandler {
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (Util.containsKeys(args, ["key", "value"])) {
       dynamicUIBuilderContext.dynamicPage.stateData
-          .set(args["state"], args["key"], args["value"], args["notify"] ?? true);
+          .set(args["state"], args["key"], args["value"], args["notify"] ?? true, args["cause"] ?? "");
     } else if (Util.containsKeys(args, ["map"])) {
       //Util.log("SetStateDataHandler args: $args");
-      dynamicUIBuilderContext.dynamicPage.stateData.setMap(args["state"], args["map"], args["notify"] ?? true);
+      dynamicUIBuilderContext.dynamicPage.stateData
+          .setMap(args["state"], args["map"], args["notify"] ?? true, args["cause"] ?? "");
     } else {
       Util.p("SetStateDataHandler undefined scheme args: $args");
     }
