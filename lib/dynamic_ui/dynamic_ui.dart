@@ -185,7 +185,8 @@ class DynamicUI {
     "SelectSheet": SelectSheet().get
   };
 
-  static DynamicUIBuilderContext changeContext(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static DynamicUIBuilderContext changeContext(
+      Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (parsedJson.containsKey("context")) {
       return dynamicUIBuilderContext.cloneWithNewData(
         Util.convertMap(parsedJson["context"]["data"] ?? {}),
@@ -201,6 +202,19 @@ class DynamicUI {
     dynamic defaultValue,
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
+    if (parsedJson.containsKey("pageArgumentsOverlay")) {
+      Map<String, dynamic> map = parsedJson["pageArgumentsOverlay"];
+      bool needReload = false;
+      for (MapEntry<String, dynamic> item in map.entries) {
+        if (!dynamicUIBuilderContext.dynamicPage.arguments.containsKey(item.key)) {
+          dynamicUIBuilderContext.dynamicPage.arguments[item.key] = item.value;
+          needReload = true;
+        }
+      }
+      if (needReload) {
+        dynamicUIBuilderContext.dynamicPage.reload(false, "pageSettingsOverlay");
+      }
+    }
     try {
       if (parsedJson.isEmpty) {
         return defaultValue;
@@ -226,7 +240,6 @@ class DynamicUI {
           }
           selector.remove("onStateDataUpdate");
         }
-
 
         if (selector["flutterType"] != "Notify" && selector.containsKey("link")) {
           // Selector это наш шаблон, но мы хотим сделать его зависимым от link данных в DataSource
@@ -260,7 +273,8 @@ class DynamicUI {
     }
   }
 
-  static List<Widget> renderList(Map<String, dynamic> parsedJson, String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<Widget> renderList(
+      Map<String, dynamic> parsedJson, String key, DynamicUIBuilderContext dynamicUIBuilderContext) {
     List<Widget> resultList = [];
     List list = parsedJson[key] ?? [];
     if (list.runtimeType.toString().contains("List")) {
