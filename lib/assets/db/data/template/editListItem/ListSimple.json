@@ -3,6 +3,7 @@
   "padding": 20,
   "child": {
     "flutterType": "Column",
+    "crossAxisAlignment": "start",
     "children": [
       {
         "flutterType": "Template",
@@ -36,6 +37,28 @@
           "context.data.onChanged.args.changeContext",
           "context.data.onChanged.args.indexItem"
         ]
+      },
+      {
+        "flutterType": "SizedBox",
+        "height": 20
+      },
+      {
+        "flutterType": "Button",
+        "height": 44,
+        "backgroundColor": "blue",
+        "onPressed": {
+          "sysInvoke": "NavigatorPop",
+          "args": {}
+        },
+        "child": {
+          "flutterType": "Text",
+          "label": "Ok",
+          "style": {
+            "flutterType": "TextStyle",
+            "fontSize": 14,
+            "color": "white"
+          }
+        }
       }
     ]
   }
