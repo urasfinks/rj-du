@@ -2,7 +2,7 @@ import 'package:rjdu/dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:rjdu/dynamic_ui/widget/abstract_widget.dart';
 import 'package:flutter/material.dart';
 
-class SelectSheet extends AbstractWidget {
+class SelectSheetWidget extends AbstractWidget {
   @override
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     bool extend = parsedJson["extend"] ?? false;
@@ -10,8 +10,8 @@ class SelectSheet extends AbstractWidget {
     String state = parsedJson["state"] ?? "main";
 
     List children = updateList(parsedJson["children"] ?? [], dynamicUIBuilderContext);
-    int? selectedIndex = parsedJson["selectedIndex"];
-    if (selectedIndex == null && parsedJson.containsKey("selectedLabel")) {
+    int selectedIndex = parsedJson["selectedIndex"] ?? -1;
+    if (parsedJson.containsKey("selectedLabel")) {
       String selectedLabel = parsedJson["selectedLabel"];
       for (int i = 0; i < children.length; i++) {
         if (children[i]["label"] == selectedLabel) {
@@ -19,24 +19,27 @@ class SelectSheet extends AbstractWidget {
           break;
         }
       }
-      selectedIndex ??= 0;
     }
     String placeholder = parsedJson["placeholder"] ?? "Найти";
     if (children.isEmpty && extend) {
       placeholder = parsedJson["placeholderAdd"] ?? "Новое наименование";
     }
-    String defaultPlaceholder = parsedJson["defaultPlaceholder"] ?? "Выбрать из списка";
-    Map<String, dynamic> selectedObject = {
-      "label": defaultPlaceholder,
-    };
-    if (!dynamicUIBuilderContext.dynamicPage.stateData.contains(state, stateKey)) {
-      if (selectedIndex != null && children.length > selectedIndex) {
-        selectedObject = children[selectedIndex];
-      }
+    String defaultLabel = parsedJson["defaultLabel"] ?? "Выбрать из списка";
+    Map<String, dynamic> selectedObject = dynamicUIBuilderContext.dynamicPage.stateData.get(
+        state,
+        stateKey,
+        {
+          "label": defaultLabel,
+          "_default": true,
+        },
+        true);
+    if (selectedObject.containsKey("_default") && selectedIndex >= 0 && children.length > selectedIndex) {
+      selectedObject = children[selectedIndex];
       dynamicUIBuilderContext.dynamicPage.stateData.set(state, stateKey, selectedObject, false);
     }
+
     //Если кол-во элементов больше текущего значения, автоматически будет выбран шаблон с поисковиком
-    int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 7;
+    int minCountItemForSearch = parsedJson["minCountItemForSearch"] ?? 14;
 
     String curTemplate = "SelectSheetData.json";
     if (extend) {
@@ -61,7 +64,7 @@ class SelectSheet extends AbstractWidget {
               "method": "onFinish",
               "state": state,
               "stateKey": stateKey,
-              "onNew": parsedJson["onNew"]
+              "onNew": parsedJson["onNew"],
             }
           },
           "constructor": {

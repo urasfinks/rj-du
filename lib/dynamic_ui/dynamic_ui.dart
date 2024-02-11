@@ -182,7 +182,7 @@ class DynamicUI {
     "Border": BorderProperty().get,
 
     //Custom
-    "SelectSheet": SelectSheet().get
+    "SelectSheet": SelectSheetWidget().get
   };
 
   static DynamicUIBuilderContext changeContext(
