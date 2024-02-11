@@ -43,7 +43,6 @@ class AssetsData {
       if (pathItem.startsWith(path)) {
         DataType dataType = parseDataTypeFromDirectory(pathItem);
         String fileName = pathItem.split("/${dataType.name}/").last;
-        //print("fName: $fileName; type: ${dataType.name}; $pathItem");
         list.add(AssetsDataItem(fileName, dataType, await getFileContent(pathItem)));
       }
     }
