@@ -19,8 +19,7 @@ class TextFieldWidget extends AbstractWidget {
       clearController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext);
     }
 
-    TextEditingController textController =
-        getController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext, () {
+    TextEditingController textController = getController(parsedJson, controlStateHelper.keyState, dynamicUIBuilderContext, () {
       return TextEditingControllerWrap(TextEditingController(text: controlStateHelper.defaultData), {});
     });
 
@@ -36,11 +35,22 @@ class TextFieldWidget extends AbstractWidget {
 
     bool hideKeyboardOnEditingComplete = TypeParser.parseBool(
       getValue(parsedJson, "hideKeyboardOnEditingComplete", true, dynamicUIBuilderContext),
-    )!;
+    ) ?? true;
+    bool clearDataOnFocus = TypeParser.parseBool(
+      getValue(parsedJson, "clearDataOnFocus", false, dynamicUIBuilderContext),
+    ) ?? false;
+
+    bool autofocus = TypeParser.parseBool(
+      getValue(parsedJson, "autofocus", false, dynamicUIBuilderContext),
+    ) ?? false;
+
+    if (clearDataOnFocus && autofocus) {
+      textController.text = "";
+    }
+
     return TextField(
       key: Util.getKey(),
-      focusNode:
-          dynamicUIBuilderContext.dynamicPage.getProperty("${controlStateHelper.keyState}_FocusNode", FocusNode()),
+      focusNode: dynamicUIBuilderContext.dynamicPage.getProperty("${controlStateHelper.keyState}_FocusNode", FocusNode()),
       onSubmitted: (value) {
         //В документации написано, что эта штука должна скрывать клавиатуру по умолчанию
         // if (parsedJson["hideKeyboardOnSubmitted"] ?? true == true) {
@@ -79,9 +89,7 @@ class TextFieldWidget extends AbstractWidget {
       autocorrect: TypeParser.parseBool(
         getValue(parsedJson, "autocorrect", true, dynamicUIBuilderContext),
       )!,
-      autofocus: TypeParser.parseBool(
-        getValue(parsedJson, "autofocus", false, dynamicUIBuilderContext),
-      )!,
+      autofocus: autofocus,
       expands: TypeParser.parseBool(
         getValue(parsedJson, "expands", false, dynamicUIBuilderContext),
       )!,
@@ -105,7 +113,7 @@ class TextFieldWidget extends AbstractWidget {
       onChanged: (value) {
         controlStateHelper.onChange(value);
       },
-      onTapOutside: (event){
+      onTapOutside: (event) {
         FocusScopeNode currentFocus = FocusScope.of(dynamicUIBuilderContext.dynamicPage.context!);
         if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -116,8 +124,7 @@ class TextFieldWidget extends AbstractWidget {
           DateTime? pickedDate = await showDatePicker(
             locale: const Locale("ru", "ru_Ru"),
             context: dynamicUIBuilderContext.dynamicPage.context!,
-            initialDate:
-                textController.text.isNotEmpty ? DateFormat("dd.MM.yyyy").parse(textController.text) : DateTime.now(),
+            initialDate: textController.text.isNotEmpty ? DateFormat("dd.MM.yyyy").parse(textController.text) : DateTime.now(),
             firstDate: DateTime(1931),
             lastDate: DateTime(2101),
           );
@@ -169,8 +176,7 @@ class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingContro
       case "reset":
         controller.text = args["text"] ?? "";
         try {
-          FocusNode focusNode =
-              dynamicUIBuilderContext.dynamicPage.getProperty("${args["controller"]}_FocusNode", FocusNode());
+          FocusNode focusNode = dynamicUIBuilderContext.dynamicPage.getProperty("${args["controller"]}_FocusNode", FocusNode());
           focusNode.requestFocus();
         } catch (error, stackTrace) {
           Util.printStackTrace("TextEditingControllerWrap.reset()::requestFocus", error, stackTrace);
