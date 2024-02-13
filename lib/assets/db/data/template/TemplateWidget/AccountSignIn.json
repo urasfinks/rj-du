@@ -104,7 +104,7 @@
       },
       {
         "flutterType": "Button",
-        "backgroundColor": "blue",
+        "backgroundColor": "schema:projectPrimary",
         "onPressed": {
           "jsRouter": "Account.ai.js",
           "args": {

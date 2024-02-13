@@ -1,7 +1,7 @@
 {
   "flutterType": "Button",
   "height": 44,
-  "backgroundColor": "${backgroundColor,blue}",
+  "backgroundColor": "${backgroundColor,schema:projectPrimary}",
   "onPressed": "${onPressed|jsonEncode()}",
   "child": {
     "flutterType": "Row",
