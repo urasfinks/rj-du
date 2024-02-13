@@ -46,7 +46,8 @@ abstract class AbstractWidget {
 
   AbstractControllerWrap? getControllerWrap(
       Map<String, dynamic> parsedJson, String state, DynamicUIBuilderContext dynamicUIBuilderContext) {
-    return dynamicUIBuilderContext.dynamicPage.getProperty(getControllerKey(parsedJson, state, dynamicUIBuilderContext), null);
+    return dynamicUIBuilderContext.dynamicPage
+        .getProperty(getControllerKey(parsedJson, state, dynamicUIBuilderContext), null);
   }
 
   static dynamic getValueStatic(
@@ -67,7 +68,8 @@ abstract class AbstractWidget {
       return Text("$className.build() Return: $resultWidget; Must be Widget");
     }
     if (resultWidget != null && resultWidget.runtimeType.toString().contains("Map<String,")) {
-      Util.p("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
+      Util.p(
+          "$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; input: $parsedJson; Must be Widget");
       return Text("$className.build() Return: $resultWidget; type: ${resultWidget.runtimeType}; Must be Widget");
     }
     return resultWidget;
@@ -151,23 +153,30 @@ abstract class AbstractWidget {
     Map<String, dynamic>? settings,
     DynamicUIBuilderContext dynamicUIBuilderContext,
   ) {
-    if (settings != null) {
-      if (settings.containsKey("jsRouter")) {
-        DynamicInvoke().jsRouter(settings["jsRouter"], settings["args"], dynamicUIBuilderContext);
-      } else if (settings.containsKey("jsInvoke")) {
-        DynamicInvoke().jsInvoke(settings["jsInvoke"], settings["args"], dynamicUIBuilderContext);
-      } else if (settings.containsKey("sysInvoke")) {
-        DynamicInvoke().sysInvoke(settings["sysInvoke"], settings["args"] ?? {}, dynamicUIBuilderContext);
-      } else if (settings.containsKey("list")) {
-        List<dynamic> list = settings["list"];
-        for (dynamic data in list) {
-          if (data.runtimeType.toString().contains("Map")) {
-            invoke(data, dynamicUIBuilderContext);
-          } else {
-            invoke(json.decode(data), dynamicUIBuilderContext);
+    try {
+      if (settings != null && settings.isNotEmpty) {
+        if (settings.containsKey("jsRouter")) {
+          DynamicInvoke().jsRouter(settings["jsRouter"], settings["args"], dynamicUIBuilderContext);
+        } else if (settings.containsKey("jsInvoke")) {
+          DynamicInvoke().jsInvoke(settings["jsInvoke"], settings["args"], dynamicUIBuilderContext);
+        } else if (settings.containsKey("sysInvoke")) {
+          DynamicInvoke().sysInvoke(settings["sysInvoke"], settings["args"] ?? {}, dynamicUIBuilderContext);
+        } else if (settings.containsKey("list")) {
+          List<dynamic> list = settings["list"];
+          for (dynamic data in list) {
+            if (data.runtimeType.toString().contains("Map")) {
+              invoke(data, dynamicUIBuilderContext);
+            } else {
+              dynamic dec = json.decode(data);
+              if (dec.runtimeType.toString().contains("Map")) {
+                invoke(dec, dynamicUIBuilderContext);
+              }
+            }
           }
         }
       }
+    } catch (error, stackTrace) {
+      Util.printStackTrace("invoke() settings: $settings", error, stackTrace);
     }
   }
 
@@ -213,7 +222,8 @@ abstract class AbstractWidget {
     }
   }
 
-  void click(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext, [String key = "onPressed"]) {
+  void click(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext,
+      [String key = "onPressed"]) {
     clickStatic(parsedJson, dynamicUIBuilderContext, key);
   }
 }

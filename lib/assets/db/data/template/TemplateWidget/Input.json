@@ -59,7 +59,7 @@
               "stateKey": "${key}"
             }
           },
-          "${onReset|jsonEncode()}"
+          "${onReset,|jsonEncode()}"
         ]
       },
       "compileTemplateList": [
