@@ -85,8 +85,7 @@ class NavigatorPushHandler extends AbstractHandler {
       barrierColor: ThemeProvider.getThemeColor().withOpacity(barrierColorOpacity),
       transitionBuilder: blur
           ? (ctx, anim1, anim2, child) => BackdropFilter(
-                filter: ImageFilter.blur(
-                    sigmaX: blurValue * anim1.value, sigmaY: blurValue * anim1.value),
+                filter: ImageFilter.blur(sigmaX: blurValue * anim1.value, sigmaY: blurValue * anim1.value),
                 child: FadeTransition(
                   opacity: anim1,
                   child: child,
@@ -158,6 +157,12 @@ class NavigatorPushHandler extends AbstractHandler {
               backgroundColor: TypeParser.parseColor(args["backgroundColor"] ?? "schema:primaryContainer", context),
               body: dynamicPage,
             ),
+          );
+        } else if (args.containsKey("heightDynamic")) {
+          return Container(
+            color: TypeParser.parseColor(args["backgroundColor"] ?? "schema:primaryContainer", context),
+            padding: TypeParser.parseEdgeInsets("0,0,0,${MediaQuery.of(context).viewInsets.bottom}"),
+            child: dynamicPage,
           );
         } else {
           //Scafold нужен для Snackbar иначе Alert мы никогда не увидим

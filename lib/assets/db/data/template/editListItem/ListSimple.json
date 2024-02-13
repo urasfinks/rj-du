@@ -1,65 +1,64 @@
 {
   "flutterType": "Padding",
-  "padding": 20,
+  "padding": 15,
   "child": {
-    "flutterType": "Column",
-    "crossAxisAlignment": "start",
+    "flutterType": "Row",
     "children": [
       {
-        "flutterType": "Template",
-        "src": "Input",
-        "context": {
-          "key": "Item",
-          "data": {
-            "data": "${pageArgs(selected.label,)}",
-            "key": "label",
-            "autofocus": true,
-            "clearDataOnFocus": "${pageArgs(clearDataOnFocus,false)}",
-            "minLines": 1,
-            "maxLines": 3,
-            "keyboardType": "multiline",
-            "onChanged": {
-              "jsRouter": "ListItem.ai.js",
-              "args": {
-                "changeContext": "${pageArgs(parentPageUuid,)}",
-                "indexItem": "${pageArgs(indexItem,)}",
-                "fieldKey": "label",
-                "method": "changeField"
+        "flutterType": "Expanded",
+        "child": {
+          "flutterType": "Template",
+          "src": "Input",
+          "context": {
+            "key": "Item",
+            "data": {
+              "data": "${pageArgs(selected.label,)}",
+              "key": "label",
+              "autofocus": true,
+              "clearDataOnFocus": "${pageArgs(clearDataOnFocus,false)}",
+              "minLines": 1,
+              "maxLines": 3,
+              "keyboardType": "multiline",
+              "onChanged": {
+                "jsRouter": "ListItem.ai.js",
+                "args": {
+                  "changeContext": "${pageArgs(parentPageUuid,)}",
+                  "indexItem": "${pageArgs(indexItem,)}",
+                  "fieldKey": "label",
+                  "method": "changeField"
+                }
+              },
+              "onSubmit": {
+                "sysInvoke": "NavigatorPop",
+                "args": {}
               }
-            },
-            "onSubmit": {
-              "sysInvoke": "NavigatorPop",
-              "args": {}
             }
-          }
-        },
-        "compileTemplateList": [
-          "context.data.data",
-          "context.data.clearDataOnFocus",
-          "context.data.onChanged.args.changeContext",
-          "context.data.onChanged.args.indexItem"
-        ]
+          },
+          "compileTemplateList": [
+            "context.data.data",
+            "context.data.clearDataOnFocus",
+            "context.data.onChanged.args.changeContext",
+            "context.data.onChanged.args.indexItem"
+          ]
+        }
       },
       {
         "flutterType": "SizedBox",
-        "height": 20
+        "width": 12
       },
       {
-        "flutterType": "Button",
-        "height": 44,
-        "backgroundColor": "blue",
+        "flutterType": "RawMaterialButton",
+        "fillColor": "schema:projectPrimary",
+        "padding": 10,
         "onPressed": {
           "sysInvoke": "NavigatorPop",
           "args": {}
         },
         "child": {
-          "flutterType": "Text",
-          "label": "Ok",
-          "style": {
-            "flutterType": "TextStyle",
-            "fontSize": 14,
-            "color": "white"
-          }
+          "flutterType": "Icon",
+          "src": "arrow_upward",
+          "color": "schema:inversePrimary",
+          "size": 20
         }
       }
     ]
