@@ -19,6 +19,7 @@
               "minLines": 1,
               "maxLines": 3,
               "keyboardType": "multiline",
+              "placeholder": "${pageArgs(placeholder,)}",
               "onChanged": {
                 "jsRouter": "ListItem.ai.js",
                 "args": {
@@ -37,6 +38,7 @@
           "compileTemplateList": [
             "context.data.data",
             "context.data.clearDataOnFocus",
+            "context.data.placeholder",
             "context.data.onChanged.args.changeContext",
             "context.data.onChanged.args.indexItem"
           ]
