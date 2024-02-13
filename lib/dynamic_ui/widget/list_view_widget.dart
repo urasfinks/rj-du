@@ -11,7 +11,7 @@ class ListViewWidget extends AbstractWidget {
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     bool separated = TypeParser.parseBool(
       getValue(parsedJson, "separated", false, dynamicUIBuilderContext),
-    )!;
+    ) ?? false;
 
     List children = updateList(parsedJson["children"] as List, dynamicUIBuilderContext);
     ScrollController controller = getController(parsedJson, "ScrollBarController", dynamicUIBuilderContext, () {

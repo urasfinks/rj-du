@@ -43,11 +43,11 @@ class ControlStateHelper {
   }
 
   bool isStatus(ControlStateHelperEvent controlStateHelperEvent) {
-    return cur[controlStateHelperEvent]!;
+    return cur[controlStateHelperEvent] ?? false;
   }
 
   onChange(dynamic value, [ControlStateHelperEvent isSet = ControlStateHelperEvent.onChangeSetState]) {
-    if (cur[isSet]!) {
+    if (cur.containsKey(isSet) && cur[isSet]!) {
       dynamicUIBuilderContext.dynamicPage.stateData
           .set(parsedJson["state"], keyState, value, cur[ControlStateHelperEvent.onChangedSetStateNotify]!);
       AbstractWidget.clickStatic(parsedJson, dynamicUIBuilderContext, "onChanged", {"value": value});

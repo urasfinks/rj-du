@@ -51,7 +51,7 @@ class SwipableStackWidget extends AbstractWidget {
 
     double reactionOverlayOpacity = TypeParser.parseDouble(
       getValue(parsedJson, "reactionOverlayOpacity", 0.25, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0.25;
 
     if (parsedJson.containsKey("finish") && stateControl.containsKey("finish") && stateControl["finish"]) {
       return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
@@ -122,10 +122,10 @@ class SwipableStackWidget extends AbstractWidget {
     )!);
     bool roll = TypeParser.parseBool(
       getValue(parsedJson, "roll", true, dynamicUIBuilderContext),
-    )!;
+    ) ?? true;
     int rollIndex = TypeParser.parseInt(
       getValue(parsedJson, "rollIndex", 0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0;
     if (parsedJson["setState"] ?? parsedJson[SwipableEvent.setStateOnInit.name] ?? false == true) {
       dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
     }

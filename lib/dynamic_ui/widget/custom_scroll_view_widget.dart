@@ -24,7 +24,7 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     double extraTopOffset = TypeParser.parseDouble(
       getValue(parsedJson, "extraTopOffset", 0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0;
 
     if (extraTopOffset > 0) {
       list.add(SizedBox(
@@ -44,7 +44,7 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     bool pullToRefresh = TypeParser.parseBool(
       getValue(parsedJson, "pullToRefresh", true, dynamicUIBuilderContext),
-    )!;
+    ) ?? true;
     if (pullToRefresh) {
       sliverList.add(
         CupertinoSliverRefreshControl(
@@ -106,10 +106,10 @@ class CustomScrollViewWidget extends AbstractWidget {
 
     double extraBottomOffset = TypeParser.parseDouble(
       getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0;
     bool isOpacityBottomNavigationBar = TypeParser.parseBool(
       getValue(parsedJson, "isOpacityBottomNavigationBar", true, dynamicUIBuilderContext),
-    )!;
+    ) ?? true;
     if (isOpacityBottomNavigationBar) {
       //Всегда добавляем с низу дополнительный блок из-за того, что прозрачный bottomBar
       list.add(SizedBox(
@@ -132,7 +132,7 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
     bool scroll = TypeParser.parseBool(
       getValue(parsedJson, "scroll", true, dynamicUIBuilderContext),
-    )!;
+    ) ?? true;
     return CustomScrollView(
       physics: scroll ? Util.getPhysics()! : const NeverScrollableScrollPhysics(),
       key: Util.getKey(),
@@ -186,20 +186,20 @@ class CustomScrollViewWidget extends AbstractWidget {
     String type = getValue(parsedJsonMutable, "gridType", "count", dynamicUIBuilderContext);
     int crossAxisCount = TypeParser.parseInt(
       getValue(parsedJsonMutable, "crossAxisCount", 1, dynamicUIBuilderContext),
-    )!;
+    ) ?? 1;
     double mainAxisSpacing = TypeParser.parseDouble(
       getValue(parsedJsonMutable, "mainAxisSpacing", 0.0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0.0;
     double crossAxisSpacing = TypeParser.parseDouble(
       getValue(parsedJsonMutable, "crossAxisSpacing", 0.0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0.0;
     double childAspectRatio = TypeParser.parseDouble(
       getValue(parsedJsonMutable, "childAspectRatio", 1.0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 1.0;
 
     double maxCrossAxisExtent = TypeParser.parseDouble(
       getValue(parsedJsonMutable, "maxCrossAxisExtent", 1.0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 1.0;
 
     EdgeInsets? padding = TypeParser.parseEdgeInsets(
       getValue(parsedJsonMutable, "padding", null, dynamicUIBuilderContext),

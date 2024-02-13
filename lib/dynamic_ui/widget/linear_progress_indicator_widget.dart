@@ -10,7 +10,7 @@ class LinearProgressIndicatorWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     double value = TypeParser.parseDouble(
       getValue(parsedJson, "value", 0.0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 0.0;
     if (parsedJson.containsKey("valueIsPercent") && parsedJson["valueIsPercent"] == true) {
       value = value / 100;
     }

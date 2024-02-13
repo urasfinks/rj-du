@@ -10,7 +10,7 @@ class CheckboxWidget extends AbstractWidget {
     String key = getValue(parsedJson, "name", "-", dynamicUIBuilderContext);
     bool value = TypeParser.parseBool(
       getValue(parsedJson, "value", false, dynamicUIBuilderContext),
-    )!;
+    ) ?? false;
     dynamicUIBuilderContext.dynamicPage.stateData.set(parsedJson["state"], key, value);
     return Checkbox(
       key: Util.getKey(),

@@ -13,12 +13,7 @@ class Parser {
   Parser() {
     follow[Dictionary.dollar] = [Dictionary.curlyBraceOpen];
     follow[Dictionary.curlyBraceOpen] = [Dictionary.any, Dictionary.escape];
-    follow[Dictionary.escape] = [
-      Dictionary.curlyBraceOpen,
-      Dictionary.curlyBraceClose,
-      Dictionary.escape,
-      Dictionary.dollar
-    ];
+    follow[Dictionary.escape] = [Dictionary.curlyBraceOpen, Dictionary.curlyBraceClose, Dictionary.escape, Dictionary.dollar];
     follow[Dictionary.any] = [Dictionary.any, Dictionary.curlyBraceClose, Dictionary.escape];
   }
 
@@ -79,7 +74,9 @@ class Parser {
   }
 
   void setFuture(Dictionary dictionary) {
-    future = follow[dictionary]!;
+    if (follow.containsKey(dictionary)) {
+      future = follow[dictionary]!;
+    }
   }
 
   bool isParse() {

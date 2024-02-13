@@ -7,7 +7,7 @@ import 'global_settings.dart';
 
 class HttpClient {
   static int timeout = 3;
-  static String? cacheAuthorizationBase64;
+  static String cacheAuthorizationBase64 = "";
 
   static void init() {
     Util.p("HttpClient.init()");
@@ -52,7 +52,7 @@ class HttpClient {
 
   static Map<String, String> upgradeHeadersAuthorization(Map<String, String>? headers) {
     headers ??= {};
-    headers["Authorization"] = cacheAuthorizationBase64!;
+    headers["Authorization"] = cacheAuthorizationBase64;
     return headers;
   }
 

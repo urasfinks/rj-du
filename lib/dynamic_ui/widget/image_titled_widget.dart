@@ -9,11 +9,11 @@ class ImageTitledWidget extends AbstractWidget {
   get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     double radius = TypeParser.parseDouble(
       getValue(parsedJson, "radius", 8.0, dynamicUIBuilderContext),
-    )!;
+    ) ?? 8.0;
     String label = getValue(parsedJson, "label", "", dynamicUIBuilderContext).toString();
     double fontSize = TypeParser.parseDouble(
       getValue(parsedJson, "fontSize", 15, dynamicUIBuilderContext),
-    )!;
+    ) ?? 15;
     dynamic childElement = const SizedBox();
     // Условия получились конечно не очень привычные и не очень красивые
     // Я испытывал проблемы с динамическим шаблоном, когда extra всегда заполнено из контекста
@@ -42,7 +42,7 @@ class ImageTitledWidget extends AbstractWidget {
     }
     bool textGradient = TypeParser.parseBool(
       getValue(parsedJson, "textGradient", true, dynamicUIBuilderContext),
-    )!;
+    ) ?? true;
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
       child: Stack(

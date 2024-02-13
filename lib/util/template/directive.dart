@@ -73,13 +73,13 @@ class TemplateDirective {
       return Util.capitalize(data);
     },
     "lPad": (data, arguments, ctx) {
-      int pad = TypeParser.parseInt(Util.listGet(arguments, 0, "0"))!;
-      String char = Util.listGet(arguments, 1, "0")!;
+      int pad = TypeParser.parseInt(Util.listGet(arguments, 0, "0")) ?? 0;
+      String char = Util.listGet(arguments, 1, "0") ?? "";
       return Util.lPad(data, pad: pad, char: char);
     },
     "rPad": (data, arguments, ctx) {
-      int pad = TypeParser.parseInt(Util.listGet(arguments, 0, "0"))!;
-      String char = Util.listGet(arguments, 1, "0")!;
+      int pad = TypeParser.parseInt(Util.listGet(arguments, 0, "0")) ?? 0;
+      String char = Util.listGet(arguments, 1, "0") ?? "";
       return Util.rPad(data, pad: pad, char: char);
     },
     "timeSoFar": (data, arguments, ctx) {

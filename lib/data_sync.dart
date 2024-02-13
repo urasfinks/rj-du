@@ -334,7 +334,9 @@ class DataSync {
       }
       DataSource().setData(dataObject);
       //Сервер должен выдавать отсортированные ревизии
-      maxRevisionByType[dataType.name] = dataObject.revision!;
+      if (dataObject.revision != null) {
+        maxRevisionByType[dataType.name] = dataObject.revision!;
+      }
       return dataObject;
     }
     return null;
