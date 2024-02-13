@@ -57,7 +57,7 @@
         "child": {
           "flutterType": "Icon",
           "src": "arrow_upward",
-          "color": "schema:inversePrimary",
+          "color": "schema:projectPrimaryText",
           "size": 20
         }
       }

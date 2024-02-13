@@ -22,7 +22,7 @@
         "flutterType": "Icon",
         "src": "${iconSrc,arrow_forward_ios_sharp}",
         "size": "${iconSize,17}",
-        "color": "${iconColor,schema:inversePrimary}"
+        "color": "${iconColor,schema:projectPrimaryText}"
       }
     ]
   }

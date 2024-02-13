@@ -119,7 +119,7 @@
           "style": {
             "flutterType": "TextStyle",
             "fontSize": 14,
-            "color": "white"
+            "color": "schema:projectPrimaryText"
           }
         }
       },
