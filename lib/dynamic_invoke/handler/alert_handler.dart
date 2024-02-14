@@ -18,7 +18,7 @@ class AlertHandler extends AbstractHandler {
       "label": "Сохранено",
       "backgroundColor": "schema:background", // "rgba:30,136,229,0.95",
       "color": "schema:inversePrimary",
-      "duration": 750,
+      "duration": 1500,
       "action": false,
       "actionColor": "white",
       "actionBackgroundColor": "transparent",
