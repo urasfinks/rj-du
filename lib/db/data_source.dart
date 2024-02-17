@@ -290,8 +290,7 @@ class DataSource {
         "body": postData,
         "host": GlobalSettings().host,
       });
-      if (response.statusCode == 200) {
-      } else {
+      if (response.statusCode != 200) {
         result = false;
         AlertHandler.alertSimple("Данные не зафиксированы на сервере (${response.statusCode})");
         Future.delayed(const Duration(seconds: 1), () {
