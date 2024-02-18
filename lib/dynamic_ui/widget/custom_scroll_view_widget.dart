@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rjdu/data_sync.dart';
+import 'package:rjdu/dynamic_ui/widget/scrollbar_widget.dart';
 import '../../global_settings.dart';
 import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
@@ -23,8 +24,9 @@ class CustomScrollViewWidget extends AbstractWidget {
     List<Widget> list = [];
 
     double extraTopOffset = TypeParser.parseDouble(
-      getValue(parsedJson, "extraTopOffset", 0, dynamicUIBuilderContext),
-    ) ?? 0;
+          getValue(parsedJson, "extraTopOffset", 0, dynamicUIBuilderContext),
+        ) ??
+        0;
 
     if (extraTopOffset > 0) {
       list.add(SizedBox(
@@ -43,8 +45,9 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     bool pullToRefresh = TypeParser.parseBool(
-      getValue(parsedJson, "pullToRefresh", true, dynamicUIBuilderContext),
-    ) ?? true;
+          getValue(parsedJson, "pullToRefresh", true, dynamicUIBuilderContext),
+        ) ??
+        true;
     if (pullToRefresh) {
       sliverList.add(
         CupertinoSliverRefreshControl(
@@ -105,11 +108,13 @@ class CustomScrollViewWidget extends AbstractWidget {
     }
 
     double extraBottomOffset = TypeParser.parseDouble(
-      getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
-    ) ?? 0;
+          getValue(parsedJson, "extraBottomOffset", 0, dynamicUIBuilderContext),
+        ) ??
+        0;
     bool isOpacityBottomNavigationBar = TypeParser.parseBool(
-      getValue(parsedJson, "isOpacityBottomNavigationBar", true, dynamicUIBuilderContext),
-    ) ?? true;
+          getValue(parsedJson, "isOpacityBottomNavigationBar", true, dynamicUIBuilderContext),
+        ) ??
+        true;
     if (isOpacityBottomNavigationBar) {
       //Всегда добавляем с низу дополнительный блок из-за того, что прозрачный bottomBar
       list.add(SizedBox(
@@ -131,14 +136,35 @@ class CustomScrollViewWidget extends AbstractWidget {
       sliverList.add(render(parsedJson, "endFill", null, dynamicUIBuilderContext));
     }
     bool scroll = TypeParser.parseBool(
-      getValue(parsedJson, "scroll", true, dynamicUIBuilderContext),
-    ) ?? true;
+          getValue(parsedJson, "scroll", true, dynamicUIBuilderContext),
+        ) ??
+        true;
+
+    ScrollController controller;
+    if (parsedJson.containsKey("saveScrollOffsetOnReload") && parsedJson["saveScrollOffsetOnReload"] == false) {
+      controller = getController(parsedJson, "CustomScrollViewController", dynamicUIBuilderContext, () {
+        return ScrollControllerWrap(ScrollController(), {});
+      });
+    } else {
+      ScrollControllerWrap scrollControllerWrap =
+          getControllerWrapFn(parsedJson, "CustomScrollViewController", dynamicUIBuilderContext, () {
+        return ScrollControllerWrap(ScrollController(), {"offset": 0.0});
+      }) as ScrollControllerWrap;
+      scrollControllerWrap
+          .setNewController(ScrollController(initialScrollOffset: scrollControllerWrap.stateControl["offset"]!));
+      controller = scrollControllerWrap.controller;
+      controller.addListener(() {
+        scrollControllerWrap.stateControl["offset"] = controller.offset;
+      });
+    }
+
     return CustomScrollView(
+      controller: controller,
       physics: scroll ? Util.getPhysics()! : const NeverScrollableScrollPhysics(),
       key: Util.getKey(),
-      primary: TypeParser.parseBool(
-        getValue(parsedJson, "primary", true, dynamicUIBuilderContext),
-      ),
+      // primary: TypeParser.parseBool( //true нельзя использовать совместо с ScrollController
+      //   getValue(parsedJson, "primary", true, dynamicUIBuilderContext),
+      // ),
       reverse: TypeParser.parseBool(
         getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
       )!,
@@ -185,21 +211,26 @@ class CustomScrollViewWidget extends AbstractWidget {
       List<Widget> defList, Map<String, dynamic> parsedJsonMutable, DynamicUIBuilderContext dynamicUIBuilderContext) {
     String type = getValue(parsedJsonMutable, "gridType", "count", dynamicUIBuilderContext);
     int crossAxisCount = TypeParser.parseInt(
-      getValue(parsedJsonMutable, "crossAxisCount", 1, dynamicUIBuilderContext),
-    ) ?? 1;
+          getValue(parsedJsonMutable, "crossAxisCount", 1, dynamicUIBuilderContext),
+        ) ??
+        1;
     double mainAxisSpacing = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, "mainAxisSpacing", 0.0, dynamicUIBuilderContext),
-    ) ?? 0.0;
+          getValue(parsedJsonMutable, "mainAxisSpacing", 0.0, dynamicUIBuilderContext),
+        ) ??
+        0.0;
     double crossAxisSpacing = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, "crossAxisSpacing", 0.0, dynamicUIBuilderContext),
-    ) ?? 0.0;
+          getValue(parsedJsonMutable, "crossAxisSpacing", 0.0, dynamicUIBuilderContext),
+        ) ??
+        0.0;
     double childAspectRatio = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, "childAspectRatio", 1.0, dynamicUIBuilderContext),
-    ) ?? 1.0;
+          getValue(parsedJsonMutable, "childAspectRatio", 1.0, dynamicUIBuilderContext),
+        ) ??
+        1.0;
 
     double maxCrossAxisExtent = TypeParser.parseDouble(
-      getValue(parsedJsonMutable, "maxCrossAxisExtent", 1.0, dynamicUIBuilderContext),
-    ) ?? 1.0;
+          getValue(parsedJsonMutable, "maxCrossAxisExtent", 1.0, dynamicUIBuilderContext),
+        ) ??
+        1.0;
 
     EdgeInsets? padding = TypeParser.parseEdgeInsets(
       getValue(parsedJsonMutable, "padding", null, dynamicUIBuilderContext),

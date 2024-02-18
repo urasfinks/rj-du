@@ -23,6 +23,11 @@ class ScrollbarWidget extends AbstractWidget {
 class ScrollControllerWrap extends AbstractControllerWrap<ScrollController> {
   ScrollControllerWrap(super.controller, super.stateControl);
 
+  void setNewController(ScrollController scrollController) {
+    dispose();
+    controller = scrollController;
+  }
+
   @override
   void dispose() {
     controller.dispose();
