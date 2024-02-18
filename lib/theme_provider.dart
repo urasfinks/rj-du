@@ -80,7 +80,7 @@ class ThemeProvider {
       floatingActionButtonTheme: themeData.floatingActionButtonTheme.copyWith(
         backgroundColor: cur[0].lightness(light),
         foregroundColor: cur[0].inverse(),
-        elevation: 0,
+        elevation: 60, //Если 0 сливается со списком того же цвета
         disabledElevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
