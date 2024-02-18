@@ -92,9 +92,9 @@ class AlertHandler extends AbstractHandler {
           ),
           duration: Duration(milliseconds: milliseconds),
           content: Text(label, style: TextStyle(color: TypeParser.parseColor(color))),
-          backgroundColor: TypeParser.parseColor(backgroundColor),
+          backgroundColor: TypeParser.parseColor(backgroundColor)?.withOpacity(0.98),
           behavior: SnackBarBehavior.floating,
-          elevation: 0,
+          elevation: 60,
           action: action,
         ),
       );
