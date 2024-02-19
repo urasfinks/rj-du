@@ -28,6 +28,13 @@ class ImageNetworkCachedWidget extends AbstractWidget {
       height: TypeParser.parseDouble(
         getValue(parsedJson, "height", null, dynamicUIBuilderContext),
       ),
+      repeat: TypeParser.parseImageRepeat(
+        getValue(parsedJson, "repeat", "noRepeat", dynamicUIBuilderContext),
+      )!,
+      filterQuality: FilterQuality.high,
+      alignment: TypeParser.parseAlignment(
+        getValue(parsedJson, "alignment", "center", dynamicUIBuilderContext),
+      )!,
     );
   }
 }
