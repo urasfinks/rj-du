@@ -7,8 +7,59 @@ import '../dynamic_ui_builder_context.dart';
 import '../type_parser.dart';
 import '../widget/abstract_widget.dart';
 import '../../util.dart';
+import 'dart:ui';
 
 class CustomScrollViewWidget extends AbstractWidget {
+  static bool drag = false;
+  static bool startRefresh = false;
+
+  static const double _kActivityIndicatorRadius = 14.0;
+  static const double _kActivityIndicatorMargin = 16.0;
+
+  static Widget buildRefreshIndicator(
+    BuildContext context,
+    RefreshIndicatorMode refreshState,
+    double pulledExtent,
+    double refreshTriggerPullDistance,
+    double refreshIndicatorExtent,
+  ) {
+    final double percentageComplete = clampDouble(pulledExtent / refreshTriggerPullDistance, 0.0, 1.0);
+    return Center(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Positioned(
+            top: _kActivityIndicatorMargin,
+            left: 0.0,
+            right: 0.0,
+            child: _buildIndicatorForRefreshState(refreshState, _kActivityIndicatorRadius, percentageComplete),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _buildIndicatorForRefreshState(RefreshIndicatorMode refreshState, double radius, double percentageComplete) {
+    if (!drag && !startRefresh) {
+      return const SizedBox.shrink();
+    }
+    switch (refreshState) {
+      case RefreshIndicatorMode.drag:
+        const Curve opacityCurve = Interval(0.0, 0.35, curve: Curves.easeInOut);
+        return Opacity(
+          opacity: opacityCurve.transform(percentageComplete),
+          child: CupertinoActivityIndicator.partiallyRevealed(radius: radius, progress: percentageComplete),
+        );
+      case RefreshIndicatorMode.armed:
+      case RefreshIndicatorMode.refresh:
+        return CupertinoActivityIndicator(radius: radius);
+      case RefreshIndicatorMode.done:
+        return CupertinoActivityIndicator(radius: radius * percentageComplete);
+      case RefreshIndicatorMode.inactive:
+        return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget get(Map<String, dynamic> parsedJson, DynamicUIBuilderContext dynamicUIBuilderContext) {
     //Получил ошибку зацикливания JSON при генерации includePageArgument в DynamicInvoke
@@ -51,9 +102,11 @@ class CustomScrollViewWidget extends AbstractWidget {
     if (pullToRefresh) {
       sliverList.add(
         CupertinoSliverRefreshControl(
-          refreshTriggerPullDistance: 125,
-          refreshIndicatorExtent: 125,
           onRefresh: () async {
+            if (!drag) {
+              return;
+            }
+            startRefresh = true;
             SyncResult syncResult = await DataSync().sync();
             if (syncResult.isSuccess()) {
               //Для того, что бы не было дёрганий перезагрузки страницы, даём свернуться pullToRefresh
@@ -64,7 +117,9 @@ class CustomScrollViewWidget extends AbstractWidget {
                 dynamicUIBuilderContext.dynamicPage.reload(parsedJson["rebuild"] ?? true, "pullToRefresh");
               });
             }
+            startRefresh = false;
           },
+          builder: buildRefreshIndicator,
         ),
       );
     }
@@ -79,11 +134,9 @@ class CustomScrollViewWidget extends AbstractWidget {
       } else if (currentSliverGroupData["name"] == "main" && sliverGroup.last["name"] != "main") {
         sliverGroup.add({"type": "list", "name": "main", "children": []});
         sliverGroup.last["children"].add(children[i]);
-      } else if (currentSliverGroupData["name"] != "main" &&
-          sliverGroup.last["name"] == currentSliverGroupData["name"]) {
+      } else if (currentSliverGroupData["name"] != "main" && sliverGroup.last["name"] == currentSliverGroupData["name"]) {
         sliverGroup.last["children"].add(children[i]);
-      } else if (currentSliverGroupData["name"] != "main" &&
-          sliverGroup.last["name"] != currentSliverGroupData["name"]) {
+      } else if (currentSliverGroupData["name"] != "main" && sliverGroup.last["name"] != currentSliverGroupData["name"]) {
         currentSliverGroupData["children"] = [];
         sliverGroup.add(currentSliverGroupData);
         sliverGroup.last["children"].add(children[i]);
@@ -150,36 +203,44 @@ class CustomScrollViewWidget extends AbstractWidget {
           getControllerWrapFn(parsedJson, "CustomScrollViewController", dynamicUIBuilderContext, () {
         return ScrollControllerWrap(ScrollController(), {"offset": 0.0});
       }) as ScrollControllerWrap;
-      scrollControllerWrap
-          .setNewController(ScrollController(initialScrollOffset: scrollControllerWrap.stateControl["offset"]!));
+      scrollControllerWrap.setNewController(ScrollController(initialScrollOffset: scrollControllerWrap.stateControl["offset"]!));
       controller = scrollControllerWrap.controller;
       controller.addListener(() {
         scrollControllerWrap.stateControl["offset"] = controller.offset;
       });
     }
 
-    return CustomScrollView(
-      controller: controller,
-      physics: scroll ? Util.getPhysics()! : const NeverScrollableScrollPhysics(),
-      key: Util.getKey(),
-      // primary: TypeParser.parseBool( //true нельзя использовать совместо с ScrollController
-      //   getValue(parsedJson, "primary", true, dynamicUIBuilderContext),
-      // ),
-      reverse: TypeParser.parseBool(
-        getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
-      )!,
-      scrollDirection: TypeParser.parseAxis(
-        getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
-      )!,
-      //False по умолчанию, потому что высота самого ScrollView будет в размер всех блоков
-      //Когда блоков не так много при скроле вниз будет скрывать содержимое не доходя до bottomTab
-      shrinkWrap: TypeParser.parseBool(
-        getValue(parsedJson, "shrinkWrap", false, dynamicUIBuilderContext),
-      )!,
-      cacheExtent: TypeParser.parseDouble(
-        getValue(parsedJson, "cacheExtent", null, dynamicUIBuilderContext),
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerUp: (_) {
+        CustomScrollViewWidget.drag = false;
+      },
+      onPointerDown: (_) {
+        CustomScrollViewWidget.drag = true;
+      },
+      child: CustomScrollView(
+        controller: controller,
+        physics: scroll ? Util.getPhysics()! : const NeverScrollableScrollPhysics(),
+        key: Util.getKey(),
+        // primary: TypeParser.parseBool( //true нельзя использовать совместо с ScrollController
+        //   getValue(parsedJson, "primary", true, dynamicUIBuilderContext),
+        // ),
+        reverse: TypeParser.parseBool(
+          getValue(parsedJson, "reverse", false, dynamicUIBuilderContext),
+        )!,
+        scrollDirection: TypeParser.parseAxis(
+          getValue(parsedJson, "scrollDirection", "vertical", dynamicUIBuilderContext)!,
+        )!,
+        //False по умолчанию, потому что высота самого ScrollView будет в размер всех блоков
+        //Когда блоков не так много при скроле вниз будет скрывать содержимое не доходя до bottomTab
+        shrinkWrap: TypeParser.parseBool(
+          getValue(parsedJson, "shrinkWrap", false, dynamicUIBuilderContext),
+        )!,
+        cacheExtent: TypeParser.parseDouble(
+          getValue(parsedJson, "cacheExtent", null, dynamicUIBuilderContext),
+        ),
+        slivers: sliverList,
       ),
-      slivers: sliverList,
     );
   }
 
