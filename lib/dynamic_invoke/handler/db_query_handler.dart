@@ -23,10 +23,10 @@ class DbQueryHandler extends AbstractHandler {
         try {
           doPostBack(args, dynamicUIBuilderContext, "fetchDb", updateResult(value), debug);
         } catch (error, stackTrace) {
-          Util.printStackTrace("DbQueryHandler.handle() args: $args; value: $value", error, stackTrace);
+          Util.log("DbQueryHandler.handle() args: $args; value: $value; Error: $error", stackTrace: stackTrace, type: "error");
         }
       }).onError((error, stackTrace) {
-        Util.printStackTrace("DbQueryHandler.handle()", error, stackTrace);
+        Util.log("DbQueryHandler.handle(); Error: $error", stackTrace: stackTrace, type: "error");
       });
     } else if (Util.containsKeys(args, ["multiple"])) {
       if (debug) {

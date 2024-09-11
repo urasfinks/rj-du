@@ -42,7 +42,7 @@ class DataSourceSetHandler extends AbstractHandler {
         }
       });
     } else {
-      Util.printCurrentStack("DataSourceSetHandler not contains Keys: [uuid, value] in args: $args");
+      Util.log("DataSourceSetHandler not contains Keys: [uuid, value] in args: $args", type: "error", stack: true);
     }
   }
 }

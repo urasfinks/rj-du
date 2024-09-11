@@ -11,8 +11,8 @@ class AlertHandler extends AbstractHandler {
   handle(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext) {
     try {
       ScaffoldMessenger.of(dynamicUIBuilderContext.dynamicPage.context!).hideCurrentSnackBar();
-    } catch (e, stacktrace) {
-      Util.printStackTrace("AlertHandler ars: $args;", e, stacktrace);
+    } catch (error, stackTrace) {
+      Util.log("AlertHandler ars: $args; Error: $error", stackTrace: stackTrace, type: "error");
     }
     Map<String, dynamic> config = Util.merge({
       "label": "Сохранено",

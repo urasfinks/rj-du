@@ -179,7 +179,7 @@ class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingContro
           FocusNode focusNode = dynamicUIBuilderContext.dynamicPage.getProperty("${args["controller"]}_FocusNode", FocusNode());
           focusNode.requestFocus();
         } catch (error, stackTrace) {
-          Util.printStackTrace("TextEditingControllerWrap.reset()::requestFocus", error, stackTrace);
+          Util.log("TextEditingControllerWrap.reset()::requestFocus; Error: $error", stackTrace: stackTrace, type: "error");
         }
         if (args["setState"] ?? true) {
           if (args["stateKey"] != null) {
@@ -195,7 +195,7 @@ class TextEditingControllerWrap extends AbstractControllerWrap<TextEditingContro
         break;
     }
     if (error.isNotEmpty) {
-      Util.printCurrentStack("TextEditingControllerWrap.invoke() Error $error; args: $args");
+      Util.log("TextEditingControllerWrap.invoke() Error $error; args: $args", type: "error", stack: true);
     }
   }
 

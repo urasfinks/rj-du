@@ -267,9 +267,9 @@ class DynamicUI {
         }
       }
       return selector;
-    } catch (e, stacktrace) {
-      Util.printStackTrace("DynamicUI.render() parsedJson: $parsedJson", e, stacktrace);
-      return Text(e.toString());
+    } catch (error, stackTrace) {
+      Util.log("DynamicUI.render() parsedJson: $parsedJson; Error: $error", stackTrace: stackTrace, type: "error");
+      return Text(error.toString());
     }
   }
 

@@ -15,11 +15,11 @@ class ControllerHandler extends AbstractHandler {
         if (controllerWrap != null) {
           controllerWrap.invoke(args, dynamicUIBuilderContext);
         } else {
-          Util.printCurrentStack("ControllerHandler.handle() ControllerWrap is null args: $args");
+          Util.log("ControllerHandler.handle() ControllerWrap is null args: $args", type: "error", stack: true);
         }
       }
     } else {
-      Util.printCurrentStack("ControllerHandler not contains Keys: [key] in args: $args");
+      Util.log("ControllerHandler not contains Keys: [key] in args: $args", type: "error", stack: true);
     }
   }
 }

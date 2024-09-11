@@ -74,7 +74,7 @@ class WebSocketService {
             _disconnect();
           }
         }).onError((error, stackTrace) {
-          Util.printStackTrace("WebSocketService._connect()", error, stackTrace);
+          Util.log("WebSocketService._connect(); Error: $error", stackTrace: stackTrace, type: "error");
         });
       } catch (e, stacktrace) {
         _log(e, stacktrace, "_connect()");
@@ -102,8 +102,8 @@ class WebSocketService {
     );
   }
 
-  void _log(e, stacktrace, String extra) {
-    Util.printStackTrace("WebSocketService._log() $extra", e, stacktrace);
+  void _log(error, stackTrace, String extra) {
+    Util.log("WebSocketService._log() $extra; Error: $error", stackTrace: stackTrace, type: "error");
   }
 
   void _disconnect() {

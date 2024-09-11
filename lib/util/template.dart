@@ -7,7 +7,8 @@ import '../dynamic_ui/dynamic_ui_builder_context.dart';
 import '../util.dart';
 
 class Template {
-  static List<TemplateItem> getRegisteredListTemplateItem(String template, DynamicUIBuilderContext dynamicUIBuilderContext) {
+  static List<TemplateItem> getRegisteredListTemplateItem(
+      String template, DynamicUIBuilderContext dynamicUIBuilderContext) {
     if (!dynamicUIBuilderContext.dynamicPage.cacheTemplate.containsKey(template)) {
       dynamicUIBuilderContext.dynamicPage.cacheTemplate[template] = NewTemplate.getParsedTemplate(template);
     }
@@ -35,8 +36,10 @@ class Template {
     dynamic value = parseTemplateQuery(expDirective.removeAt(0), dynamicUIBuilderContext, debug);
     if (expDirective.isNotEmpty) {
       for (String directive in expDirective) {
-        for (MapEntry<String,
-                dynamic Function(dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
+        for (MapEntry<
+                String,
+                dynamic Function(
+                    dynamic data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext)> item
             in TemplateDirective.map.entries) {
           if (directive.startsWith("${item.key}(")) {
             // отрезаем имя директивы + скобки
@@ -57,8 +60,8 @@ class Template {
     }
     for (MapEntry<
         String,
-        dynamic Function(Map<String, dynamic> data, List<String> arguments, DynamicUIBuilderContext dynamicUIBuilderContext,
-            bool debug)> item in TemplateFunction.map.entries) {
+        dynamic Function(Map<String, dynamic> data, List<String> arguments,
+            DynamicUIBuilderContext dynamicUIBuilderContext, bool debug)> item in TemplateFunction.map.entries) {
       if (query.startsWith("${item.key}(")) {
         List<String> arguments = parseArguments(query.substring(item.key.length + 1, query.length - 1));
         return item.value(dynamicUIBuilderContext.data, arguments, dynamicUIBuilderContext, debug);
@@ -102,8 +105,11 @@ class Template {
           break;
         }
       }
-    } catch (e, stacktrace) {
-      Util.printStackTrace("Template.stringSelector() path: $path; defaultValue: $defaultValue; data: $data", e, stacktrace);
+    } catch (error, stackTrace) {
+      Util.log(
+          "Template.stringSelector() path: $path; defaultValue: $defaultValue; data: $data; Error: $error",
+          stackTrace: stackTrace,
+          type: "error");
       find = false;
     }
     if (!find) {
@@ -121,7 +127,8 @@ class Template {
           if (selector.ref.runtimeType == String) {
             selector.set(template(selector.ref, dynamicUIBuilderContext));
           } else {
-            Util.printCurrentStack("Template.compileTemplateList() ref must be String, real: ${selector.ref}");
+            Util.log("Template.compileTemplateList() ref must be String, real: ${selector.ref}",
+                type: "error", stack: true);
           }
         }
       }

@@ -80,7 +80,7 @@ class UtilHandler extends AbstractHandler {
               }
             }
           }).onError((error, stackTrace) {
-            Util.printStackTrace("DataSyncHandler.handler()", error, stackTrace);
+            Util.log("DataSyncHandler.handler(); Error: $error", stackTrace: stackTrace, type: "error");
           });
         } else {
           DataSync().sync();

@@ -85,14 +85,15 @@ class DynamicInvoke {
           if (pageByUuid != null) {
             result = sysInvoke(item.key, args, pageByUuid.dynamicUIBuilderContext, true);
           } else {
-            Util.printCurrentStack("DynamicInvoke.onMessage() DynamicPage($pageByUuid) not found in Navigator");
+            Util.log("DynamicInvoke.onMessage() DynamicPage($pageByUuid) not found in NavigatorApp",
+                type: "error", stack: true);
           }
           if (result == null) {
             return null;
           }
           return result is String ? result : json.encode(result);
         } catch (e, stacktrace) {
-          Util.printStackTrace("DynamicInvoke.onMessage() args: $args", e, stacktrace);
+          Util.log("DynamicInvoke.onMessage() args: $args; Error: $e", stackTrace: stacktrace, type: "error");
         }
       });
     }
@@ -174,10 +175,10 @@ class DynamicInvoke {
           return result;
         }
       } else {
-        Util.p("DynamicInvoke.call() handler[$handler] undefined");
+        Util.log("DynamicInvoke.call() handler[$handler] undefined", type: "error");
       }
     } catch (error, stackTrace) {
-      Util.printStackTrace("DynamicInvoke.sysInvoke($handler, $args, $jsContext)", error, stackTrace);
+      Util.log("DynamicInvoke.sysInvoke($handler, $args, $jsContext); Error: $error", stackTrace: stackTrace, type: "error");
     }
     return null;
   }

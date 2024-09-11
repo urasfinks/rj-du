@@ -92,8 +92,8 @@ class DataSync {
       cron = Cron();
       cron!.schedule(Schedule.parse(template), sync);
       sync();
-    } catch (e, stacktrace) {
-      Util.printStackTrace("DataSync.restart() template: $template", e, stacktrace);
+    } catch (error, stackTrace) {
+      Util.log("DataSync.restart() template: $template; Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 
@@ -123,7 +123,7 @@ class DataSync {
         NavigatorApp.getLast()!.dynamicUIBuilderContext,
       );
     } catch (error, stackTrace) {
-      Util.printStackTrace("DataSync.updateLoaderStatus()", error, stackTrace);
+      Util.log("DataSync.updateLoaderStatus(); Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 
@@ -304,9 +304,9 @@ class DataSync {
       // При HotReload страница Account уже загрузится,
       // Не пугайтесь всегда будет отставание на одно значение от реальности
       Storage().set("lastSync", "${Util.getTimestamp()}");
-    } catch (e, stacktrace) {
-      syncResult.setError(e.toString());
-      Util.printStackTrace("DataSync().sync()", e, stacktrace);
+    } catch (error, stackTrace) {
+      syncResult.setError(error.toString());
+      Util.log("DataSync().sync(); Error: $error", stackTrace: stackTrace, type: "error");
     }
     Util.p("sync time: ${Util.getTimestampMillis() - start}; sumUpgrade: $sumUpgrade; countRequest: $countRequest");
     if (flagOpenLoader && NavigatorApp.getLast() != null) {

@@ -27,41 +27,31 @@ class Util {
     String? correlation,
     bool stack = false,
   }) {
-    String result = "";
-    if (stack == true && stackTrace == null) {
-      stackTrace = StackTrace.current;
+    if (kDebugMode && GlobalSettings().debug) {
+      String result = "";
+      if (stack == true && stackTrace == null) {
+        stackTrace = StackTrace.current;
+      }
+      String qType = type ?? "log";
+      result += LoggerMsg.find(qType).wrap("[$qType]");
+      result += (" ");
+      result += LoggerMsg.Default.wrap("${DateTime.now()} ");
+      if (correlation != null) {
+        result += LoggerMsg.Yellow.wrap(correlation);
+        result += " ";
+      }
+      result += LoggerMsg.Default.wrap(mes);
+      if (stackTrace != null) {
+        result += "\n";
+        result += LoggerMsg.Red.wrap(stackTrace.toString());
+      }
+      stdout.writeln(result);
     }
-    String qType = type ?? "log";
-    result += LoggerMsg.find(qType).wrap("[$qType]");
-    result += (" ");
-    result += LoggerMsg.Default.wrap("${DateTime.now()} ");
-    if (correlation != null) {
-      result += LoggerMsg.Yellow.wrap(correlation);
-      result += " ";
-    }
-    result += LoggerMsg.Default.wrap(mes);
-    if (stackTrace != null) {
-      result += "\n";
-      result += LoggerMsg.Red.wrap(stackTrace.toString());
-    }
-    stdout.writeln(result);
   }
 
   static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
     if (kDebugMode && GlobalSettings().debug) {
       log(mes, stack: stack);
-    }
-  }
-
-  static void printStackTrace(String label, Object? error, StackTrace stackTrace) {
-    if (kDebugMode && GlobalSettings().debug) {
-      log(label, stackTrace: stackTrace);
-    }
-  }
-
-  static void printCurrentStack(String label, [int maxFrames = 50, extraLabel = true]) {
-    if (kDebugMode && GlobalSettings().debug) {
-      log(extraLabel ? ":::PrintCurrentStack::: $label" : label, stack: true);
     }
   }
 
@@ -210,7 +200,7 @@ class Util {
       await Future<void>.delayed(Duration.zero);
       fn(args);
     } catch (error, stackTrace) {
-      Util.printStackTrace("Util.asyncInvoke()", error, stackTrace);
+      Util.log("Util.asyncInvoke(); Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 
@@ -292,7 +282,8 @@ class Util {
       }
       return selector;
     } catch (error, stackTrace) {
-      Util.printStackTrace("Reference.get exp: $exp; selectorReference: $selector;", error, stackTrace);
+      Util.log("Reference.get exp: $exp; selectorReference: $selector; Error: $error",
+          stackTrace: stackTrace, type: "error");
     }
     return null;
   }

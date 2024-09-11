@@ -82,7 +82,7 @@ class DataGetter {
         }
       }
     }).onError((error, stackTrace) {
-      Util.printStackTrace("DataGetter.getDataJson() uuid: $uuid", error, stackTrace);
+      Util.log("DataGetter.getDataJson() uuid: $uuid; Error: $error", stackTrace: stackTrace, type: "error");
     });
   }
 
@@ -91,7 +91,7 @@ class DataGetter {
         [uuid, DataType.blob.name, DataType.blobRSync.name]).then((resultSet) {
       callback(resultSet.isEmpty ? null : Util.base64Decode(resultSet.first["value_data"] as String));
     }).onError((error, stackTrace) {
-      Util.printStackTrace("DataGetter.getDataBlob() uuid: $uuid", error, stackTrace);
+      Util.log("DataGetter.getDataBlob() uuid: $uuid; Error: $error", stackTrace: stackTrace, type: "error");
     });
   }
 
@@ -101,7 +101,7 @@ class DataGetter {
         Util.p("DataGetter.debug($sql)");
         Util.log(Util.jsonPretty(resultSet));
       }).onError((error, stackTrace) {
-        Util.printStackTrace("DataGetter.debug()", error, stackTrace);
+        Util.log("DataGetter.debug(); Error: $error", stackTrace: stackTrace, type: "error");
       });
     }
   }

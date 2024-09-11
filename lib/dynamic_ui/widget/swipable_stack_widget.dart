@@ -169,7 +169,7 @@ class SwipableStackWidget extends AbstractWidget {
             dynamicUIBuilderContext.dynamicPage.stateData.setMap(parsedJson["state"], stateControl);
           }
         } catch (error, stackTrace) {
-          Util.printStackTrace("-", error, stackTrace);
+          Util.log("Error: $error", stackTrace: stackTrace, type: "error");
         }
       },
       onWillMoveNext: (index, direction) {
@@ -242,7 +242,7 @@ class SwipableStackWidget extends AbstractWidget {
       });
       stateControl["swiped"] = swipedCounter;
     } catch (error, stackTrace) {
-      Util.printStackTrace("", error, stackTrace);
+      Util.log("Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 }

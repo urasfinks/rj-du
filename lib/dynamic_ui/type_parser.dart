@@ -162,7 +162,7 @@ class TypeParser {
         }
       }
     } catch (error, stackTrace) {
-      Util.printStackTrace("parseColor($value)", error, stackTrace);
+      Util.log("parseColor($value); Error: $error", stackTrace: stackTrace, type: "error");
     }
     return result;
   }

@@ -11,8 +11,8 @@ class IteratorThemeLoader {
         list.add(item.key);
         Map<String, dynamic> parseTheme = json.decode(item.value);
         Iterator.theme[item.key] = parseTheme;
-      } catch (e, stacktrace) {
-        Util.printStackTrace("IteratorThemeLoader", e, stacktrace);
+      } catch (error, stackTrace) {
+        Util.log("IteratorThemeLoader; Error: $error", stackTrace: stackTrace, type: "error");
       }
     }
     Util.p("IteratorThemeLoader.load()::$extra $list");

@@ -17,8 +17,8 @@ class HideHandler extends AbstractHandler {
         case "snackBar":
           try {
             ScaffoldMessenger.of(dynamicUIBuilderContext.dynamicPage.context!).hideCurrentSnackBar();
-          } catch (e, stacktrace) {
-            Util.printStackTrace("HideHandler.snackBar args: $args", e, stacktrace);
+          } catch (error, stackTrace) {
+            Util.log("HideHandler.snackBar args: $args; Error: $error", stackTrace: stackTrace, type: "error");
           }
           break;
         case "keyboard":

@@ -94,14 +94,14 @@ class AudioComponent {
           this.audioComponentContext!.play();
           audioPlayer!.play();
         }).onError((error, stackTrace) {
-          Util.printStackTrace("AudioComponent.play()", error, stackTrace);
+          Util.log("AudioComponent.play(); Error: $error", stackTrace: stackTrace, type: "error");
           this.audioComponentContext!.error(error.toString());
         });
       } else {
         this.audioComponentContext!.error("Файл не загружен");
       }
     } else {
-      Util.printCurrentStack("audioPlayer is null");
+      Util.log("audioPlayer is null", stack: true, type: "error");
     }
   }
 
@@ -110,7 +110,7 @@ class AudioComponent {
       audioComponentContext!.pause();
       audioPlayer!.pause();
     } else {
-      Util.printCurrentStack("audioPlayer || audioComponentContext is null");
+      Util.log("audioPlayer || audioComponentContext is null", type: "error", stack: true);
     }
   }
 
@@ -120,7 +120,7 @@ class AudioComponent {
     if (audioPlayer != null) {
       audioPlayer!.play();
     } else {
-      Util.printCurrentStack("audioPlayer is null");
+      Util.log("audioPlayer is null", type: "error", stack: true);
     }
   }
 
@@ -128,7 +128,7 @@ class AudioComponent {
     if (audioPlayer != null) {
       audioPlayer!.stop();
     } else {
-      Util.printCurrentStack("audioPlayer is null");
+      Util.log("audioPlayer is null", stack: true, type: "error");
     }
     if (audioComponentContext != null) {
       audioComponentContext!.stop();
@@ -144,7 +144,8 @@ class AudioComponentContext {
 
   Function(AudioComponentContext audioComponentContext)? onLoadBytesCallback;
 
-  AudioComponentContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext, [this.onLoadBytesCallback]) {
+  AudioComponentContext(Map<String, dynamic> args, DynamicUIBuilderContext dynamicUIBuilderContext,
+      [this.onLoadBytesCallback]) {
     dataState = AbstractWidget.getStateControl(args["key"] ?? "Audio", dynamicUIBuilderContext, {
       "state": AudioComponentContextState.loading.name,
       "playerState": "init",
@@ -167,7 +168,7 @@ class AudioComponentContext {
               AudioComponent().play(this);
             }
           }).onError((error, stackTrace) {
-            Util.printStackTrace("AudioComponentContext.constructor()", error, stackTrace);
+            Util.log("AudioComponentContext.constructor(); Error: $error", stackTrace: stackTrace, type: "error");
             this.error(error.toString());
           });
           break;
@@ -197,8 +198,9 @@ class AudioComponentContext {
           dataState["state"] = AudioComponentContextState.error.name;
           break;
       }
-    } catch (e, stacktrace) {
-      Util.printStackTrace("AudioComponentContext ars: $args; onLoadBytesCallback: $onLoadBytesCallback", e, stacktrace);
+    } catch (e, stackTrace) {
+      Util.log("AudioComponentContext ars: $args; onLoadBytesCallback: $onLoadBytesCallback; Error: $error",
+          stackTrace: stackTrace, type: "error");
     }
     _streamData = StreamData(dataState);
   }

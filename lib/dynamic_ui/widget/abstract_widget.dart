@@ -31,11 +31,11 @@ abstract class AbstractWidget {
   }
 
   AbstractControllerWrap getControllerWrapFn<T>(
-      Map<String, dynamic> parsedJson,
-      String state,
-      DynamicUIBuilderContext dynamicUIBuilderContext,
-      AbstractControllerWrap<T> Function() getDefault,
-      ) {
+    Map<String, dynamic> parsedJson,
+    String state,
+    DynamicUIBuilderContext dynamicUIBuilderContext,
+    AbstractControllerWrap<T> Function() getDefault,
+  ) {
     String controllerKey = getControllerKey(parsedJson, state, dynamicUIBuilderContext);
     AbstractControllerWrap? ctx = dynamicUIBuilderContext.dynamicPage.getPropertyFn(controllerKey, getDefault);
     return ctx!;
@@ -98,9 +98,11 @@ abstract class AbstractWidget {
       } else {
         return defaultValue;
       }
-    } catch (e, stacktrace) {
-      Util.printStackTrace(
-          "AbstractWidget.getValue() key: $key; defaultValue: $defaultValue; parsedJson: $parsedJson", e, stacktrace);
+    } catch (error, stackTrace) {
+      Util.log(
+          "AbstractWidget.getValue() key: $key; defaultValue: $defaultValue; parsedJson: $parsedJson; Error: $error",
+          stackTrace: stackTrace,
+          type: "error");
     }
   }
 
@@ -187,7 +189,7 @@ abstract class AbstractWidget {
         }
       }
     } catch (error, stackTrace) {
-      Util.printStackTrace("invoke() settings: $settings", error, stackTrace);
+      Util.log("invoke() settings: $settings; Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 
@@ -205,11 +207,11 @@ abstract class AbstractWidget {
         } else {
           try {
             settings = json.decode(tmp) as Map<String, dynamic>?;
-          } catch (e, stacktrace) {
-            Util.printStackTrace(
-                "AbstractWidget.clickStatic() key: $key; parsedJson: $parsedJson; tmp: $tmp; tmpType: ${tmp.runtimeType.toString()}",
-                e,
-                stacktrace);
+          } catch (error, stackTrace) {
+            Util.log(
+                "AbstractWidget.clickStatic() key: $key; parsedJson: $parsedJson; tmp: $tmp; tmpType: ${tmp.runtimeType.toString()}; Error: $error",
+                stackTrace: stackTrace,
+                type: "error");
           }
         }
         if (settings != null) {
@@ -225,10 +227,10 @@ abstract class AbstractWidget {
           }
         }
         return null;
-      }).then((result) {}).catchError((error, stacktrace) {
-        Util.printStackTrace("clickStatic", error, stacktrace);
+      }).then((result) {}).catchError((error, stackTrace) {
+        Util.log("clickStatic; Error: $error", stackTrace: stackTrace, type: "error");
       }).onError((error, stackTrace) {
-        Util.printStackTrace("AbstractWidget.clickStatic()", error, stackTrace);
+        Util.log("AbstractWidget.clickStatic(); Error: $error", stackTrace: stackTrace, type: "error");
       });
     }
   }

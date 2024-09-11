@@ -82,7 +82,7 @@ class DataSource {
         query = query.trim();
         if (query.isNotEmpty) {
           DataSource().db.execute(query).onError((error, stackTrace) {
-            Util.printStackTrace("DataMigration._sqlExecute()", error, stackTrace);
+            Util.log("DataMigration._sqlExecute(); Error: $error", stackTrace: stackTrace, type: "error");
           });
         }
       }
@@ -142,7 +142,7 @@ class DataSource {
       }
     } catch (error, stackTrace) {
       result = false;
-      Util.printStackTrace("DataSource.setData() $data", error, stackTrace);
+      Util.log("DataSource.setData() $data; Error: $error", stackTrace: stackTrace, type: "error");
     }
     return result;
   }
@@ -236,7 +236,7 @@ class DataSource {
       }
     } catch (error, stackTrace) {
       result = false;
-      Util.printStackTrace("setDataStandard()", error, stackTrace);
+      Util.log("setDataStandard(); Error: $error", stackTrace: stackTrace, type: "error");
     }
     return result;
   }
@@ -248,8 +248,8 @@ class DataSource {
       Util.asyncInvoke((args) {
         try {
           notifyBlock(args);
-        } catch (e, stacktrace) {
-          Util.printStackTrace("DataSource.notifyBlockAsync() args: $args", e, stacktrace);
+        } catch (error, stackTrace) {
+          Util.log("DataSource.notifyBlockAsync() args: $args; Error: $error", stackTrace: stackTrace, type: "error");
         }
       }, data);
     }
@@ -274,7 +274,7 @@ class DataSource {
       printTransaction(diffData, transaction);
     } catch (error, stackTrace) {
       result = false;
-      Util.printStackTrace("DataSource.setDataSocket() diffData: $diffData", error, stackTrace);
+      Util.log("DataSource.setDataSocket() diffData: $diffData; Error: $error", stackTrace: stackTrace, type: "error");
     }
     return result;
   }
@@ -299,13 +299,13 @@ class DataSource {
       }
       // Util.p(
       //     "DataSource.sendSocketUpdate() Response Code: ${response.statusCode}; Body: ${response.body}; Headers: ${response.headers}");
-    } catch (e, stacktrace) {
+    } catch (error, stackTrace) {
       result = false;
       AlertHandler.alertSimple("Данные не зафиксированы на сервере");
       Future.delayed(const Duration(seconds: 1), () {
         SocketCache().renderDBData(data.uuid);
       });
-      Util.printStackTrace("DataSource.sendDataSocket() data: $data", e, stacktrace);
+      Util.log("DataSource.sendDataSocket() data: $data; Error: $error", stackTrace: stackTrace, type: "error");
     }
     // тут не будем вызывать синхронизацию данных,
     // так как событие на синхронизацию должно прийти по сокету
@@ -370,7 +370,7 @@ class DataSource {
         ],
       );
     } catch (error, stackTrace) {
-      Util.printStackTrace("DataSource.update()", error, stackTrace);
+      Util.log("DataSource.update(); Error: $error", stackTrace: stackTrace, type: "error");
       return false;
     }
     return true;
@@ -395,7 +395,7 @@ class DataSource {
         ],
       );
     } catch (error, stackTrace) {
-      Util.printStackTrace("DataSource.insert()", error, stackTrace);
+      Util.log("DataSource.insert(); Error: $error", stackTrace: stackTrace, type: "error");
       return false;
     }
     return true;
@@ -415,7 +415,7 @@ class DataSource {
         [curData.uuid],
       );
     } catch (error, stackTrace) {
-      Util.printStackTrace("DataSource.insert()", error, stackTrace);
+      Util.log("DataSource.insert(); Error: $error", stackTrace: stackTrace, type: "error");
       return false;
     }
     return true;
@@ -465,7 +465,7 @@ class DataSource {
           handler(uuid, null);
         }
       }).onError((error, stackTrace) {
-        Util.printStackTrace("DataSource.get()", error, stackTrace);
+        Util.log("DataSource.get(); Error: $error", stackTrace: stackTrace, type: "error");
       });
     } else {
       list.add(GetterTask(uuid, handler));

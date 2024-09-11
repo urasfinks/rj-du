@@ -168,7 +168,7 @@ class DynamicPage extends StatefulWidget {
             try {
               _setState!.setState(() {});
             } catch (error, stackTrace) {
-              Util.printStackTrace("setState", error, stackTrace);
+              Util.log("setState; Error: $error", stackTrace: stackTrace, type: "error");
             }
           }
         }
@@ -319,7 +319,7 @@ class DynamicPage extends StatefulWidget {
         break;
     }
     if (error.isNotEmpty) {
-      Util.printCurrentStack("DynamicPage.api() Error: $error; args: $args;");
+      Util.log("DynamicPage.api() Error: $error; args: $args;", stack: true, type: "error");
     }
     return null;
   }
@@ -350,7 +350,7 @@ class _DynamicPage extends State<DynamicPage> {
         timerReload!.cancel();
       }
     } catch (error, stackTrace) {
-      Util.printStackTrace("DynamicPage.dispose()", error, stackTrace);
+      Util.log("DynamicPage.dispose(); Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 

@@ -38,7 +38,7 @@ class TemplateDirective {
         }
         return DateFormat(arguments[0]).format(DateTime.fromMillisecondsSinceEpoch(x * 1000));
       } catch (error, stackTrace) {
-        Util.printStackTrace("TemplateDirective.timestampToDate($data, $arguments)", error, stackTrace);
+        Util.log("TemplateDirective.timestampToDate($data, $arguments); Error: $error", stackTrace: stackTrace, type: "error");
         return "TemplateDirective.timestampToDate exception: $error; Data: $data; Args: $arguments";
       }
     },
@@ -91,7 +91,7 @@ class TemplateDirective {
       try {
         d = TypeParser.parseInt(data)!;
       } catch (error, stackTrace) {
-        Util.printStackTrace("TemplateDirective.timeSoFar($data, $arguments)", error, stackTrace);
+        Util.log("TemplateDirective.timeSoFar($data, $arguments); Error: $error", stackTrace: stackTrace, type: "error");
       }
 
       int diffSec = curTimestamp - d;

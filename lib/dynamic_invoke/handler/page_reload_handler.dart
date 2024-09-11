@@ -57,7 +57,7 @@ class PageReloadHandler extends AbstractHandler {
           Util.p("PageReloadHandler.handle() $syncResult");
         }
       }).onError((error, stackTrace) {
-        Util.printStackTrace("PageReloadHandler.handle()", error, stackTrace);
+        Util.log("PageReloadHandler.handle(); Error: $error", stackTrace: stackTrace, type: "error");
       });
     } else {
       fnReload();

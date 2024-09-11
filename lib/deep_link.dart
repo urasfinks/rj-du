@@ -29,8 +29,8 @@ class DeepLink {
         Util.p("DeepLink $uri; args: $args");
         DynamicInvoke().jsInvoke("DeepLink.js", args, NavigatorApp.getLast()!.dynamicUIBuilderContext);
       }
-    } catch (e, stacktrace) {
-      Util.printStackTrace("DeepLink.open()", e, stacktrace);
+    } catch (error, stackTrace) {
+      Util.log("DeepLink.open(); Error: $error", stackTrace: stackTrace, type: "error");
     }
   }
 
@@ -46,8 +46,8 @@ class DeepLink {
       if (uri != null) {
         open(uri);
       }
-    }, onError: (e, stacktrace) {
-      Util.printStackTrace("DeepLink.uriLinkStream.listen()", e, stacktrace);
+    }, onError: (error, stackTrace) {
+      Util.log("DeepLink.uriLinkStream.listen(); Error: $error", stackTrace: stackTrace, type: "error");
     });
   }
 }
