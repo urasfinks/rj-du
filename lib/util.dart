@@ -32,12 +32,13 @@ class Util {
       if (stack == true && stackTrace == null) {
         stackTrace = StackTrace.current;
       }
-      String qType = type ?? "log";
+      String qType = type ?? "info";
       result += LoggerMsg.find(qType).wrap("[$qType]");
+      //result += (Util.lPad("", pad: 10 - qType.length, char: " "));
       result += (" ");
-      result += LoggerMsg.Default.wrap("${DateTime.now()} ");
+      result += LoggerMsg.Gray.wrap("${DateTime.now()} ");
       if (correlation != null) {
-        result += LoggerMsg.Yellow.wrap(correlation);
+        result += LoggerMsg.Cyan.wrap(correlation);
         result += " ";
       }
       result += LoggerMsg.Default.wrap(mes);
@@ -339,12 +340,12 @@ enum LoggerMsg {
       }
     }
     switch (text) {
-      case "log":
-        return LoggerMsg.Gray;
+      case "info":
+        return LoggerMsg.Yellow;
       case "error":
         return LoggerMsg.Red;
       case "request":
-        return LoggerMsg.Yellow;
+        return LoggerMsg.Green;
       case "response":
         return LoggerMsg.Blue;
       default:

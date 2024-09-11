@@ -36,7 +36,7 @@ class RjDu {
     AudioComponent().init();
 
     Storage().set("uuid", Util.uuid(), false);
-    Util.p("I'am: ${Storage().get("uuid", "")}");
+    Util.log("I'am", correlation: Storage().get("uuid", ""));
     Storage().set("unique", Util.uuid(), false);
     Storage().set("version", GlobalSettings().version, false);
     Storage().set("isAuth", "false", false);

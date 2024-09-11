@@ -57,7 +57,7 @@ class DynamicPage extends StatefulWidget {
 
   void subscribeToReload(SubscribeReloadGroup group, String value) {
     if (!_subscribedOnReload[group]!.contains(value)) {
-      Util.p("DynamicPage.subscribeToReload() uuidPage: $uuid; group: ${group.name}; value: $value");
+      Util.log("DynamicPage.subscribeToReload(); group: ${group.name}; value: $value", correlation: uuid);
       _subscribedOnReload[group]!.add(value);
     }
   }
@@ -79,7 +79,7 @@ class DynamicPage extends StatefulWidget {
     Data state = stateData.getInstanceData(null);
     SystemNotify().subscribe(SystemNotifyEnum.changeOrientation, onChangeOrientation);
     constructor("init");
-    Util.p("CreateInstance DynamicPage uuidPage: $uuid; uuidState: ${state.uuid}; args: $arguments");
+    Util.log("CreateInstance DynamicPage; uuidState: ${state.uuid}; args: $arguments", correlation: uuid);
   }
 
   void constructor(String cause) {
