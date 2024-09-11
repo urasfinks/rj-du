@@ -221,7 +221,7 @@ class DataSource {
         // сами данные, бывает что надо бновить флаг удаления или ревизию
         updateNullable(data, resultSet.first);
         updateOverlayJsonValue(data, resultSet.first);
-        result = await update(data);
+        result = await updateDataSource(data);
         notify = true;
         //Сокетные данные не могут обновляться, поэтому не предполагаем вызова синхронизации
       } else {
@@ -347,7 +347,7 @@ class DataSource {
     }
   }
 
-  Future<bool> update(Data curData) async {
+  Future<bool> updateDataSource(Data curData) async {
     try {
       if (curData.onUpdateResetRevision && curData.type.name.endsWith("RSync")) {
         curData.revision = 0;

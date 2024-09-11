@@ -25,26 +25,31 @@ class Util {
     String? type,
     StackTrace? stackTrace,
     String? correlation,
+    bool stack = false,
   }) {
+    String result = "";
+    if (stack == true && stackTrace == null) {
+      stackTrace = StackTrace.current;
+    }
     String qType = type ?? "log";
-    LoggerMsg.find(qType).write("[$qType]");
-    stdout.write(" ");
-    LoggerMsg.Default.write("${DateTime.now()} ");
+    result += LoggerMsg.find(qType).wrap("[$qType]");
+    result += (" ");
+    result += LoggerMsg.Default.wrap("${DateTime.now()} ");
     if (correlation != null) {
-      LoggerMsg.Yellow.write("$correlation");
-      stdout.write(" ");
+      result += LoggerMsg.Yellow.wrap(correlation);
+      result += " ";
     }
-    LoggerMsg.Default.write(mes);
+    result += LoggerMsg.Default.wrap(mes);
     if (stackTrace != null) {
-      stdout.writeln();
-      LoggerMsg.Red.write(stackTrace.toString());
+      result += "\n";
+      result += LoggerMsg.Red.wrap(stackTrace.toString());
     }
-    stdout.writeln();
+    stdout.writeln(result);
   }
 
   static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
     if (kDebugMode && GlobalSettings().debug) {
-      log(mes, stackTrace: stack ? StackTrace.current : null);
+      log(mes, stack: stack);
     }
   }
 
@@ -56,7 +61,7 @@ class Util {
 
   static void printCurrentStack(String label, [int maxFrames = 50, extraLabel = true]) {
     if (kDebugMode && GlobalSettings().debug) {
-      log(extraLabel ? ":::PrintCurrentStack::: $label" : label, stackTrace: StackTrace.current);
+      log(extraLabel ? ":::PrintCurrentStack::: $label" : label, stack: true);
     }
   }
 
@@ -332,11 +337,16 @@ enum LoggerMsg {
 
   const LoggerMsg(this.code);
 
-  void write(dynamic text) {
-    stdout.write('\x1B[${code}m$text\x1B[0m');
+  String wrap(dynamic text) {
+    return "\x1B[${code}m$text\x1B[0m";
   }
 
   static LoggerMsg find(String text) {
+    for (LoggerMsg item in LoggerMsg.values) {
+      if (item.name == text) {
+        return item;
+      }
+    }
     switch (text) {
       case "log":
         return LoggerMsg.Gray;

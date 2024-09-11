@@ -54,7 +54,7 @@ class HttpClient {
             "Request timeout",
             correlation: uuid,
             type: "error",
-            stackTrace: StackTrace.current,
+            stack: true,
           );
         }
         return http.Response(
