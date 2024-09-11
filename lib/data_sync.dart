@@ -113,7 +113,7 @@ class DataSync {
 
   void updateLoaderStatus(Map<String, dynamic> parseJson, int firstTotalCountItem) {
     try {
-      int curTotalCountItem = parseJson["data"]["totalCountItem"];
+      int curTotalCountItem = parseJson["totalCountItem"];
       DynamicInvoke().sysInvokeType(
         ControllerHandler,
         {
@@ -129,8 +129,8 @@ class DataSync {
 
   int parseUpgradeData(Map<String, dynamic> parseJson, Map<String, int> maxRevisionByType) {
     int countUpgrade = 0;
-    if (parseJson["data"]["upgrade"] != null) {
-      for (MapEntry<String, dynamic> item in parseJson["data"]["upgrade"].entries) {
+    if (parseJson["upgrade"] != null) {
+      for (MapEntry<String, dynamic> item in parseJson["upgrade"].entries) {
         DataType dataType = Util.dataTypeValueOf(item.key);
         for (Map<String, dynamic> curData in item.value) {
           Data? updData = upgradeData(curData, dataType, maxRevisionByType);
@@ -145,8 +145,8 @@ class DataSync {
 
   void parseResetData(Map<String, dynamic> parseJson, Map<String, int> maxRevisionByType) {
     // Если ревизия на сервере меньше чем на устройстве будет возвращён блок serverNeedUpgrade
-    if (parseJson["data"]["serverNeedUpgrade"] != null) {
-      for (MapEntry<String, dynamic> item in parseJson["data"]["serverNeedUpgrade"].entries) {
+    if (parseJson["serverNeedUpgrade"] != null) {
+      for (MapEntry<String, dynamic> item in parseJson["serverNeedUpgrade"].entries) {
         DataType dataType = Util.dataTypeValueOf(item.key);
         if (dataType.isUserData()) {
           Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
@@ -257,21 +257,22 @@ class DataSync {
           postDataRequest["userDataRSync"] = await DataGetter.getUpdatedUserData();
           postDataRequest["blobRSync"] = await DataGetter.getUpdatedBlobData();
         }
-        //Util.log(Util.jsonPretty(postDataRequest));
+
         Response response = await Util.asyncInvokeIsolate((args) {
-          return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"]);
+          return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"], args["debug"]);
         }, {
           "headers": HttpClient.upgradeHeadersAuthorization({}),
           "body": postDataRequest,
           "host": GlobalSettings().host,
+          "debug": GlobalSettings().debugDataSync
         });
+
         if (response.statusCode == 200) {
           int countUpgrade = 0;
           Map<String, dynamic> parseJson = await Util.asyncInvokeIsolate((arg) => json.decode(arg), response.body);
-          //Util.log(parseJson);
           if (parseJson["status"] == true) {
             if (firstTotalCountItem == -1) {
-              firstTotalCountItem = parseJson["data"]["totalCountItem"];
+              firstTotalCountItem = parseJson["totalCountItem"];
             }
             if (flagOpenLoader) {
               updateLoaderStatus(parseJson, firstTotalCountItem);
@@ -286,13 +287,6 @@ class DataSync {
           }
         } else {
           syncResult.setError("Сервер вернул ошибку: ${response.statusCode}");
-          Util.p("DataSync.sync() Error");
-          Util.log(Util.jsonPretty({
-            "responseCode": response.statusCode,
-            "responseBody": response.body,
-            "responseHeader": response.headers,
-            "request": postDataRequest
-          }));
           //Серверу плохо, остановим долбление
           break;
         }

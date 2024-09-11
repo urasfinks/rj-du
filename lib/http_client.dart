@@ -14,24 +14,40 @@ class HttpClient {
     Storage().onChange("uuid", "", onUpdateDeviceUuid);
   }
 
-  static Future<Response> get(String url, Map<String, String>? headers) {
+  static Future<Response> get(String url, Map<String, String>? headers, [bool debug = false]) {
     return _configureRequest(
       http.get(Uri.parse(url), headers: headers),
+      debug,
       "$url, $headers",
     );
   }
 
-  static Future<Response> post(String url, Map<String, dynamic> post, Map<String, String>? headers) async {
+  static Future<Response> post(String url, Map<String, dynamic> post, Map<String, String>? headers,
+      [bool debug = false]) async {
     return _configureRequest(
       http.post(Uri.parse(url), headers: headers, body: json.encode(post)),
+      debug,
       "$url, $post, $headers",
     );
   }
 
-  static Future<Response> _configureRequest(Future<Response> obj, String logArgs) async {
-    return obj.timeout(
+  static Future<Response> _configureRequest(Future<Response> obj, bool debug, String requestDataLog) async {
+    String uuid = "?";
+    if (debug) {
+      uuid = Util.uuid();
+      Util.p("Request: $uuid; >> $requestDataLog");
+    }
+    return obj.then((value) {
+      if (debug) {
+        Util.p("Response: $uuid; >> $value");
+      }
+      return value;
+    }).timeout(
       Duration(seconds: timeout),
       onTimeout: () {
+        if (debug) {
+          Util.p("Response: $uuid; >> Request timeout");
+        }
         return http.Response(
             json.encode({
               "status": false,
@@ -40,7 +56,10 @@ class HttpClient {
             408);
       },
     ).onError((error, stackTrace) {
-      Util.printStackTrace("HttpClient._configureRequest()", error, stackTrace);
+      if (debug) {
+        Util.p("Response: $uuid; >> Error");
+      }
+      Util.log(error, stack: true);
       return http.Response(
           json.encode({
             "status": false,

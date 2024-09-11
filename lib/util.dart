@@ -14,7 +14,36 @@ import 'global_settings.dart';
 
 class Util {
   static Base64Codec base64 = const Base64Codec();
+
   static Uuid uuidObject = const Uuid();
+
+  static void log(dynamic mes, {bool stack = false, String? name, StackTrace? stackTrace, Object? error}) {
+    developer.log(
+      "${DateTime.now()} $mes",
+      time: DateTime.now(),
+      name: name ?? "log",
+      error: error,
+      stackTrace: stack ? (stackTrace ?? StackTrace.current) : null,
+    );
+  }
+
+  static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
+    if (kDebugMode && GlobalSettings().debug) {
+      log(mes, stack: stack);
+    }
+  }
+
+  static void printStackTrace(String label, Object? error, StackTrace stackTrace) {
+    if (kDebugMode && GlobalSettings().debug) {
+      log(label, stack: true, error: error, stackTrace: stackTrace);
+    }
+  }
+
+  static void printCurrentStack(String label, [int maxFrames = 50, extraLabel = true]) {
+    if (kDebugMode && GlobalSettings().debug) {
+      log(extraLabel ? ":::PrintCurrentStack::: $label" : label, stack: true);
+    }
+  }
 
   static bool isIOs() {
     return Platform.isIOS;
@@ -35,20 +64,6 @@ class Util {
   static String template(String template, DynamicUIBuilderContext dynamicUIBuilderContext,
       [bool autoEscape = true, debug = false]) {
     return Template.template(template, dynamicUIBuilderContext, autoEscape, debug);
-  }
-
-  static void log(dynamic mes) {
-    developer.log("[${DateTime.now()}] $mes");
-  }
-
-  static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
-    if (kDebugMode && GlobalSettings().debug) {
-      if (stack) {
-        printCurrentStack("[${DateTime.now()}] $mes", maxFrames, false);
-      } else {
-        print("[${DateTime.now()}] $mes");
-      }
-    }
   }
 
   static String jsonEncode(dynamic object, [bool pretty = false]) {
@@ -234,25 +249,6 @@ class Util {
   }
 
   static String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-
-  static void printStackTrace(String label, Object? error, StackTrace stackTrace) {
-    if (kDebugMode && GlobalSettings().debug) {
-      debugPrintStack(
-        stackTrace: stackTrace,
-        maxFrames: GlobalSettings().debugStackTraceMaxFrames,
-        label: "$label; Exception: $error",
-      );
-    }
-  }
-
-  static void printCurrentStack(String label, [int maxFrames = 50, extraLabel = true]) {
-    debugPrintStack(
-      stackTrace: StackTrace.current,
-      maxFrames: maxFrames,
-      //label: ":::PrintCurrentStack::: ${label.length > 100 ? label.substring(0, 100) : label}",
-      label: extraLabel ? ":::PrintCurrentStack::: $label" : label,
-    );
-  }
 
   static List<String>? castListDynamicToString(dynamic list) {
     return (list as List)?.map((item) => item as String)?.toList();

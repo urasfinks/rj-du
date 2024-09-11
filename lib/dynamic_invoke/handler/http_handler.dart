@@ -46,8 +46,8 @@ class HttpHandler extends AbstractHandler {
           httpResponseObject["data"] = data;
           if (data.containsKey("status") && data["status"] == false) {
             httpResponseObject["status"] = false;
-            if (data.containsKey("description")) {
-              httpResponseObject["error"] = data["description"];
+            if (data.containsKey("cause")) {
+              httpResponseObject["error"] = data["cause"];
             } else if (data.containsKey("exception")) {
               String ex = data["exception"][0] as String;
               httpResponseObject["error"] = ex.length > 100 ? ex.substring(0, 100) : ex;
