@@ -18,7 +18,7 @@ class HttpClient {
     return _configureRequest(
       http.get(Uri.parse(url), headers: headers),
       debug,
-      "$url, $headers",
+      debug ? Util.jsonPretty({"url": url, "headers": headers}) : "",
     );
   }
 
@@ -27,7 +27,7 @@ class HttpClient {
     return _configureRequest(
       http.post(Uri.parse(url), headers: headers, body: json.encode(post)),
       debug,
-      debug ? "$url, ${Util.jsonPretty(post)}, $headers" : "",
+      debug ? Util.jsonPretty({"url": url, "headers": headers, "post": post}) : "",
     );
   }
 
@@ -35,37 +35,47 @@ class HttpClient {
     String uuid = "?";
     if (debug) {
       uuid = Util.uuid();
-      Util.p("Request: $uuid; >> $requestDataLog");
+      Util.log(requestDataLog, type: "request", correlation: uuid);
     }
     return obj.then((value) {
       if (debug) {
-        Util.p("Response: $uuid; >> $value");
+        Util.log(
+          "StatusCode: ${value.statusCode}; Headers: ${Util.jsonPretty(value.headers)}; Body: ${value.body}",
+          type: "response",
+          correlation: uuid,
+        );
       }
       return value;
     }).timeout(
       Duration(seconds: timeout),
       onTimeout: () {
         if (debug) {
-          Util.p("Response: $uuid; >> Request timeout");
+          Util.log(
+            "Request timeout",
+            correlation: uuid,
+            type: "error",
+            stackTrace: StackTrace.current,
+          );
         }
         return http.Response(
-            json.encode({
-              "status": false,
-              "exception": ["Request timeout"]
-            }),
-            408);
+          json.encode({
+            "status": false,
+            "exception": ["Request timeout"]
+          }),
+          408,
+        );
       },
     ).onError((error, stackTrace) {
       if (debug) {
-        Util.p("Response: $uuid; >> Error");
+        Util.log("$error", type: "error", stackTrace: stackTrace, correlation: uuid);
       }
-      Util.log(error, stack: true);
       return http.Response(
-          json.encode({
-            "status": false,
-            "exception": ["Connection failed"]
-          }),
-          417);
+        json.encode({
+          "status": false,
+          "exception": ["Connection failed"]
+        }),
+        417,
+      );
     });
   }
 

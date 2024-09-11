@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:io' show Platform;
 import 'dart:io';
 
@@ -17,31 +16,47 @@ class Util {
 
   static Uuid uuidObject = const Uuid();
 
-  static void log(dynamic mes, {bool stack = false, String? name, StackTrace? stackTrace, Object? error}) {
-    developer.log(
-      "${DateTime.now()} $mes",
-      time: DateTime.now(),
-      name: name ?? "log",
-      error: error,
-      stackTrace: stack ? (stackTrace ?? StackTrace.current) : null,
-    );
+  static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) {
+    return compute(fn, arg);
+  }
+
+  static void log(
+    String mes, {
+    String? type,
+    StackTrace? stackTrace,
+    String? correlation,
+  }) {
+    String qType = type ?? "log";
+    LoggerMsg.find(qType).write("[$qType]");
+    stdout.write(" ");
+    LoggerMsg.Default.write("${DateTime.now()} ");
+    if (correlation != null) {
+      LoggerMsg.Yellow.write("$correlation");
+      stdout.write(" ");
+    }
+    LoggerMsg.Default.write(mes);
+    if (stackTrace != null) {
+      stdout.writeln();
+      LoggerMsg.Red.write(stackTrace.toString());
+    }
+    stdout.writeln();
   }
 
   static void p(dynamic mes, [stack = false, int maxFrames = 7]) {
     if (kDebugMode && GlobalSettings().debug) {
-      log(mes, stack: stack);
+      log(mes, stackTrace: stack ? StackTrace.current : null);
     }
   }
 
   static void printStackTrace(String label, Object? error, StackTrace stackTrace) {
     if (kDebugMode && GlobalSettings().debug) {
-      log(label, stack: true, error: error, stackTrace: stackTrace);
+      log(label, stackTrace: stackTrace);
     }
   }
 
   static void printCurrentStack(String label, [int maxFrames = 50, extraLabel = true]) {
     if (kDebugMode && GlobalSettings().debug) {
-      log(extraLabel ? ":::PrintCurrentStack::: $label" : label, stack: true);
+      log(extraLabel ? ":::PrintCurrentStack::: $label" : label, stackTrace: StackTrace.current);
     }
   }
 
@@ -185,10 +200,6 @@ class Util {
     return true;
   }
 
-  static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) {
-    return compute(fn, arg);
-  }
-
   static asyncInvoke(Function(dynamic args) fn, dynamic args) async {
     try {
       await Future<void>.delayed(Duration.zero);
@@ -294,5 +305,49 @@ class Selector {
   @override
   String toString() {
     return 'Selector{parent: $parent, key: $key, ref: $ref}';
+  }
+}
+
+enum LoggerMsg {
+  Default("0"),
+  DefaultBackground("7"),
+  Black("30"),
+  BlackBackground("40"),
+  Red("31"),
+  RedBackground("41"),
+  Green("32"),
+  GreenBackground("42"),
+  Yellow("33"),
+  YellowBackground("43"),
+  Blue("34"),
+  BlueBackground("44"),
+  Magenta("35"),
+  MagentaBackground("45"),
+  Cyan("36"),
+  CyanBackground("46"),
+  Gray("37"),
+  GrayBackground("47");
+
+  final String code;
+
+  const LoggerMsg(this.code);
+
+  void write(dynamic text) {
+    stdout.write('\x1B[${code}m$text\x1B[0m');
+  }
+
+  static LoggerMsg find(String text) {
+    switch (text) {
+      case "log":
+        return LoggerMsg.Gray;
+      case "error":
+        return LoggerMsg.Red;
+      case "request":
+        return LoggerMsg.Yellow;
+      case "response":
+        return LoggerMsg.Blue;
+      default:
+        return LoggerMsg.Default;
+    }
   }
 }

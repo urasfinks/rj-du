@@ -149,7 +149,7 @@ class DataSync {
       for (MapEntry<String, dynamic> item in parseJson["serverNeedUpgrade"].entries) {
         DataType dataType = Util.dataTypeValueOf(item.key);
         if (dataType.isUserData()) {
-          Util.p("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
+          Util.log("!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}", type: "error");
           // Пометим это лаг в локальнйо БД revision = 0, что бы данные заново прошли синхронизацию
           // Грубо говоря - это восстановление данных на сервере
           // Конечно вероятность такого мала, но на всякий случай, если сервер когда-нибудь невозвратимо утухнет
@@ -159,7 +159,7 @@ class DataSync {
             maxRevisionByType[dataType.name]!,
           );
         } else {
-          Util.p("(NOT USER DATA)!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}");
+          Util.log("(NOT USER DATA)!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}", type: "error");
         }
       }
     }
