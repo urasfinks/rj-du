@@ -159,7 +159,8 @@ class DataSync {
             maxRevisionByType[dataType.name]!,
           );
         } else {
-          Util.log("(NOT USER DATA)!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}", type: "error");
+          Util.log("(NOT USER DATA)!!!SERVER NEED UPGRADE from $item .. ${maxRevisionByType[dataType.name]}",
+              type: "error");
         }
       }
     }
@@ -285,6 +286,14 @@ class DataSync {
           if (countUpgrade < 1) {
             break;
           }
+        } else if (response.statusCode == 401) {
+          // Мы оказывается не авторизованы
+          // Такое может случится, если сервер переедет без восстановления БД
+          // Мы должны разлогинится без удаления каких либо данных
+          Util.log("Server Crash", type: "error");
+          await DataGetter.crashServer();
+          await DataGetter.logout();
+          break;
         } else {
           syncResult.setError("Сервер вернул ошибку: ${response.statusCode}");
           //Серверу плохо, остановим долбление

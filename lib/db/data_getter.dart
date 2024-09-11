@@ -136,6 +136,12 @@ class DataGetter {
     }
   }
 
+  // Сервер вернул при синхронизации данных ошибку авторизации, надо срочно сохранить что у нас есть личного
+  static Future<void> crashServer() async {
+    await DataSource().db.rawQuery("UPDATE data SET revision_data = 0 WHERE type_data IN (?,?,?)",
+        [DataType.socket.name, DataType.blobRSync.name, DataType.userDataRSync.name]);
+  }
+
   static Future<void> logout() async {
     if (Storage().get("isAuth", "false") == "true") {
       Storage().setMap({"mail": "", "isAuth": "false", "accountName": ""});
