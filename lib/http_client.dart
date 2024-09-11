@@ -27,7 +27,7 @@ class HttpClient {
     return _configureRequest(
       http.post(Uri.parse(url), headers: headers, body: json.encode(post)),
       debug,
-      "$url, $post, $headers",
+      debug ? "$url, ${Util.jsonPretty(post)}, $headers" : "",
     );
   }
 
