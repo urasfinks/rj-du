@@ -60,7 +60,7 @@ class HttpClient {
         return http.Response(
           json.encode({
             "status": false,
-            "exception": ["Request timeout"]
+            "cause": "Request timeout"
           }),
           408,
         );
@@ -72,7 +72,7 @@ class HttpClient {
       return http.Response(
         json.encode({
           "status": false,
-          "exception": ["Connection failed"]
+          "cause": "Connection failed"
         }),
         417,
       );
