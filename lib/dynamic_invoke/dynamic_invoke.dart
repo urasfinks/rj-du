@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/foundation.dart';
 import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/dynamic_invoke/handler/audio_handler.dart';
+import 'package:rjdu/dynamic_invoke/handler/log_handler.dart';
 import 'package:rjdu/global_settings.dart';
 import 'package:rjdu/storage.dart';
 import 'package:rjdu/util/template.dart';
@@ -72,6 +73,7 @@ class DynamicInvoke {
     SubscribeReloadHandler();
     UtilHandler();
     AudioHandler();
+    LogHandler();
 
     javascriptRuntime = getJavascriptRuntime();
     javascriptRuntime?.init();

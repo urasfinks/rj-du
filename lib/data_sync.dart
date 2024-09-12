@@ -260,7 +260,12 @@ class DataSync {
         }
 
         Response response = await Util.asyncInvokeIsolate((args) {
-          return HttpClient.post("${args["host"]}/Sync", args["body"], args["headers"], args["debug"]);
+          return HttpClient.post(
+            "${args["host"]}/Sync",
+            args["body"],
+            args["headers"],
+            debug: args["debug"],
+          );
         }, {
           "headers": HttpClient.upgradeHeadersAuthorization({}),
           "body": postDataRequest,

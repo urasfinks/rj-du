@@ -33,6 +33,8 @@ class GlobalSettings {
   bool bottomNavigationBar = true;
   FloatingActionButtonLocation floatingActionButtonLocation = FloatingActionButtonLocation.endFloat;
   bool debugDataSync = true;
+  bool debugHttpHandler = true;
+  bool debugSocketUpdate = true;
 
   static final GlobalSettings _singleton = GlobalSettings._internal();
 

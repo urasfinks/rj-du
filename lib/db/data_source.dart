@@ -284,11 +284,12 @@ class DataSource {
     try {
       Map<String, dynamic> postData = {"uuid_data": data.uuid, "data": data.value};
       Response response = await Util.asyncInvokeIsolate((args) {
-        return HttpClient.post("${args["host"]}/SocketUpdate", args["body"], args["headers"]);
+        return HttpClient.post("${args["host"]}/SocketUpdate", args["body"], args["headers"], debug: args["debug"]);
       }, {
         "headers": HttpClient.upgradeHeadersAuthorization({}),
         "body": postData,
         "host": GlobalSettings().host,
+        "debug": GlobalSettings().debugSocketUpdate
       });
       if (response.statusCode != 200) {
         result = false;

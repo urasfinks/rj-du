@@ -14,7 +14,7 @@ class HttpClient {
     Storage().onChange("uuid", "", onUpdateDeviceUuid);
   }
 
-  static Future<Response> get(String url, Map<String, String>? headers, [bool debug = false]) {
+  static Future<Response> get(String url, Map<String, String>? headers, {bool debug = false}) {
     return _configureRequest(
       http.get(Uri.parse(url), headers: headers),
       debug,
@@ -23,7 +23,7 @@ class HttpClient {
   }
 
   static Future<Response> post(String url, Map<String, dynamic> post, Map<String, String>? headers,
-      [bool debug = false]) async {
+      {bool debug = false}) async {
     return _configureRequest(
       http.post(Uri.parse(url), headers: headers, body: json.encode(post)),
       debug,

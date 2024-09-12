@@ -25,9 +25,18 @@ class HttpHandler extends AbstractHandler {
 
     Future<Response> response;
     if (args["method"] == "POST") {
-      response = HttpClient.post("${args["host"]}${args["uri"]}", args["body"], args["headers"]);
+      response = HttpClient.post(
+        "${args["host"]}${args["uri"]}",
+        args["body"],
+        args["headers"],
+        debug: args["debug"] ?? GlobalSettings().debugHttpHandler,
+      );
     } else {
-      response = HttpClient.get("${args["host"]}${args["uri"]}", args["headers"]);
+      response = HttpClient.get(
+        "${args["host"]}${args["uri"]}",
+        args["headers"],
+        debug: GlobalSettings().debugHttpHandler,
+      );
     }
     response.then((value) {
       if (args.containsKey("onResponse")) {

@@ -340,6 +340,8 @@ enum LoggerMsg {
       }
     }
     switch (text) {
+      case "javascript":
+        return LoggerMsg.Green;
       case "info":
         return LoggerMsg.Yellow;
       case "error":
