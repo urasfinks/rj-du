@@ -60,12 +60,12 @@ class HttpHandler extends AbstractHandler {
             } else if (data.containsKey("exception")) {
               String ex = data["exception"][0] as String;
               httpResponseObject["error"] = ex.length > 100 ? ex.substring(0, 100) : ex;
-              Util.p(data["exception"]);
             }
           }
-        } catch (e) {
+        } catch (error, stackTrace) {
           httpResponseObject["status"] = false;
-          httpResponseObject["error"] = e.toString();
+          httpResponseObject["error"] = error.toString();
+          Util.log("$error", type: "error", stackTrace: stackTrace);
         }
 
         args["onResponse"]["args"]["httpResponse"] = httpResponseObject;
