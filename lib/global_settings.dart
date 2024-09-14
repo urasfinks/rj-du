@@ -32,7 +32,7 @@ class GlobalSettings {
   double barSeparatorOpacity = 0.04;
   bool bottomNavigationBar = true;
   FloatingActionButtonLocation floatingActionButtonLocation = FloatingActionButtonLocation.endFloat;
-  bool debugDataSync = true;
+  bool debugDataSync = false;
   bool debugHttpHandler = true;
   bool debugSocketUpdate = true;
 

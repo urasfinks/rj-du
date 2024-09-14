@@ -248,7 +248,10 @@ class Util {
   }
 
   static Uint8List base64Decode(String data) {
-    return base64.decode(data);
+    if (data.contains("\n")) {
+      return base64.decode(data.replaceAll("\r\n", "").replaceAll("\n", ""));
+    }
+    return base64.decode(data.replaceAll("\r\n", ""));
   }
 
   static String uuid() {
