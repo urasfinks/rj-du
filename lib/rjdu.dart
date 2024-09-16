@@ -8,6 +8,7 @@ import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/dynamic_page.dart';
 import 'package:rjdu/global_settings.dart';
+import 'package:rjdu/log_isolate.dart';
 import 'package:rjdu/system_notify.dart';
 import 'package:rjdu/theme_provider.dart';
 import 'package:rjdu/translate.dart';
@@ -25,8 +26,10 @@ import 'http_client.dart';
 
 class RjDu {
   static init() async {
+    LogIsolate().init();
     Util.p("RjDu.init()");
     WidgetsFlutterBinding.ensureInitialized();
+
     androidUpdateSubAppBar(); //Нет зависимостей
     GlobalSettings().init(); //Нет зависимостей
     await Storage().init(); //Нет зависимостей

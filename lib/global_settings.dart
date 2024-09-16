@@ -21,7 +21,7 @@ class GlobalSettings {
   ];
 
   //String version = "v${Util.getTimestamp()}";
-  String version = "v15";
+  String version = "v16";
   bool clearStorageOnUpdateVersion = false;
   String host = "";
   String ws = "";

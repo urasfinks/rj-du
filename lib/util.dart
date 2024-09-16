@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rjdu/log_isolate.dart';
 import 'package:rjdu/util/template.dart';
 import 'dynamic_ui/dynamic_ui_builder_context.dart';
 import 'package:uuid/uuid.dart';
@@ -11,13 +13,34 @@ import 'package:uuid/uuid.dart';
 import 'data_type.dart';
 import 'global_settings.dart';
 
+class TransIsolate {
+  dynamic args;
+}
+
+class IsolateArgument {
+  Function(dynamic arg) fn;
+
+  dynamic arg;
+
+  SendPort sendPort;
+
+  IsolateArgument(this.fn, this.arg, this.sendPort);
+
+  dynamic invoke() {
+    return fn(arg);
+  }
+}
+
 class Util {
   static Base64Codec base64 = const Base64Codec();
 
   static Uuid uuidObject = const Uuid();
 
   static Future<dynamic> asyncInvokeIsolate(Function(dynamic arg) fn, dynamic arg) {
-    return compute(fn, arg);
+    return compute((isolateArgument) {
+      LogIsolate().iamIsolate(isolateArgument.sendPort);
+      return isolateArgument.invoke();
+    }, IsolateArgument(fn, arg, LogIsolate().getSendPort()));
   }
 
   static void log(
@@ -46,7 +69,7 @@ class Util {
         result += "\n";
         result += LoggerMsg.Red.wrap(stackTrace.toString());
       }
-      stdout.writeln(result);
+      LogIsolate().log(result);
     }
   }
 
