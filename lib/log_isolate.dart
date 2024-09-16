@@ -5,6 +5,8 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 import 'package:rjdu/util.dart';
 
+import 'global_settings.dart';
+
 // Транс поточное логироние с соблюдением последовательности вывода
 class LogIsolate {
   static final LogIsolate _singleton = LogIsolate._internal();
@@ -24,13 +26,13 @@ class LogIsolate {
   }
 
   void init() {
-    ReceivePort port = ReceivePort();
-    port.listen((message) {
-      if (kDebugMode) {
+    if (kDebugMode && GlobalSettings().debug) {
+      ReceivePort port = ReceivePort();
+      port.listen((message) {
         LogIsolate().log(message);
-      }
-    });
-    LogIsolate().sendPort = port.sendPort;
+      });
+      LogIsolate().sendPort = port.sendPort;
+    }
   }
 
   void iamIsolate(SendPort sp) {
@@ -60,20 +62,30 @@ class LogIsolate {
   void next() {
     if (queue.isNotEmpty) {
       String removeFirst = queue.removeFirst();
-      Util.asyncInvokeIsolate((str) {
-        int spLen = 1000;
-        while (str.length > spLen) {
-          stdout.write(str.substring(0, spLen));
-          str = str.substring(spLen);
-        }
-        stdout.write(str);
+      if (removeFirst.length > 1000) {
+        Util.asyncInvokeIsolate((str) {
+          _splitWrite(str);
+        }, removeFirst)
+            .then((value) {
+          next();
+        });
+      } else {
+        stdout.write(removeFirst);
         stdout.writeln();
-      }, removeFirst)
-          .then((value) {
         next();
-      });
+      }
     } else {
       oldOpComplete = true;
     }
+  }
+
+  void _splitWrite(str) {
+    int spLen = 1000;
+    while (str.length > spLen) {
+      stdout.write(str.substring(0, spLen));
+      str = str.substring(spLen);
+    }
+    stdout.write(str);
+    stdout.writeln();
   }
 }
