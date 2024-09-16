@@ -35,14 +35,14 @@ class LogIsolate {
     }
   }
 
-  void iamIsolate(SendPort sp) {
+  void iamIsolate(SendPort? sp) {
     isolate = true;
     sendPort = sp;
   }
 
   // Множественное распостранение порта от изолята к изоляту
-  SendPort getSendPort() {
-    return sendPort!;
+  SendPort? getSendPort() {
+    return sendPort;
   }
 
   void log(String msg) {
@@ -81,11 +81,20 @@ class LogIsolate {
 
   void _splitWrite(str) {
     int spLen = 1000;
+    int max = 10;
     while (str.length > spLen) {
+      if (max <= 0) {
+        break;
+      }
       stdout.write(str.substring(0, spLen));
       str = str.substring(spLen);
+      max--;
     }
-    stdout.write(str);
+    if (max <= 0) {
+      stdout.writeln("... more ${spLen * max}");
+    } else {
+      stdout.write(str);
+    }
     stdout.writeln();
   }
 }

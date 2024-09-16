@@ -22,7 +22,7 @@ class IsolateArgument {
 
   dynamic arg;
 
-  SendPort sendPort;
+  SendPort? sendPort;
 
   IsolateArgument(this.fn, this.arg, this.sendPort);
 
