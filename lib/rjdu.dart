@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:rjdu/assets_data.dart';
 import 'package:rjdu/audio_component.dart';
 import 'package:rjdu/dynamic_page.dart';
@@ -100,6 +101,7 @@ class RjDu {
     if (Storage().isUpdateApplicationVersion()) {
       Storage().set("version", GlobalSettings().version);
     }
+    setOptimalDisplayMode();
   }
 
   static androidUpdateSubAppBar() {
@@ -130,5 +132,25 @@ class RjDu {
     }
 
     return DynamicPage(const {"flutterType": "MaterialApp"}, DynamicPageOpenType.window);
+  }
+
+  static Future<void> setOptimalDisplayMode() async {
+    try {
+      final List<DisplayMode> supported = await FlutterDisplayMode.supported;
+      final DisplayMode active = await FlutterDisplayMode.active;
+
+      final List<DisplayMode> sameResolution = supported
+          .where((DisplayMode m) => m.width == active.width && m.height == active.height)
+          .toList()
+        ..sort((DisplayMode a, DisplayMode b) => b.refreshRate.compareTo(a.refreshRate));
+
+      final DisplayMode mostOptimalMode = sameResolution.isNotEmpty ? sameResolution.first : active;
+
+      /// This setting is per session.
+      /// Please ensure this was placed with `initState` of your root widget.
+      await FlutterDisplayMode.setPreferredMode(mostOptimalMode);
+    } catch (error, stackTrace) {
+      Util.log("Error: $error", stackTrace: stackTrace, type: "error");
+    }
   }
 }

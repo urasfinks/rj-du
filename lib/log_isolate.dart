@@ -70,8 +70,11 @@ class LogIsolate {
           next();
         });
       } else {
-        stdout.write(removeFirst);
-        stdout.writeln();
+        print(removeFirst);
+        // Flutter 3.27.0 deprecated stdout.write
+        //stdout.write(removeFirst);
+        //stdout.writeln();
+        //stdout.flush();
         next();
       }
     } else {

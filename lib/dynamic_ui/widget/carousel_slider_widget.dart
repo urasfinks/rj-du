@@ -26,8 +26,8 @@ class CarouselSliderWidget extends AbstractWidget {
     if (parsedJson.containsKey("finish") && stateControl.containsKey("finish") && stateControl["finish"]) {
       return render(parsedJson["finish"], null, const SizedBox(), dynamicUIBuilderContext);
     }
-    CarouselController carouselController = getController(parsedJson, "CarouselSlider", dynamicUIBuilderContext, () {
-      return CarouselControllerWrap(CarouselController(), stateControl);
+    CarouselSliderController carouselController = getController(parsedJson, "CarouselSlider", dynamicUIBuilderContext, () {
+      return CarouselControllerWrap(CarouselSliderControllerImpl(), stateControl);
     });
 
     List children = [];
@@ -144,7 +144,7 @@ class CarouselSliderWidget extends AbstractWidget {
   }
 }
 
-class CarouselControllerWrap extends AbstractControllerWrap<CarouselController> {
+class CarouselControllerWrap extends AbstractControllerWrap<CarouselSliderControllerImpl> {
   CarouselControllerWrap(super.controller, super.stateControl);
 
   @override

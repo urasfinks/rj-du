@@ -11,7 +11,7 @@ import 'abstract_handler.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -87,10 +87,10 @@ class UtilHandler extends AbstractHandler {
         }
         break;
       case "wakeLock":
-        Wakelock.enable();
+        WakelockPlus.enable();
         break;
       case "wakeUnlock":
-        Wakelock.disable();
+        WakelockPlus.disable();
         break;
       case "urlLauncher":
         launch(args["url"], forceSafariVC: false);

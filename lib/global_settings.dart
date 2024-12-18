@@ -22,7 +22,7 @@ class GlobalSettings {
 
   //String version = "v${Util.getTimestamp()}";
   String version = "v16";
-  bool clearStorageOnUpdateVersion = false;
+  bool clearStorageOnUpdateVersion = true;
   String host = "";
   String ws = "";
   double appBarHeight = 56.0;

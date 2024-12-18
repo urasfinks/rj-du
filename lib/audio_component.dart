@@ -81,9 +81,13 @@ class AudioComponent {
     });
   }
 
-  void play(AudioComponentContext audioComponentContext) {
+  void play(AudioComponentContext audioComponentContext, [int tryCount = 1]) async {
     if (audioPlayer != null) {
-      audioPlayer!.stop();
+      try {
+        await audioPlayer!.stop();
+      } catch (error, stackTrace) {
+        Util.log("AudioComponent.play() stop() Error: $error", stackTrace: stackTrace, type: "error");
+      }
       if (this.audioComponentContext != null) {
         this.audioComponentContext!.stop();
       }
@@ -96,6 +100,11 @@ class AudioComponent {
         }).onError((error, stackTrace) {
           Util.log("AudioComponent.play(); Error: $error", stackTrace: stackTrace, type: "error");
           this.audioComponentContext!.error(error.toString());
+          if (tryCount < 3) {
+            Future.delayed(const Duration(seconds: 1), () {
+              play(audioComponentContext, tryCount + 1);
+            });
+          }
         });
       } else {
         this.audioComponentContext!.error("Файл не загружен");

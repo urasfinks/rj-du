@@ -60,11 +60,8 @@ class ShowHandler extends AbstractHandler {
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        cropStyle: CropStyle.rectangle,
         sourcePath: image.path,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-        ],
+        compressQuality: 100,
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: "",

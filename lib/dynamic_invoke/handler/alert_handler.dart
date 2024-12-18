@@ -82,6 +82,7 @@ class AlertHandler extends AbstractHandler {
   }
 
   static void alert(int milliseconds, String label, String color, String backgroundColor, SnackBarAction? action) {
+    Util.p("!!!", true);
     if (NavigatorApp.getLast() != null) {
       ScaffoldMessenger.of(NavigatorApp.getLast()!.context!).showSnackBar(
         SnackBar(
